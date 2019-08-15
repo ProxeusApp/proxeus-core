@@ -1,0 +1,14 @@
+.idea
+.vscode
+.DS_Store
+
+artifacts/*
+SHOULD_INIT
+
+main/handlers/assets/bindata.go
+
+*.db
+*.dmg
+
+vendor
+data

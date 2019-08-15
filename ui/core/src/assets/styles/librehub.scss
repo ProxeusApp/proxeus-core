@@ -1,0 +1,164 @@
+@keyframes draggableAnim {
+  from {
+    border-left: dotted 1px rgba(4, 255, 15, 0.32);
+    border-top: dotted 1px rgba(4, 255, 15, 0.32);
+    border-right: dotted 1px rgba(4, 255, 15, 0.32);
+    border-bottom: dotted 1px rgba(4, 255, 15, 0.32);
+  }
+  to {
+    border-left: dashed 1px #00e241;
+    border-top: dashed 1px #00e241;
+    border-right: dashed 1px #00e241;
+    border-bottom: dashed 1px #00e241;
+  }
+}
+
+.libreHub {
+  position: fixed;
+  /* BG is currently set with JavaScript
+  /*background: rgba(255, 255, 255, 0.9);*/
+  width: 360px;
+  padding: 5px;
+  box-sizing: border-box;
+  bottom: 0;
+  left: 0;
+  z-index: 3000;
+  box-shadow: 0px 0px 40px rgba(0, 0, 0, .1);
+}
+
+.libreHub .panel-group {
+  margin: 0;
+}
+
+.libreHub-draggable {
+  animation: draggableAnim 3s infinite ease-in-out;
+}
+
+.libreHub-search {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  border: 1px solid rgba(0, 0, 0, 0.41);
+  display: none;
+}
+
+.libreHub-search input {
+  width: 100%;
+  height: 25px;
+  border: 1px solid rgba(0, 0, 0, 0.03);
+  border-bottom: 1px solid black;
+  padding: 4px;
+  position: relative;
+  display: block;
+  box-sizing: border-box;
+  background: rgba(255, 255, 255, 0.85);
+}
+
+.libreHub-search table tr > td:last-child {
+  width: 1px;
+}
+
+.libreHub-search table {
+  margin: 0;
+  padding: 0;
+  border-spacing: 0;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.libreHub button {
+  border-radius: 0;
+}
+
+.libreHub-search-result {
+  max-height: 200px;
+  overflow: auto;
+  display: block;
+  position: relative;
+  box-sizing: border-box;
+  background: rgba(255, 255, 255, 0.85);
+  margin: 1px 4px 4px 4px;
+}
+
+.libreHub-search-result > p {
+  margin: 0;
+  padding: 4px 8px;
+  border-bottom: 1px solid gray;
+  box-sizing: border-box;
+}
+
+.libreHub-search-result p > span {
+  color: rgba(0, 0, 0, 0.45);
+  margin-right: 5px;
+  display: inline-block;
+}
+
+.libreHub-search-result > p:hover {
+  cursor: pointer;
+}
+
+.libreHub-search-result > p.lh-hover {
+  background: rgba(0, 122, 255, 0.38);
+}
+
+.libreHub-hlted {
+  width: 100%;
+  color: black !important;
+  background: transparent;
+}
+
+.libreHub-hlted, .libreHub-hlted > * {
+  font-family: monospace;
+}
+
+.libreHub-hlted span {
+  background: yellow;
+  padding: 2px;
+}
+
+.libreHub-hlted i {
+  color: #07c516;
+  font-style: normal;
+  text-shadow: 1px 1px #676767;
+}
+
+.libreHub-hlted o {
+  color: #dadada;
+  font-style: normal;
+}
+
+.libreHub-hlted e {
+  color: #0056ff;
+  text-shadow: 1px 1px #676767;
+}
+
+.libreHub-hlted d {
+  color: #ff00ff;
+}
+
+.libreHub-hlted p {
+  margin: 3px 0 0 30px;
+}
+
+.libreHub .libreHub-codeboard {
+  background: white;
+}
+
+.libreHub .panel-group a > .libreHub-codeboard {
+  background: transparent !important;
+  padding: 0;
+}
+
+button.libreHub-hlted {
+  background: white;
+  margin: 6px 0;
+}
+
+button.libreHub-hlted o {
+  color: blue;
+}
+
+.libreHub .panel-body {
+  padding: 8px;
+}

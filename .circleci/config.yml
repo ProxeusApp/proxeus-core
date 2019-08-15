@@ -1,0 +1,249 @@
+
+version: 2.1
+executors:
+
+  docker-image-golang:
+    docker:
+      - image: golang:1.11
+
+  docker-publisher:
+    environment:
+      CONTAINER_IMAGE_NAME: proxeus/proxeus-core
+    docker:
+      - image: circleci/buildpack-deps:stretch
+
+jobs:
+  
+  validate:
+    executor: docker-image-golang
+    steps:
+      - checkout
+      - restore_cache:
+          keys: 
+            - go-vendor-v1-{{ .Branch }}
+#      - run:
+#          # install ssh-agent if not already installed
+#          command: 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
+#      - run:
+#          # run ssh-agent
+#          command: eval $(ssh-agent -s)
+#      - run:
+#          command: chmod 0700 ./id_rsa
+#      - run:
+#          # add the SSH key stored in SSH_DEPLOY_KEY_CORE_SYS
+#          # command: ssh-add <(echo "$SSH_DEPLOY_KEY_CORE_SYS")
+#          command: ssh-add ./id_rsa
+#      - run:
+#          # for Docker builds disable host key checking
+#          command: mkdir -p ~/.ssh
+#      - run:
+#          command: '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+      - run:
+          command: ls -lha
+      - run:
+          command: make link-repo
+      - run:
+          command: curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
+      - run:
+          command: go get golang.org/x/tools/cmd/goimports
+      - run:
+          command: |
+            cd /go/src/git.proxeus.com/core/central
+            dep ensure -v
+      - run:
+          command: chmod -R 777 ./build
+      - run:
+          command: |
+            cd /go/src/git.proxeus.com/core/central
+            make fmt
+      - run:
+          command: |
+            cd /go/src/git.proxeus.com/core/central
+            make validate
+      - save_cache:
+          key: go-vendor-v1-{{ .Branch }}
+          paths:
+            - vendor/
+
+  test:
+    executor: docker-image-golang
+    steps:
+      - checkout
+      - restore_cache:
+          keys: 
+            - go-vendor-v1-{{ .Branch }}
+      - run:
+          command: chmod -R 777 ./build
+      - run:
+          command: make link-repo
+      - run:
+          command: |
+            cd /go/src/git.proxeus.com/core/central
+            make test
+      - save_cache:
+          key: go-vendor-v1-{{ .Branch }}
+          paths:
+            - vendor/
+
+  build-ui:
+    docker:
+      - image: node:10
+    steps:
+      - checkout
+      - restore_cache:
+          keys: 
+            - yarn-v1-{{ .Branch }}
+      - run:
+          command: chmod -R 777 ./build
+      - run:
+          command: make ui
+      - save_cache:
+          key: yarn-v1-{{ .Branch }}
+          paths:
+            - ui/.yarn/
+            - ui/node_modules/
+            - ui/core/node_modules/
+            - ui/wallet/node_modules/
+# define workspace for artifacts
+      - persist_to_workspace:
+          root: .
+          paths:
+            - ./artifacts/dist
+
+  build-go:
+    executor: docker-image-golang
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ~/project/
+      - restore_cache:
+          keys: 
+            - go-vendor-v1-{{ .Branch }}
+      - run:
+          command: chmod -R 777 ./build
+      - run:
+          name: 
+          command: make link-repo
+      - run:
+          name: 
+          command: |
+            cd /go/src/git.proxeus.com/core/central
+            make server
+      - save_cache:
+          key: go-vendor-v1-{{ .Branch }}
+          paths:
+            - vendor/
+      - persist_to_workspace:
+          root: .
+          paths:
+            - ./artifacts/server
+  
+    
+  build-docker:
+    executor: docker-publisher
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ~/project/
+      - setup_remote_docker
+      - run:
+          name: Build Docker image
+          command: |
+            docker build -f Dockerfile.xes-platform -t $CONTAINER_IMAGE_NAME:latest -t $CONTAINER_IMAGE_NAME .
+      - run:
+          name: Archive Docker image
+          command: docker save -o image.tar $CONTAINER_IMAGE_NAME
+      - persist_to_workspace:
+          root: .
+          paths:
+            - image.tar
+
+  publish-latest:
+    executor: docker-publisher
+    steps:      
+      - attach_workspace:
+          at: /tmp/workspace
+      - setup_remote_docker
+      - run:
+          name: Load archived Docker image
+          command: docker load -i /tmp/workspace/image.tar
+      - run:
+          name: Publish Docker Image to Docker Hub
+          command: |
+            echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
+            docker push $CONTAINER_IMAGE_NAME
+      - run:
+          name: Tag docker image  
+          command: docker tag $CONTAINER_IMAGE_NAME $CONTAINER_IMAGE_NAME:$CIRCLE_SHA1
+      - run:
+          name: Publish Docker Image to Docker Hub
+          command: |
+            docker push $CONTAINER_IMAGE_NAME:$CIRCLE_SHA1      
+
+  publish-staging:
+    executor: docker-publisher
+    steps:
+      - attach_workspace:
+          at: /tmp/workspace
+      - setup_remote_docker
+      - run:
+          name: Load archived Docker image
+          command: docker load -i /tmp/workspace/image.tar
+      - run:
+          name: Tag docker image  
+          command: docker tag $CONTAINER_IMAGE_NAME $CONTAINER_IMAGE_NAME:staging
+      - run:
+          name: Publish Docker Image to Docker Hub
+          command: |
+            echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
+            docker push $CONTAINER_IMAGE_NAME:staging
+            
+workflows:
+  version: 2
+  build-master:
+    jobs:
+      - validate
+#          filters:
+#            branches:
+#              only: master
+      - test:
+          requires:
+            - validate
+#          filters:
+#            branches:
+#              only: master
+      - build-ui:
+          requires:
+            - test
+#          filters:
+#            branches:
+#              only: master
+      - build-go:
+          requires:
+            - build-ui
+#          filters:
+#            branches:
+#              only: master
+      - build-docker:
+          requires:
+            - build-ui
+            - build-go
+#          filters:
+#            branches:
+#              only: master
+      - publish-latest:
+          requires:
+            - build-docker 
+#          filters:
+#            branches:
+#              only: master
+      - hold:
+          type: approval
+          requires:
+            - build-docker
+      - publish-staging:
+          requires:
+            - hold
+#          filters:
+#            branches:
+#              only: master

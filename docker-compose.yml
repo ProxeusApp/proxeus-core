@@ -1,0 +1,39 @@
+version: '3.7'
+
+networks:
+  xes-platform-network:
+    name: xes-platform-network
+
+services:
+  platform:
+    build:
+      context: .
+      dockerfile: Dockerfile.xes-platform
+    container_name: xes_platform
+    networks: ['xes-platform-network']
+    restart: unless-stopped
+    environment:
+      TZ: Europe/Zurich
+      DataDir: "/data/hosted"
+      DocumentServiceUrl: "http://document-service:2115/"
+      BlockchainContractAddress: "0x1d3e5c81bf4bc60d41a8fbbb3d1bae6f03a75f71"
+      EmailFrom: "no-reply@proxeus.com"
+    ports:
+      - "1323:1323"
+    volumes:
+      - ./data/proxeus-platform/data:/data/hosted
+      - ./data/proxeus-platform/settings:/root/.proxeus/settings
+
+  document-service:
+    #todo: change image with proxeus docker registry
+    image: eu.gcr.io/blockfactory-01/document-service:latest
+    container_name: xes_document_service
+    networks: ['xes-platform-network']
+    restart: unless-stopped
+    environment:
+      TZ: Europe/Zurich
+    ports:
+      - "2115:2115"
+    volumes:
+      - ./data/document-service/logs:/document-service/logs
+      - ./data/document-service/fonts:/document-service/fonts
