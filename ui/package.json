@@ -1,0 +1,15 @@
+{
+  "author": "david.matter@proxeus.com",
+  "private": true,
+  "workspaces": [
+    "core",
+    "wallet"
+  ],
+  "scripts": {
+    "check-node-version": "check-node-version --package"
+  },
+  "engines": {
+    "node": ">= 8.11.3",
+    "yarn": ">= 1.12.3"
+  }
+}

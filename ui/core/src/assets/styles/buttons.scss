@@ -1,0 +1,33 @@
+.btn-info {
+  color: white !important;
+}
+
+.btn-light {
+  color: theme-color("primary") !important;
+}
+
+.btn-link:hover {
+  text-decoration: none !important;
+}
+
+.btn.btn-round {
+  border-radius: 50%;
+  padding: 1rem;
+  line-height: 1;
+}
+
+.btn-link-muted {
+  background: transparent;
+  color: $text-muted;
+  &:hover {
+    color: $primary;
+  }
+}
+
+.btn-link-light {
+  color: theme-color("light");
+  background: transparent;
+  &:hover {
+    color: white;
+  }
+}

@@ -1,0 +1,191 @@
+
+.error {
+  color: #ffffff;
+  background-color: #dc3545;
+  display: inline-block;
+  padding: .25em .4em;
+  font-size: 75%;
+  font-weight: 700;
+  line-height: 1;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: baseline;
+  border-radius: .25rem;
+}
+
+.form-compiled .form-group {
+
+  .control-label {
+    padding-top: calc(.375rem + 1px);
+    padding-bottom: calc(.375rem + 1px);
+    margin-bottom: 0;
+    font-size: 1rem;
+    line-height: 1.5;
+  }
+}
+
+.help-block {
+  color: $text-muted;
+  font-size: .9rem;
+  display: inline-block;
+  padding-top: 5px;
+
+  &:empty {
+    display: none;
+  }
+}
+
+.array-row, .array-item {
+  // This is important for the var-boxes to be displayed properly
+  position: relative;
+}
+
+// Compatibility for old forms
+
+.text-field, .form-control, .v-select .dropdown-toggle {
+  display: block;
+  padding: 0.375rem 1rem;
+  font-size: 1rem;
+  line-height: 2;
+  color: #495057;
+  background-color: #ffffff;
+  background-clip: padding-box;
+  border: 2px solid $gray-300 !important;
+  border-radius: 0.25rem;
+  -webkit-transition: border-color 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out;
+  transition: border-color 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out;
+
+  &:focus {
+    border-color: rgba(6, 42, 133, 0.6) !important;
+  }
+}
+
+textarea {
+  display: block;
+  padding: 0.375rem 1rem;
+  font-size: 1rem;
+  color: #495057;
+  background-color: #ffffff;
+  background-clip: padding-box;
+  border: 2px solid $gray-300;
+  border-radius: 0.25rem;
+  -webkit-transition: border-color 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out;
+  transition: border-color 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out;
+}
+
+.inputfile + label span {
+  width: 100% !important;
+  display: inline-block !important;
+  padding: 0.5rem 1.25rem !important;
+  font-size: 1rem !important;
+  vertical-align: middle !important;
+  line-height: 2 !important;
+}
+
+.inputfile + label strong {
+  min-height: 3rem !important;
+}
+
+.inputfile + label {
+  border-color: $input-border-color !important;
+  margin-bottom: 0;
+  padding-bottom: 5px;
+}
+
+.form-compiled {
+  .btn-success {
+    color: $primary;
+    background-color: $info;
+    border-color: $info;
+  }
+  .input-group-addon:last-child {
+    border-left: 1px solid #cccccc;
+    border-color: #cccccc;
+  }
+
+  .date-field > .input-group-addon {
+    border-left: 1px solid #cccccc;
+    border-color: #cccccc;
+  }
+  .date-field > .input-group-addon {
+    border-left: 0;
+    border-color: #062985;
+    border-bottom-right-radius: 4px !important;
+    border-top-right-radius: 4px !important;
+  }
+  .input-group-addon:last-child {
+    border-left: 0;
+    border-color: #062985;
+    border-bottom-right-radius: 4px;
+    border-top-right-radius: 4px;
+  }
+
+  .input-group {
+    display: table;
+    flex-wrap: wrap;
+    align-items: stretch;
+    width: 100%;
+  }
+  .input-group-addon {
+    display: table-cell;
+    padding: 6px 12px;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1;
+    color: $primary;
+    text-align: center;
+    background-color: $gray-200;
+    border-radius: 0;
+  }
+  input[type="text"] {
+    border-radius: 4px;
+    padding: 6px 0 6px 12px;
+    height: 45px;
+    padding-left: 14px;
+    width: 100%;
+    display: block;
+    vertical-align: middle;
+    background-color: #ffffff;
+    background-image: none;
+    border: 1px solid #dee2e6;
+    box-shadow: none;
+  }
+}
+
+.frequired {
+  display: inline;
+  font-size: 20px;
+  position: absolute;
+  top: 5px;
+  left: 3px;
+  font-family: monospace;
+}
+
+.form-compiled {
+  label:empty {
+    display: none;
+  }
+
+  .field-parent {
+    margin-bottom: 1rem;
+  }
+}
+
+.simple-date-field {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.date-field .frequired {
+  left: -20px;
+}
+
+textarea:focus, .form-control:focus {
+  box-shadow: inset 0 1px 1px rgba($black, .075);
+  outline: 0 none;
+  border-color: rgba(theme-color("primary"), .6);
+}

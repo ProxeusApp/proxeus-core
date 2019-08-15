@@ -1,0 +1,1628 @@
+.hcbuild-main {
+  position: relative;
+  overflow: hidden;
+}
+
+.hcbuild-main .hcbuild-workspace-body .fb-component input, .hcbuild-main .hcbuild-comp-body .fb-component input,
+.hcbuild-main .hcbuild-workspace-body .fb-component a, .hcbuild-main .hcbuild-comp-body .fb-component a,
+.hcbuild-main .hcbuild-workspace-body .fb-component button, .hcbuild-main .hcbuild-comp-body .fb-component button,
+.hcbuild-main .hcbuild-workspace-body .fb-component select, .hcbuild-main .hcbuild-comp-body .fb-component select,
+.hcbuild-main .hcbuild-workspace-body .fb-component textarea, .hcbuild-main .hcbuild-comp-body .fb-component textarea,
+.hcbuild-main .hcbuild-workspace-body .fb-component label, .hcbuild-main .hcbuild-comp-body .fb-component label {
+  pointer-events: none !important;
+}
+
+.hcbuild-main.fb-test-mode-active .hcbuild-comp-body .fb-component {
+  opacity: 0.5;
+}
+
+.hcbuild-main.fb-test-mode-active .hcbuild-comp-body .fb-component i.fbdh {
+  display: none;
+}
+
+.hcbuild-main canvas {
+  z-index: 3000;
+}
+
+.hcbuild-main .connectionLayer {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.hcbuild-main .connectionLayer svg.connections {
+  width: 100% !important;
+  height: 100% !important;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  position: absolute;
+}
+
+.hcbuild-main:not(.cm-active) svg.fbcm {
+  display: none;
+}
+
+.hcbuild-main .hcbuild-container {
+  position: relative;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.hcbuild-main .ace_editor {
+  min-width: 100%;
+  min-height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.hcbuild-main .ace_editor .ace_scrollbar-h, .hcbuild-main .ace_editor .ace_scrollbar-v {
+  display: none !important;
+}
+
+.hcbuild-main .hcbuild-viewer {
+  min-height: 100%;
+  position: relative;
+  background: white;
+  padding: 0;
+  margin: 0;
+}
+
+.hcbuild-main .htmlComponentBuilder .panel {
+  margin-bottom: 0;
+  background-color: inherit;
+}
+
+.hcbuild-main .htmlComponentBuilder .panel-body {
+  padding: 0;
+}
+
+.hcbuild-main .pretty-split-pane-frame {
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  padding: 5px;
+  min-height: 500px;
+}
+
+.hcbuild-main .pretty-split-pane-frame .split-pane > .split-pane-divider.dragged.touch {
+  background: blue;
+  opacity: 0.25;
+}
+
+.hcbuild-main .pretty-split-pane-component-inner {
+  border: 1px solid #d2d2d2;
+  width: 100%;
+  height: 100%;
+  padding: 10px;
+  position: relative;
+  margin: 0;
+  box-sizing: border-box;
+  background: #191919;
+}
+
+.hcbuild-main .split-layout-main {
+  min-height: 500px;
+  height: 100%;
+}
+
+.hcbuild-main .test-succeeded {
+  background: linear-gradient(270deg, #6fffda, #a3f1e4, #3cfff8, #c9faff, #f2fdff, #ffffff);
+  background-size: 1200% 1200%;
+  animation: bgFrames 2s ease infinite;
+}
+
+.hcbuild-main .test-failed {
+  background: linear-gradient(270deg, #ffac9c, #f18587, #ffb7ad, #ffffff, #f2fdff, #ffffff);
+  background-size: 1200% 1200%;
+  animation: bgFrames 2s ease infinite;
+}
+
+@keyframes bgFrames {
+  0%{background-position:0% 50%}
+  50%{background-position:100% 50%}
+  100%{background-position:0% 50%}
+}
+
+.hcbuild-main .hcbuild-workspace-test-main .workspace-test-body {
+  padding: 5px 1px;
+}
+
+.hcbuild-main .split-layout-main .hcbuild-container code {
+  position: absolute;
+  bottom: 5px;
+  right: 5px;
+  z-index: 100;
+  border: 1px solid #c7254e;
+  opacity: 0.5;
+}
+
+.hcbuild-main .htmlComponentBuilder.new-entry-plus {
+  /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#ffda75+0,fff9ea+47,fff9ea+47,fefdf8+100,fcfcfc+100 */
+  background: #ffda75; /* Old browsers */
+  background: -moz-linear-gradient(top, #ffda75 0%, #fff9ea 47%, #fff9ea 47%, #fefdf8 100%, #fcfcfc 100%); /* FF3.6+ */
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #ffda75), color-stop(47%, #fff9ea), color-stop(47%, #fff9ea), color-stop(100%, #fefdf8), color-stop(100%, #fcfcfc)); /* Chrome,Safari4+ */
+  background: -webkit-linear-gradient(top, #ffda75 0%, #fff9ea 47%, #fff9ea 47%, #fefdf8 100%, #fcfcfc 100%); /* Chrome10+,Safari5.1+ */
+  background: -o-linear-gradient(top, #ffda75 0%, #fff9ea 47%, #fff9ea 47%, #fefdf8 100%, #fcfcfc 100%); /* Opera 11.10+ */
+  background: -ms-linear-gradient(top, #ffda75 0%, #fff9ea 47%, #fff9ea 47%, #fefdf8 100%, #fcfcfc 100%); /* IE10+ */
+  background: linear-gradient(to bottom, #ffda75 0%, #fff9ea 47%, #fff9ea 47%, #fefdf8 100%, #fcfcfc 100%); /* W3C */
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffda75', endColorstr='#fcfcfc', GradientType=0); /* IE6-9 */
+}
+
+.hcbuild-main .htmlComponentBuilder.new-entry {
+  /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#21b4e2+2,71ceef+25,b7deed+48,ffffff+100 */
+  background: #21b4e2; /* Old browsers */
+  background: -moz-linear-gradient(top, #21b4e2 2%, #71ceef 25%, #b7deed 48%, #ffffff 100%); /* FF3.6+ */
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(2%, #21b4e2), color-stop(25%, #71ceef), color-stop(48%, #b7deed), color-stop(100%, #ffffff)); /* Chrome,Safari4+ */
+  background: -webkit-linear-gradient(top, #21b4e2 2%, #71ceef 25%, #b7deed 48%, #ffffff 100%); /* Chrome10+,Safari5.1+ */
+  background: -o-linear-gradient(top, #21b4e2 2%, #71ceef 25%, #b7deed 48%, #ffffff 100%); /* Opera 11.10+ */
+  background: -ms-linear-gradient(top, #21b4e2 2%, #71ceef 25%, #b7deed 48%, #ffffff 100%); /* IE10+ */
+  background: linear-gradient(to bottom, #21b4e2 2%, #71ceef 25%, #b7deed 48%, #ffffff 100%); /* W3C */
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#21b4e2', endColorstr='#ffffff', GradientType=0); /* IE6-9 */
+}
+
+@keyframes draggableAnim {
+  from {
+    border-left: dotted 1px rgba(4, 255, 15, 0.32);
+    border-top: dotted 1px rgba(4, 255, 15, 0.32);
+    border-right: dotted 1px rgba(4, 255, 15, 0.32);
+    border-bottom: dotted 1px rgba(4, 255, 15, 0.32);
+  }
+  to {
+    border-left: dashed 1px #00e241;
+    border-top: dashed 1px #00e241;
+    border-right: dashed 1px #00e241;
+    border-bottom: dashed 1px #00e241;
+  }
+}
+
+@keyframes hcbSettingsChanged {
+  from {
+    display: inline-block;
+    vertical-align: middle;
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+    box-shadow: 0 0 1px rgba(0, 0, 0, 0);
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  to {
+    -webkit-transform: scale(1.2);
+    transform: scale(1.2);
+    -webkit-transition-timing-function: cubic-bezier(0.47, 2.02, 0.31, -0.36);
+    transition-timing-function: cubic-bezier(0.47, 2.02, 0.31, -0.36);
+  }
+}
+
+@-webkit-keyframes hcbSettingsReAssignedComp {
+  from {
+    background: #65ff47;
+  }
+  to {
+    background: #e5fae7;
+  }
+}
+
+@-moz-keyframes hcbSettingsReAssignedComp {
+  from {
+    background: #65ff47;
+  }
+  to {
+    background: #e5fae7;
+  }
+}
+
+@keyframes hcbSettingsReAssignedComp {
+  from {
+    background: #65ff47;
+  }
+  to {
+    background: #e5fae7;
+  }
+}
+
+.hcbuild-main .hcbuild-workspace-body .no-comp-ref {
+  background: rgba(226, 96, 0, 0.11); /* Old browsers */
+}
+
+.hcbuild-main .htmlComponents .fb-component, .hcbuild-main .fb-component.fbc-new {
+  border: 1px dashed #bec4ca;
+}
+
+.hcbuild-main .htmlComponents .fb-component {
+  margin-bottom: 4px;
+  position: relative;
+}
+
+.hcbuild-main .fb-workspace .fb-component {
+  position: relative;
+  pointer-events: all;
+}
+
+.hcbuild-main .fb-workspace .fb-component > .fbdfg {
+  pointer-events: none;
+}
+
+.hcbuild-main .fb-workspace .am-endpoint-main .am-endpoint {
+  display: block;
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  margin-left: -9px;
+  pointer-events: none;
+}
+
+.hcbuild-main.am-active .fb-workspace .am-endpoint-main .am-endpoint {
+  pointer-events: all;
+}
+
+.hcbuild-main .fb-workspace .fbc-grp > .fb-component > .am-endpoint-main > i {
+  margin:4px;
+}
+
+.hcbuild-main .fb-workspace .fbc-grp .fbc-grp > .fb-component > .am-endpoint-main > i {
+  margin:6px;
+}
+
+.hcbuild-main .fb-workspace .fbc-grp > .fb-component .am-endpoint-main .am-endpoint {
+  margin-left:0;
+  left:8px;
+  top:8px;
+}
+
+.hcbuild-main .fb-workspace .fbc-grp .fbc-grp > .fb-component .am-endpoint-main .am-endpoint {
+  margin-left:0;
+  left:10px;
+  top:10px;
+}
+
+.hcbuild-main .fb-workspace .connectionLayer, .hcbuild-main .fb-workspace .connectionLayer .dragline {
+  opacity: 0;
+  pointer-events: none;
+  overflow: visible;
+  width: 100%;
+}
+
+.hcbuild-main.am-active .fb-workspace .connectionLayer .dragline > * {
+  z-index: 80;
+}
+
+.hcbuild-main .connectionLayer svg.dragline {
+  position: absolute;
+  width: 100% !important;
+  height: 100% !important;
+  top: 0;
+  left: 0;
+}
+
+.hcbuild-main.am-active .fb-workspace .connectionLayer, .hcbuild-main.am-active .fb-workspace .connectionLayer .dragline {
+  z-index: 8;
+  opacity: 1;
+}
+
+.hcbuild-main .fb-workspace .am-point-main.am-point-layer{
+  opacity: 0;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.hcbuild-main.am-active .fb-workspace .am-point-main.am-point-layer{
+  opacity: 1;
+  pointer-events: all;
+}
+
+.hcbuild-main.am-active .fb-workspace .am-point-main.am-point-layer > *{
+  z-index: 101;
+}
+
+.hcbuild-main.am-active .am-endpoint-main .am-endpoint.maybe-connected,
+.hcbuild-main.am-active .am-endpoint-main .am-endpoint.hcb-changed3 {
+  background: #ffffff;
+  border: 2px solid #af36d2;
+  z-index: 120;
+}
+
+.hcbuild-main .am-endpoint-main > i {
+  position: absolute;
+  display: block;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin:2px;
+  border-radius: 10px;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.hcbuild-main.am-active .am-endpoint-main.connected-to > i {
+  border: 1px dashed rgba(183, 0, 194, 0.8);
+}
+
+.hcbuild-main.am-active .am-endpoint-main.drag-active > i {
+  border: 2px solid #af36d2;
+}
+
+.hcbuild-main.am-active .am-endpoint-main.maybe-connected-to > i {
+  border: 2px dashed rgba(183, 0, 194, 0.8);
+}
+
+.hcbuild-main .am-endpoint-main {
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.hcbuild-main .fb-workspace .am-point-main {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  opacity: 0;
+  overflow: hidden;
+}
+
+.hcbuild-main .fb-workspace .am-point-main > *{
+  z-index: 10;
+}
+
+.hcbuild-main .fb-workspace .am-point-main .am-pointer {
+  position: absolute;
+  display: block;
+  border-radius: 50%;
+  width: 25px;
+  height: 25px;
+  z-index: 100;
+  box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.5);
+  background-color: rgba(30, 0, 255, 0.4);
+  /* opacity: 0.4; */
+  border: 2px solid rgba(30, 0, 255, 0.8);
+  cursor:pointer;
+}
+
+.hcbuild-main .fb-workspace .am-point-main .am-pointer.connected {
+  background-color: #af36d259;
+  border: 3px solid rgba(183, 0, 194, 0.8);
+}
+
+.hcbuild-main .hcb-grow {
+  display: inline-block;
+  vertical-align: middle;
+  -webkit-transform: scale(1.2);
+  transform: scale(1.2);
+  box-shadow: 0 0 1px transparent;
+  -webkit-transition-duration: 0.5s;
+  transition-duration: 0.5s;
+  -webkit-transition-property: transform;
+  transition-property: transform;
+}
+
+.hcbuild-main .fb-workspace .am-point-main .am-overlay {
+  position: absolute;
+  display: block;
+  /*background-color: #1e00ff;*/
+  /*opacity: 0.2;*/
+  visibility: hidden;
+  z-index: 50;
+  /*pointer-events: none;*/
+  border: 1px dashed #7055ff;
+  background-color: rgba(30, 0, 255, 0.2);
+  border-radius: 4px;
+}
+
+.hcbuild-main .fb-workspace .am-point-main .am-overlay.connected {
+  visibility: visible;
+}
+
+svg.dragline > line {
+  stroke: #1e00ff;
+  stroke-width: 2;
+  stroke-opacity: 0.2;
+  pointer-events: all;
+}
+
+svg.dragline > line:hover, svg.dragline > line.hover {
+  stroke-width: 3;
+  stroke-opacity: 0.6;
+}
+
+.hcbuild-main .fb-workspace {
+  position: relative;
+}
+
+.hcbuild-main .hcb-changed {
+  -webkit-animation: hcbSettingsChanged 0.5s infinite ease-in-out;
+  -moz-animation: hcbSettingsChanged 0.5s infinite ease-in-out;
+  animation: hcbSettingsChanged 0.5s infinite ease-in-out;
+}
+
+.hcbuild-main .hcb-changed2 {
+  -webkit-animation: hcbSettingsChanged 1s infinite ease-in-out;
+  -moz-animation: hcbSettingsChanged 1s infinite ease-in-out;
+  animation: hcbSettingsChanged 1s infinite ease-in-out;
+}
+
+.hcbuild-main .hcb-changed3 {
+  -webkit-animation: hcbSettingsChanged 0.4s infinite ease-in-out;
+  -moz-animation: hcbSettingsChanged 0.4s infinite ease-in-out;
+  animation: hcbSettingsChanged 0.4s infinite ease-in-out;
+}
+
+.hcbuild-main .hcbuild-workspace-body .fb-component > *,
+.hcbuild-main .hcbuild-comp-body .fb-component > * {
+  pointer-events: none;
+}
+
+.hcbuild-main .hcbuild-workspace-body,
+.hcbuild-main .hcbuild-workspace-body .fb-drop-here,
+.hcbuild-main .hcbuild-comp-body .fb-drop-here,
+.hcbuild-main .hcbuild-viewer .fb-drop-here{
+  position: relative;
+  background-color: #ebebeb;
+  background-image:
+          linear-gradient(#f4f5f6 1px, transparent 1px),
+          linear-gradient(#f4f5f6 1px, transparent 1px),
+          linear-gradient(90deg, #f4f5f6 1px, transparent 1px),
+          linear-gradient(90deg, #ffffff 1px, transparent 1px);
+  background-size: 15px 15px, 60px 60px, 15px 15px, 60px 60px, 60px 60px, 60px 60px;
+  border: 1px solid #dee2e6;
+}
+
+.hcbuild-main form.fbc-dz,
+.hcbuild-main .fb-component .fbc-dz,
+.hcbuild-main .fb-component .fbc-ndz,
+.hcbuild-main .hcbuild-workspace-body .fb-drop-here,
+.hcbuild-main .hcbuild-comp-body .fb-drop-here,
+.hcbuild-main .fbc-copy-holder .fb-drop-here,
+.hcbuild-main .hcbuild-viewer .fb-drop-here {
+  min-height: 50px;
+  min-width: 30px;
+}
+
+/***READ ONLY***/
+.hcbuild-main.read-only .hcbuild-comp-body .fb-component,
+.hcbuild-main.read-only .hcbuilder-settings-body,
+.hcbuild-main.read-only .htmlComponentBuilder,
+.hcbuild-main.read-only .fb-workspace .am-point-layer .am-pointer,
+.hcbuild-main.read-only .fb-comp-search-group,
+.hcbuild-main.read-only .htmlComponentBuilder .save-btn,
+.hcbuild-main.read-only .htmlComponentSettings .save-btn {
+  opacity: 0.5 !important;
+  pointer-events: none !important;
+}
+
+.hcbuild-main.read-only .hcbuilder-settings-body > *, .hcbuild-main.read-only .hcbuild-workspace-body .fb-component > * {
+  pointer-events: none !important;
+}
+
+.hcbuild-main.read-only .fb-component i.fbdh {
+  display: none !important;
+}
+
+/***READ ONLY***/
+
+.hcbuild-main .fbc-dz, .hcbuild-main .fbc-ndz {
+  border: 1px solid transparent;
+}
+
+.hcbuild-main .fbc-dz.drag-active {
+  background: rgba(0, 0, 0, 0.08);
+}
+
+.hcbuild-main .fb-workspace form.fbc-dz.drag-started .fbc-dz.fbc-grp {
+  overflow: visible !important;
+}
+
+.hcbuild-main .fb-workspace form.fbc-dz,.hcbuild-main .fb-workspace form.fbc-dz .fbc-dz.fbc-grp {
+  pointer-events: all !important;
+}
+
+.hcbuild-main .fb-workspace {
+  transition: top 500ms;
+}
+
+.hcbuild-main .fb-workspace .fbc-dz.fbc-grp {
+  border: 1px solid #bbbec2;
+  background-color: rgba(0, 0, 0, 0.06);
+}
+
+.hcbuild-main .fb-workspace .fbc-dz.drag-active {
+  background-color: rgba(0, 216, 221, 0.08);
+}
+
+.hcbuild-main .fbc-dz > .fb-component:not(.fbc-grp-parent):not(.dragging) > i.fbdbg {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.hcbuild-main .drag-mirror > .fb-component, .hcbuild-main .fb-component.dragging, .hcbuild-main .fb-component.fbc-new {
+  z-index: 100;
+  opacity: 0.8;
+}
+
+.hcbuild-main .drag-mirror > .fb-component > i.fbdbg,
+.hcbuild-main .fb-component.dragging > i.fbdbg,
+.hcbuild-main .fb-component.fbc-new > i.fbdbg {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.hcbuild-main .fb-component.dragging {
+  pointer-events: none !important;
+}
+
+.hcbuild-main .fb-workspace .fb-component:not(.dragging) {
+  transition-property: transform;
+  transition-duration: 0.3s;
+}
+
+.hcbuild-main .fb-component i.fbdh {
+  position: absolute;
+  vertical-align: middle;
+  cursor: move;
+  pointer-events: all;
+  z-index: 10;
+  background: transparent;
+  padding: 0;
+  display: block;
+  visibility: hidden;
+}
+
+.hcbuild-main .fb-workspace form.fbc-dz.drag-started .fb-component i.fbdh {
+  display: none !important;
+}
+
+.hcbuild-main .fb-component i.fbdh.dhtop {
+  height: 16px;
+  width: 36px;
+  top: 6px;
+  left: 50%;
+  margin-left: -18px;
+}
+
+.hcbuild-main .fb-component i.fbdh.dhbottom {
+  height: 16px;
+  width: 36px;
+  bottom: 6px;
+  left: 50%;
+  margin-left: -18px;
+}
+
+.hcbuild-main .fb-component i.fbdh.dhright {
+  height: 36px;
+  width: 16px;
+  right: 6px;
+  top: 50%;
+  margin-top: -18px;
+}
+
+.hcbuild-main .fb-component i.fbdh.dhleft {
+  height: 36px;
+  width: 16px;
+  left: 6px;
+  top: 50%;
+  margin-top: -18px;
+}
+
+.hcbuild-main .fb-component i.fbdh > * {
+  display: inline-block;
+  width: 4px;
+  height: 4px;
+  margin: 4px 2px;
+  background: #9c9c9c;
+  line-height: 4px;
+  float: left;
+}
+
+i.fb-ws-only.fbdh.dhtop > *, i.fb-ws-only.fbdh.dhbottom > * {
+  margin: 2px 4px;
+}
+
+.hcbuild-main .fb-component i.fbdh > b:before {
+  display: none;
+}
+
+.hcbuild-main .fb-component i.fbdh > b:after {
+  display: none;
+}
+
+.hcbuild-main .fb-component > i.fbdbg,
+.hcbuild-main .fb-component > i.fbdfg {
+  position: absolute;
+  right: 0;
+  left: 0;
+  top: 0;
+  bottom: 0;
+}
+
+.hcbuild-main .fb-component > i.fbdfg > i {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+}
+
+.hcbuild-main .fb-component > i.fbdfg > i.left {
+  left: 0;
+}
+
+.hcbuild-main .fb-component > i.fbdfg > i.right {
+  right: 0;
+}
+
+.hcbuild-main .fb-component > i.fbdfg {
+  border-top: 1px solid transparent;
+  border-bottom: 1px solid transparent;
+}
+
+.hcbuild-main .fb-workspace .fb-component:not(.selected):hover {
+  cursor: pointer;
+}
+
+.hcbuild-main .fb-workspace .fbc-dz:not(.drag-active):not(.dz-drag-active) .fb-component:hover > i.fbdh,
+.hcbuild-main .hcbuilder-components-body .fb-component:hover > i.fbdh {
+  visibility: visible;
+}
+
+.hcbuild-main .fb-workspace form.fws-main:not(.drag-started) .fb-component:not(.selected):not(.dragging):hover > i.fbdfg {
+  border-top: 1px solid rgba(33, 150, 243, 0.3);
+  border-bottom: 1px solid rgba(33, 150, 243, 0.3);
+}
+
+.hcbuild-main .fb-workspace form.fws-main:not(.drag-started) .fb-component:not(.selected):not(.dragging):hover > i.fbdfg > i.right {
+  background: rgba(33, 150, 243, 0.4);
+}
+
+.hcbuild-main .fb-workspace .fbc-dz .fb-component.selected > i.fbdfg {
+  border-top: 1px solid #40e1d1;
+  border-bottom: 1px solid #40e1d1;
+}
+
+.hcbuild-main .fb-workspace .fbc-dz .fb-component.selected > i.fbdfg > i.right {
+  background: #40e1d1;
+}
+
+.hcbuild-main .fbc-copy-holder {
+  height: 0 !important;
+  max-height: 0 !important;
+  width: 100%;
+  position: absolute;
+  top:0;
+  left:0;
+  display: block;
+}
+
+.hcbuild-main .fbc-copy-holder > .drag-mirror > .fb-component {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  pointer-events: none;
+  border: 1px solid rgba(255, 163, 152, 0.61);
+  background: rgba(255, 235, 240, 0.81);
+
+}
+
+.hcbuild-main .fbc-copy-holder .fb-component.selected > i.fbdfg,
+.hcbuild-main .fbc-copy-holder .fb-component.selected > i.fbdfg > i.right {
+  background: none;
+}
+
+.hcbuild-main .drag-mirror {
+  position:relative;
+}
+.hcbuild-main .fws-main .drag-mirror>.drag-mirror-bg {
+  position:absolute;
+  left:0;
+  top:0;
+  background: rgba(55, 255, 255, 0.4);
+  width: 100%;
+  height: 100%;
+  box-shadow: 0 0 5px 0 rgba(0, 255, 233, 0.5);
+}
+
+.hcbuild-main .hcbuild-workspace-body form.fws-main {
+  width: 100%;
+  min-height: 100px;
+  overflow: hidden;
+}
+
+.hcbuild-main .dropdown-menu > li > a {
+  font-family: monospace;
+  font-size: 16px;
+  padding: 2px 5px 2px 5px;
+}
+
+.hcbuild-main .hcbuilder-settings-body, .hcbuild-main .hcbuilder-components-body {
+  overflow: auto;
+  /*max-height: calc(100vh - 352px);*/
+}
+
+.hcbuild-main .hcbuilder-settings-body .dropdown-toggle .fbs-lbl {
+  padding: 0;
+  margin: 0;
+  height: auto;
+}
+
+.hcbuild-main .hcbuilder-settings-body .fbs-lbl {
+  padding-top: 5px;
+  padding-left: 12px;
+  height: 34px;
+  margin: 0;
+  font-family: monospace;
+  font-size: 13px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-weight: normal;
+  color: #002179;
+}
+
+.hcbuild-main .hcbuilder-settings-body .relative-parent.action label.fbs-lbl[name$="action"] {
+  padding: 7px 14px;
+  color: #ffffff;
+  background: rgb(88, 66, 255);
+  background: -moz-linear-gradient(left, rgba(88, 66, 255, 1) 0%, rgba(180, 85, 209, 1) 100%);
+  background: -webkit-linear-gradient(left, rgba(88, 66, 255, 1) 0%, rgba(180, 85, 209, 1) 100%);
+  background: linear-gradient(to right, rgba(88, 66, 255, 1) 0%, rgba(180, 85, 209, 1) 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#5842ff', endColorstr='#b455d1', GradientType=1);
+}
+
+.hcbuild-main .hcbuilder-settings-body .relative-parent.action label.fbs-lbl[name$="action.destination"] {
+  padding: 7px 14px;
+  color: #ffffff;
+  background: rgba(180, 85, 209, 1);
+}
+
+.hcbuild-main .hcbuilder-settings-body .relative-parent.action label.fbs-lbl[name$="action.source"] {
+  padding: 7px 14px;
+  color: #ffffff;
+  background: rgba(88, 66, 255, 1);
+}
+
+.hcbuilder .hcbuilder-settings-body .action .array-add {
+  display: none;
+}
+
+.hcbuilder .hcbuilder-settings-body .actionsource .array-item {
+  background: rgba(88, 66, 255, 0.2);
+}
+
+.hcbuilder .hcbuilder-settings-body .actionsource .array-item > .fb-field-group {
+  background: #ffffff;
+}
+
+.hcbuild-main .hcbuilder-settings-body .fb-validation-menu, .hcbuild-main .hcbuilder-settings-body .fb-validation-menu li a {
+  text-transform: capitalize;
+}
+
+.hcbuild-main .hcbuilder.panel-body {
+  border: none;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+
+.panel-default {
+    margin-bottom: 0;
+}
+
+.hcbuild-main .fb-sticky-right {
+  position: absolute;
+  width: 100%;
+  padding-right: 15px;
+  -webkit-transition-duration: 0.5s;
+  transition-duration: 0.5s;
+  -webkit-transition-property: transform;
+  transition-property: transform;
+}
+
+.hcbuild-main .hcbuilder-main {
+  position: relative;
+  width: 100%;
+}
+
+/* The switch - the box around the slider */
+.hcbuild-main .hcbuilder-settings-body .i18n-toggle {
+  position: relative;
+  display: block;
+  width: 36px;
+  height: 34px;
+}
+
+/* Hide default HTML checkbox */
+.hcbuild-main .hcbuilder-settings-body .i18n-toggle input {
+  display: none;
+}
+
+/* The slider */
+.hcbuild-main .hcbuilder-settings-body .i18n-toggle .slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #bec4ca;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.hcbuild-main .hcbuilder-settings-body .i18n-toggle .slider:before {
+  position: absolute;
+  content: "";
+  height: 30px;
+  width: 16px;
+  left: 2px;
+  bottom: 2px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.hcbuild-main .hcbuilder-settings-body .i18n-toggle input:checked + .slider {
+  background-color: #062a85;
+}
+
+.hcbuild-main .hcbuilder-settings-body .i18n-toggle input:focus + .slider {
+  box-shadow: 0 0 1px #062a85;
+}
+
+.hcbuild-main .hcbuilder-settings-body .i18n-toggle input:checked + .slider:before {
+  -webkit-transform: translateX(16px);
+  -ms-transform: translateX(16px);
+  transform: translateX(16px);
+}
+
+.hcbuild-main .hcbuilder-settings-body .hcbuilder-settings-tbl label {
+  margin-bottom: 0;
+}
+
+.hcbuild-main .hcbuilder-settings-body .hcbuilder-settings-tbl td {
+  display: table-cell;
+  vertical-align: middle;
+}
+
+.hcbuild-main .hcbuilder-settings-body .hcbuilder-settings-tbl .switch-td {
+  width: 36px;
+}
+
+.hcbuild-main .hcbuilder-settings-body .hcbuilder-settings-tbl {
+  width: 100%;
+}
+
+.hcbuild-main td.td-min {
+  width: 1px !important;
+  white-space: nowrap;
+}
+
+/*.hcbuild-main .vdf-ext-main.vdf-inactive {*/
+/*}*/
+.hcbuild-main .vdf-ext-main.vdf-inactive .vdf-input {
+  display: none;
+}
+
+.hcbuild-main .vdf-ext-main.vdf-inactive .vdf-ext {
+  display: inline-block;
+  height: 34px;
+  line-height: 30px;
+  width: 34px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.hcbuild-main .vdf-ext-main.vdf-active .vdf-input {
+  width: 100%;
+}
+
+.hcbuild-main .vdf-ext-main.vdf-active .vdf-input .td-auto .glyphicon {
+  display: none;
+}
+
+.hcbuild-main .vdf-ext-main.vdf-active .vdf-ext {
+  display: none;
+}
+
+.hcbuild-main .vdf-ext {
+  font-size: 20px;
+  color: #ffffff;
+}
+
+.hcbuild-main .vdf-before {
+  background: rgba(255, 244, 117, 0.62);
+}
+
+.hcbuild-main .vdf-after {
+  background: rgba(93, 255, 147, 0.52);
+}
+
+.hcbuild-main .vdf-ext-main .vdf-ext.glyphicon {
+  color: #989898;
+}
+
+.hcbuild-main .vdf-ext-main .vdf-ext.vdf-true.glyphicon {
+  color: #40e1d1;
+}
+
+.hcbuild-main .vdf-ext-main .vdf-input {
+  width: 100%;
+}
+
+.hcbuild-main .vdf-ext-main .vdf-input span.glyphicon {
+  color: #989898;
+}
+
+.hcbuild-main .vdf-ext-main .vdf-input span.vdf-true.glyphicon {
+  color: #40e1d1;
+}
+
+.hcbuild-main .vdf-ext-main .vdf-input .vdf-var {
+  font-weight: bold;
+  font-family: monospace;
+  font-size: 16px;
+  color: #007800;
+}
+
+.hcbuild-main .vdf-input .glyphicon {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 34px;
+  width: 100%;
+  line-height: 34px;
+  text-align: center;
+  vertical-align: middle;
+  cursor: pointer;
+}
+
+.hcbuild-main .vdf-input td {
+  position: relative;
+}
+
+.vdf-ext-main .vdf-input input.form-control {
+  background: transparent;
+}
+
+.hcbuild-main .hcbuilder-settings-body .validation-parent .hcbuilder-settings-tbl > tbody > tr > td:first-child:not(.td-min):not(.vdf-ext-main) {
+  width: 100%;
+  padding-left: 20px;
+}
+
+.hcbuild-main .hcbuilder-settings-body .validation-parent .hcbuilder-settings-tbl > tbody > tr > td:last-child {
+  width: 40px;
+  max-width: 40px;
+  padding: 0;
+  margin: 0;
+}
+
+.hcbuild-main .hcbuilder-settings-body .validation-parent .hcbuilder-settings-tbl > tbody > tr > td:last-child {
+  width: 40px;
+  max-width: 40px;
+  padding: 0;
+  margin: 0;
+}
+
+.hcbuild-main .hcbuilder-settings-body .validation-parent .hcbuilder-settings-tbl {
+  border-bottom: 1px solid #bec4ca;
+  border-top: 1px solid #d4f4f4;
+  margin-bottom: 2px;
+  height: 36px;
+}
+
+.hcbuild-main .hcbuilder-settings-body .validation-parent .validation-del {
+  padding: 6px 6px;
+  height: 34px;
+  width: 34px;
+}
+
+.hcbuild-main .hcbuilder-settings-body .validation-parent .fb-field-group .fbs-lbl {
+  left: 15px;
+  position: relative;
+  padding-left: 8px;
+  border-bottom: 1px solid #ccc;
+  width: 100%;
+  height: 36px;
+  border-left: 1px solid #dee2e6;
+  padding-top: 7px;
+  border-top: 1px solid #dee2e6;
+}
+
+.hcbuild-main .hcbuilder-settings-body .col-lg-1,
+.hcbuild-main .hcbuilder-settings-body .col-lg-10,
+.hcbuild-main .hcbuilder-settings-body .col-lg-11,
+.hcbuild-main .hcbuilder-settings-body .col-lg-12,
+.hcbuild-main .hcbuilder-settings-body .col-lg-2,
+.hcbuild-main .hcbuilder-settings-body .col-lg-3,
+.hcbuild-main .hcbuilder-settings-body .col-lg-4,
+.hcbuild-main .hcbuilder-settings-body .col-lg-5,
+.hcbuild-main .hcbuilder-settings-body .col-lg-6,
+.hcbuild-main .hcbuilder-settings-body .col-lg-7,
+.hcbuild-main .hcbuilder-settings-body .col-lg-8,
+.hcbuild-main .hcbuilder-settings-body .col-lg-9,
+.hcbuild-main .hcbuilder-settings-body .col-md-1,
+.hcbuild-main .hcbuilder-settings-body .col-md-10,
+.hcbuild-main .hcbuilder-settings-body .col-md-11,
+.hcbuild-main .hcbuilder-settings-body .col-md-12,
+.hcbuild-main .hcbuilder-settings-body .col-md-2,
+.hcbuild-main .hcbuilder-settings-body .col-md-3,
+.hcbuild-main .hcbuilder-settings-body .col-md-4,
+.hcbuild-main .hcbuilder-settings-body .col-md-5,
+.hcbuild-main .hcbuilder-settings-body .col-md-6,
+.hcbuild-main .hcbuilder-settings-body .col-md-7,
+.hcbuild-main .hcbuilder-settings-body .col-md-8,
+.hcbuild-main .hcbuilder-settings-body .col-md-9,
+.hcbuild-main .hcbuilder-settings-body .col-sm-1,
+.hcbuild-main .hcbuilder-settings-body .col-sm-10,
+.hcbuild-main .hcbuilder-settings-body .col-sm-11,
+.hcbuild-main .hcbuilder-settings-body .col-sm-12,
+.hcbuild-main .hcbuilder-settings-body .col-sm-2,
+.hcbuild-main .hcbuilder-settings-body .col-sm-3,
+.hcbuild-main .hcbuilder-settings-body .col-sm-4,
+.hcbuild-main .hcbuilder-settings-body .col-sm-5,
+.hcbuild-main .hcbuilder-settings-body .col-sm-6,
+.hcbuild-main .hcbuilder-settings-body .col-sm-7,
+.hcbuild-main .hcbuilder-settings-body .col-sm-8,
+.hcbuild-main .hcbuilder-settings-body .col-sm-9,
+.hcbuild-main .hcbuilder-settings-body .col-xs-1,
+.hcbuild-main .hcbuilder-settings-body .col-xs-10,
+.hcbuild-main .hcbuilder-settings-body .col-xs-11,
+.hcbuild-main .hcbuilder-settings-body .col-xs-12,
+.hcbuild-main .hcbuilder-settings-body .col-xs-2,
+.hcbuild-main .hcbuilder-settings-body .col-xs-3,
+.hcbuild-main .hcbuilder-settings-body .col-xs-4,
+.hcbuild-main .hcbuilder-settings-body .col-xs-5,
+.hcbuild-main .hcbuilder-settings-body .col-xs-6,
+.hcbuild-main .hcbuilder-settings-body .col-xs-7,
+.hcbuild-main .hcbuilder-settings-body .col-xs-8,
+.hcbuild-main .hcbuilder-settings-body .col-xs-9 {
+  position: relative;
+  min-height: 1px;
+  padding-left: 0;
+  padding-right: 0px;
+}
+
+.hcbuild-main .hcbuilder-settings-body .row {
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.hcbuild-main .hcbuilder-settings-body .component-row-root {
+  border: 1px solid #007cf8;
+}
+
+.hcbuild-main .hcbuilder-settings-body .root-row {
+  border: 1px solid #ececec;
+}
+
+.hcbuild-main .hcbuilder-settings-body .array-item {
+  border: 1px solid #ececec;
+  float: left;
+  width: 100%;
+  position: relative;
+  border-left: 1px solid #bec4ca;
+  border-bottom: 1px solid #bec4ca;
+  margin-bottom: 10px;
+}
+
+.hcbuild-main .hcbuilder-settings-body button.array-item-del {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  zoom: 0.34;
+  -moz-transform: scale(0.34);
+  -moz-transform-origin: 0 37px;
+}
+
+.hcbuild-main .hcbuilder-settings-body .dropdown-menu > .active > a, .dropdown-menu > .active > a:focus, .dropdown-menu > .active > a:hover {
+  color: #ffffff;
+  text-decoration: none;
+  outline: 0;
+  background-color: #007cf8;
+}
+
+.hcbuild-main .hcbuilder-settings-body .dropdown-menu > .active > a .fb-i18n-lang, .dropdown-menu > .active > a:focus .fb-i18n-lang, .dropdown-menu > .active > a:hover .fb-i18n-lang,
+.hcbuild-main .hcbuilder-settings-body .dropdown-menu > .active > a .fb-i18n-key, .dropdown-menu > .active > a:focus .fb-i18n-key, .dropdown-menu > .active > a:hover .fb-i18n-key {
+  color: #ffffff;
+}
+
+.hcbuild-main .hcbuilder-settings-body .fb-i18n-lang, .hcbuild-main .hcbuilder-settings-body .fb-i18n-key {
+  color: #333333;
+}
+
+.hcbuild-main .hcbuilder-settings-body .i18n-vertical {
+  color: #007cf8;
+  display: block;
+  float: right;
+  font-size: 12px;
+  font-family: monospace;
+  -webkit-transform: rotate(90deg);
+  -moz-transform: rotate(90deg);
+  -o-transform: rotate(90deg);
+  -ms-transform: rotate(90deg);
+  transform: rotate(90deg);
+  white-space: nowrap;
+  bottom: 1px;
+  top: 0;
+  right: 4px;
+  position: absolute;
+}
+
+.hcbuild-main .hcbuilder-settings-body .form-control.i18n-active {
+  background: rgb(255, 255, 255); /* Old browsers */
+  background: -moz-linear-gradient(top, rgba(255, 255, 255, 1) 88%, rgba(33, 150, 243, 1) 88%, rgba(33, 150, 243, 1) 100%); /* FF3.6-15 */
+  background: -webkit-linear-gradient(top, rgba(255, 255, 255, 1) 88%, rgba(33, 150, 243, 1) 88%, rgba(33, 150, 243, 1) 100%); /* Chrome10-25,Safari5.1-6 */
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 1) 88%, rgba(33, 150, 243, 1) 88%, rgba(33, 150, 243, 1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#40e1d1', GradientType=0); /* IE6-9 */
+}
+
+.hcbuild-main .hcbuilder-settings-body .relative-parent {
+  position: relative;
+  border-left: 1px solid #ccc;
+  border-bottom: 1px solid #ccc;
+  border-top-color: #dee2e6;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-right-color: #dee2e6;
+  border-right-style: solid;
+  border-right-width: 1px;
+  padding: 2px;
+  margin-bottom: 10px;
+}
+
+.hcbuild-main .hcbuilder-settings-body .validate-dropdown {
+  margin-bottom: 14px;
+}
+
+.hcbuild-main .hcbuilder-settings-body .validate-dropdown-toggle {
+  background-color: #d9534f;
+  border-color: #d43f3a;
+}
+
+.hcbuild-main .hcbuilder-settings-body .validate-dropdown-toggle * {
+  color: #ffffff;
+}
+
+.hcbuild-main .reassigned {
+  -webkit-animation: hcbSettingsReAssignedComp 150ms infinite ease !important;
+  -moz-animation: hcbSettingsReAssignedComp 150ms infinite ease !important;
+  animation: hcbSettingsReAssignedComp 150ms infinite ease !important;
+}
+
+.hcbuild-main .assign-to-comp {
+  -webkit-animation: hcbSettingsReAssignedComp 0.6s infinite ease !important;
+  -moz-animation: hcbSettingsReAssignedComp 0.6s infinite ease !important;
+  animation: hcbSettingsReAssignedComp 0.6s infinite ease !important;
+}
+
+/* The switch - the box around the slider */
+
+/* Hide default HTML checkbox */
+.hcbuild-main .ws-mode input {
+  display: none;
+}
+
+.hcbuild-main .ws-mode-text {
+  color: #007cf8;
+  display: block;
+  float: right;
+  font-size: 12px;
+  font-family: monospace;
+  white-space: nowrap;
+  bottom: 1px;
+  top: 2px;
+  right: 0;
+  position: absolute;
+  width: 80px;
+  text-align: center;
+}
+
+.hcbuild-main .nav-item>.nav-link:focus {
+  outline: none;
+  background-color: #062a85;
+}
+
+.hcbuild-main .ws-mode .slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #062a85;
+  -webkit-transition: .4s;
+  transition: .4s;
+  height: 20px;
+  width: 160px;
+}
+
+.hcbuild-main .ws-mode .slider:before {
+  position: absolute;
+  content: "";
+  height: 16px;
+  width: 78px;
+  left: 2px;
+  bottom: 2px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+  top: 2px;
+}
+
+.hcbuild-main .ws-mode input:checked + .slider {
+  background-color: #062a85;
+}
+
+.hcbuild-main .ws-mode input:focus + .slider {
+  box-shadow: 0 0 1px #062a85;
+}
+
+.hcbuild-main .ws-mode input:checked + .slider:before {
+  -webkit-transform: translateX(78px);
+  -ms-transform: translateX(78px);
+  transform: translateX(78px);
+}
+
+.hcbuild-main .disabled .ws-mode-text {
+  color: #868686;
+}
+
+.hcbuild-main .ws-mode.disabled .slider {
+  cursor: not-allowed;
+}
+
+.hcbuild-main .ws-mode.ws-test {
+  margin: 0 auto;
+}
+
+.hcbuild-main .hcbuild-workspace-test {
+  border: 1px solid #007cf8;
+}
+
+.hcbuild-main .fb-dropzone.fb-drop-possible {
+  border-color: #666666;
+}
+
+.hcbuild-main .fb-dropzone.fb-drop-over {
+  background: #666666;
+}
+
+.hcbuild-main .fb-drag-over {
+  background: #ff920b !important;
+}
+
+.hcbuild-main .fb-draggable {
+  position: relative;
+  z-index: 10;
+  margin: 0;
+  padding: 0;
+  width: 20px;
+  height: 20px;
+  background-color: #2299ee;
+  text-align: center;
+  -ms-touch-action: none;
+  touch-action: none;
+}
+
+.hcbuild-main .fb-draggable.fb-drop-possible {
+  background-color: #42bd41;
+}
+
+.hcbuild-main .fullscreen {
+  z-index: 99999999;
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
+.hcbuild-main .hcbuilder-settings-body .form-control {
+  height: 34px;
+  border-radius: 0;
+  border-color: silver;
+  padding-left: 7px;
+  color: #0003ce;
+  background: #f9f9f9;
+  font-weight: normal;
+  font-family: monospace;
+  padding-top: 2px;
+}
+
+.hcbuild-main .hcbuilder-settings-body div.var-name {
+  background: #edffed;
+}
+
+.hcbuild-main .hcbuilder-settings-body input.var-name {
+  background: #f3fff2;
+  border: 1px solid #007800;
+  font-weight: bold;
+  font-family: monospace;
+  font-size: 16px;
+  color: #007800;
+}
+
+.hcbuild-main .hcbuilder-settings-body label.var-name {
+  font-weight: bold;
+  font-size: 16px;
+  color: #000000;
+}
+
+.hcbuild-main .hcbuilder-settings-body .array-item {
+  padding-left: 18px;
+}
+
+.hcbuild-main .btn {
+  display: inline-block;
+  padding: 6px 12px;
+  margin-bottom: 0;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.42857143;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+}
+
+.hcbuild-main .htmlComponentSettings .btn > span,
+.hcbuild-main .hcbuilder .panel-footer .btn > span {
+  color: #ffffff;
+}
+
+.hcbuild-main .htmlComponentSettings .btn-default > span,
+.hcbuild-main .hcbuilder .panel-footer .btn-default > span {
+  color: #333333;
+}
+
+.hcbuild-main .panel-default > .panel-heading {
+  /*color: #000;*/
+}
+
+.hcbuild-main .panel-footer {
+  padding: 10px 15px;
+  background-color: #f4f5f6;
+  border-top: 1px solid #dee2e6;
+}
+
+/* The switch - the box around the slider */
+
+.hcbuild-main .switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+  margin: 0;
+  padding: 0;
+  float: left;
+}
+
+/* Hide default HTML checkbox */
+.hcbuild-main label.switch input {
+  display: none;
+}
+
+/* The slider */
+.hcbuild-main .slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #bec4ca;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.hcbuild-main .slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.hcbuild-main input:checked + .slider {
+  background-color: #062a85;
+}
+
+.hcbuild-main input:focus + .slider {
+  box-shadow: 0 0 1px #40e1d1;
+}
+
+.hcbuild-main input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.hcbuild-main .slider.round {
+  border-radius: 34px;
+}
+
+.hcbuild-main .slider.round:before {
+  border-radius: 50%;
+}
+
+.hcbuild-main .switch-main {
+  display: table;
+  height: 34px;
+  border: 1px solid #bec4ca;
+  margin-left: 10px;
+  margin-right: 10px;
+  background: #ffffff;
+}
+
+.hcbuild-main .switch-main > span {
+  display: table-cell;
+  vertical-align: middle;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+.hcbuild-main .switch-main > label.switch {
+  display: table-cell;
+  height: 32px;
+  width: 58px;
+}
+
+.hcbuild-main .switch-main > label.switch > .slider:before {
+  height: 24px;
+  width: 24px;
+}
+
+.hcbuild-main .switch-main input:checked + .slider:before {
+  -webkit-transform: translateX(24px);
+  -ms-transform: translateX(24px);
+  transform: translateX(24px);
+}
+
+.hcbuild-main .enum-field select {
+  height: 34px;
+  display: inline-block;
+  background: white;
+  text-transform: capitalize;
+  border-color: #40e1d1;
+}
+
+/*.hcbuild-main .hcbuild-editor.ace_editor * {*/
+/*color: #cfdc38;*/
+/*}*/
+
+.hcbuild-main .hcbuilder-settings-body .fancy-el {
+  position: relative;
+}
+
+.hcbuild-main .hcbuilder-settings-body .fancy-el label {
+  position: relative;
+  cursor: pointer;
+}
+
+.hcbuild-main .hcbuilder-settings-body .fancy-el input:checked + label {
+  cursor: default;
+}
+
+.hcbuild-main .hcbuilder-settings-body .fancy-el input + label span {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+.hcbuild-main .hcbuilder-settings-body .fancy-el input + label p {
+  padding: 8px 16px 8px 16px;
+  position: relative;
+  display: block;
+  margin: 0;
+  font-family: monospace;
+  font-size: 13px;
+}
+
+.hcbuild-main .hcbuilder-settings-body .fancy-checkbox input[type="checkbox"] {
+  display: none;
+}
+
+.hcbuild-main .hcbuilder-settings-body .fancy-checkbox input[type="checkbox"] + label span {
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  margin: -2px 10px 0 0;
+  vertical-align: middle;
+  border: 1px solid #007cf8;
+
+  cursor: pointer;
+  padding: 0;
+}
+
+.hcbuild-main .hcbuilder-settings-body .fancy-checkbox > label > span > i {
+  width: 14px;
+  height: 14px;
+  display: inline-block;
+  margin: 4px;
+}
+
+.hcbuild-main .hcbuilder-settings-body .fancy-checkbox input[type="checkbox"]:checked + label > span > i {
+  background: #007cf8;
+}
+
+.hcbuild-main .hcbuilder-settings-body .fancy-checkbox input[type="checkbox"]:not(:checked) + label:hover > span > i,
+.hcbuild-main .hcbuilder-settings-body .fancy-checkbox input[type="checkbox"]:not(:checked) + label > span:hover > i {
+  background: #007cf8;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=30)";
+  filter: alpha(opacity=30);
+  opacity: 0.3;
+}
+
+.hcbuild-main .hcbuilder-settings-body .fancy-radio input[type="radio"] {
+  display: none;
+}
+
+.hcbuild-main .hcbuilder-settings-body .fancy-radio input[type="radio"] + label span {
+  display: inline-block;
+  margin: 0 10px 0 0;
+  vertical-align: middle;
+  -webkit-border-radius: 50px;
+  -moz-border-radius: 50px;
+  border-radius: 50px;
+  border: 1px solid #007cf8;
+  cursor: pointer;
+  padding: 0;
+}
+
+.hcbuild-main .hcbuilder-settings-body .fancy-radio > label > span > i {
+  width: 100%;
+  height: 100%;
+  display: inline-block;
+  padding: 4px;
+  -webkit-border-radius: 50px;
+  -moz-border-radius: 50px;
+  border-radius: 50px;
+  position: absolute;
+  margin: 0;
+  border: 4px solid #ffffff;
+}
+
+.hcbuild-main .hcbuilder-settings-body .fancy-radio input[type="radio"]:checked + label > span > i {
+  background: #007cf8;
+}
+
+.hcbuild-main .hcbuilder-settings-body .fancy-radio input[type="radio"]:checked + label > p {
+  color: #ffffff;
+}
+
+.hcbuild-main .hcbuilder-settings-body .fancy-radio input[type="radio"]:not(:checked) + label:hover > span > i,
+.hcbuild-main .hcbuilder-settings-body .fancy-radio input[type="radio"]:not(:checked) + label > span:hover > i {
+  background: #007cf8;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=30)";
+  filter: alpha(opacity=30);
+  opacity: 0.3;
+}
+
+.hcbuild-main .hcbuilder-settings-body .fancy-radio.float-left,
+.hcbuild-main .hcbuilder-settings-body .fancy-checkbox.float-left {
+  float: left;
+  margin-right: 8px;
+  margin-bottom: 8px;
+}
+
+.hcbuild-main .hcbuilder .btn {
+  border-radius: 0;
+}
