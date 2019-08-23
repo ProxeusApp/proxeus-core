@@ -1,11 +1,10 @@
 
 version: 2.1
-executors:
 
+executors:
   docker-image-golang:
     docker:
       - image: golang:1.11
-
   docker-publisher:
     environment:
       CONTAINER_IMAGE_NAME: proxeus/proxeus-core
@@ -13,7 +12,6 @@ executors:
       - image: circleci/buildpack-deps:stretch
 
 jobs:
-  
   validate:
     executor: docker-image-golang
     steps:
@@ -21,25 +19,6 @@ jobs:
       - restore_cache:
           keys: 
             - go-vendor-v1-{{ .Branch }}
-#      - run:
-#          # install ssh-agent if not already installed
-#          command: 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
-#      - run:
-#          # run ssh-agent
-#          command: eval $(ssh-agent -s)
-#      - run:
-#          command: chmod 0700 ./id_rsa
-#      - run:
-#          # add the SSH key stored in SSH_DEPLOY_KEY_CORE_SYS
-#          # command: ssh-add <(echo "$SSH_DEPLOY_KEY_CORE_SYS")
-#          command: ssh-add ./id_rsa
-#      - run:
-#          # for Docker builds disable host key checking
-#          command: mkdir -p ~/.ssh
-#      - run:
-#          command: '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
-      - run:
-          command: ls -lha
       - run:
           command: make link-repo
       - run:
@@ -51,7 +30,7 @@ jobs:
             cd /go/src/git.proxeus.com/core/central
             dep ensure -v
       - run:
-          command: chmod -R 777 ./build
+          command: chmod -R +x ./build
       - run:
           command: |
             cd /go/src/git.proxeus.com/core/central
@@ -73,7 +52,7 @@ jobs:
           keys: 
             - go-vendor-v1-{{ .Branch }}
       - run:
-          command: chmod -R 777 ./build
+          command: chmod -R +x ./build
       - run:
           command: make link-repo
       - run:
@@ -94,7 +73,7 @@ jobs:
           keys: 
             - yarn-v1-{{ .Branch }}
       - run:
-          command: chmod -R 777 ./build
+          command: chmod -R +x ./build
       - run:
           command: make ui
       - save_cache:
@@ -104,7 +83,6 @@ jobs:
             - ui/node_modules/
             - ui/core/node_modules/
             - ui/wallet/node_modules/
-# define workspace for artifacts
       - persist_to_workspace:
           root: .
           paths:
@@ -120,7 +98,7 @@ jobs:
           keys: 
             - go-vendor-v1-{{ .Branch }}
       - run:
-          command: chmod -R 777 ./build
+          command: chmod -R +x ./build
       - run:
           name: 
           command: make link-repo
@@ -138,7 +116,6 @@ jobs:
           paths:
             - ./artifacts/server
   
-    
   build-docker:
     executor: docker-publisher
     steps:
@@ -171,16 +148,9 @@ jobs:
           name: Publish Docker Image to Docker Hub
           command: |
             echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
-            docker push $CONTAINER_IMAGE_NAME
-      - run:
-          name: Tag docker image  
-          command: docker tag $CONTAINER_IMAGE_NAME $CONTAINER_IMAGE_NAME:$CIRCLE_SHA1
-      - run:
-          name: Publish Docker Image to Docker Hub
-          command: |
-            docker push $CONTAINER_IMAGE_NAME:$CIRCLE_SHA1      
+            docker push $CONTAINER_IMAGE_NAME     
 
-  publish-staging:
+  publish-demo:
     executor: docker-publisher
     steps:
       - attach_workspace:
@@ -190,30 +160,13 @@ jobs:
           name: Load archived Docker image
           command: docker load -i /tmp/workspace/image.tar
       - run:
-          name: Tag docker image  
-          command: docker tag $CONTAINER_IMAGE_NAME $CONTAINER_IMAGE_NAME:staging
+          name: Tag docker image
+          command: docker tag $CONTAINER_IMAGE_NAME $CONTAINER_IMAGE_NAME:demo
       - run:
           name: Publish Docker Image to Docker Hub
           command: |
             echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
-            docker push $CONTAINER_IMAGE_NAME:staging
-
-# deploy to demo (test) server
-
-  deploy:
-    machine:
-      image: ubuntu-1604:201903-01
-#      enabled: true
-    steps:
-      - run:
-          name: Add server IP to known hosts
-          command: ssh-keyscan 34.65.234.245 >> ~/.ssh/known_hosts 
-      - add_ssh_keys: # add private SSH key from CircleCI account based on fingerprint.
-          fingerprints:
-            - "bb:74:d5:62:8e:3e:2f:9a:70:1a:8d:53:3f:f1:f2:03"
-      - run:
-          name: Deploy
-          command: ssh deploy@34.65.234.245 'cd /data/compose/ && sudo docker-compose pull && sudo docker-compose up -d'
+            docker push $CONTAINER_IMAGE_NAME:demo
 
             
 workflows:
@@ -221,50 +174,29 @@ workflows:
   build-master:
     jobs:
       - validate
-#          filters:
-#            branches:
-#              only: master
       - test:
           requires:
             - validate
-#          filters:
-#            branches:
-#              only: master
       - build-ui:
           requires:
             - test
-#          filters:
-#            branches:
-#              only: master
       - build-go:
           requires:
             - build-ui
-#          filters:
-#            branches:
-#              only: master
       - build-docker:
           requires:
             - build-ui
             - build-go
-#          filters:
-#            branches:
-#              only: master
       - publish-latest:
           requires:
             - build-docker 
-#          filters:
-#            branches:
-#              only: master
       - hold:
           type: approval
           requires:
             - build-docker
-      - publish-staging:
+      - publish-demo:
           requires:
             - hold
-#          filters:
-#            branches:
-#              only: master
-      - deploy:
-          requires:
-            - publish-staging
+          filters:
+            branches:
+              only: master
