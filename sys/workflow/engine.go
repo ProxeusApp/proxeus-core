@@ -330,7 +330,7 @@ func (me *Engine) execute(nn *Node, considerSteps bool) (proceed bool, err error
 					n.resetState()
 				}
 			}
-			proceed, err = nImpl.Execute(nn, me.getData())
+			proceed, err = nImpl.Execute(nn)
 			nn.err = err
 			if considerSteps && shouldAddStep {
 				me.steps = append(me.steps, Stack{Node: nn})

@@ -122,7 +122,7 @@ export default {
         this.$notify({
           group: 'app',
           title: this.$t('Error'),
-          text: this.$t('Could not delete Workflow'),
+          text: this.$t('Could not delete Workflow. Please try again or if the error persists contact the platform operator.\n'),
           type: 'error'
         })
       })
@@ -170,7 +170,7 @@ export default {
             this.$notify({
               group: 'app',
               title: this.$t('Error'),
-              text: this.$t('Could not copy Workflow'),
+              text: this.$t('Could not copy Workflow. Please try again or if the error persists contact the platform operator.\n'),
               type: 'error'
             })
           })
@@ -180,7 +180,7 @@ export default {
         this.$notify({
           group: 'app',
           title: this.$t('Error'),
-          text: this.$t('Could not copy Workflow'),
+          text: this.$t('Could not copy Workflow. Please try again or if the error persists contact the platform operator.\n'),
           type: 'error'
         })
       })

@@ -101,7 +101,7 @@ export default {
         this.$notify({
           group: 'app',
           title: this.$t('Error'),
-          text: this.$t('Could not load document'),
+          text: this.$t('Could not load document. Please try again or if the error persists contact the platform operator.'),
           type: 'error'
         })
         this.$router.push({ name: 'Documents' })
@@ -140,7 +140,7 @@ export default {
               this.$notify({
                 group: 'app',
                 title: this.$t('Error'),
-                text: this.$t('Could not change name'),
+                text: this.$t('Could not change name. Please try again or if the error persists contact the platform operator.'),
                 type: 'error'
               })
             })

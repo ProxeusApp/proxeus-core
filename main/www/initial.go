@@ -27,6 +27,7 @@ func (me *InitialHandler) Handler(next echo.HandlerFunc) echo.HandlerFunc {
 			if sess == nil || sess.AccessRights() != model.ROOT { //ensure we have a tmp root session to power up
 				sess = c.SessionWithUser(&model.User{ID: "XYZ", Role: model.ROOT})
 			}
+
 			if me.cleanOnNextCall && c.Request().RequestURI != "/api/import/results" && c.Request().RequestURI != "/api/init" {
 				me.configured, _ = c.System().Configured()
 				me.cleanOnNextCall = false
@@ -61,6 +62,7 @@ func (me *InitialHandler) Handler(next echo.HandlerFunc) echo.HandlerFunc {
 				}
 				return c.NoContent(http.StatusBadRequest)
 			}
+
 		}
 		return next(c)
 	}

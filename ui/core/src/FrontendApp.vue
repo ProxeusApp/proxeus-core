@@ -11,7 +11,7 @@
     <div class="row">
       <div class="footer p-3 col-sm-12 d-flex justify-content-center">
         <a target="_blank"
-           href="https://docs.google.com/document/d/1nUqB31uWRVokDOeKgzhv49rTbkLQAS8nmv8bCumDMEM/preview"
+           href="https://docs.google.com/document/d/1C3B1oNY6lOv8Q_AvbKhwlySrS6qTiRl3raPLV6OXr7w/preview"
            class="footer-link">Handbook
         </a>
         <a target="_blank" href="https://proxeus.com/en/privacy-policy/" class="footer-link ml-3">Privacy Policy</a>
@@ -120,7 +120,7 @@ export default {
 
   .footer {
     bottom: 0;
-    position: absolute;
+    position: fixed;
     background: $primary;
   }
 

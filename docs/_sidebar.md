@@ -10,28 +10,33 @@
     - [Docker](docker.md)
     - [Smart Contract](contract_deployment.md)
 
-- Building
+- Build and Run
 
-    - [Back End](build_backend.md)
-    - [Front End](build_frontend.md)
+    - [Build All](build_all.md)
+    - [Configure Sever](configure.md)
+    - [Test](test.md)
+    - [Front End Only](build_frontend.md)
+    - [Back End Only](build_backend.md)
+    - [Docker](build_docker.md)
 
 - Development
 
-    - [Software Architecture](software_architecture.md)
+    - [Software Architecture](architecture.md)
     - [Back End](backend.md)
     - [Front End](frontend.md)
-    - [Workflow Engine](workflow_engine.md)
-    - [Data Storage](data_storage.md)
 
 - API
 
-    - [Authentication](authentication.md)
-    - [Start Workflow](start_workflow.md) 
+    - [Authentication](api_auth.md)
+    - [Start Workflow](api_start_workflow.md) 
+        - [List All Workflows](api_list_all_workflows.md)
+        - [Get Workflow Schema](api_get_workflow_schema.md)
+        - [Execute Workflow](api_execute_workflow.md)
 
-- Connector
 
-    - [Principles](connector_principles.md)
-    - [Example](connector_example.md)
+- Workflow Extension
+
+    - [Customer Workflow Nodes](custom_workflow_nodes.md)
 
 - Contributing
 

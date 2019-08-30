@@ -8,6 +8,13 @@ import (
 	"git.proxeus.com/core/central/sys/workflow"
 )
 
+const (
+	PaymentStatusCreated   = "created"
+	PaymentStatusPending   = "pending"
+	PaymentStatusConfirmed = "confirmed"
+	PaymentStatusFinished  = "finished"
+)
+
 type (
 	//Structure interface helps us to keep track of the inner structure of a struct between persisted and memory data
 	Structure interface {
@@ -104,11 +111,13 @@ type (
 
 	WorkflowPaymentItem struct {
 		//save from who payment
-		Hash       string `json:"hash" storm:"id"`
-		WorkflowID string `json:"workflowID" storm:"index"`
-		From       string `json:"From"`
-		To         string `json:"To"`
-		Xes        uint64 `json:"xes"`
+		TxHash     string    `json:"hash" storm:"id"`
+		WorkflowID string    `json:"workflowID" storm:"index"`
+		From       string    `json:"From"`
+		To         string    `json:"To"`
+		Xes        uint64    `json:"xes"`
+		Status     string    `json:"Status"`
+		CreatedAt  time.Time `json:"createdAt"`
 	}
 
 	TemplateLangMap map[string]*file.IO

@@ -19,7 +19,7 @@ func TestCheckIfWorkflowNeedsPayment(t *testing.T) {
 
 	t.Run("CheckIfWorkflowNeedsPaymentShouldSucceedIfPaymentFound", func(t *testing.T) {
 
-		workflowPaymentItem := &model.WorkflowPaymentItem{Xes: 2000000000000000000, From: "0x1", To: "0x3", Hash: "0x5", WorkflowID: "3"}
+		workflowPaymentItem := &model.WorkflowPaymentItem{Xes: 2000000000000000000, From: "0x1", To: "0x3", TxHash: "0x5", WorkflowID: "3"}
 		workflowPaymentsDBMock := storm.NewMockWorkflowPaymentsDBInterface(mockCtrl)
 		workflowPaymentsDBMock.EXPECT().GetByWorkflowId("3").Return(workflowPaymentItem, nil).Times(1)
 
@@ -77,10 +77,10 @@ func TestDeletePaymentIfExists(t *testing.T) {
 	t.Run("DeletePaymentIfExistsShouldSucceedIfPaymentDeleted", func(t *testing.T) {
 		wwwContext := &www.Context{}
 
-		workflowPaymentItem := &model.WorkflowPaymentItem{Xes: 2000000000000000000, From: "0x1", To: "0x3", Hash: "0x5"}
+		workflowPaymentItem := &model.WorkflowPaymentItem{Xes: 2000000000000000000, From: "0x1", To: "0x3", TxHash: "0x5"}
 		workflowPaymentsDBMock := storm.NewMockWorkflowPaymentsDBInterface(mockCtrl)
 		workflowPaymentsDBMock.EXPECT().GetByWorkflowIdAndFromEthAddress(gomock.Eq("1"), gomock.Eq("0x1")).Return(workflowPaymentItem, nil).Times(1)
-		workflowPaymentsDBMock.EXPECT().Delete(gomock.Eq(workflowPaymentItem.Hash)).Return(nil).Times(1)
+		workflowPaymentsDBMock.EXPECT().Delete(gomock.Eq(workflowPaymentItem.TxHash)).Return(nil).Times(1)
 
 		system := &sys.System{}
 		system.DB = &storm.DBSet{WorkflowPaymentsDB: workflowPaymentsDBMock}
@@ -123,13 +123,13 @@ func TestDeletePaymentIfExists(t *testing.T) {
 	t.Run("DeletePaymentIfExistsShouldFailOnDeleteError", func(t *testing.T) {
 		wwwContext := &www.Context{}
 
-		workflowPaymentItem := &model.WorkflowPaymentItem{Xes: 2000000000000000000, From: "0x1", To: "0x3", Hash: "0x5"}
+		workflowPaymentItem := &model.WorkflowPaymentItem{Xes: 2000000000000000000, From: "0x1", To: "0x3", TxHash: "0x5"}
 		workflowPaymentsDBMock := storm.NewMockWorkflowPaymentsDBInterface(mockCtrl)
 		workflowPaymentsDBMock.EXPECT().GetByWorkflowIdAndFromEthAddress(gomock.Eq("1"), gomock.Eq("0x1")).Return(workflowPaymentItem, nil).Times(1)
 
 		err := errors.New("some error")
 
-		workflowPaymentsDBMock.EXPECT().Delete(gomock.Eq(workflowPaymentItem.Hash)).Return(err).Times(1)
+		workflowPaymentsDBMock.EXPECT().Delete(gomock.Eq(workflowPaymentItem.TxHash)).Return(err).Times(1)
 
 		system := &sys.System{}
 		system.DB = &storm.DBSet{WorkflowPaymentsDB: workflowPaymentsDBMock}

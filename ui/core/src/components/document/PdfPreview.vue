@@ -57,7 +57,7 @@
     </button>
     <pdf-modal class="pdfwkaround" :src="getSrc" :mid="'modal' + _uid" ref="pdfMod" :filename="filename"
                :download="canDownload"/>
-    <signing-modal :src="getSrc" :id="'smodal' + _uid" ref="signMod"/>
+    <signing-modal :src="getSrc" :mid="'smodal' + _uid" ref="signMod"/>
   </div>
 </div>
 </template>
@@ -170,7 +170,11 @@ export default {
     },
     signature_request () {
       let $smodal = $('#smodal' + this._uid)
+      console.log($smodal)
       $smodal.modal('show')
+      this.$nextTick(() => {
+        this.$refs.pdfMod.load()
+      })
     }
 
   }

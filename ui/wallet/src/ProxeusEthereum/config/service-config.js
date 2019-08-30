@@ -13,7 +13,7 @@ const serviceConfig = {
     DEFAULT_GAS_REGULAR: 1000000,
     DEFAULT_GAS_CREATE: 4000000,
     XES_TOKEN_ADDRESS: '0xa017ac5fac5941f95010b12570b812c974469c2c',
-    PROXEUS_FS_ADDRESS: '0x58265b2cb2fe841068b755a9637c34fb65067428',
+    PROXEUS_FS_ADDRESS: '0xf63e471d8cbc57517c37c39c35381a385628e012',
     // When the PROXEUS_FS_ADDRESS changes add the old address to the list below so that file validation check also past contracts
     PROXEUS_FS_PAST_ADDRESSES: [
     ]

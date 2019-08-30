@@ -1,24 +1,17 @@
 package main
 
 import (
-	"context"
 	"fmt"
+	"log"
 	"net/http"
 	_ "net/http/pprof"
 	"path"
-
-	"github.com/ethereum/go-ethereum/accounts/abi"
-
-	"git.proxeus.com/core/central/lib/wallet"
-
-	"git.proxeus.com/core/central/main/handlers/blockchain"
 
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
 
 	"strings"
 
-	"git.proxeus.com/core/central/lib/default_server"
 	cfg "git.proxeus.com/core/central/main/config"
 	"git.proxeus.com/core/central/main/handlers"
 	"git.proxeus.com/core/central/main/handlers/api"
@@ -43,6 +36,34 @@ var embedded *www.Embedded
 
 func main() {
 	e := echo.New()
+	//Simple Request Logging
+	//e.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
+	//	Format: "[echo] ${time_rfc3339} client=${remote_ip}, method=${method}, uri=${uri}, status=${status}\n",
+	//}))
+
+	//Request Logging with User Info and Body on Error
+	e.Use(middleware.BodyDump(func(e echo.Context, reqBody, resBody []byte) {
+		c := www.Context{Context: e}
+		//c := e.(*www.Context)
+		s := c.Session(false)
+		if s == nil {
+			return
+		}
+		if s.ID() != "" {
+			id := s.UserID()
+			user, err := c.System().DB.User.Get(s, id)
+			if err != nil {
+				return
+			}
+			userName := user.Name
+			userAddr := user.EthereumAddr
+			log.Println("[echo] Method: "+e.Request().Method, "Status:", e.Response().Status, "User: "+userAddr, "("+userName+")", "URI: "+e.Request().RequestURI)
+			if len(reqBody) > 0 && c.Response().Status != 200 && c.Response().Status != 404 {
+				fmt.Printf("[echo][errorrequest] %s\n", reqBody)
+			}
+		}
+
+	}))
 	e.HTTPErrorHandler = www.DefaultHTTPErrorHandler
 	e.Use(func(h echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) error {
@@ -95,6 +116,10 @@ func main() {
 				_ = system.DB.I18n.Put(lang, k, v)
 			}
 		}
+		err = system.DB.I18n.PutLang("en", true)
+		if err != nil {
+			fmt.Println("Error activating fallback lang: ", err)
+		}
 	}()
 
 	secure := www.NewSecurity()
@@ -106,29 +131,7 @@ func main() {
 
 	handlers.MainHostedAPI(e, secure, system)
 
-	XESABI, err := abi.JSON(strings.NewReader(wallet.XesMainTokenABI))
-	if err != nil {
-		panic(err)
-	}
-
-	xesAdapter := blockchain.NewAdapter(cfg.Config.XESContractAddress, XESABI)
-
-	bcListenerPayment := blockchain.NewPaymentListener(xesAdapter, cfg.Config.EthWebSocketURL,
-		cfg.Config.EthClientURL, system.DB.WorkflowPaymentsDB)
-	ctxPay := context.Background()
-	go bcListenerPayment.Listen(ctxPay)
-
-	ProxeusFSABI, err := abi.JSON(strings.NewReader(wallet.ProxeusFSABI))
-	if err != nil {
-		panic(err)
-	}
-
-	bcListenerSignature := blockchain.NewSignatureListener(cfg.Config.EthWebSocketURL,
-		cfg.Config.EthClientURL, system.GetSettings().BlockchainContractAddress, system.DB.SignatureRequestsDB, system.DB.User, system.EmailSender, ProxeusFSABI)
-	ctxSig := context.Background()
-	go bcListenerSignature.Listen(ctxSig)
-
-	default_server.StartServer(e, cfg.Config.ServiceAddress, false)
+	www.StartServer(e, cfg.Config.ServiceAddress, false)
 	system.Shutdown()
 }
 

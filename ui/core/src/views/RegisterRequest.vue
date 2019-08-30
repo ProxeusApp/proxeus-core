@@ -141,24 +141,24 @@
             class="c4">By using the Service provided by Proxeus to make Service Content available to other Users, the User acknowledges that such sharing occurs via a deep link. By nature of a deep link every User in possession of such deep link will be able to use the Service Content. Proxeus shall not protect such links in any way.</span>
           </p>
           <ol class="c8 lst-kix_list_51-1" start="4">
-            <li class="c11"><h2 style="display:inline"><span class="c2">Beta version</span></h2></li>
+            <li class="c11"><h2 style="display:inline"><span class="c2">Demo version</span></h2></li>
           </ol>
           <p class="c1"><span
-            class="c4">You are aware of the Services provided by Proxeus being a test version (the &ldquo;</span><span
-            class="c14">Beta</span><span
+            class="c4">You are aware of the Services provided by Proxeus being a demo version (the &ldquo;</span><span
+            class="c14">Demo</span><span
             class="c4">&rdquo;). Therefore, using the Services may require additional efforts and care on your side, while a continuing high quality of service delivery may not be guaranteed.</span>
           </p>
           <p class="c1"><span
-            class="c4">Furthermore Proxeus shall not be responsible for any harm done to your hard- / software, privacy of your Ethereum identity or any other identity used while using the Beta.</span>
+            class="c4">Furthermore Proxeus shall not be responsible for any harm done to your hard- / software, privacy of your Ethereum identity or any other identity used while using the Demo.</span>
           </p>
           <p class="c1"><span
-            class="c4">Proxeus also points out, that Service Content created during the Beta may not be available after completion of the Beta. We strongly recommend not to use the Beta to build productive content on which you depend on. Proxeus shall not be liable for any damage resulting in loss of Service Content or any data after completion of the Beta.</span>
+            class="c4">Proxeus also points out that Service Content created on the Demo may be subject to resets of the entire platform and may then not be available anymore. We strongly recommend not to use the Demo to build productive content on which you depend on. Proxeus shall not be liable for any damage resulting in loss of Service Content or any data after completion of the Demo.</span>
           </p>
           <p class="c1"><span
-            class="c4">During the Beta the Services are provided only in a hosted environment and interact solely with the Ropsten Test Net (Ethereum Testnet). Proxeus shall reserve the right to switch to the Ethereum main net (or any another environment) at their sole discretion.</span>
+            class="c4">During the availability of the Demo, the Services are provided only in a hosted environment and interact solely with the Ropsten Test Net (Ethereum Testnet). Proxeus shall reserve the right to switch to the Ethereum main net or any another Ethereum network at their sole discretion.</span>
           </p>
           <p class="c1"><span
-            class="c4">During the Beta you will be provided with XES tokens which are reliant on the Ropsten Test Net, to see how the ecosystem manages payments &ndash; the first service being the registration of a document to the Ethereum environment for proof of existence and genuineness. Those XES tokens are only available in the Beta version (and on the Ropsten Test Net) and do not hold any value or right of usage of the Services on other Proxeus services environments. Due to the nature of the Ropsten Test Net, loss of XES tokens and the attached Service Content is possible and probable. Proxeus shall not be held liable for such a loss</span><span
+            class="c4">For the use of the Demo you may be provided with XES tokens which are reliant on the Ropsten Test Net, to see how the ecosystem manages payments – the first service being the registration of a document to the Ethereum environment for proof of existence and genuineness. Those XES tokens are only available in the Demo version (and on the Ropsten Test Net) and do not hold any value or right of usage of the Services on other Proxeus services environments. Due to the nature of the Ropsten Test Net, loss of XES tokens and the attached Service Content is possible and probable. Proxeus shall not be held liable for such a loss.</span><span
             class="c4">.</span></p>
           <ol class="c8 lst-kix_list_51-1" start="5">
             <li class="c11"><h2 style="display:inline"><span class="c2">Service disruption</span></h2></li>
@@ -431,7 +431,7 @@ export default {
           this.$notify({
             group: 'app',
             title: this.$t('Warning'),
-            text: this.$t('Something wrong happened, please try again.'),
+            text: this.$t('There was an unexpected error. Please try again or if the error persists contact the platform operator.'),
             type: 'warning'
           })
         }
@@ -442,7 +442,7 @@ export default {
     },
     acceptTC () {
       localStorage.setItem('acc_' + this.account, 'yes')
-      sessionStorage.setItem('firstLogin', true)
+      this.app.acknowledgeFirstLogin()
       $(this.$refs.tcModal).modal('hide')
       this.metamaskLogin()
     },

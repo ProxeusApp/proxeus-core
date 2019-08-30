@@ -30,7 +30,9 @@
       <div class="d-block">{{$t('Are you sure, you want to delete?')}}</div>
     </list-item-dialog>
   </div>
-  <first-login-overlay></first-login-overlay>
+  <first-login-overlay keyz="documents"
+                       preview-url="https://docs.google.com/document/d/1PoJMmdBt8bu1tfqbOBJ3g87V-z1yjBrhlNZpOW2wQWk/preview">
+  </first-login-overlay>
 </div>
 </template>
 
@@ -81,7 +83,7 @@ export default {
         this.$notify({
           group: 'app',
           title: this.$t('Error'),
-          text: this.$t('Could not delete item'),
+          text: this.$t('Could not delete item. Please try again or if the error persists contact the platform operator.'),
           type: 'error'
         })
       })

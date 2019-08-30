@@ -172,7 +172,6 @@ export default {
     TopNav,
     LanguageDropDown
   },
-
   data () {
     return {
       name: '',
@@ -192,7 +191,7 @@ export default {
       nonce: undefined,
       accountEthAddress: '',
       isConnectedAccount: false,
-      me: ''
+      me: null
     }
   },
   computed: {
@@ -211,9 +210,6 @@ export default {
         fileUrl: '/api/document/' + this.id + '/file'
       }
     },
-    me () {
-      return this.app.me
-    },
     blockchainNet () {
       return this.app.blockchainNet
     },
@@ -228,6 +224,20 @@ export default {
   async mounted () {
     this.setAccountEthAddress()
     this.checkConnectedAccount()
+  },
+  beforeRouteLeave (to, from, next) {
+    if (this.submitting) {
+      const answer = window.confirm(this.$t('Blockchain progress alert warning',
+        'Its highly recommended to stay on this page until the metamask transaction has been confirmed, else your payment might not be successfully processed. ' +
+        '\n\nClick on "Cancel" to stay on this page or "OK" to leave.'))
+      if (answer) {
+        next()
+      } else {
+        next(false)
+      }
+    } else {
+      next()
+    }
   },
   methods: {
     async setAccountEthAddress () {
@@ -251,6 +261,7 @@ export default {
             this.isConnectedAccount = false
             return
           }
+          // check lowercase because window.ethereum.selectedAddress returns lowercase hash
           this.isConnectedAccount = this.me.toLowerCase() === this.accountEthAddress.toLowerCase()
         }
       } catch (e) {
@@ -311,7 +322,7 @@ export default {
             this.$notify({
               group: 'app',
               title: this.$t('Error'),
-              text: error.response.data,
+              text: error.response.data + '. Please try again or if the error persists contact the platform operator.',
               type: 'error'
             })
           }
@@ -327,7 +338,7 @@ export default {
               this.$notify({
                 group: 'app',
                 title: this.$t('Error'),
-                text: error.response.data,
+                text: error.response.data + '. Please try again or if the error persists contact the platform operator.',
                 type: 'error'
               })
               return
@@ -336,7 +347,7 @@ export default {
               this.$notify({
                 group: 'app',
                 title: this.$t('Error'),
-                text: this.$t('Something wrong happened.'),
+                text: this.$t('An unexpected error occurred. Please try again or if the error persists contact the platform operator.'),
                 type: 'error'
               })
             }
@@ -346,7 +357,7 @@ export default {
           this.$notify({
             group: 'app',
             title: this.$t('Error'),
-            text: this.$t('Something wrong happened.'),
+            text: this.$t('An unexpected error occurred. Please try again or if the error persists contact the platform operator.'),
             type: 'error'
           })
         }
@@ -383,7 +394,7 @@ export default {
             this.$notify({
               group: 'app',
               title: this.$t('Error'),
-              text: err.response.data,
+              text: err.response.data + '. Please try again or if the error persists contact the platform operator.',
               type: 'error'
             })
             return
@@ -414,7 +425,7 @@ export default {
           this.$notify({
             group: 'app',
             title: this.$t('Error'),
-            text: this.$t('Could not complete.'),
+            text: this.$t('Could not complete. Please try again or if the error persists contact the platform operator.'),
             type: 'error'
           })
         }
@@ -435,7 +446,7 @@ export default {
           this.$notify({
             group: 'app',
             title: this.$t('Error'),
-            text: this.$t('Could not complete.'),
+            text: this.$t('Could not complete. Please try again or if the error persists contact the platform operator.'),
             type: 'error'
           })
         }
@@ -445,7 +456,7 @@ export default {
         this.$notify({
           group: 'app',
           title: this.$t('Error'),
-          text: this.$t('Could not complete.'),
+          text: this.$t('Could not complete. Please try again or if the error persists contact the platform operator.'),
           type: 'error'
         })
       })
@@ -464,10 +475,10 @@ export default {
           this.$notify({
             group: 'app',
             title: this.$t('Error'),
-            text: this.$t('Please login to your wallet'),
+            text: this.$t('Please login to your wallet.'),
             type: 'error'
           })
-          reject(new Error(this.$t('Please login to your wallet')))
+          reject(new Error(this.$t('Please login to your wallet.')))
         }
 
         this.nonce = await this.wallet.proxeusFS.web3.eth.getTransactionCount(account)
@@ -487,11 +498,11 @@ export default {
           this.$notify({
             group: 'app',
             title: this.$t('Error'),
-            text: this.$t('Could not register document. Please try again.'),
+            text: this.$t('Could not register document. Please try again or if the error persists contact the platform operator.'),
             type: 'error'
           })
           this.submitting = false
-          reject(new Error(this.$t('Could not create transaction.')))
+          reject(new Error(this.$t('Could not create transaction. Please try again or if the error persists contact the platform operator.')))
         })
       })
     },
@@ -516,8 +527,8 @@ export default {
       if (this.blockchainNet !== clientProvidedNet) {
         this.$notify({
           group: 'app',
-          title: 'Could not register document.',
-          text: 'Please switch to ' + this.blockchainNet + ' Network in MetaMask.',
+          title: 'Error',
+          text: 'Could not register document. Please switch to ' + this.blockchainNet + ' Network in MetaMask and try again.',
           type: 'error',
           duration: 5000
         })
@@ -534,6 +545,7 @@ export default {
           this.confirmingDocs = false
         }
 
+        this.submitting = false
         this.submitDoc()
       } catch (e) {
         console.log(e)
@@ -542,7 +554,7 @@ export default {
         this.$notify({
           group: 'app',
           title: this.$t('Error'),
-          text: this.$t('Please check your wallet over Metamask and refresh.'),
+          text: this.$t('Please make sure you are logged in to Metamask and refresh.'),
           type: 'error'
         })
       }
@@ -583,7 +595,7 @@ export default {
           this.$notify({
             group: 'app',
             title: this.$t('Error'),
-            text: this.$t('Could not complete.'),
+            text: this.$t('Could not complete. Please try again or if the error persists contact the platform operator.'),
             type: 'error'
           })
         }

@@ -82,9 +82,9 @@
           </li>
           <li class="nav-item" v-if="app.userIsUserOrHigher()">
             <a href="/user/document" class="nav-link" data-toggle="tooltip" data-placement="right"
-               data-boundary="window" :title="$t('Menu Frontend','Frontend')"><span
+               data-boundary="window" :title="$t('Menu Frontend','User View')"><span
               class="material-icons">event_note</span><span
-              class="nav-link-title">{{$t('Menu Frontend','Frontend')}}</span>
+              class="nav-link-title">{{$t('Menu Frontend','User View')}}</span>
             </a>
           </li>
         </ul>

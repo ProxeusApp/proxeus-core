@@ -163,13 +163,13 @@ export default {
         this.$notify({
           group: 'app',
           title: this.$t('Success'),
-          text: this.$t('Saved template'),
+          text: this.$t('The template was saved successfully'),
           type: 'success'
         })
       }, (err) => {
         this.uploadPending = false
         this.$emit('on-file-upload-fail', this.lang.Code, this.unsavedFile)
-        this.notifyError(this.$t('Could not save template.'))
+        this.notifyError(this.$t('Could not save template. Please try again or if the error persists contact the platform operator.'))
         this.app.handleError(err)
       })
     },
@@ -193,7 +193,7 @@ export default {
         this.$notify({
           group: 'app',
           title: this.$t('Success'),
-          text: this.$t('Deleted template'),
+          text: this.$t('Successfully deleted the template.'),
           type: 'success'
         })
       }, (err) => {
@@ -201,7 +201,7 @@ export default {
         this.$notify({
           group: 'app',
           title: this.$t('Error'),
-          text: this.$t('Couldn\'t delete template'),
+          text: this.$t('Couldn\'t delete template. Please try again or if the error persists contact the platform operator.'),
           type: 'error'
         })
       })

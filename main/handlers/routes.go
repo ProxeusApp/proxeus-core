@@ -100,8 +100,9 @@ func MainHostedAPI(e *echo.Echo, s *www.Security, system *sys.System) {
 		{GET, USER, "/api/userdata/export", api.ExportUserData},
 		{GET, PUBLIC, "/api/document/:ID", api.DocumentHandler},
 
+		{GET, PUBLIC, "/api/document/list", workflow.ListPublishedHandler},
 		{GET, PUBLIC, "/api/document/:ID/allAtOnce/schema", api.WorkflowSchema},
-		{GET, PUBLIC, "/api/document/:ID/allAtOnce", api.WorkflowExecuteAtOnce},
+		{POST, PUBLIC, "/api/document/:ID/allAtOnce", api.WorkflowExecuteAtOnce},
 		{POST, GUEST, "/api/document/:ID/edit/name", api.DocumentEditHandler},
 		{POST, GUEST, "/api/document/:ID/name", api.DocumentEditHandler},
 		{POST, GUEST, "/api/document/:ID/data", api.DocumentDataHandler},
@@ -110,7 +111,7 @@ func MainHostedAPI(e *echo.Echo, s *www.Security, system *sys.System) {
 		{GET, GUEST, "/api/document/:ID/file/:inputName", api.DocumentFileGetHandler},
 		{POST, PUBLIC, "/api/document/:ID/file/:inputName", api.DocumentFilePostHandler},
 		{GET, PUBLIC, "/api/document/:ID/preview/:templateID/:lang/:format", api.DocumentPreviewHandler},
-		{GET, CREATOR, "/api/document/:ID/delete", api.DocumentDeleteHandler},
+		{GET, GUEST, "/api/document/:ID/delete", api.DocumentDeleteHandler},
 
 		{GET, GUEST, "/api/user/document", api.UserDocumentListHandler},
 		{GET, USER, "/api/user/document/:ID", api.UserDocumentGetHandler},
@@ -149,7 +150,7 @@ func MainHostedAPI(e *echo.Echo, s *www.Security, system *sys.System) {
 		// workflow
 		{GET, CREATOR, "/api/admin/workflow/:ID/delete", workflow.DeleteHandler},
 		{GET, USER, "/api/workflow/export", workflow.ExportWorkflow},
-		{GET, USER, "/api/user/workflow/list", workflow.ListHandler},
+		{GET, USER, "/api/user/workflow/list", workflow.ListPublishedHandler},
 		{GET, PUBLIC, "/api/admin/workflow/list", workflow.ListHandler},
 		{GET, PUBLIC, "/api/admin/workflow/:ID", workflow.GetHandler},
 		{POST, PUBLIC, "/api/admin/workflow/update", workflow.UpdateHandler},

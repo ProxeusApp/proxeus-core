@@ -152,7 +152,7 @@ export default {
       }
       this.account = this.wallet.getCurrentAddress()
       if (this.account === undefined) {
-        this.walletErrorMessage = this.$t('Please sign in to MetaMask.')
+        this.walletErrorMessage = this.$t('Please sign in to MetaMask.', 'Please log in to MetaMask')
         return
       }
       this.wallet.signMessage(this.challenge, this.account).then((signature) => {
@@ -193,7 +193,7 @@ export default {
           this.$notify({
             group: 'app',
             title: this.$t('Warning'),
-            text: this.$t('Something wrong happened, please try again.'),
+            text: this.$t('There was an error changing the email address. Please try again or if the error persists contact the platform operator.'),
             type: 'warning'
           })
         }
@@ -236,7 +236,7 @@ export default {
         this.$notify({
           group: 'app',
           title: this.$t('Success'),
-          text: this.$t('Saved'),
+          text: this.$t('Successfully saved changes.'),
           type: 'success'
         })
         this.show = false
@@ -249,7 +249,7 @@ export default {
         this.$notify({
           group: 'app',
           title: this.$t('Error'),
-          text: this.$t('Could not save'),
+          text: this.$t('There was an error saving the changes. Please try again or if the error persists contact the platform operator.'),
           type: 'error'
         })
       })

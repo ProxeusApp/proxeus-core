@@ -18,6 +18,7 @@
     <div v-if="newFormReady()" class="init-settings form-group" ref="fields">
       <div class="spanel"><span class="spanel-title">{{$t('System settings')}}</span>
         <animated-input name="settings.dataDir" :max="100" :label="$t('Data dir','Data directory')" v-model="settings.dataDir"></animated-input>
+        <div class="alert-danger">{{$t('Warning data dir', 'Warning: by changing the data directory you will loose all the data like the users, workflows, etc...Do not do it unless you are aware of the implications.')}}</div>
         <span class="text-muted">{{$t('Data dir explanation','Set the database directory path. All data will be stored here.')}}</span>
         <animated-input name="settings.sessionExpiry" :max="100" :label="$t('Session expiry')" v-model="settings.sessionExpiry"></animated-input>
         <span class="text-muted">{{$t('Session expiry explanation','Set the session expiry like 1h as one hour, 1m as one minute or 1s as one second.')}}</span>
@@ -27,10 +28,14 @@
         <span class="text-muted">{{$t('Default role explanation','Select the default role that is going to be used for new registrations.')}}</span>
         <animated-input name="settings.documentServiceUrl" :max="100" :label="$t('Document Service URL')" v-model="settings.documentServiceUrl"></animated-input>
         <span class="text-muted">{{$t('Document Service URL explanation','Set the Document Service URL which will be used to render documents.')}}</span>
+        <animated-input name="settings.platformDomain" :max="100" :label="$t('Platform Domain')" v-model="settings.platformDomain"></animated-input>
+        <span class="text-muted">{{$t('Platform Domain explanation','Set the Domain this Platform instance is identifying as (used for example for sending links to this instance)')}}</span>
       </div>
       <div class="spanel"><span class="spanel-title">{{$t('Blockchain settings')}}</span>
         <animated-input name="settings.blockchainNet" :max="100" :label="$t('Blockchain net')" v-model="settings.blockchainNet"></animated-input>
         <span class="text-muted">{{$t('Blockchain net explanation','Set the ethereum blockchain net like mainnet or ropsten.')}}</span>
+        <animated-input name="settings.infuraApiKey" :max="100" :label="$t('Infura API Key')" v-model="settings.infuraApiKey"></animated-input>
+        <span class="text-muted">{{$t('Infura API Key explanation','API Key to access Infura node.')}}</span>
         <animated-input name="settings.blockchainContractAddress" :max="100" :label="$t('Blockchain contract address')" v-model="settings.blockchainContractAddress"></animated-input>
         <span class="text-muted">{{$t('Blockchain contract address explanation','Set the ethereum contract address which will be used to register files and verify them.')}}</span>
       </div>
@@ -190,7 +195,7 @@ export default {
         this.$notify({
           group: 'app',
           title: this.$t('Success'),
-          text: this.$t('Saved'),
+          text: this.$t('Saved successfully'),
           type: 'success'
         })
         if (this.app.me === null) {
@@ -206,7 +211,7 @@ export default {
           this.$notify({
             group: 'app',
             title: this.$t('Error'),
-            text: this.$t('Could not save'),
+            text: this.$t('Could not save. Please try again or if the error persists contact the platform operator.\n'),
             type: 'error'
           })
         }

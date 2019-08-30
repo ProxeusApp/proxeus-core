@@ -12,11 +12,14 @@ import (
 	"strings"
 	"time"
 
+	"git.proxeus.com/core/central/main/handlers/blockchain"
+
+	"git.proxeus.com/core/central/sys/utils"
+
 	uuid "github.com/satori/go.uuid"
 
 	"github.com/ethereum/go-ethereum/crypto"
 
-	"git.proxeus.com/core/central/lib/airdrop"
 	"git.proxeus.com/core/central/sys/db"
 
 	"github.com/labstack/echo"
@@ -28,7 +31,6 @@ import (
 	"os"
 	"strconv"
 
-	"git.proxeus.com/core/central/lib/wallet"
 	"git.proxeus.com/core/central/main/app"
 	"git.proxeus.com/core/central/main/helpers"
 	"git.proxeus.com/core/central/main/www"
@@ -40,11 +42,9 @@ import (
 	"git.proxeus.com/core/central/sys/eio"
 	"git.proxeus.com/core/central/sys/email"
 	"git.proxeus.com/core/central/sys/file"
-	"git.proxeus.com/core/central/sys/form"
 	"git.proxeus.com/core/central/sys/model"
 	"git.proxeus.com/core/central/sys/session"
 	"git.proxeus.com/core/central/sys/validate"
-	"git.proxeus.com/core/central/sys/workflow"
 )
 
 var filenameRegex = regexp.MustCompile(`^[^\s][\p{L}\d.,_\-&: ]{3,}[^\s]$`)
@@ -245,7 +245,12 @@ func GetInit(e echo.Context) error {
 	if err != nil && !os.IsNotExist(err) {
 		return c.String(http.StatusInternalServerError, err.Error())
 	}
-	return c.JSON(http.StatusOK, map[string]interface{}{"settings": c.System().GetSettings(), "configured": configured})
+	settings := c.System().GetSettings()
+	if len(settings.PlatformDomain) == 0 {
+		settings.PlatformDomain = e.Request().Host
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{"settings": settings, "configured": configured})
 }
 
 var root = &model.User{Role: model.ROOT}
@@ -257,8 +262,8 @@ func PostInit(e echo.Context) error {
 		return c.NoContent(http.StatusUnauthorized)
 	}
 	type usr struct {
-		Email    string     `json:"email" validate:"required=true,email=true"`
-		Password string     `json:"password" validate:"required=true,matches=^.{6}"`
+		Email    string     `json:"email" validate:"required=false,email=true"`
+		Password string     `json:"password" validate:"required=false,matches=^.{6}"`
 		Role     model.Role `json:"role"`
 	}
 	type Init struct {
@@ -278,6 +283,7 @@ func PostInit(e echo.Context) error {
 	}
 	err = c.System().PutSettings(d.Settings)
 	if err != nil {
+		fmt.Println("Error during PostInit: ", err)
 		return c.NoContent(http.StatusInternalServerError)
 	}
 	if !yes {
@@ -286,10 +292,12 @@ func PostInit(e echo.Context) error {
 		if uex == nil {
 			err = c.System().DB.User.Put(root, u)
 			if err != nil {
+				fmt.Println("Error during PostInit: ", err)
 				return c.NoContent(http.StatusInternalServerError)
 			}
 			err = c.System().DB.User.PutPw(u.ID, d.User.Password)
 			if err != nil {
+				fmt.Println("Error during PostInit: ", err)
 				return c.NoContent(http.StatusInternalServerError)
 			}
 		}
@@ -307,7 +315,7 @@ func ConfigHandler(e echo.Context) error {
 	stngs := c.System().GetSettings()
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"roles":                      roles,
-		"blockchainNet":              stngs.BlockchainNet,
+		"blockchainNet":              strings.Replace(stngs.BlockchainNet, "mainnet", "main", 1),
 		"blockchainProxeusFSAddress": stngs.BlockchainContractAddress,
 		"version":                    ServerVersion,
 	})
@@ -336,7 +344,7 @@ func UpdateAddress(e echo.Context) error {
 	if challenge == "" {
 		return c.JSON(http.StatusUnprocessableEntity, challengeError)
 	}
-	address, err := wallet.VerifySignInChallenge(challenge, loginForm.Signature)
+	address, err := blockchain.VerifySignInChallenge(challenge, loginForm.Signature)
 	sess.Delete("challenge")
 	if err != nil {
 		return c.JSON(http.StatusUnprocessableEntity, challengeError)
@@ -441,7 +449,7 @@ func LoginWithWallet(c *www.Context, challenge, signature string) (bool, *model.
 	created := false
 	var address string
 	var err error
-	address, err = wallet.VerifySignInChallenge(challenge, signature)
+	address, err = blockchain.VerifySignInChallenge(challenge, signature)
 	if err != nil {
 		return false, nil, err
 	}
@@ -460,17 +468,6 @@ func LoginWithWallet(c *www.Context, challenge, signature string) (bool, *model.
 		}
 		created = true
 		usr, err = c.System().DB.User.GetByBCAddress(address)
-		// Give new user some Ropsten XES
-		if err == nil && c.System().GetSettings().BlockchainNet == "ropsten" {
-			go func() {
-				defer func() {
-					if r := recover(); r != nil {
-						log.Println("airdrop recover with err ", r)
-					}
-				}()
-				airdrop.GiveTokens(address)
-			}()
-		}
 	}
 	return created, usr, err
 }
@@ -810,7 +807,7 @@ func redirectAfterLogin(role model.Role, referer string) string {
 func ChallengeHandler(e echo.Context) error {
 	c := e.(*www.Context)
 	langMessage := c.I18n().T("Account sign message")
-	challengeHex := wallet.CreateSignInChallenge(langMessage)
+	challengeHex := blockchain.CreateSignInChallenge(langMessage)
 	sess := c.Session(true)
 	if sess == nil {
 		return c.NoContent(http.StatusBadRequest)
@@ -917,7 +914,7 @@ func DocumentHandler(e echo.Context) error {
 	var st *app.Status
 
 	var wf *model.WorkflowItem
-	wf, err = c.System().DB.Workflow.Get(sess, ID)
+	wf, err = c.System().DB.Workflow.GetPublished(sess, ID)
 	if err != nil {
 		return c.String(http.StatusNotFound, err.Error())
 	}
@@ -1092,6 +1089,7 @@ func DocumentNextHandler(e echo.Context) error {
 				return c.NoContent(http.StatusBadRequest)
 			}
 
+			// Invalidate payment by removing from WorkflowPaymentsDB once workflow is finished.
 			err = DeletePaymentIfExists(c, ID, user.EthereumAddr)
 			if err != nil {
 				return c.String(http.StatusBadRequest, err.Error())
@@ -1118,6 +1116,7 @@ func DocumentNextHandler(e echo.Context) error {
 	return c.JSON(http.StatusOK, resData)
 }
 
+// Remove payment from workflowPaymentsDB if exists
 func DeletePaymentIfExists(c *www.Context, workflowID, ethereumAddr string) error {
 	workflowPaymentsDB := c.System().DB.WorkflowPaymentsDB
 	workflowPaymentItem, err := c.System().DB.WorkflowPaymentsDB.GetByWorkflowIdAndFromEthAddress(workflowID, ethereumAddr)
@@ -1126,7 +1125,7 @@ func DeletePaymentIfExists(c *www.Context, workflowID, ethereumAddr string) erro
 			return err
 		}
 	} else {
-		err = workflowPaymentsDB.Delete(workflowPaymentItem.Hash)
+		err = workflowPaymentsDB.Delete(workflowPaymentItem.TxHash)
 		if err != nil {
 			return err
 		}
@@ -1268,9 +1267,9 @@ func DocumentPreviewHandler(e echo.Context) error {
 	return c.NoContent(http.StatusNotFound)
 }
 
-func getDocApp(c *www.Context, sess *session.Session, ID string) *app.Document {
+func getDocApp(c *www.Context, sess *session.Session, ID string) *app.DocumentFlowInstance {
 	if sess != nil {
-		var docApp *app.Document
+		var docApp *app.DocumentFlowInstance
 		sessDocAppID := "docApp_" + ID
 		err := sess.Get(sessDocAppID, &docApp)
 		if err != nil {
@@ -1612,7 +1611,8 @@ func UserDocumentSignatureRequestAddHandler(e echo.Context) error {
 
 			To check your pending signature requests, please log in <here (link to requests, if logged in>
 		*/
-		c.System().EmailSender.Send(&email.Email{From: "info@proxeus.com", To: []string{sig.Email}, Subject: c.I18n().T("New signature request received"), Body: "<div>Your signature was requested for a document from " + c.Request().Host + " <br />by " + requestor.Name + " (" + requestor.Email + ")<br />" + requestorAddr + "<br /><br />The requestor would like you to review and sign the document on the platform.<br /><br />To check your pending signature requests, please log in <a href='" + helpers.AbsoluteURL(c, "/user/signature-requests") + "'>here</a></div>"})
+		emailFrom := c.System().GetSettings().EmailFrom
+		c.System().EmailSender.Send(&email.Email{From: emailFrom, To: []string{sig.Email}, Subject: c.I18n().T("New signature request received"), Body: "<div>Your signature was requested for a document from " + c.Request().Host + " <br />by " + requestor.Name + " (" + requestor.Email + ")<br />" + requestorAddr + "<br /><br />The requestor would like you to review and sign the document on the platform.<br /><br />To check your pending signature requests, please log in <a href='" + helpers.AbsoluteURL(c, "/user/signature-requests") + "'>here</a></div>"})
 	}
 
 	return c.NoContent(http.StatusOK)
@@ -1654,7 +1654,8 @@ func UserDocumentSignatureRequestRejectHandler(e echo.Context) error {
 			You may send another request if you think this was by mistake.
 
 		*/
-		c.System().EmailSender.Send(&email.Email{From: "info@proxeus.com", To: []string{requestorAddr.Email}, Subject: c.I18n().T("New signature request received"), Body: "<div>Your signature request for a document on " + c.Request().Host + " from " + signatureRequest.RequestedAt.Format("2.1.2006 15:04") + " <br />has been rejected by  " + item.Name + " (" + item.Email + ")<br />" + item.EthereumAddr + "<br /><br />You may send another request if you think this was by mistake.</div>"})
+		emailFrom := c.System().GetSettings().EmailFrom
+		c.System().EmailSender.Send(&email.Email{From: emailFrom, To: []string{requestorAddr.Email}, Subject: c.I18n().T("Signature request rejected"), Body: "<div>Your signature request for a document on " + c.Request().Host + " from " + signatureRequest.RequestedAt.Format("2.1.2006 15:04") + " <br />has been rejected by  " + item.Name + " (" + item.Email + ")<br />" + item.EthereumAddr + "<br /><br />You may send another request if you think this was by mistake.</div>"})
 	}
 
 	return c.NoContent(http.StatusOK)
@@ -1695,7 +1696,7 @@ func UserDocumentSignatureRequestRevokeHandler(e echo.Context) error {
 
 			To check your signature requests, please log in <here (link to requests, if logged in>
 		*/
-		c.System().EmailSender.Send(&email.Email{From: "info@proxeus.com", To: []string{signatoryEmail}, Subject: c.I18n().T("New signature request received"), Body: "<div>Earlier you may have received a signature request from " + c.Request().Host + " by " + requestor.Name + " (" + requestor.Email + ")<br />" + requestor.EthereumAddr + "<br /><br />The requestor has retracted the request. You may still log in and view the request, but can no longer sign the document.<br /><br />To check your signature requests, please log in <a href='" + helpers.AbsoluteURL(c, "/user/signature-requests") + "'>here</a></div>"})
+		c.System().EmailSender.Send(&email.Email{To: []string{signatoryEmail}, Subject: c.I18n().T("New signature request received"), Body: "<div>Earlier you may have received a signature request from " + c.Request().Host + " by " + requestor.Name + " (" + requestor.Email + ")<br />" + requestor.EthereumAddr + "<br /><br />The requestor has retracted the request. You may still log in and view the request, but can no longer sign the document.<br /><br />To check your signature requests, please log in <a href='" + helpers.AbsoluteURL(c, "/user/signature-requests") + "'>here</a></div>"})
 	}
 
 	return c.NoContent(http.StatusOK)
@@ -1840,31 +1841,7 @@ func WorkflowSchema(e echo.Context) error {
 	if err != nil {
 		return c.NoContent(http.StatusNotFound)
 	}
-	marshaledForms := map[string]*model.FormItem{}
-	//loop recursively and change permissions on all children
-	wf.LoopNodes(nil, func(l *workflow.Looper, node *workflow.Node) bool {
-		if node.Type == "form" {
-			it, er := c.System().DB.Form.Get(a, node.ID)
-			if er != nil {
-				return true //continue
-			}
-			marshaledForms[it.ID] = it
-		} else if node.Type == "workflow" { // deep dive...
-			it, er := c.System().DB.Workflow.Get(a, node.ID)
-			if er != nil {
-				return true //continue
-			}
-			it.LoopNodes(l, nil)
-		}
-		return true //continue
-	})
-	fieldsAndRules := map[string]interface{}{}
-	for _, formItem := range marshaledForms {
-		vars := form.Vars(formItem.Data)
-		for _, v := range vars {
-			fieldsAndRules[v] = form.RulesOf(formItem.Data, v)
-		}
-	}
+	fieldsAndRules := utils.GetAllFormFieldsWithRulesOf(wf.Data, a, c.System())
 	wfDetails := &struct {
 		*model.WorkflowItem
 		Data interface{} `json:"data"`

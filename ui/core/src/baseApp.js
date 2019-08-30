@@ -246,14 +246,14 @@ export default {
         this.$notify({
           group: 'app',
           title: this.$t('Success'),
-          text: this.$t('Export done'),
+          text: this.$t('The data was successfully exported.'),
           type: 'success'
         })
         this.loadLastExportResults(cb)
       }, (err) => {
         this.handleError(err)
         this.unblockUI()
-        let text = this.$t('Could not export')
+        let text = this.$t('There was an error exporting the data. Please try again or if the error persists contact the platform operator.')
         try {
           if (err.response && typeof err.response.data === 'string') {
             text = err.response.data
@@ -286,13 +286,13 @@ export default {
         this.$notify({
           group: 'app',
           title: this.$t('Success'),
-          text: this.$t('Import done'),
+          text: this.$t('Import was successful.'),
           type: 'success'
         })
         this.loadLastImportResults(cb)
       }, (err) => {
         this.unblockUI()
-        let text = this.$t('Could not import')
+        let text = this.$t('There was an error while importing the data. Please try again or if the error persists contact the platform operator.')
         try {
           text = err.response.data
         } catch (e) {}
@@ -381,6 +381,13 @@ export default {
       }
       if (this.blockchainNet && this.blockchainProxeusFSAddress) {
         this.wallet = new WalletInterface(this.blockchainNet, this.blockchainProxeusFSAddress)
+      }
+    },
+    acknowledgeFirstLogin () {
+      // Show the following overlays starting now (they can be delayed)
+      localStorage.setItem('showFirstLoginMessageOn-documents', new Date())
+      if (this.userIsCreatorOrHigher()) {
+        localStorage.setItem('showFirstLoginMessageOn-admin', new Date())
       }
     }
   },

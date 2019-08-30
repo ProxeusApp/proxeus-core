@@ -113,7 +113,7 @@ export default {
           this.$notify({
             group: 'app',
             title: this.$t('Error'),
-            text: this.$t('Could not load documents'),
+            text: this.$t('There was an error loading the documents. Please try again or if the error persists contact the platform operator.'),
             type: 'error'
           })
         }
@@ -137,7 +137,7 @@ export default {
         this.$notify({
           group: 'app',
           title: 'Signature request',
-          text: 'Revoked!',
+          text: 'Successfully revoked the signature request',
           type: 'success'
         })
         this.$router.go()
@@ -145,7 +145,7 @@ export default {
         this.$notify({
           group: 'app',
           title: 'Error',
-          text: 'Failed to revoke signature',
+          text: 'There was an error while revoking the signature request. Please try again or if the error persists contact the platform operator.',
           type: 'error'
         })
         return false
@@ -158,7 +158,6 @@ export default {
       return '/api/user/document/file/' + doc.id + '/' + this.doc.docID
     },
     documentPreviews () {
-      console
       return true
     },
     async hashFile (file) {
@@ -205,6 +204,20 @@ export default {
       vertical-align:top;
       padding-bottom: 0.0em;
       padding-right: 3em;
+    }
+  }
+
+  @media (max-width: 1554px) {
+    table.signatures {
+      td {
+        padding-right: 0;
+      }
+      button {
+        height: auto;
+        i {
+          display: none;
+        }
+      }
     }
   }
 </style>

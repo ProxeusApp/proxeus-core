@@ -32,7 +32,7 @@ class WalletInterface {
       // connect to the network using what was given in the constructor
       this.web3.setProvider(
         new this.web3.providers.HttpProvider(
-          'https://' + network + '.infura.io/n1HoAn4TRnGMa7RSDToo'))
+          'https://' + network + '.infura.io/'))
 
       // overwrite the provided web3 for what we load
       window.web3 = this.web3

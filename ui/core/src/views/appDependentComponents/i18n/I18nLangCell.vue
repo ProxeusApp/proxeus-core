@@ -30,7 +30,7 @@ export default {
           this.$notify({
             group: 'app',
             title: this.$t('Error'),
-            text: this.$t('Could not save language.'),
+            text: this.$t('Could not save language. Please try again or if the error persists contact the platform operator.\n'),
             type: 'error'
           })
         })

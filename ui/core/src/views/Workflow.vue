@@ -10,7 +10,7 @@
                 </button>
             </td>
             <td slot="td" class="tdmin" v-if="workflow && app.amIWriteGrantedFor(workflow)">
-                <button class="btn btn-primary ml-2" @click="publish">
+                <button class="btn btn-primary ml-2" @click="publishModalShow = true">
                     <i class="material-icons" style="margin-right:2px;">video_library</i>
                     <span>{{$t('Publish')}}</span>
                 </button>
@@ -78,10 +78,15 @@
                                                 <div class="field-parent">
                                                     <form autocomplete="off">
                                                         <div class="input-group w-100 search-box">
-                                                            <input type="search" autocomplete="off"
-                                                                   class="form-control text-field flow-chart-finder-input"
-                                                                   :placeholder="$t('Click here to add Elements to your workflow')"
-                                                                   style="box-sizing: border-box;">
+                                                            <div class="input-group-prepend">
+                                                              <span class="input-group-text" id="basic-addon1" @click="focusInputElementAdd">
+                                                                <i class="material-icons">add</i>
+                                                              </span>
+                                                            </div>
+                                                              <input type="search" autocomplete="off" ref="workflowElementAdd"
+                                                                     class="form-control text-field flow-chart-finder-input"
+                                                                     :placeholder="$t('Click here to add elements to your workflow')"
+                                                                     style="box-sizing: border-box;">
                                                             <div class="input-group-append fcf-layout-switch p-1 bg-light border">
                                                                 <button type="button"
                                                                         class="btn layout-btn border grid-layout-btn btn-default">
@@ -106,14 +111,7 @@
                                         </div>
                                     </div>
                                 </div>
-
                                 <div class="wfchart-wrapper bg-graphpaper border-0"></div>
-                                <button type="button" class="btn btn-legend btn-default bg-transparent">
-                                <span class="btn btn-primary btn-round mdi mdi-information-outline p-1"
-                                      aria-hidden="true"
-                                      style="font-size: 22px;"></span>
-                                </button>
-
                                 <div class="wfchart-snavi">
                                     <div class="wfc-snn">
                                         <!--<div data-id="collection" class="flow-chart-node">-->
@@ -215,6 +213,19 @@
                 </div>
             </div>
         </div>
+        <b-modal v-model="publishModalShow" class="b-modal"
+                 :title="$t('Confirm')"
+                 :ok-title="$t('Yes')"
+                 :cancel-title="$t('No')"
+                 header-bg-variant="light"
+                 @hide="publishModalShow = false"
+                 @ok="publish">
+          <div class="d-block">{{$t('If you publish this workflow anyone can start this workflow.')}}</div>
+          <div class="d-block mt-3">{{$t('Are you sure you want to publish this workflow?')}}</div>
+          <div class="d-block bold bg-primary">
+          </div>
+        </b-modal>
+
         <permission-dialog v-if="workflow" :save="save" :publicLink="app.makeURL('/p/workflow/'+id)"
                            :publicLink2="app.makeURL('/document/'+id)" v-model="workflow" :setup="setupDialog"/>
         <list-item-dialog :_blank="true" :title="$t('Couldn\'t publish')" :setup="setupPublishResponseDialog" :timestamp="false" :noBtns="true" >
@@ -288,7 +299,8 @@ export default {
       network: null,
       lastJsonValue: null,
       openPermissionDialog: () => {},
-      showPublishResponseDialog: () => {}
+      showPublishResponseDialog: () => {},
+      publishModalShow: false
     }
   },
   mounted () {
@@ -311,7 +323,7 @@ export default {
         this.$notify({
           group: 'app',
           title: this.$t('Error'),
-          text: this.$t('Could not load Workflow'),
+          text: this.$t('Could not load Workflow. Please try again or if the error persists contact the platform operator.\n'),
           type: 'error'
         })
         this.$router.push({ to: 'Workflows' })
@@ -325,6 +337,10 @@ export default {
     }
   },
   methods: {
+    focusInputElementAdd () {
+      this.$refs.workflowElementAdd.focus()
+      this.$refs.workflowElementAdd.click()
+    },
     setupPublishResponseDialog (showFunc) {
       this.showPublishResponseDialog = showFunc
     },
@@ -373,10 +389,7 @@ export default {
       return this.workflow.data.flow
     },
     publish () {
-      if (!this.app.amIWriteGrantedFor(this.workflow)) {
-        return
-      }
-      this.setUserReadRights()
+      this.workflow.published = true
 
       this.infoToggled = false
       this.syncWorkflowWithFlowchart()
@@ -433,22 +446,10 @@ export default {
         this.$notify({
           group: 'app',
           title: this.$t('Error'),
-          text: this.$t('Could not publish workflow'),
+          text: this.$t('Could not publish workflow. Please try again or if the error persists contact the platform operator.\n'),
           type: 'error'
         })
       })
-    },
-    setUserReadRights () {
-      if (!this.workflow.groupAndOthers) {
-        this.workflow.groupAndOthers = {}
-      }
-      if (!this.workflow.groupAndOthers.rights || this.workflow.groupAndOthers.rights.length < 1) {
-        this.workflow.groupAndOthers.rights = [0, 0]
-      }
-      if (this.workflow.groupAndOthers.group < 5 || this.workflow.groupAndOthers.rights[0] < 1) {
-        this.workflow.groupAndOthers.rights[0] = 1
-        this.workflow.groupAndOthers.group = 5
-      }
     },
     togglePriceErrorModal (show) {
       if (show === true) {
@@ -493,7 +494,7 @@ export default {
           this.$notify({
             group: 'app',
             title: this.$t('Error'),
-            text: this.$t('Could not save workflow'),
+            text: this.$t('Could not save workflow. Please try again or if the error persists contact the platform operator.\n'),
             type: 'error'
           })
         }
@@ -1924,7 +1925,12 @@ function condition(){
     }
 
     .flow-chart-finder-input {
-        border: 1px solid $gray-200 !important;
+      border: 1px solid $gray-200 !important;
+      text-indent: 8px;
+    }
+    .flow-chart-finder-input::placeholder {
+      color: #00A655;
+      text-indent: 8px;
     }
 
     .custom-menu {
@@ -1955,5 +1961,15 @@ function condition(){
     }
     .modal.priceErrorModal .modal-content{
       border: 3px solid;
+    }
+    .flow-chart-finder .input-group-text {
+      width: 73px;
+      background-color: #00A655;
+      border: 1px solid #00A655;
+      cursor: pointer;
+      .material-icons {
+        width: 73px;
+        color: white;
+      }
     }
 </style>

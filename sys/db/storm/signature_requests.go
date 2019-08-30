@@ -34,8 +34,14 @@ func NewSignatureDB(dir string) (*SignatureRequestsDB, error) {
 	udb := &SignatureRequestsDB{db: msgpackDb}
 
 	example := &model.SignatureRequestItem{}
-	udb.db.Init(example)
-	udb.db.ReIndex(example)
+	err = udb.db.Init(example)
+	if err != nil {
+		return nil, err
+	}
+	err = udb.db.ReIndex(example)
+	if err != nil {
+		return nil, err
+	}
 
 	var fVersion int
 	verr := udb.db.Get(signatureVersion, signatureVersion, &fVersion)

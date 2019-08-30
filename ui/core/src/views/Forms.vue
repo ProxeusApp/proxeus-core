@@ -71,7 +71,7 @@ export default {
         this.$notify({
           group: 'app',
           title: this.$t('Success'),
-          text: this.$t('Form deleted'),
+          text: this.$t('Form successfully deleted'),
           type: 'success'
         })
       }, (err) => {
@@ -79,7 +79,7 @@ export default {
         this.$notify({
           group: 'app',
           title: this.$t('Error'),
-          text: this.$t('Could not delete Form'),
+          text: this.$t('Could not delete Form. Please try again or if the error persists contact the platform operator.'),
           type: 'error'
         })
       })
@@ -117,7 +117,7 @@ export default {
             this.$notify({
               group: 'app',
               title: this.$t('Success'),
-              text: this.$t('Form copied'),
+              text: this.$t('Form successfully copied.'),
               type: 'success'
             })
             if (response.data && response.data.id) {
@@ -128,7 +128,7 @@ export default {
             this.$notify({
               group: 'app',
               title: this.$t('Error'),
-              text: this.$t('Could not copy Form'),
+              text: this.$t('Could not copy Form. Please try again or if the error persists contact the platform operator.'),
               type: 'error'
             })
           })
@@ -138,7 +138,7 @@ export default {
         this.$notify({
           group: 'app',
           title: this.$t('Error'),
-          text: this.$t('Could not copy Form'),
+          text: this.$t('Could not copy Form. Please try again or if the error persists contact the platform operator.'),
           type: 'error'
         })
       })

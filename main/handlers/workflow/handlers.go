@@ -48,7 +48,6 @@ func GetHandler(e echo.Context) error {
 	if sess != nil {
 		item, err := c.System().DB.Workflow.Get(sess, ID)
 		if err == nil {
-
 			workflowOwner, err := c.System().DB.User.Get(sess, item.Owner)
 			if err != nil {
 				return c.NoContent(http.StatusNotFound)
@@ -89,7 +88,6 @@ func UpdateHandler(e echo.Context) error {
 		}
 
 		if publish {
-			usrAuth := &model.User{Role: model.USER}
 			errs := map[string]interface{}{}
 			collectError := func(err error, node *workflow.Node) {
 				errs[node.ID] = struct {
@@ -105,8 +103,8 @@ func UpdateHandler(e echo.Context) error {
 						collectError(er, node)
 						return true //continue
 					}
-					if !it.IsReadGrantedFor(usrAuth) {
-						it.Permissions = item.Permissions
+					if !it.Published {
+						it.Published = true
 						er = c.System().DB.Form.Put(sess, it)
 						if er != nil {
 							collectError(er, node)
@@ -118,8 +116,8 @@ func UpdateHandler(e echo.Context) error {
 						collectError(er, node)
 						return true //continue
 					}
-					if !it.IsReadGrantedFor(usrAuth) {
-						it.Permissions = item.Permissions
+					if !it.Published {
+						it.Published = true
 						er = c.System().DB.Template.Put(sess, it)
 						if er != nil {
 							collectError(er, node)
@@ -131,8 +129,8 @@ func UpdateHandler(e echo.Context) error {
 						collectError(er, node)
 						return true //continue
 					}
-					if !it.IsReadGrantedFor(usrAuth) {
-						it.Permissions = item.Permissions
+					if !it.Published {
+						it.Published = true
 						er = c.System().DB.Workflow.Put(sess, it)
 						if er != nil {
 							collectError(er, node)
@@ -160,6 +158,12 @@ func UpdateHandler(e echo.Context) error {
 	return c.NoContent(http.StatusBadRequest)
 }
 
+// Checks if a workflow payment exist in the db.
+// The payment can be retrieved either by txHash or workflowId/documentId and ethereum address.
+// Getting the payment with txHash is used when metamask notifies the frontend that a payment has been received but the backend has not yet been notified what
+// workflow the payment was for. The backend verifies if it has received the payment.
+// Once the payment process is finished and the backend has been notified what workflow the payment is for, the payment is checked/retrieved in
+// workflowId/documentId and ethereum address.
 func GetWorkflowPayment(e echo.Context) error {
 	c := e.(*www.Context)
 	txHash := c.QueryParam("txHash")
@@ -193,11 +197,13 @@ func GetWorkflowPayment(e echo.Context) error {
 		}
 	}
 
-	log.Println("[workflowHandler][GetWorkflowPayment]", workflowPaymentItem.Hash)
+	log.Println("[workflowHandler][GetWorkflowPayment]", workflowPaymentItem.TxHash)
 
 	return c.JSON(http.StatusOK, workflowPaymentItem)
 }
 
+// Once the payment has been confirmed this function redeems the payment for a worklflowId.
+// If all parameters in checkPayment function are valid the worfklowId is set to the workflowPaymentItem.
 func AddWorkflowPayment(e echo.Context) error {
 	c := e.(*www.Context)
 	txHash := c.Param("txHash")
@@ -225,6 +231,8 @@ func AddWorkflowPayment(e echo.Context) error {
 
 var errPaymentFailed = errors.New("failed to validate payment")
 
+// Verify that a payment can be claimed by user by validating payment parameter against workflow parameters.
+// A payment can only be claimed if all these parameters match: price, payer, receiver
 func checkPayment(c *www.Context, workflowId string, workflowPaymentItem *model.WorkflowPaymentItem) error {
 	sess := c.Session(false)
 	if sess == nil {
@@ -278,23 +286,36 @@ func DeleteHandler(e echo.Context) error {
 	return c.NoContent(http.StatusBadRequest)
 }
 
+func ListPublishedHandler(e echo.Context) error {
+	return listHandler(e.(*www.Context), true)
+}
+
 func ListHandler(e echo.Context) error {
-	c := e.(*www.Context)
+	return listHandler(e.(*www.Context), false)
+}
+
+func listHandler(c *www.Context, publishedOnly bool) error {
 	contains := c.QueryParam("c")
-	sess := c.Session(false)
-	if sess != nil {
-		settings := helpers.ReadReqSettings(c)
-		dat, err := c.System().DB.Workflow.List(sess, contains, settings)
-		if err != nil {
-			log.Println("Can't list workflows: " + err.Error())
-			if err == model.ErrAuthorityMissing {
-				return c.NoContent(http.StatusUnauthorized)
-			}
-			return c.NoContent(http.StatusNotFound)
-		}
-		return c.JSON(http.StatusOK, dat)
+	a, err := c.Auth()
+	if err != nil {
+		return c.NoContent(http.StatusUnauthorized)
 	}
-	return c.NoContent(http.StatusUnauthorized)
+	settings := helpers.ReadReqSettings(c)
+	var dat []*model.WorkflowItem
+	if publishedOnly {
+		dat, err = c.System().DB.Workflow.ListPublished(a, contains, settings)
+	} else {
+		dat, err = c.System().DB.Workflow.List(a, contains, settings)
+	}
+
+	if err != nil {
+		if err == model.ErrAuthorityMissing {
+			log.Println("Can't list workflows: " + err.Error())
+			return c.NoContent(http.StatusUnauthorized)
+		}
+		return c.NoContent(http.StatusNotFound)
+	}
+	return c.JSON(http.StatusOK, dat)
 }
 
 func ListCustomNodeHandler(e echo.Context) error {

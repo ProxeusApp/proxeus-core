@@ -46,12 +46,12 @@
       </table>
         <div v-if="isSignatureStatusPending">
           <hr>
-          <button type="button" class="btn btn-primary mr-4" @click="signFile()" :disabled="processing || !isConnectedAccount"
+          <button type="button" class="btn btn-primary mr-4" @click="signFile()" :disabled="processing || !isConnectedAccount || appBlockchainNet !== clientProvidedNet"
                   :title="$t('Sign file', 'Sign file')">
             <i class="material-icons mr-1">check_circle_outline</i>
             <span>{{$t('Sign', 'Sign')}}</span>
           </button>
-          <button type="button" class="btn btn-primary" @click="rejectFile()" :disabled="processing || !isConnectedAccount"
+          <button type="button" class="btn btn-primary" @click="rejectFile()" :disabled="processing || !isConnectedAccount || appBlockchainNet !== clientProvidedNet"
                   :title="$t('Reject', 'Reject')">
             <i class="material-icons mr-1">remove_circle_outline</i>
             <span>{{$t('Reject', 'Reject')}}</span>
@@ -77,6 +77,14 @@ export default {
     isConnectedAccount: {
       type: Boolean,
       default: false
+    },
+    appBlockchainNet: {
+      type: String,
+      default: ''
+    },
+    clientProvidedNet: {
+      type: String,
+      default: ''
     }
   },
   data () {
@@ -145,7 +153,7 @@ export default {
           this.$notify({
             group: 'app',
             title: this.$t('Error'),
-            text: this.$t('Unable to reject file'),
+            text: this.$t('Unable to reject file. Please try again or if the error persists contact the platform operator.'),
             type: 'error'
           })
         })
@@ -159,10 +167,9 @@ export default {
         this.$notify({
           group: 'app',
           title: this.$t('Error'),
-          text: this.$t('Please login to your wallet'),
+          text: this.$t('Please login to your wallet.'),
           type: 'error'
         })
-        this.walletErrorMessage = this.$t('Please login to your wallet')
       }
 
       this.nonce = await this.app.wallet.proxeusFS.web3.eth.getTransactionCount(this.me)
@@ -181,7 +188,7 @@ export default {
         this.$notify({
           group: 'app',
           title: this.$t('Error'),
-          text: this.$t('Could not sign document. Please try again.'),
+          text: this.$t('Could not sign document. Please try again or if the error persists contact the platform operator.'),
           type: 'error'
         })
       })

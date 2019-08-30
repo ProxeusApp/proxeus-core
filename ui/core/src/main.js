@@ -38,6 +38,7 @@ import './global'
 import './legacy-imports'
 
 import VueScrollTo from 'vue-scrollto'
+import { events } from 'vue-notification/src/events'
 
 /*
  *
@@ -62,6 +63,17 @@ Vue.config.productionTip = false
  *
  */
 window.eventBus = new Vue()
+
+// Vue.prototype.$notify = (params) => {
+//   duration: 10000
+//   // if (typeof params === 'string') {
+//   //   params = { title: '', text: params }
+//   // }
+//   //
+//   // if (typeof params === 'object') {
+//   //   events.$emit('add', params)
+//   // }
+// }
 
 Vue.use(ErrorPage, {
   resolver: (component) => {

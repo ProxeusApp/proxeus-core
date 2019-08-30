@@ -10,10 +10,11 @@ import (
 	"strconv"
 	"sync"
 
+	"git.proxeus.com/core/central/sys/utils"
+
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/labstack/echo"
 
-	"git.proxeus.com/core/central/main/customNode"
 	"git.proxeus.com/core/central/sys"
 	"git.proxeus.com/core/central/sys/db/storm"
 	"git.proxeus.com/core/central/sys/eio"
@@ -24,9 +25,9 @@ import (
 	"git.proxeus.com/core/central/sys/workflow"
 )
 
-//TODO use DataCluster for guest users and otherwise the database
+//TODO replace DataCluster with file.MapIO. DataCluster was meant to be used for guest users only to prevent from storing data that will be never used again after the session is expired
 type (
-	Document struct {
+	DocumentFlowInstance struct {
 		WFID             string            `json:"WFID"`
 		DataID           string            `json:"dataID"`
 		DataCluster      *form.DataManager `json:"dataCluster"`
@@ -45,7 +46,9 @@ type (
 		SelectedDocLangs map[string]string
 		Confirmed        bool
 		unorderedData    map[string]interface{}
+		allFormFields    []string
 	}
+
 	Status struct {
 		TargetName  string          `json:"targetName"`
 		Steps       []workflow.Step `json:"steps"`
@@ -58,15 +61,15 @@ type (
 	}
 
 	FormNodeImpl struct {
-		ctx       *Document
+		ctx       *DocumentFlowInstance
 		presented bool
 	}
 	DocTmplNodeImpl struct {
-		ctx *Document
+		ctx *DocumentFlowInstance
 	}
 )
 
-func NewDocumentApp(usrData *model.UserDataItem, auth model.Authorization, system *sys.System, wfid, baseFilePath string) (*Document, error) {
+func NewDocumentApp(usrData *model.UserDataItem, auth model.Authorization, system *sys.System, wfid, baseFilePath string) (*DocumentFlowInstance, error) {
 	if system == nil || wfid == "" {
 		return nil, os.ErrInvalid
 	}
@@ -74,7 +77,7 @@ func NewDocumentApp(usrData *model.UserDataItem, auth model.Authorization, syste
 	workflowItem, err := system.DB.Workflow.Get(auth, wfid)
 
 	if err == nil && workflowItem != nil && workflowItem.Data != nil {
-		doc := &Document{
+		doc := &DocumentFlowInstance{
 			DataID:           usrData.ID,
 			SelectedDocLangs: map[string]string{},
 			system:           system,
@@ -91,7 +94,7 @@ func NewDocumentApp(usrData *model.UserDataItem, auth model.Authorization, syste
 	return nil, os.ErrNotExist
 }
 
-func (me *Document) Init(auth model.Authorization, system *sys.System) error {
+func (me *DocumentFlowInstance) Init(auth model.Authorization, system *sys.System) error {
 	me.auth = auth
 	me.system = system
 	workflowItem, err := system.DB.Workflow.Get(auth, me.WFID)
@@ -101,18 +104,18 @@ func (me *Document) Init(auth model.Authorization, system *sys.System) error {
 	return os.ErrNotExist
 }
 
-func (me *Document) NeedToBeInitialized() bool {
+func (me *DocumentFlowInstance) NeedToBeInitialized() bool {
 	return me.dirty
 }
 
-func (me *Document) OnLoad() {
+func (me *DocumentFlowInstance) OnLoad() {
 	me.dirty = true
 	if me.DataCluster != nil {
 		me.DataCluster.OnLoad()
 	}
 }
 
-func (me *Document) init(wfd *workflow.Workflow, state []workflow.Step) error {
+func (me *DocumentFlowInstance) init(wfd *workflow.Workflow, state []workflow.Step) error {
 	me.dirty = false
 	me.Confirmed = false
 	me.statusResult = &Status{}
@@ -121,11 +124,11 @@ func (me *Document) init(wfd *workflow.Workflow, state []workflow.Step) error {
 	conf := workflow.Config{
 		GetWorkflow: me.getWorkflow,
 		State:       state,
-		GetData:     me.getData, // so that it can be shared through nodes
+		GetData:     me.getData, // for condition execution
 		NodeImpl: map[string]*workflow.NodeDef{
-			"ibmsender":      {InitImplFunc: customNode.NewIBMSenderNodeImpl, Background: true},
-			"mailsender":     {InitImplFunc: customNode.NewMailSender, Background: false},
-			"priceretriever": {InitImplFunc: customNode.NewPriceRetriever, Background: false},
+			"ibmsender":      {InitImplFunc: me.newIBMSenderNodeImpl, Background: true},
+			"mailsender":     {InitImplFunc: me.newMailSender, Background: true},
+			"priceretriever": {InitImplFunc: me.newPriceRetriever, Background: true},
 			"form":           {InitImplFunc: me.newFormNodeImpl, Background: false},
 			"template":       {InitImplFunc: me.newDocTmplNodeImpl, Background: true},
 		},
@@ -135,7 +138,7 @@ func (me *Document) init(wfd *workflow.Workflow, state []workflow.Step) error {
 	return err
 }
 
-func (me *Document) isLangAvailable(lang string) (bool, error) {
+func (me *DocumentFlowInstance) isLangAvailable(lang string) (bool, error) {
 	langs, err := me.system.DB.I18n.GetLangs(true)
 	if err != nil {
 		return false, err
@@ -148,7 +151,7 @@ func (me *Document) isLangAvailable(lang string) (bool, error) {
 	return false, nil
 }
 
-func (me *Document) getWorkflow(id string) (*workflow.Workflow, error) {
+func (me *DocumentFlowInstance) getWorkflow(id string) (*workflow.Workflow, error) {
 	item, err := me.system.DB.Workflow.Get(me.auth, id)
 	if err != nil {
 		return nil, err
@@ -159,13 +162,23 @@ func (me *Document) getWorkflow(id string) (*workflow.Workflow, error) {
 	return nil, os.ErrNotExist
 }
 
-func (me *Document) getData() interface{} {
-	dd, _ := me.DataCluster.GetAllData()
+func (me *DocumentFlowInstance) findFormFieldNames(containing ...string) []string {
+	if me.allFormFields == nil {
+		workflowItem, err := me.system.DB.Workflow.Get(me.auth, me.WFID)
+		if err != nil || workflowItem.Data == nil {
+			return nil
+		}
+		me.allFormFields = utils.GetAllFormFieldsOf(workflowItem.Data, me.auth, me.system)
+	}
+	return utils.FindFieldNameContaining(me.allFormFields, containing...)
+}
 
+func (me *DocumentFlowInstance) getData() interface{} {
+	dd, _ := me.DataCluster.GetAllData()
 	return map[string]interface{}{"input": dd}
 }
 
-func (me *Document) getDataFor(id string) (map[string]interface{}, error) {
+func (me *DocumentFlowInstance) getDataFor(id string) (map[string]interface{}, error) {
 	m, err := me.DataCluster.GetData(id)
 	if m == nil && len(me.unorderedData) > 0 {
 		f, err := me.system.DB.Form.Get(me.auth, id)
@@ -186,15 +199,31 @@ func (me *Document) getDataFor(id string) (map[string]interface{}, error) {
 	return m, err
 }
 
-func (me *Document) newFormNodeImpl(n *workflow.Node) (workflow.NodeIF, error) {
+func (me *DocumentFlowInstance) getDataByPath(dataPath string) (interface{}, error) {
+	return me.system.DB.UserData.GetData(me.auth, me.DataID, dataPath)
+}
+
+func (me *DocumentFlowInstance) newIBMSenderNodeImpl(n *workflow.Node) (workflow.NodeIF, error) {
+	return &IBMSenderNodeImpl{ctx: me}, nil
+}
+
+func (me *DocumentFlowInstance) newMailSender(n *workflow.Node) (workflow.NodeIF, error) {
+	return &mailSenderNode{ctx: me}, nil
+}
+
+func (me *DocumentFlowInstance) newPriceRetriever(n *workflow.Node) (workflow.NodeIF, error) {
+	return &priceRetrieverNode{ctx: me}, nil
+}
+
+func (me *DocumentFlowInstance) newFormNodeImpl(n *workflow.Node) (workflow.NodeIF, error) {
 	return &FormNodeImpl{ctx: me}, nil
 }
 
-func (me *Document) newDocTmplNodeImpl(n *workflow.Node) (workflow.NodeIF, error) {
+func (me *DocumentFlowInstance) newDocTmplNodeImpl(n *workflow.Node) (workflow.NodeIF, error) {
 	return &DocTmplNodeImpl{ctx: me}, nil
 }
 
-func (me *Document) getDataWithFiles() (d map[string]interface{}, files []string) {
+func (me *DocumentFlowInstance) getDataWithFiles() (d map[string]interface{}, files []string) {
 	d, files = me.DataCluster.GetAllDataFilePathNameOnly()
 	if d == nil {
 		d = map[string]interface{}{}
@@ -203,7 +232,7 @@ func (me *Document) getDataWithFiles() (d map[string]interface{}, files []string
 	return
 }
 
-func (me *Document) GetFile(name string) (*file.IO, error) {
+func (me *DocumentFlowInstance) GetFile(name string) (*file.IO, error) {
 	n, err := me.wfContext.Current()
 	if err != nil {
 		return nil, err
@@ -214,22 +243,49 @@ func (me *Document) GetFile(name string) (*file.IO, error) {
 	return nil, os.ErrNotExist
 }
 
-func (me *Document) UpdateData(d map[string]interface{}, submit bool) (verrs validate.ErrorMap, err error) {
+func (me *DocumentFlowInstance) UpdateData(d map[string]interface{}, submit bool) (verrs validate.ErrorMap, err error) {
 	var n *workflow.Node
 	n, err = me.wfContext.Current()
 	if n != nil && n.Type == "form" {
 		verrs, err = form.Validate(d, me.statusResult.Data, false)
 		if err == nil && len(verrs) == 0 {
-			err = me.DataCluster.PutData(n.ID, d)
-			if err == nil {
-				err = me.system.DB.UserData.PutData(me.auth, me.DataID, map[string]interface{}{"input": d})
-			}
+			err = me.writeData(n, d)
 		}
 	}
 	return
 }
 
-func (me *Document) UpdateFile(name string, fm file.Meta, reader io.Reader) (verrs validate.Errors, err error) {
+// updateFormFieldsContaining by providing a value and some words that could match a form field.
+// containing is case insensitive
+func (me *DocumentFlowInstance) updateFormFieldsContaining(n *workflow.Node, v interface{}, containing ...string) error {
+	fields := me.findFormFieldNames(containing...)
+	newData := map[string]interface{}{}
+	for _, fname := range fields {
+		newData[fname] = v
+	}
+	return me.writeData(n, newData)
+}
+
+func (me *DocumentFlowInstance) readData(dataPath string) (interface{}, error) {
+	return me.system.DB.UserData.GetData(me.auth, me.DataID, dataPath)
+}
+
+func (me *DocumentFlowInstance) writeField(n *workflow.Node, fname string, val interface{}) error {
+	return me.writeData(n, map[string]interface{}{fname: val})
+}
+
+func (me *DocumentFlowInstance) writeData(n *workflow.Node, d map[string]interface{}) error {
+	if n != nil {
+		err := me.DataCluster.PutData(n.ID, d)
+		if err == nil {
+			err = me.system.DB.UserData.PutData(me.auth, me.DataID, map[string]interface{}{"input": d})
+		}
+		return err
+	}
+	return nil
+}
+
+func (me *DocumentFlowInstance) UpdateFile(name string, fm file.Meta, reader io.Reader) (verrs validate.Errors, err error) {
 	var n *workflow.Node
 	n, err = me.wfContext.Current()
 	if err != nil {
@@ -253,7 +309,7 @@ func (me *Document) UpdateFile(name string, fm file.Meta, reader io.Reader) (ver
 		if err != nil {
 			return
 		}
-		var f *file.IO //TODO storing on session and db
+		var f *file.IO //TODO better storage handling on session and persistent db, right now we just duplicate it
 		var dbF *file.IO
 		f, err = me.DataCluster.GetDataFile(n.ID, name)
 		if err != nil {
@@ -278,7 +334,7 @@ func (me *Document) UpdateFile(name string, fm file.Meta, reader io.Reader) (ver
 	return
 }
 
-func (me *Document) WF() *model.WorkflowItem {
+func (me *DocumentFlowInstance) WF() *model.WorkflowItem {
 	if me.wfItem == nil {
 		me.wfItem, _ = me.system.DB.Workflow.Get(me.auth, me.WFID)
 		me.wfItem.Data = nil
@@ -286,7 +342,7 @@ func (me *Document) WF() *model.WorkflowItem {
 	return me.wfItem
 }
 
-func (me *Document) Confirm(currentAppLang string, tmpls map[string]interface{}, store *storm.UserDataDB) (map[string]interface{}, map[string]*file.IO, *Status, error) {
+func (me *DocumentFlowInstance) Confirm(currentAppLang string, tmpls map[string]interface{}, store *storm.UserDataDB) (map[string]interface{}, map[string]*file.IO, *Status, error) {
 	if me.Confirmed {
 		return nil, nil, me.statusResult, nil
 	}
@@ -390,7 +446,7 @@ func (me *Document) Confirm(currentAppLang string, tmpls map[string]interface{},
 	return dat, nil, me.statusResult, err
 }
 
-func (me *Document) Next(d map[string]interface{}) (*Status, error) {
+func (me *DocumentFlowInstance) Next(d map[string]interface{}) (*Status, error) {
 	n, _ := me.wfContext.Current()
 	if n != nil && len(d) > 0 {
 		err := me.DataCluster.PutData(n.ID, d)
@@ -406,12 +462,15 @@ func (me *Document) Next(d map[string]interface{}) (*Status, error) {
 	return me.next(d)
 }
 
-func (me *Document) Current(d map[string]interface{}) (*Status, error) {
+func (me *DocumentFlowInstance) Current(d map[string]interface{}) (*Status, error) {
 	err := me.Init(me.auth, me.system)
 	if err != nil {
 		return me.statusResult, err
 	}
 	n, err := me.wfContext.Current()
+	if err != nil {
+		return me.statusResult, err
+	}
 	err = me.ensureWeBeginWithAForegroundNode(n, d)
 	if err != nil {
 		return me.statusResult, err
@@ -430,7 +489,7 @@ func (me *Document) Current(d map[string]interface{}) (*Status, error) {
 	return me.statusResult, nil
 }
 
-func (me *Document) ensureWeBeginWithAForegroundNode(n *workflow.Node, d map[string]interface{}) error {
+func (me *DocumentFlowInstance) ensureWeBeginWithAForegroundNode(n *workflow.Node, d map[string]interface{}) error {
 	if me.Started || !me.wfContext.HasPrevious() {
 		_, err := me.next(d)
 		if err == nil {
@@ -441,7 +500,7 @@ func (me *Document) ensureWeBeginWithAForegroundNode(n *workflow.Node, d map[str
 	return nil
 }
 
-func (me *Document) next(d map[string]interface{}) (*Status, error) {
+func (me *DocumentFlowInstance) next(d map[string]interface{}) (*Status, error) {
 	if me.statusResult.HasNext {
 		me.Confirmed = false
 	}
@@ -456,7 +515,7 @@ func (me *Document) next(d map[string]interface{}) (*Status, error) {
 	return me.statusResult, err
 }
 
-func (me *Document) hasPrev() bool {
+func (me *DocumentFlowInstance) hasPrev() bool {
 	formsCount := 0
 	for _, a := range me.statusResult.Steps {
 		if a.Type == "form" {
@@ -479,7 +538,7 @@ func (me *Status) addDoc(id, hash string, tmpls *model.TemplateItem) {
 	me.Docs = append(me.Docs, map[string]interface{}{"id": id, "hash": hash, "langs": langs, "name": tmpls.Name, "detail": tmpls.Detail})
 }
 
-func (me *Document) templateAdd(id string, tmplItem *model.TemplateItem) {
+func (me *DocumentFlowInstance) templateAdd(id string, tmplItem *model.TemplateItem) {
 	me.templateMapLock.Lock()
 	defer me.templateMapLock.Unlock()
 	if me.templateMap == nil {
@@ -487,13 +546,13 @@ func (me *Document) templateAdd(id string, tmplItem *model.TemplateItem) {
 	}
 	me.templateMap[id] = tmplItem
 }
-func (me *Document) templateClear() {
+func (me *DocumentFlowInstance) templateClear() {
 	me.templateMapLock.Lock()
 	defer me.templateMapLock.Unlock()
 	me.templateMap = map[string]*model.TemplateItem{}
 }
 
-func (me *Document) templateExists(id string) bool {
+func (me *DocumentFlowInstance) templateExists(id string) bool {
 	me.templateMapLock.RLock()
 	defer me.templateMapLock.RUnlock()
 	if me.templateMap != nil {
@@ -504,7 +563,7 @@ func (me *Document) templateExists(id string) bool {
 	return false
 }
 
-func (me *Document) Previous() *Status {
+func (me *DocumentFlowInstance) Previous() *Status {
 	me.Confirmed = false
 	me.statusResult.HasPrev, _ = me.wfContext.Previous(true)
 	if !me.statusResult.HasPrev {
@@ -514,7 +573,7 @@ func (me *Document) Previous() *Status {
 	return me.statusResult
 }
 
-func (me *Document) getTemplate(id, lang string) (*file.IO, error) {
+func (me *DocumentFlowInstance) getTemplate(id, lang string) (*file.IO, error) {
 	me.templateMapLock.RLock()
 	defer me.templateMapLock.RUnlock()
 	if me.templateMap != nil {
@@ -527,7 +586,7 @@ func (me *Document) getTemplate(id, lang string) (*file.IO, error) {
 	return nil, os.ErrNotExist
 }
 
-func (me *Document) Preview(id, lang, strFormat string, resp *echo.Response) error {
+func (me *DocumentFlowInstance) Preview(id, lang, strFormat string, resp *echo.Response) error {
 	if available, err := me.isLangAvailable(lang); !available || err != nil {
 		return os.ErrNotExist
 	}
@@ -556,7 +615,7 @@ func (me *Document) Preview(id, lang, strFormat string, resp *echo.Response) err
 	return nil
 }
 
-func (me *Document) currentStatus(n *workflow.Node) error {
+func (me *DocumentFlowInstance) currentStatus(n *workflow.Node) error {
 	var err error
 	if n == nil {
 		n, err = me.wfContext.Current()
@@ -572,7 +631,7 @@ func (me *Document) currentStatus(n *workflow.Node) error {
 	return err
 }
 
-func (me *Document) updateDocs() {
+func (me *DocumentFlowInstance) updateDocs() {
 	me.statusResult.Docs = make([]interface{}, 0)
 	for k, v := range me.templateMap {
 		me.statusResult.addDoc(k, "", v)
@@ -584,12 +643,15 @@ func (me *Document) updateDocs() {
 ***************** START *********************
  */
 
-func (me *FormNodeImpl) Execute(n *workflow.Node, data interface{}) (proceed bool, err error) {
-	formData, err := me.ctx.getDataFor(n.ID)
-	me.ctx.statusResult.CurrentType = n.Type
-	if err != nil {
-		return false, err
+func (me *FormNodeImpl) Execute(n *workflow.Node) (proceed bool, err error) {
+	//formData, err := me.ctx.getDataFor(n.ID)
+	formDataIf, _ := me.ctx.getDataByPath("input")
+	var formData map[string]interface{}
+	if v, ok := formDataIf.(map[string]interface{}); ok {
+		formData = v
 	}
+	me.ctx.statusResult.CurrentType = n.Type
+
 	if !me.presented {
 		formItem, err := me.ctx.system.DB.Form.Get(me.ctx.auth, n.ID)
 		if err != nil {
@@ -638,7 +700,7 @@ func (me *FormNodeImpl) Close() {
 ***************** START *********************
  */
 
-func (me *DocTmplNodeImpl) Execute(n *workflow.Node, dat interface{}) (proceed bool, err error) {
+func (me *DocTmplNodeImpl) Execute(n *workflow.Node) (proceed bool, err error) {
 	me.ctx.statusResult.CurrentType = n.Type
 	uniqueNodeId := n.WFUniqueID()
 	if !me.ctx.templateExists(uniqueNodeId) {
@@ -672,7 +734,7 @@ func (me *DocTmplNodeImpl) Close() {
 ***** Node Implementation type "template" *******
  */
 
-func (me *Document) Close() error {
+func (me *DocumentFlowInstance) Close() error {
 	if me.DataCluster != nil {
 		return me.DataCluster.Close()
 	}

@@ -117,7 +117,7 @@ export default {
         this.$notify({
           group: 'app',
           title: this.$t('Success'),
-          text: this.$t('Deleted'),
+          text: this.$t('The API-Key was successfully deleted.'),
           type: 'success'
         })
         this.reloadKeys()
@@ -126,7 +126,7 @@ export default {
         this.$notify({
           group: 'app',
           title: this.$t('Error'),
-          text: this.$t('Could not delete'),
+          text: this.$t('Could not delete API-Key. Please try again or if the error persists contact the platform operator.'),
           type: 'error'
         })
       })
@@ -143,7 +143,7 @@ export default {
         this.$notify({
           group: 'app',
           title: this.$t('Success'),
-          text: this.$t('Saved'),
+          text: this.$t('The API-Key was successfully saved.'),
           type: 'success'
         })
       }, (err) => {
@@ -151,7 +151,7 @@ export default {
         this.$notify({
           group: 'app',
           title: this.$t('Error'),
-          text: this.$t('Could not save'),
+          text: this.$t('Could not save API-Key. Please try again or if the error persists contact the platform operator.'),
           type: 'error'
         })
       })

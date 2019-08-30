@@ -76,7 +76,7 @@
           </div>
           <div class="py-2 px-2 w-auto">
             <button type="button" @click="create" class="btn btn-primary btn-round"
-                    :disabled="newElement.name === ''">
+                    :disabled="newElement.name === '' || displayPrice === true && newElement.price === ''">
               <span class="material-icons">check</span>
             </button>
           </div>
@@ -86,7 +86,7 @@
     <slot name="list">
       <div v-if="!elements || elements.length===0" class="no-elements mt-3">
         <div v-if="loading" style="height: 60px;width: 100%;"></div>
-        <span v-else class="light-text">No elements found</span>
+        <span v-else class="light-text">{{ $t('No elements found') }}</span>
       </div>
       <table v-else class="nicetbl tblspacing">
         <tbody>
@@ -339,7 +339,7 @@ export default {
         this.$notify({
           group: 'app',
           title: this.$t('Error'),
-          text: this.$t('Decimal numbers are not allowed for the XES Price'),
+          text: this.$t('Decimal numbers are not allowed for the XES Price field.'),
           type: 'error'
         })
         return
@@ -355,7 +355,7 @@ export default {
         this.$notify({
           group: 'app',
           title: this.$t('Success'),
-          text: 'Created new item',
+          text: 'The new item has been created successfully.',
           type: 'success'
         })
       }, (err) => {
@@ -363,7 +363,8 @@ export default {
         this.app.handleError(err)
         this.$notify({
           group: 'app',
-          title: 'Could not create element.',
+          title: 'Error',
+          text: 'The element could not be created. Please try again or if the error persists contact the platform operator.',
           type: 'error'
         })
       })

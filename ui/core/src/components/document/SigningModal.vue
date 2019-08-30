@@ -46,8 +46,8 @@ export default {
     send (addr) {
       this.$notify({
         group: 'app',
-        title: 'Signature request',
-        text: 'Requesting signature...',
+        title: this.$t('Signature request'),
+        text: this.$t('Requesting signature...'),
         type: 'info'
       })
       var bodyFormData = new FormData()
@@ -60,8 +60,8 @@ export default {
       }).then(response => {
         this.$notify({
           group: 'app',
-          title: 'Signature request',
-          text: 'Sent!',
+          title: this.$t('Signature request'),
+          text: this.$t('Signature request successfully sent.'),
           type: 'success'
         })
         $('#signingModal').modal('hide')
@@ -71,14 +71,13 @@ export default {
         console.log(err)
         this.$notify({
           group: 'app',
-          title: 'Failed to request signature',
-          text: 'Signatory has no Ethereum address defined or already requested',
-          type: 'error'
+          title: this.$t('Failed to request signature'),
+          text: this.$t('The signatory has no either no Ethereum address defined or was already requested.'),
+          type: 'error',
+          duration: 5000
         })
-        return false
       }).catch(e => {
         console.log(e)
-        return false
       })
     },
     cancel () {
@@ -115,6 +114,9 @@ export default {
 </script>
 
 <style scoped>
+  .modal-dialog{
+    top: 55px
+  }
   .modal-body p{
     margin: 25px
   }

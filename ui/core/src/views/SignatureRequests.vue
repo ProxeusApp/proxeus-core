@@ -6,6 +6,9 @@
       <div class="col-sm-12 mt-3">
         <div class="row">
           <div class="col-sm-12 col-md-12">
+            <div v-if="appBlockchainNet !== clientProvidedNet" class="alert alert-warning mb-3" role="alert">
+              {{$t('Document buy help 3', 'Make sure you are logged in to the "{network}" network in metamask.', { network: appBlockchainNet })}}
+            </div>
             <div v-if="!isConnectedAccount" class="alert alert-warning mb-3" role="alert">
               {{$t('Document sign help', 'Make sure that you are logged into the correct account in MetaMask. The signature must be made from the ethereum-account that you have connected in your account settings. Switch Metamask account and make sure that you have set your ethereum address in your account account settings on the top right.')}}
             </div>
@@ -15,7 +18,8 @@
             <div class="alert alert-light" role="alert" v-if="documents.length === 0">{{$t('You currently have no Signature Requests.', 'You currently have no Signature Requests.')}}</div>
             <div v-else v-for="(doc, index) in documents" class="card mb-1">
               <div class="card-body p-0">
-                <signature-request :doc="doc" :index="index" :isConnectedAccount="isConnectedAccount"></signature-request>
+                <signature-request :doc="doc" :index="index" :isConnectedAccount="isConnectedAccount" :appBlockchainNet="appBlockchainNet" :clientProvidedNet="clientProvidedNet">
+                </signature-request>
               </div>
             </div>
           </div>
@@ -44,6 +48,8 @@ export default {
       walletErrorMessage: '',
       accountEthAddress: '',
       isConnectedAccount: false,
+      appBlockchainNet: '',
+      clientProvidedNet: '',
       me: ''
     }
   },
@@ -53,8 +59,25 @@ export default {
   async mounted () {
     this.setAccountEthAddress()
     this.checkConnectedAccount()
+    this.checkBlockchainNetwork()
   },
   methods: {
+    async checkBlockchainNetwork () {
+      let r = await axios.get('/api/config')
+      if (!r.data) {
+        return
+      }
+      if (!r.data.blockchainNet) {
+        return
+      }
+      this.appBlockchainNet = r.data.blockchainNet
+
+      try {
+        this.clientProvidedNet = await this.app.wallet.getClientProvidedNetwork()
+      } catch (e) {
+        console.log(e)
+      }
+    },
     async setAccountEthAddress () {
       let response = await axios.get('/api/me')
       if (response.data.etherPK) {
@@ -76,6 +99,7 @@ export default {
             this.isConnectedAccount = false
             return
           }
+          // check lowercase because window.ethereum.selectedAddress returns lowercase hash
           this.isConnectedAccount = this.me.toLowerCase() === this.accountEthAddress.toLowerCase()
         }
       } catch (e) {
@@ -92,7 +116,7 @@ export default {
           this.$notify({
             group: 'app',
             title: this.$t('Error'),
-            text: this.$t('Could not load documents'),
+            text: this.$t('Could not load documents. Please try again or if the error persists contact the platform operator.\n'),
             type: 'error'
           })
           this.$router.push({ name: 'Documents' })

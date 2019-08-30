@@ -147,7 +147,7 @@ func (me *DocTemplateDB) Get(auth model.Authorization, id string) (*model.Templa
 		return nil, err
 	}
 	itemRef := &item
-	if !itemRef.Permissions.IsReadGrantedFor(auth) {
+	if !itemRef.IsPublishedOrReadGrantedFor(auth) {
 		return nil, model.ErrAuthorityMissing
 	}
 	for _, v := range itemRef.Data {

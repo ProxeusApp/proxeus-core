@@ -5,19 +5,17 @@ import (
 	"reflect"
 	"strconv"
 
-	"git.proxeus.com/core/central/sys/model"
-)
-
-import (
 	"flag"
+
+	"git.proxeus.com/core/central/sys/model"
 )
 
 //This configuration can be used in two ways:
 //1. Using the default meta in a struct
 //2. Using the specified arguments in flag
 type Configuration struct {
-	EthClientURL    string `json:"ethClientURL" default:"https://ropsten.infura.io/v3/4876e0df8d31475799c8239ba2538c4c" usage:"Ethereum client URL"`
-	EthWebSocketURL string `json:"ethWebSocketURL" default:"wss://ropsten.infura.io/ws/v3/4876e0df8d31475799c8239ba2538c4c" usage:"Ethereum websocket URL"`
+	EthClientURL    string `json:"ethClientURL" default:"https://ropsten.infura.io/v3/" usage:"Ethereum client URL"`
+	EthWebSocketURL string `json:"ethWebSocketURL" default:"wss://ropsten.infura.io/ws/v3/" usage:"Ethereum websocket URL"`
 
 	ServiceAddress string `json:"serviceAddress" default:":1323" usage:"address and port of this service"`
 
@@ -31,6 +29,9 @@ type Configuration struct {
 var Config Configuration
 
 func init() {
+	if flag.Lookup("test.v") != nil {
+		return
+	}
 	flagStruct(Config)
 	pCfg := &Config
 	flag.Parse()
@@ -50,7 +51,7 @@ func init() {
 		} else if field.Kind() == reflect.Bool {
 			bl, _ := strconv.ParseBool(strFlagVal)
 			field.SetBool(bl)
-		} else if field.Type() == reflect.TypeOf(model.CREATOR) {
+		} else if field.Kind() != reflect.Invalid && field.Type() == reflect.TypeOf(model.CREATOR) {
 			pCfg.DefaultRole = model.StringToRole(strFlagVal)
 		}
 	})

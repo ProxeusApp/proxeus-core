@@ -9,7 +9,6 @@ import (
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/golang/mock/gomock"
 
-	"git.proxeus.com/core/central/lib/wallet"
 	"git.proxeus.com/core/central/sys/db/storm"
 	"git.proxeus.com/core/central/sys/model"
 )
@@ -29,7 +28,7 @@ func (me *workflowPaymentItemMatcher) Matches(x interface{}) bool {
 		log.Fatal("workflowPaymentItemMatcher cast error")
 	}
 	return workflowPaymentItem.WorkflowID == "" &&
-		me.transactionHash == workflowPaymentItem.Hash &&
+		me.transactionHash == workflowPaymentItem.TxHash &&
 		me.from == workflowPaymentItem.From &&
 		me.to == workflowPaymentItem.To &&
 		me.xes == workflowPaymentItem.Xes
@@ -97,13 +96,13 @@ func runTest(mockCtrl *gomock.Controller, xesAmount *big.Int, addPaymentExpected
 		paymentsDBMock.EXPECT().Add(workflowPaymentItemMatcher)
 	}
 
-	event := &wallet.XesMainTokenTransfer{
+	event := &XesMainTokenTransfer{
 		Value:       xes,
 		FromAddress: common.HexToAddress(from),
 		ToAddress:   common.HexToAddress(to),
 	}
 
-	listener := &paymentlistener{
+	listener := &Paymentlistener{
 		xesAdapter:         adapterMock,
 		workflowPaymentsDB: paymentsDBMock,
 	}

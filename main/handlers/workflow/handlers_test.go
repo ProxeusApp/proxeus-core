@@ -55,7 +55,7 @@ func TestAddWorkflowPayment(t *testing.T) {
 		userDBMock.EXPECT().Get(gomock.Any(), gomock.Eq("1")).Return(user, nil).Times(1)
 		userDBMock.EXPECT().Get(gomock.Any(), gomock.Eq(ownerUser.EthereumAddr)).Return(ownerUser, nil).Times(1)
 
-		workflowPaymentItem := &model.WorkflowPaymentItem{Xes: 2000000000000000000, From: user.EthereumAddr, To: "0x3", Hash: "0x5"}
+		workflowPaymentItem := &model.WorkflowPaymentItem{Xes: 2000000000000000000, From: user.EthereumAddr, To: "0x3", TxHash: "0x5"}
 		workflowPaymentsDBMock := storm.NewMockWorkflowPaymentsDBInterface(mockCtrl)
 		workflowPaymentsDBMock.EXPECT().GetByTxHash(gomock.Any()).Return(workflowPaymentItem, nil).Times(1)
 		workflowPaymentsDBMock.EXPECT().Add(gomock.Any()).Return(nil).Times(1)
@@ -80,7 +80,7 @@ func TestAddWorkflowPayment(t *testing.T) {
 		userDBMock := storm.NewMockUserDBInterface(mockCtrl)
 		userDBMock.EXPECT().Get(gomock.Any(), gomock.Eq("1")).Return(user, nil).Times(1)
 
-		workflowPaymentItem := &model.WorkflowPaymentItem{Xes: 2000000000000000000, From: "0xWrong", To: "0x3", Hash: "0x5"}
+		workflowPaymentItem := &model.WorkflowPaymentItem{Xes: 2000000000000000000, From: "0xWrong", To: "0x3", TxHash: "0x5"}
 		workflowPaymentsDBMock := storm.NewMockWorkflowPaymentsDBInterface(mockCtrl)
 		workflowPaymentsDBMock.EXPECT().GetByTxHash(gomock.Any()).Return(workflowPaymentItem, nil).Times(1)
 
@@ -103,7 +103,7 @@ func TestAddWorkflowPayment(t *testing.T) {
 	t.Run("AddWorkflowPaymentShouldFailPaymentItemWorkflowIDAlreadySet", func(t *testing.T) {
 		wwwContext, rec, user, _ := setupPaymentTest(http.MethodPost, "/api/admin/workflow/1/payment/0x2222")
 
-		workflowPaymentItem := &model.WorkflowPaymentItem{Xes: 2000000000000000000, From: user.EthereumAddr, To: "0x3", WorkflowID: "3", Hash: "0x5"}
+		workflowPaymentItem := &model.WorkflowPaymentItem{Xes: 2000000000000000000, From: user.EthereumAddr, To: "0x3", WorkflowID: "3", TxHash: "0x5"}
 		workflowPaymentsDBMock := storm.NewMockWorkflowPaymentsDBInterface(mockCtrl)
 		workflowPaymentsDBMock.EXPECT().GetByTxHash(gomock.Any()).Return(workflowPaymentItem, nil).Times(1)
 
@@ -130,7 +130,7 @@ func TestGetWorkflowPayment(t *testing.T) {
 		userDBMock.EXPECT().Get(gomock.Any(), gomock.Eq("1")).Return(user, nil).Times(2)
 		userDBMock.EXPECT().Get(gomock.Any(), gomock.Eq(ownerUser.EthereumAddr)).Return(ownerUser, nil).Times(1)
 
-		workflowPaymentItem := &model.WorkflowPaymentItem{Xes: 2000000000000000000, From: user.EthereumAddr, To: "0x3", WorkflowID: "3", Hash: "0x5"}
+		workflowPaymentItem := &model.WorkflowPaymentItem{Xes: 2000000000000000000, From: user.EthereumAddr, To: "0x3", WorkflowID: "3", TxHash: "0x5"}
 		workflowPaymentsDBMock := storm.NewMockWorkflowPaymentsDBInterface(mockCtrl)
 		workflowPaymentsDBMock.EXPECT().GetByWorkflowIdAndFromEthAddress(gomock.Eq(""), gomock.Eq(user.EthereumAddr)).Return(workflowPaymentItem, nil).Times(1)
 
@@ -146,7 +146,7 @@ func TestGetWorkflowPayment(t *testing.T) {
 		if assert.NoError(t, GetWorkflowPayment(wwwContext)) {
 			assert.Equal(t, http.StatusOK, rec.Code)
 			responseBody := rec.Body.String()
-			successResponseJSON := `{"hash":"0x5","workflowID":"3","From":"0x00","To":"0x3","xes":2000000000000000000}`
+			successResponseJSON := `{"hash":"0x5","workflowID":"3","From":"0x00","To":"0x3","xes":2000000000000000000,"Status":"","createdAt":"0001-01-01T00:00:00Z"}`
 			assert.Equal(t, successResponseJSON, strings.Trim(responseBody, "\n"))
 		}
 	})
@@ -155,7 +155,7 @@ func TestGetWorkflowPayment(t *testing.T) {
 
 		wwwContext, rec, user, _ := setupPaymentTest(http.MethodGet, "/api/admin/workflow/1/payment?txHash=0x2222")
 
-		workflowPaymentItem := &model.WorkflowPaymentItem{Xes: 2000000000000000000, From: user.EthereumAddr, To: "0x3", WorkflowID: "3", Hash: "0x5"}
+		workflowPaymentItem := &model.WorkflowPaymentItem{Xes: 2000000000000000000, From: user.EthereumAddr, To: "0x3", WorkflowID: "3", TxHash: "0x5"}
 		workflowPaymentsDBMock := storm.NewMockWorkflowPaymentsDBInterface(mockCtrl)
 		workflowPaymentsDBMock.EXPECT().GetByTxHash(gomock.Eq("0x2222")).Return(workflowPaymentItem, nil).Times(1)
 
@@ -166,7 +166,7 @@ func TestGetWorkflowPayment(t *testing.T) {
 		if assert.NoError(t, GetWorkflowPayment(wwwContext)) {
 			assert.Equal(t, http.StatusOK, rec.Code)
 			responseBody := rec.Body.String()
-			successResponseJSON := `{"hash":"0x5","workflowID":"3","From":"0x00","To":"0x3","xes":2000000000000000000}`
+			successResponseJSON := `{"hash":"0x5","workflowID":"3","From":"0x00","To":"0x3","xes":2000000000000000000,"Status":"","createdAt":"0001-01-01T00:00:00Z"}`
 			assert.Equal(t, successResponseJSON, strings.Trim(responseBody, "\n"))
 		}
 	})
@@ -178,7 +178,7 @@ func TestGetWorkflowPayment(t *testing.T) {
 		userDBMock := storm.NewMockUserDBInterface(mockCtrl)
 		userDBMock.EXPECT().Get(gomock.Any(), gomock.Eq("1")).Return(user, nil).Times(1)
 
-		workflowPaymentItem := &model.WorkflowPaymentItem{Xes: 2100000000000000000, From: user.EthereumAddr, To: "0x3", WorkflowID: "3", Hash: "0x5"}
+		workflowPaymentItem := &model.WorkflowPaymentItem{Xes: 2100000000000000000, From: user.EthereumAddr, To: "0x3", WorkflowID: "3", TxHash: "0x5"}
 		workflowPaymentsDBMock := storm.NewMockWorkflowPaymentsDBInterface(mockCtrl)
 		workflowPaymentsDBMock.EXPECT().GetByWorkflowIdAndFromEthAddress(gomock.Eq(""), gomock.Eq(user.EthereumAddr)).Return(workflowPaymentItem, nil).Times(1)
 
@@ -206,7 +206,7 @@ func TestGetWorkflowPayment(t *testing.T) {
 		userDBMock.EXPECT().Get(gomock.Any(), gomock.Eq("1")).Return(user, nil).Times(2)
 		userDBMock.EXPECT().Get(gomock.Any(), gomock.Eq(ownerUser.EthereumAddr)).Return(ownerUser, nil).Times(1)
 
-		workflowPaymentItem := &model.WorkflowPaymentItem{Xes: 2100000000000000000, From: user.EthereumAddr, To: "0xWrong", WorkflowID: "3", Hash: "0x5"}
+		workflowPaymentItem := &model.WorkflowPaymentItem{Xes: 2100000000000000000, From: user.EthereumAddr, To: "0xWrong", WorkflowID: "3", TxHash: "0x5"}
 		workflowPaymentsDBMock := storm.NewMockWorkflowPaymentsDBInterface(mockCtrl)
 		workflowPaymentsDBMock.EXPECT().GetByWorkflowIdAndFromEthAddress(gomock.Eq(""), gomock.Eq(user.EthereumAddr)).Return(workflowPaymentItem, nil).Times(1)
 

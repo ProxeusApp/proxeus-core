@@ -15,7 +15,7 @@
         <table style="margin-right: 15px;" v-else-if="showSignInBtn()"><tbody><tr>
             <td class="tdmin impcnt"><a href="/register" class="btn btn-primary text-white">{{$t('Sign up')}}</a></td>
             <td class="tdmin impcnt"><a style="margin-left: 14px;" href="/login"
-                                        class="btn btn-primary text-white">{{$t('Sign in')}}</a></td>
+                                        class="btn btn-primary text-white">{{$t('Sign in','Log in')}}</a></td>
         </tr></tbody></table>
         <span v-show="showOverlay" class="trp-overlay">
             <div class="trp-overlay-body">

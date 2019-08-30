@@ -9,8 +9,7 @@
           </button>
         </div>
         <div class="modal-body px-3">
-          <iframe v-if="app.userIsCreatorOrHigher()" frameborder="0" width="100%" height="100%" src="https://docs.google.com/document/d/e/2PACX-1vSp1Mk4mlyvxRf36qUXFWGFeqrCZEhTniMGQRCPfiGvgdS9pB1wDjED89LZzqqWbD72R9s388oAMJ-4/pub?embedded=true"></iframe>
-          <iframe v-else frameborder="0" width="100%" height="100%" src="https://docs.google.com/document/d/e/2PACX-1vQfPfXcYSnQXvZC3FNvnAZ_D49xnmOQ8V2xv6ftNTbPgQXz6Jze-AUPtBU-XiQKmwlNbdypiVsyxOkm/pub?embedded=true"></iframe>
+          <iframe frameborder="0" width="100%" height="100%" :src="previewUrl"></iframe>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-primary" data-dismiss="modal">{{$t('Dont show this again')}}</button>
@@ -27,14 +26,16 @@ import mafdc from '@/mixinApp'
 export default {
   mixins: [mafdc],
   name: 'FirstLoginOverlay',
+  props: {
+    keyz: { type: String, required: true }, // A key to assign to the overlay. the overlay could be shown somewhere else,
+    previewUrl: { type: String, required: true }
+  },
   mounted () {
-    const firstLogin = sessionStorage.getItem('firstLogin')
-    const delayedMessage = localStorage.getItem('showFirstLoginMessageOn')
+    const delayedMessage = localStorage.getItem('showFirstLoginMessageOn-' + this.$props.keyz)
 
-    if (firstLogin || (delayedMessage && new Date(delayedMessage).getTime() < new Date().getTime())) {
+    if (delayedMessage && new Date(delayedMessage).getTime() < new Date().getTime()) {
       $(this.$refs.firstLoginModal).modal('show')
-      sessionStorage.removeItem('firstLogin')
-      localStorage.removeItem('showFirstLoginMessageOn')
+      localStorage.removeItem('showFirstLoginMessageOn-' + this.$props.keyz)
     }
   },
   methods: {
@@ -43,7 +44,7 @@ export default {
       const now = new Date()
       const showAt = new Date(now.getTime() + milliseconds)
 
-      localStorage.setItem('showFirstLoginMessageOn', showAt)
+      localStorage.setItem('showFirstLoginMessageOn-' + this.$props.keyz, showAt)
       console.log('Will show the message again later...', showAt)
 
       return true
