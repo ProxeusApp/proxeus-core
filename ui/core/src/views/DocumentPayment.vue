@@ -5,7 +5,7 @@
     <div class="main-container">
       <div class="p-4 bg-light" style="position: relative">
         <h1 class="mb-3">{{$t('Document', 'Document')}} </h1>
-        <p class="text-danger" v-if="walletErrorMessage">{{ walletErrorMessage }}</p>
+        <p class="text-danger font-weight-bold" v-if="walletErrorMessage">{{ walletErrorMessage }}</p>
         <h2 class="mb-1">{{$t('Name', 'Name')}} </h2>
         <p>{{workflow.name}}</p>
         <h2 class="mb-1">{{$t('Description', 'Description')}}</h2>
@@ -18,13 +18,19 @@
         <div v-show="submitting" class="v-fade" style="position:absolute;top:0;left:0;bottom:0;right:0;margin-top: 50px;">
           <div>
             <spinner background="transparent"/>
-            <div style="margin: 155px auto 100px;position: relative; text-align: center;">Please wait for your transaction to be confirmed.</div>
+            <div style="margin: 155px auto 100px;position: relative; text-align: center;">
+              <div>{{$t('Please wait for your transaction to be confirmed.', 'Please wait for your transaction to be confirmed.')}}</div>
+              <div>{{$t('Stay on this page until the transaction has been successfully processed.', 'Stay on this page until the transaction has been successfully processed.')}}</div>
+            </div>
           </div>
         </div>
-        <button type="button" class="btn btn-primary mr-4 mb-1" @click="payDocument()" :disabled="submitting || !isConnectedAccount"
+        <button type="button" class="btn btn-primary mr-4 mb-1" @click="payDocument()" :disabled="submitting || !isConnectedAccount || appBlockchainNet !== clientProvidedNet"
                 :title="$t('Buy Document', 'Buy Document')">
           <span>{{$t('Buy Document', 'Buy Document')}}</span>
         </button>
+        <div v-if="appBlockchainNet !== clientProvidedNet" class="alert alert-warning mb-3" role="alert">
+          {{$t('Document buy help 3', 'In order to pay you must be on logged in to the "{network}" network in metamask.', { network: appBlockchainNet })}}
+        </div>
         <div v-if="!isConnectedAccount" class="alert alert-warning mb-3" role="alert">
           {{$t('Document buy help 2', 'Make sure that you are logged into the correct account in MetaMask. The payment must be made from the ethereum-account that you have connected in your account settings. Switch Metamask account and make sure that you have set your ethereum address in your account account settings on the top right.')}}
         </div>
@@ -56,18 +62,49 @@ export default {
       workflow: {},
       submitting: false,
       isConnectedAccount: false,
+      appBlockchainNet: '',
+      clientProvidedNet: '',
       me: ''
     }
   },
   created () {
+    window.addEventListener('beforeunload', this.beforeUnload)
+  },
+  beforeDestroy () {
+    window.removeEventListener('beforeunload', this.beforeUnload)
+  },
+  beforeRouteLeave (to, from, next) {
+    if (this.submitting) {
+      const answer = window.confirm(this.$t('Blockchain progress alert warning',
+        'Its highly recommended to stay on this page until the metamask transaction has been confirmed, else your payment might not be successfully processed. ' +
+        '\n\nClick on "Cancel" to stay on this page or "OK" to leave.'))
+      if (answer) {
+        next()
+      } else {
+        next(false)
+      }
+    } else {
+      next()
+    }
   },
   async mounted () {
     this.getDocument()
     this.setAccountEthAddress()
     this.checkPaymentAndRedirectIfExists()
     this.checkConnectedAccount()
+    this.checkBlockchainNetwork()
   },
   methods: {
+    beforeUnload (e) {
+      if (this.submitting) {
+        e.preventDefault()
+        // custom messages are not supported anymore in beforeunload
+        // https://stackoverflow.com/questions/38879742/is-it-possible-to-display-a-custom-message-in-the-beforeunload-popup
+        // this return value is going to be used as a flag on the new browsers
+        return e.returnValue = this.$t('Blockchain progress alert warning 2',
+          'Its highly recommended to stay on this page until the metamask transaction has been confirmed, else your payment might not be successfully processed. ')
+      }
+    },
     checkPaymentAndRedirectIfExists () {
       console.log('Check payment ' + this.documentId)
       axios.get('/api/admin/workflow/' + this.documentId + '/payment').then(response => {
@@ -81,6 +118,22 @@ export default {
           console.log('no payment found')
         }
       })
+    },
+    async checkBlockchainNetwork () {
+      let r = await axios.get('/api/config')
+      if (!r.data) {
+        return
+      }
+      if (!r.data.blockchainNet) {
+        return
+      }
+      this.appBlockchainNet = r.data.blockchainNet
+
+      try {
+        this.clientProvidedNet = await this.app.wallet.getClientProvidedNetwork()
+      } catch (e) {
+        console.log(e)
+      }
     },
     async checkConnectedAccount () {
       console.log('Check connected account ' + this.documentId)
@@ -98,6 +151,7 @@ export default {
             this.isConnectedAccount = false
             return
           }
+          // check lowercase because window.ethereum.selectedAddress returns lowercase hash
           this.isConnectedAccount = this.me.toLowerCase() === this.accountEthAddress.toLowerCase()
         }
       } catch (e) {
@@ -126,7 +180,7 @@ export default {
           this.$notify({
             group: 'app',
             title: this.$t('Error'),
-            text: this.$t('Could not load Workflow'),
+            text: this.$t('Could not load Workflow. Please try again or if the error persists contact the platform operator.'),
             type: 'error'
           })
           this.$router.push({ to: 'Workflows' })
@@ -136,6 +190,7 @@ export default {
     wallet () {
       return this.app.wallet
     },
+    // Check if payment has been registered in the backend by payment listener
     async checkPaymentReceived (txHash) {
       let response = await axios.get('/api/admin/workflow/' + this.documentId + '/payment', {
         params: {
@@ -161,10 +216,10 @@ export default {
         this.$notify({
           group: 'app',
           title: this.$t('Error'),
-          text: this.$t('Please login to your wallet and refresh'),
+          text: this.$t('Please login to your wallet and refresh.'),
           type: 'error'
         })
-        this.walletErrorMessage = this.$t('Please login to your wallet and refresh')
+        this.walletErrorMessage = this.$t('Please login to your wallet and refresh.')
       }
 
       this.nonce = await this.app.wallet.proxeusFS.web3.eth.getTransactionCount(this.me)
@@ -181,26 +236,28 @@ export default {
           do {
             paymentReceived = await self.checkPaymentReceived(txHash)
             tryCount++
-            if (tryCount > 10) { // assume in ~30 seconds blockchain nodes are in sync
+            if (tryCount > 20) { // timeout after 200 seconds
               this.$notify({
                 group: 'app',
                 title: this.$t('Error'),
-                text: this.$t('Payment failed. Please try again.'),
+                text: this.$t('Payment failed. Please contact the platform operator.'),
                 type: 'error'
               })
+              this.walletErrorMessage = this.$t('Payment failed. Please contact the platform operator.')
               return
             }
             if (paymentReceived !== true) {
-              await self.sleep(3000)
+              await self.sleep(10000)
             }
           } while (paymentReceived !== true)
+          // Notify backend what workflow the user intended to buy
           axios.post('/api/admin/workflow/' + this.documentId + '/payment/' + txHash).then(response => {
           }).catch((error) => {
             console.log(error)
             this.$notify({
               group: 'app',
               title: this.$t('Error'),
-              text: this.$t('Payment failed. Please try again.'),
+              text: this.$t('Payment failed. Please try again or if the error persists contact the platform operator.'),
               type: 'error'
             })
           })
@@ -211,7 +268,7 @@ export default {
           this.$notify({
             group: 'app',
             title: this.$t('Error'),
-            text: this.$t('Payment failed. Please try again.'),
+            text: this.$t('Payment failed. Please try again or if the error persists contact the platform operator.'),
             type: 'error'
           })
         })

@@ -101,8 +101,8 @@ export default {
     document.addEventListener('keydown', this.keyboardHandler)
     if (this.userSrc) {
       this.formSrc = this.userSrc
-      this.loadComponents(() => {
-        this.initFb()
+      this.loadComponents((store) => {
+        this.initFb(store)
       })
     } else {
       axios.get('/api/admin/form/' + this.id).then(response => {
@@ -113,14 +113,14 @@ export default {
           if (response.data.data) {
             this.formSrc = response.data.data.formSrc
           }
-          this.loadComponents(() => {
-            this.initFb()
+          this.loadComponents((store) => {
+            this.initFb(store)
           })
         } else {
           this.$notify({
             group: 'app',
             title: this.$t('Error'),
-            text: this.$t('Could not load form'),
+            text: this.$t('Could not load form. Please try again or if the error persists contact the platform operator.'),
             type: 'error'
           })
           this.$router.push({ name: 'Forms' })
@@ -133,7 +133,7 @@ export default {
           this.$notify({
             group: 'app',
             title: this.$t('Error'),
-            text: this.$t('Could not load form'),
+            text: this.$t('Could not load form. Please try again or if the error persists contact the platform operator.'),
             type: 'error'
           })
           this.$router.push({ name: 'Forms' })
@@ -173,12 +173,14 @@ export default {
     loadComponents (done) {
       axios.get('/api/admin/form/component?l=1000').then(res => {
         this.components = {}
+        var has = false
         Object.entries(res.data).sort((a, b) => {
           return a[1].sortIndex - b[1].sortIndex
         }).forEach((entry) => {
+          has = true
           this.components[entry[0]] = entry[1]
         })
-        done()
+        done(!has)
       }, (err) => {
         this.app.handleError(err)
       })
@@ -226,7 +228,7 @@ export default {
         }
       })
     },
-    initFb () {
+    initFb (store) {
       let _this = this
       jQuery(function () {
         let myHtmlEntry = function (id, langCode, text) {
@@ -480,6 +482,10 @@ export default {
         }
         _this.myFormBuilder.init()
         window.__fb = _this.myFormBuilder
+        if (store) {
+          console.log('storing defaults')
+          _this.myFormBuilder.fb.componentsTab.storeComponents()
+        }
       })
       let lastFromSrc
 

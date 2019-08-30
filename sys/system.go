@@ -1,19 +1,26 @@
 package sys
 
 import (
+	"context"
 	"fmt"
 	"io"
 	"io/ioutil"
 	"os"
 	"os/user"
 	"path/filepath"
+	"strings"
 	"time"
 
+	"github.com/ethereum/go-ethereum/accounts/abi"
+
+	"git.proxeus.com/core/central/main/handlers/blockchain"
+
+	"log"
+
+	cfg "git.proxeus.com/core/central/main/config"
 	"git.proxeus.com/core/central/sys/cache"
 	"git.proxeus.com/core/central/sys/email"
 	"git.proxeus.com/core/central/sys/validate"
-
-	"log"
 
 	"git.proxeus.com/core/central/sys/db/storm"
 	"git.proxeus.com/core/central/sys/eio"
@@ -36,15 +43,16 @@ var (
 
 type (
 	System struct {
-		Debug            bool
-		SessionMgmnt     *session.Manager
-		DB               *storm.DBSet
-		DS               *eio.DocumentServiceClient
-		EmailSender      email.EmailSender
-		Cache            *cache.UCache
-		settingsDB       *storm.SettingsDB
-		settingsInUse    model.Settings
-		fallbackSettings *model.Settings
+		SessionMgmnt                *session.Manager
+		DB                          *storm.DBSet
+		DS                          *eio.DocumentServiceClient
+		EmailSender                 email.EmailSender
+		Cache                       *cache.UCache
+		settingsDB                  *storm.SettingsDB
+		settingsInUse               model.Settings
+		fallbackSettings            *model.Settings
+		paymentListenerCancelFunc   context.CancelFunc
+		signatureListenerCancelFunc context.CancelFunc
 	}
 	sessionNotify struct {
 		system *System
@@ -93,10 +101,7 @@ func NewWithSettings(settings model.Settings) (*System, error) {
 }
 
 func (me *System) init(stngs *model.Settings) error {
-	//err := validate.Struct(stngs)
-	//if err != nil {
-	//	return err
-	//}
+	log.Println("Init with settings: ", stngs)
 	var err error
 	var expiry time.Duration
 	expiry, err = time.ParseDuration(stngs.SessionExpiry)
@@ -104,50 +109,98 @@ func (me *System) init(stngs *model.Settings) error {
 		expiry = time.Hour
 	}
 
-	me.Debug = true //TODO read system settings from db
-	if me.DS == nil || me.settingsInUse.DocumentServiceUrl != stngs.DocumentServiceUrl {
-		me.DS = &eio.DocumentServiceClient{Url: stngs.DocumentServiceUrl}
-		me.settingsInUse.DocumentServiceUrl = stngs.DocumentServiceUrl
+	me.DS = &eio.DocumentServiceClient{Url: stngs.DocumentServiceUrl}
+	me.settingsInUse.DocumentServiceUrl = stngs.DocumentServiceUrl
+
+	me.EmailSender, err = email.NewSparkPostEmailSender(stngs.SparkpostApiKey, stngs.EmailFrom)
+	if err != nil {
+		return err
+	}
+	me.settingsInUse.SparkpostApiKey = stngs.SparkpostApiKey
+
+	if stngs.BlockchainNet == "ropsten" {
+		cfg.Config.XESContractAddress = "0x84E0b37e8f5B4B86d5d299b0B0e33686405A3919"
+		cfg.Config.EthClientURL = "https://ropsten.infura.io/v3/" + stngs.InfuraApiKey
+		cfg.Config.EthWebSocketURL = "wss://ropsten.infura.io/ws/v3/" + stngs.InfuraApiKey
+	} else if stngs.BlockchainNet == "mainnet" {
+		cfg.Config.XESContractAddress = "0xa017ac5fac5941f95010b12570b812c974469c2c"
+		cfg.Config.EthClientURL = "https://mainnet.infura.io/v3/" + stngs.InfuraApiKey
+		cfg.Config.EthWebSocketURL = "wss://mainnet.infura.io/ws/v3/" + stngs.InfuraApiKey
+	} else {
+		log.Println("Wrong blockchain network: ", stngs.BlockchainNet)
 	}
 
-	if me.EmailSender == nil || me.settingsInUse.SparkpostApiKey != stngs.SparkpostApiKey {
-		me.EmailSender, err = email.NewSparkPostEmailSender(stngs.SparkpostApiKey)
-		if err != nil {
-			return err
-		}
-		me.settingsInUse.SparkpostApiKey = stngs.SparkpostApiKey
+	me.closeDBs()
+	var cacheExpiry time.Duration
+	cacheExpiry, err = time.ParseDuration(stngs.CacheExpiry)
+	if err != nil {
+		cacheExpiry = time.Hour
 	}
-	if me.Cache == nil || me.settingsInUse.DataDir != stngs.DataDir || me.settingsInUse.CacheExpiry != stngs.CacheExpiry {
-		me.closeDBs()
-		var cacheExpiry time.Duration
-		cacheExpiry, err = time.ParseDuration(stngs.CacheExpiry)
-		if err != nil {
-			cacheExpiry = time.Hour
-		}
-		config := cache.UCacheConfig{
-			DiskStorePath: filepath.Join(stngs.DataDir, "cache"),
-			StoreType:     cache.DiskCache,
-			ExtendExpiry:  false,
-			DefaultExpiry: cacheExpiry,
-		}
-		me.Cache, err = cache.NewUCache(config)
-		if err != nil {
-			return err
-		}
 
-		me.DB, err = storm.NewDBSet(me.settingsDB, stngs.DataDir)
+	_, err = os.Stat(stngs.DataDir)
+	if os.IsNotExist(err) {
+		err = os.MkdirAll(stngs.DataDir, 0755)
 		if err != nil {
 			return err
 		}
-		sessionNotify := &sessionNotify{system: me}
-		me.SessionMgmnt, err = session.NewManagerWithNotify(stngs.DataDir, expiry, sessionNotify)
-		if err != nil {
-			return err
-		}
-		me.settingsInUse.DataDir = stngs.DataDir
 	}
-	me.DB.SignatureRequestsDB, err = storm.NewSignatureDB(stngs.DataDir)
-	me.DB.WorkflowPaymentsDB, err = storm.NewWorkflowPaymentDB(stngs.DataDir)
+	config := cache.UCacheConfig{
+		DiskStorePath: filepath.Join(stngs.DataDir, "cache"),
+		StoreType:     cache.DiskCache,
+		ExtendExpiry:  false,
+		DefaultExpiry: cacheExpiry,
+	}
+	me.Cache, err = cache.NewUCache(config)
+	if err != nil {
+		return err
+	}
+
+	me.DB, err = storm.NewDBSet(me.settingsDB, stngs.DataDir)
+	if err != nil {
+		return err
+	}
+	sessionNotify := &sessionNotify{system: me}
+	me.SessionMgmnt, err = session.NewManagerWithNotify(stngs.DataDir, expiry, sessionNotify)
+	if err != nil {
+		return err
+	}
+	me.settingsInUse.DataDir = stngs.DataDir
+
+	XESABI, err := abi.JSON(strings.NewReader(blockchain.XesMainTokenABI))
+	if err != nil {
+		panic(err)
+	}
+
+	log.Println("blockchain config ethURL: ", cfg.Config.EthClientURL)
+	log.Println("blockchain config ethWebSocketURL: ", cfg.Config.EthWebSocketURL)
+
+	xesAdapter := blockchain.NewAdapter(cfg.Config.XESContractAddress, XESABI)
+
+	bcListenerPayment := blockchain.NewPaymentListener(xesAdapter, cfg.Config.EthWebSocketURL,
+		cfg.Config.EthClientURL, me.DB.WorkflowPaymentsDB)
+	ctxPay := context.Background()
+	ctxPay, cancelPay := context.WithCancel(ctxPay)
+	if me.paymentListenerCancelFunc != nil {
+		me.paymentListenerCancelFunc()
+	}
+	me.paymentListenerCancelFunc = cancelPay
+	go bcListenerPayment.Listen(ctxPay)
+
+	ProxeusFSABI, err := abi.JSON(strings.NewReader(blockchain.ProxeusFSABI))
+	if err != nil {
+		panic(err)
+	}
+
+	bcListenerSignature := blockchain.NewSignatureListener(cfg.Config.EthWebSocketURL,
+		cfg.Config.EthClientURL, stngs.BlockchainContractAddress, me.DB.SignatureRequestsDB, me.DB.User, me.EmailSender, ProxeusFSABI, cfg.Config.PlatformDomain)
+	ctxSig := context.Background()
+	ctxSig, cancelSig := context.WithCancel(ctxPay)
+	if me.signatureListenerCancelFunc != nil {
+		me.signatureListenerCancelFunc()
+	}
+	me.signatureListenerCancelFunc = cancelSig
+	go bcListenerSignature.Listen(ctxSig)
+
 	return nil
 }
 
@@ -330,7 +383,10 @@ func (me *System) closeDBs() {
 	if me.DB == nil {
 		return
 	}
-	_ = me.DB.Close()
+	err := me.DB.Close()
+	if err != nil {
+		log.Println("[system][closeDBs] err: ", err.Error())
+	}
 }
 
 func (me *System) Shutdown() {

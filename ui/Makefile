@@ -7,9 +7,6 @@ init:
 check-node-version:
 	yarn run check-node-version
 
-validate: init check-node-version
-	../build/validate-ui.sh
-
 serve-main-hosted: check-node-version
 	cd core && yarn run serve
 

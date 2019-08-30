@@ -11,7 +11,6 @@ import (
 
 	"github.com/asdine/storm"
 
-	"git.proxeus.com/core/central/main/customNode"
 	"git.proxeus.com/core/central/main/www"
 	"git.proxeus.com/core/central/sys/eio"
 	"git.proxeus.com/core/central/sys/form"
@@ -53,12 +52,8 @@ func ExecuteWorkflowAtOnce(c *www.Context, a model.Authorization, wfi *model.Wor
 			}
 			return nil, os.ErrNotExist
 		},
-		GetData: func() interface{} {
-			return map[string]interface{}{"input": inputData}
-		},
+		GetData: eaoc.getData,
 		NodeImpl: map[string]*workflow.NodeDef{
-			"ibmsender":  {InitImplFunc: customNode.NewIBMSenderNodeImpl, Background: true},
-			"mailsender": {InitImplFunc: customNode.NewMailSender, Background: false},
 			"form": {InitImplFunc: func(n *workflow.Node) (workflow.NodeIF, error) {
 				return &EAOFormNodeImpl{ctx: eaoc}, nil
 			}, Background: false},
@@ -88,7 +83,6 @@ func ExecuteWorkflowAtOnce(c *www.Context, a model.Authorization, wfi *model.Wor
 	if fileCount > 1 {
 		c.Response().Header().Set("Content-Disposition", "attachment;filename=\"docs.zip\"")
 		c.Response().Header().Set("Content-Type", "application/zip")
-		c.Response().Header().Set("Content-Length", "")
 		c.Response().Committed = true
 		return eaoc.WriteZIP(filePaths, c.Response().Writer)
 	}
@@ -153,6 +147,10 @@ func (me *ExecuteAtOnceContext) WriteZIP(filePaths []string, writer io.Writer) e
 	return nil
 }
 
+func (me *ExecuteAtOnceContext) getData() interface{} {
+	return map[string]interface{}{"input": me.data}
+}
+
 type EAOFormNodeImpl struct {
 	ctx *ExecuteAtOnceContext
 }
@@ -174,7 +172,7 @@ func (me *EAOFormNodeImpl) getDataFor(formItem *model.FormItem, id string) (map[
 	return nil, storm.ErrNotFound
 }
 
-func (me *EAOFormNodeImpl) Execute(n *workflow.Node, data interface{}) (proceed bool, err error) {
+func (me *EAOFormNodeImpl) Execute(n *workflow.Node) (proceed bool, err error) {
 	formItem, err := me.ctx.c.System().DB.Form.Get(me.ctx.a, n.ID)
 	if err != nil {
 		return false, err
@@ -198,7 +196,7 @@ func (me *EAOFormNodeImpl) Execute(n *workflow.Node, data interface{}) (proceed 
 func (me *EAOFormNodeImpl) Remove(n *workflow.Node) {}
 func (me *EAOFormNodeImpl) Close()                  {}
 
-func (me *EAODocTmplNodeImpl) Execute(n *workflow.Node, dat interface{}) (proceed bool, err error) {
+func (me *EAODocTmplNodeImpl) Execute(n *workflow.Node) (proceed bool, err error) {
 	var tmplItem *model.TemplateItem
 	tmplItem, err = me.ctx.c.System().DB.Template.Get(me.ctx.a, n.ID)
 	if err != nil {
@@ -207,7 +205,7 @@ func (me *EAODocTmplNodeImpl) Execute(n *workflow.Node, dat interface{}) (procee
 	if tmpl, ok := tmplItem.Data[me.ctx.lang]; ok {
 		var dsResp *http.Response
 		dsResp, err = me.ctx.c.System().DS.Compile(eio.Template{
-			Data:         dat,
+			Data:         me.ctx.getData(),
 			TemplatePath: tmpl.Path(),
 			EmbedError:   false,
 		})

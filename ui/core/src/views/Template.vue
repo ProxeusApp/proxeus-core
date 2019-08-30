@@ -289,7 +289,7 @@ export default {
           this.$notify({
             group: 'app',
             title: this.$t('Error'),
-            text: this.$t('Could not load template'),
+            text: this.$t('Could not load template. Please try again or if the error persists contact the platform operator.\n'),
             type: 'error'
           })
           this.$router.push({ name: 'Templates' })
@@ -371,7 +371,7 @@ export default {
                 this.$notify({
                   group: 'app',
                   title: this.$t('Error'),
-                  text: this.$t('Could not update template'),
+                  text: this.$t('Could not update template. Please try again or if the error persists contact the platform operator.\n'),
                   type: 'error'
                 })
               })
@@ -631,7 +631,7 @@ export default {
       this.$notify({
         group: 'app',
         title: this.$t('Error'),
-        text: error || this.$t('Could not connect to the server. Please try again.'),
+        text: error || this.$t('Could not connect to the server. Please try again or if the error persists contact the platform operator.\n'),
         type: 'error',
         duration: 5000
       })

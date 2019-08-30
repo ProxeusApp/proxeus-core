@@ -5,11 +5,9 @@ import (
 	"reflect"
 	"strconv"
 
-	"git.proxeus.com/core/central/sys/model"
-)
-
-import (
 	"flag"
+
+	"git.proxeus.com/core/central/sys/model"
 )
 
 //This configuration can be used in two ways:
@@ -31,6 +29,9 @@ type Configuration struct {
 var Config Configuration
 
 func init() {
+	if flag.Lookup("test.v") != nil {
+		return
+	}
 	flagStruct(Config)
 	pCfg := &Config
 	flag.Parse()
@@ -50,7 +51,7 @@ func init() {
 		} else if field.Kind() == reflect.Bool {
 			bl, _ := strconv.ParseBool(strFlagVal)
 			field.SetBool(bl)
-		} else if field.Type() == reflect.TypeOf(model.CREATOR) {
+		} else if field.Kind() != reflect.Invalid && field.Type() == reflect.TypeOf(model.CREATOR) {
 			pCfg.DefaultRole = model.StringToRole(strFlagVal)
 		}
 	})

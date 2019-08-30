@@ -63,9 +63,9 @@
           </li>
           <li class="nav-item" v-if="userCanAccessBackend">
             <a href="/admin/workflow" class="nav-link" data-toggle="tooltip" data-placement="right"
-               data-boundary="window" :title="$t('Menu Backend', 'Backend')"><span
+               data-boundary="window" :title="$t('Menu Backend', 'Admin Panel')"><span
               class="material-icons">event_note</span><span
-              class="nav-link-title">{{$t('Menu Backend', 'Backend')}}</span>
+              class="nav-link-title">{{$t('Menu Backend', 'Admin Panel')}}</span>
             </a>
           </li>
 

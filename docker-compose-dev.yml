@@ -1,0 +1,40 @@
+version: '3.7'
+
+networks:
+  xes-platform-network:
+    name: xes-platform-network
+
+services:
+  platform:
+    build:
+      context: .
+    container_name: xes_platform
+    networks: ['xes-platform-network']
+    restart: unless-stopped
+    environment:
+      TZ: Europe/Zurich
+      DataDir: "/data/hosted"
+      DocumentServiceUrl: "http://document-service:2115/"
+      BlockchainContractAddress: "${PROXEUS_CONTRACT_ADDRESS}"
+      InfuraApiKey: "${PROXEUS_INFURA_KEY}"
+      SparkpostApiKey: "${PROXEUS_SPARKPOST_KEY}" 
+      EmailFrom: "${PROXEUS_EMAIL_FROM:-no-reply@proxeus.com}"
+    ports:
+      - "1323:1323"
+    volumes:
+      - ${PROXEUS_DATA_DIR:-./data}/proxeus-platform/data:/data/hosted
+      - ${PROXEUS_DATA_DIR:-./data}/proxeus-platform/settings:/root/.proxeus/settings
+
+  document-service:
+    #todo: change image with proxeus docker registry
+    image: proxeus/document-service:latest
+    container_name: xes_document_service
+    networks: ['xes-platform-network']
+    restart: unless-stopped
+    environment:
+      TZ: Europe/Zurich
+    ports:
+      - "2115:2115"
+    volumes:
+      - ${PROXEUS_DATA_DIR:-./data}/document-service/logs:/document-service/logs
+      - ${PROXEUS_DATA_DIR:-./data}/document-service/fonts:/document-service/fonts

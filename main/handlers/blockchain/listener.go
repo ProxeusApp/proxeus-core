@@ -16,7 +16,6 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
 
-	"git.proxeus.com/core/central/lib/wallet"
 	"git.proxeus.com/core/central/main/ethglue"
 	"git.proxeus.com/core/central/sys/db/storm"
 	"git.proxeus.com/core/central/sys/model"
@@ -29,23 +28,25 @@ type (
 		ethURL          string
 		sub             ethereum.Subscription
 	}
-	paymentlistener struct {
+	Paymentlistener struct {
 		listener
 		workflowPaymentsDB storm.WorkflowPaymentsDBInterface
 		xesAdapter         adapter
 	}
-	signaturelistener struct {
+	Signaturelistener struct {
 		listener
 		signatureRequestsDB       storm.SignatureRequestsDB
 		userDB                    storm.UserDBInterface
 		emailSender               email.EmailSender
+		domain                    string
 		BlockchainContractAddress string
 		ProxeusFSABI              abi.ABI
+		emailFrom                 string
 	}
 )
 
-func NewPaymentListener(xesAdapter adapter, ethWebSocketURL, ethURL string, workflowPaymentsDB storm.WorkflowPaymentsDBInterface) *paymentlistener {
-	me := &paymentlistener{}
+func NewPaymentListener(xesAdapter adapter, ethWebSocketURL, ethURL string, workflowPaymentsDB storm.WorkflowPaymentsDBInterface) *Paymentlistener {
+	me := &Paymentlistener{}
 	me.xesAdapter = xesAdapter
 	me.ethWebSocketURL = ethWebSocketURL
 	me.ethURL = ethURL
@@ -54,27 +55,28 @@ func NewPaymentListener(xesAdapter adapter, ethWebSocketURL, ethURL string, work
 	return me
 }
 
-func (me *paymentlistener) Listen(ctx context.Context) {
-
+func (me *Paymentlistener) Listen(ctx context.Context) {
 	var readyCh <-chan struct{}
 
 	for {
 		readyCh = me.ethConnectWebSocketsAsync(ctx)
 		select {
 		case <-readyCh:
-			log.Println("listen() started...")
+			log.Println("[paymentlistener] listen on contract started. contract address: ", me.xesAdapter.getContractAddress())
 			reconnect := me.listenLoop(ctx)
 			if !reconnect {
+				log.Printf("[paymentlistener][eventHandler] finished")
 				return
 			}
 		case <-ctx.Done():
+			log.Printf("[paymentlistener][eventHandler] done")
 			return
 		}
 	}
 	return
 }
 
-func (me *paymentlistener) listenLoop(ctx context.Context) (shouldReconnect bool) {
+func (me *Paymentlistener) listenLoop(ctx context.Context) (shouldReconnect bool) {
 	for {
 		select {
 		case <-ctx.Done():
@@ -89,7 +91,7 @@ func (me *paymentlistener) listenLoop(ctx context.Context) (shouldReconnect bool
 			if !ok {
 				return true
 			}
-			event := new(wallet.XesMainTokenTransfer)
+			event := new(XesMainTokenTransfer)
 			err := me.eventsHandler(&vLog, event)
 			if err != nil {
 				if err == xesOverflowError {
@@ -101,7 +103,7 @@ func (me *paymentlistener) listenLoop(ctx context.Context) (shouldReconnect bool
 	}
 }
 
-func (me *paymentlistener) ethConnectWebSocketsAsync(ctx context.Context) <-chan struct{} {
+func (me *Paymentlistener) ethConnectWebSocketsAsync(ctx context.Context) <-chan struct{} {
 
 	filterAddresses := []common.Address{common.HexToAddress(me.xesAdapter.getContractAddress())}
 
@@ -140,7 +142,7 @@ func (me *paymentlistener) ethConnectWebSocketsAsync(ctx context.Context) <-chan
 
 var xesOverflowError = errors.New("overflow on xes event")
 
-func (me *paymentlistener) eventsHandler(lg *types.Log, event *wallet.XesMainTokenTransfer) error {
+func (me *Paymentlistener) eventsHandler(lg *types.Log, event *XesMainTokenTransfer) error {
 	log.Printf("[paymentlistener][eventHandler] txHash: %s, value: %s, %v",
 		lg.TxHash.String(), event.Value.String(), lg)
 	if err := me.xesAdapter.eventFromLog(event, lg, "Transfer"); err != nil {
@@ -155,16 +157,16 @@ func (me *paymentlistener) eventsHandler(lg *types.Log, event *wallet.XesMainTok
 	}
 
 	item := &model.WorkflowPaymentItem{
-		Hash: lg.TxHash.String(),
-		Xes:  bigXes.Uint64(),
-		From: event.FromAddress.String(),
-		To:   event.ToAddress.String(),
+		TxHash: lg.TxHash.String(),
+		Xes:    bigXes.Uint64(),
+		From:   event.FromAddress.String(),
+		To:     event.ToAddress.String(),
 	}
 	return me.workflowPaymentsDB.Add(item)
 }
 
-func NewSignatureListener(ethWebSocketURL, ethURL, BlockchainContractAddress string, SignatureRequestsDB *storm.SignatureRequestsDB, UserDB storm.UserDBInterface, EmailSender email.EmailSender, ProxeusFSABI abi.ABI) *signaturelistener {
-	me := &signaturelistener{}
+func NewSignatureListener(ethWebSocketURL, ethURL, BlockchainContractAddress string, SignatureRequestsDB *storm.SignatureRequestsDB, UserDB storm.UserDBInterface, EmailSender email.EmailSender, ProxeusFSABI abi.ABI, domain string) *Signaturelistener {
+	me := &Signaturelistener{}
 	me.BlockchainContractAddress = BlockchainContractAddress
 	me.ethWebSocketURL = ethWebSocketURL
 	me.ethURL = ethURL
@@ -172,11 +174,12 @@ func NewSignatureListener(ethWebSocketURL, ethURL, BlockchainContractAddress str
 	me.signatureRequestsDB = *SignatureRequestsDB
 	me.emailSender = EmailSender
 	me.userDB = UserDB
+	me.domain = domain
 	me.logs = make(chan types.Log, 200)
 	return me
 }
 
-func (me *signaturelistener) Listen(ctx context.Context) {
+func (me *Signaturelistener) Listen(ctx context.Context) {
 
 	var readyCh <-chan struct{}
 
@@ -184,7 +187,7 @@ func (me *signaturelistener) Listen(ctx context.Context) {
 		readyCh = me.ethConnectWebSocketsAsync(ctx)
 		select {
 		case <-readyCh:
-			log.Println("listen() started...")
+			log.Println("[signaturelistener] listen on contract started. contract address: ", me.BlockchainContractAddress)
 			reconnect := me.listenLoop(ctx)
 			if !reconnect {
 				log.Printf("[signaturelistener][eventHandler] finished")
@@ -198,7 +201,7 @@ func (me *signaturelistener) Listen(ctx context.Context) {
 	return
 }
 
-func (me *signaturelistener) listenLoop(ctx context.Context) (shouldReconnect bool) {
+func (me *Signaturelistener) listenLoop(ctx context.Context) (shouldReconnect bool) {
 	for {
 		select {
 		case <-ctx.Done():
@@ -218,7 +221,7 @@ func (me *signaturelistener) listenLoop(ctx context.Context) (shouldReconnect bo
 	}
 }
 
-func (me *signaturelistener) ethConnectWebSocketsAsync(ctx context.Context) <-chan struct{} {
+func (me *Signaturelistener) ethConnectWebSocketsAsync(ctx context.Context) <-chan struct{} {
 
 	filterAddresses := []common.Address{common.HexToAddress(me.BlockchainContractAddress)}
 
@@ -255,9 +258,9 @@ func (me *signaturelistener) ethConnectWebSocketsAsync(ctx context.Context) <-ch
 	return readyCh
 }
 
-func (me *signaturelistener) eventsHandler(lg *types.Log) {
+func (me *Signaturelistener) eventsHandler(lg *types.Log) {
 	log.Printf("[signaturelistener][eventHandler] txHash: %s, %v", lg.TxHash.String(), lg)
-	event := new(wallet.ProxeusFSFileSignedEvent)
+	event := new(ProxeusFSFileSignedEvent)
 	if err := me.eventFromLog(event, lg, "FileSignedEvent"); err == nil {
 		//Search for signingrequest in db
 		filehash := "0x" + hex.EncodeToString(event.Hash[:])
@@ -265,17 +268,26 @@ func (me *signaturelistener) eventsHandler(lg *types.Log) {
 		items, err := me.signatureRequestsDB.GetByHashAndSigner(filehash, signer)
 		if err == nil && len(*items) > 0 {
 			item := (*items)[0]
-			requestorAddr, err := me.userDB.GetByBCAddress(item.Signatory)
+			requestorAddr, err := me.userDB.GetByBCAddress(item.Requestor)
+			if err != nil {
+				log.Println("Coudln't retrieve requestor for event: ", err)
+				return
+			}
+			signatory, err := me.userDB.GetByBCAddress(signer)
+			if err != nil {
+				log.Println("Coudln't retrieve signer for event: ", err)
+				return
+			}
 			if err == nil {
-				if len(requestorAddr.Email) > 3 {
-					me.emailSender.Send(&email.Email{From: "info@proxeus.com", To: []string{requestorAddr.Email}, Subject: "Signature granted", Body: "<div>Your signature request for a document on dev.proxeus.com from " + item.RequestedAt.Format("2.1.2006 15:04") + "<br />has been accepted by " + requestorAddr.Name + " (" + requestorAddr.Email + ")<br />" + requestorAddr.EthereumAddr + "<br /><br />The document is now cryptographically signed by this user on dev.proxeus.com.</div>"})
+				if requestorAddr != nil && signatory != nil && len(requestorAddr.Email) > 3 {
+					me.emailSender.Send(&email.Email{To: []string{requestorAddr.Email}, Subject: "Signature granted", Body: "<div>Your signature request for a document on dev.proxeus.com from " + item.RequestedAt.Format("2.1.2006 15:04") + "<br />has been accepted by " + signatory.Name + " (" + signatory.Email + ")<br />" + signatory.EthereumAddr + "<br /><br />The document is now cryptographically signed by this user on " + me.domain + ".</div>"})
 				}
 			}
 		}
 	}
 }
 
-func (me *signaturelistener) eventFromLog(out interface{}, lg *types.Log, eventType string) error {
+func (me *Signaturelistener) eventFromLog(out interface{}, lg *types.Log, eventType string) error {
 	pfsLogUnpacker := bind.NewBoundContract(common.HexToAddress(me.BlockchainContractAddress), me.ProxeusFSABI,
 		nil, nil, nil)
 

@@ -60,7 +60,7 @@ func (me *WorkflowPaymentsDB) GetByTxHash(txHash string) (*model.WorkflowPayment
 	}
 	var item model.WorkflowPaymentItem
 	defer tx.Rollback()
-	err = tx.One("Hash", txHash, &item)
+	err = tx.One("TxHash", txHash, &item)
 	if err != nil {
 		return nil, err
 	}
@@ -113,7 +113,7 @@ func (me *WorkflowPaymentsDB) Delete(txHash string) error {
 	}
 	defer tx.Rollback()
 	var item model.WorkflowPaymentItem
-	err = tx.One("Hash", txHash, &item)
+	err = tx.One("TxHash", txHash, &item)
 	if err != nil {
 		return err
 	}

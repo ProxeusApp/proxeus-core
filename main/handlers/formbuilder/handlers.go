@@ -141,17 +141,6 @@ func DeleteHandler(e echo.Context) error {
 		if err != nil {
 			return c.String(http.StatusBadRequest, err.Error())
 		}
-
-		workflow, err := c.System().DB.Workflow.Get(sess, ID)
-		if err != nil {
-			return c.String(http.StatusBadRequest, err.Error())
-		}
-
-		err = c.System().DB.Workflow.Put(sess, workflow)
-		if err != nil {
-			return c.String(http.StatusBadRequest, err.Error())
-		}
-
 		return c.NoContent(http.StatusOK)
 	}
 	return c.NoContent(http.StatusBadRequest)

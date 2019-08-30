@@ -9,11 +9,14 @@ import (
 
 var ErrAuthorityMissing = fmt.Errorf("authority missing")
 
-//Permission holds an int slice for the pattern --/rw or ----/r-r- and so on
+//Permission holds an byte slice for the pattern --/rw or ----/r-r- and so on
 // none     read    write
 //0 == - | 1 == r | 2 == w
 //to support []byte we implement the json marshaller interface otherwise use []int
 type Permission []byte
+
+const read = 1
+const write = 2
 
 type Authorization interface {
 	UserID() string
@@ -48,6 +51,9 @@ type Permissions struct {
 	//Accessible by everyone who has the ID
 	//Allowed to modify: everyone with write rights!
 	PublicByID Permission `json:"publicByID,omitempty"`
+
+	//Execute only! If read or write not set.
+	Published bool `json:"published"`
 }
 
 func PermissionFrom(readablePattern string) (Permission, error) {
@@ -60,10 +66,10 @@ func PermissionFrom(readablePattern string) (Permission, error) {
 	p := make(Permission, len(readablePattern)/2)
 	for i, ii := 0, 0; ii < len(readablePattern); i, ii = i+1, ii+2 {
 		if readablePattern[ii:ii+1] == "r" {
-			p[i] = 1
+			p[i] = read
 		}
 		if readablePattern[ii+1:ii+2] == "w" {
-			p[i] = 2
+			p[i] = write
 		}
 	}
 	return p, nil
@@ -113,10 +119,7 @@ func hasRead(me []byte, pos int) bool {
 	if l-1 < pos || pos < 0 {
 		return false
 	}
-	if me[pos] >= 1 {
-		return true
-	}
-	return false
+	return me[pos] >= read
 }
 
 func (me Permission) posHasWrite(pos int) bool {
@@ -131,10 +134,7 @@ func hasWrite(me []byte, pos int) bool {
 	if l-1 < pos || pos < 0 {
 		return false
 	}
-	if me[pos] == 2 {
-		return true
-	}
-	return false
+	return me[pos] == write
 }
 
 func (me Permission) ToReadablePattern() string {
@@ -145,9 +145,9 @@ func (me Permission) ToReadablePattern() string {
 	for _, v := range me {
 		if v == 0 {
 			b.WriteString("--")
-		} else if v == 1 {
+		} else if v == read {
 			b.WriteString("r-")
-		} else if v == 2 {
+		} else if v == write {
 			b.WriteString("rw")
 		}
 	}
@@ -167,11 +167,13 @@ func (me *Permissions) Change(auth Authorization, changed *Permissions) *Permiss
 		me.GroupAndOthers = changed.GroupAndOthers
 		me.Grant = changed.Grant
 		me.PublicByID = changed.PublicByID
+		me.Published = changed.Published
 		return me
 	}
 	if me.IsWriteGrantedFor(auth) {
 		me.Grant = changed.Grant
 		me.PublicByID = changed.PublicByID
+		me.Published = changed.Published
 	}
 	return me
 }
@@ -348,6 +350,14 @@ func (me *Permissions) IsWriteGrantedFor(auth Authorization) bool {
 	}
 
 	return false
+}
+
+func (me *Permissions) IsPublishedOrReadGrantedFor(auth Authorization) bool {
+	return me.IsReadGrantedFor(auth) || me.IsPublishedFor(auth)
+}
+
+func (me *Permissions) IsPublishedFor(auth Authorization) bool {
+	return /*activate if needed auth.AccessRights().IsGrantedFor(CREATOR) && */ me.Published
 }
 
 func (me *Permissions) OwnedBy(auth Authorization) bool {

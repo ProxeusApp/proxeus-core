@@ -5,8 +5,8 @@
 We are using [docsify](https://docsify.js.org/#/) to create our developer documentation website.
 
 ```
-npm install docsify-cli -t
-docsify server
+npm install -g docsify-cli
+docsify serve docs
 ```
 
 To add more content, you will essentially [add more pages](https://docsify.js.org/#/more-pages),

@@ -15,7 +15,9 @@ import (
 )
 
 type WorkflowDBInterface interface {
+	ListPublished(auth model.Authorization, contains string, options map[string]interface{}) ([]*model.WorkflowItem, error)
 	List(auth model.Authorization, contains string, options map[string]interface{}) ([]*model.WorkflowItem, error)
+	GetPublished(auth model.Authorization, id string) (*model.WorkflowItem, error)
 	Get(auth model.Authorization, id string) (*model.WorkflowItem, error)
 	Put(auth model.Authorization, item *model.WorkflowItem) error
 	put(auth model.Authorization, item *model.WorkflowItem, updated bool) error
@@ -75,7 +77,15 @@ func (me *WorkflowDB) getDB() *storm.DB {
 	return me.db
 }
 
+func (me *WorkflowDB) ListPublished(auth model.Authorization, contains string, options map[string]interface{}) ([]*model.WorkflowItem, error) {
+	return me.list(auth, contains, options, true)
+}
+
 func (me *WorkflowDB) List(auth model.Authorization, contains string, options map[string]interface{}) ([]*model.WorkflowItem, error) {
+	return me.list(auth, contains, options, false)
+}
+
+func (me *WorkflowDB) list(auth model.Authorization, contains string, options map[string]interface{}, publishedOnly bool) ([]*model.WorkflowItem, error) {
 	params := makeSimpleQuery(options)
 	items := make([]*model.WorkflowItem, 0)
 	tx, err := me.db.Begin(false)
@@ -84,7 +94,12 @@ func (me *WorkflowDB) List(auth model.Authorization, contains string, options ma
 	}
 	defer tx.Rollback()
 
-	matchers := defaultMatcher(auth, contains, params, true)
+	var matchers []q.Matcher
+	if publishedOnly {
+		matchers = publishedMatcher(auth, contains, params)
+	} else {
+		matchers = defaultMatcher(auth, contains, params, true)
+	}
 
 	//when user account is deleted the users workslows will be set to deactivated
 	m := q.And(
@@ -111,6 +126,20 @@ func (me *WorkflowDB) List(auth model.Authorization, contains string, options ma
 	return items, nil
 }
 
+func (me *WorkflowDB) GetPublished(auth model.Authorization, id string) (*model.WorkflowItem, error) {
+	var item model.WorkflowItem
+	err := me.db.One("ID", id, &item)
+	if err != nil {
+		return nil, err
+	}
+	itemRef := &item
+	if !(itemRef.OwnedBy(auth) || itemRef.IsPublishedFor(auth)) {
+		return nil, model.ErrAuthorityMissing
+	}
+	me.db.Get(workflowHeavyData, itemRef.ID, &itemRef.Data)
+	return itemRef, nil
+}
+
 func (me *WorkflowDB) Get(auth model.Authorization, id string) (*model.WorkflowItem, error) {
 	var item model.WorkflowItem
 	err := me.db.One("ID", id, &item)
@@ -118,7 +147,7 @@ func (me *WorkflowDB) Get(auth model.Authorization, id string) (*model.WorkflowI
 		return nil, err
 	}
 	itemRef := &item
-	if !itemRef.Permissions.IsReadGrantedFor(auth) {
+	if !itemRef.IsPublishedOrReadGrantedFor(auth) {
 		return nil, model.ErrAuthorityMissing
 	}
 	me.db.Get(workflowHeavyData, itemRef.ID, &itemRef.Data)

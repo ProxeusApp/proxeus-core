@@ -14,7 +14,7 @@
           <div class="my-3">{{$t('Email changed. You can use the new one now.')}}</div>
 
           <a href="/" class="btn btn-primary" style="float: left;">{{$t('Home')}}</a>
-          <a href="/login" class="btn btn-primary" style="float: right;">{{$t('Sign in')}}</a>
+          <a href="/login" class="btn btn-primary" style="float: right;">{{$t('Sign in','Log in')}}</a>
         </div>
       </div>
     </div>
@@ -57,7 +57,7 @@ export default {
         this.$notify({
           group: 'app',
           title: this.$t('Warning'),
-          text: this.$t('Something wrong happened, please try again.'),
+          text: this.$t('An unexpected error occurred. Please try again or if the error persists contact the platform operator.'),
           type: 'warning'
         })
       }

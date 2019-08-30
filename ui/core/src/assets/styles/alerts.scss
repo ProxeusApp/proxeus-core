@@ -1,6 +1,18 @@
 .alert {
   margin-top: 1rem;
   box-shadow: 1px 1px 10px rgba(0, 0, 0, .3);
+  white-space: normal;
+  text-align: center !important;
+  padding: 1em;
+
+  .notification-title {
+    font-size: 15px;
+  }
+  .notification-content {
+    margin-top: 0.3em;
+    font-size: 13px;
+    line-height: 13px;
+  }
 
   &.success {
     color: #155724;
@@ -12,6 +24,5 @@
     color: white;
     background-color: red;
     border: transparent;
-    padding: .5rem;
   }
 }

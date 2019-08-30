@@ -2,6 +2,7 @@ package email
 
 import (
 	"encoding/base64"
+	"errors"
 	"fmt"
 	"strings"
 	"unicode"
@@ -9,11 +10,12 @@ import (
 	sp "github.com/SparkPost/gosparkpost"
 )
 
-type SparkPostEmailSender struct {
-	client *sp.Client
+type sparkPostEmailSender struct {
+	client           *sp.Client
+	defaultEmailFrom string
 }
 
-func NewSparkPostEmailSender(apiKey string) (EmailSender, error) {
+func NewSparkPostEmailSender(apiKey, defaultEmailFrom string) (EmailSender, error) {
 	cfg := &sp.Config{
 		BaseUrl:    "https://api.sparkpost.com",
 		ApiKey:     apiKey,
@@ -25,12 +27,19 @@ func NewSparkPostEmailSender(apiKey string) (EmailSender, error) {
 	if err != nil {
 		return nil, err
 	}
-	return &SparkPostEmailSender{client: client}, nil
+	return &sparkPostEmailSender{client: client, defaultEmailFrom: defaultEmailFrom}, nil
 }
 
-func (me *SparkPostEmailSender) Send(e *Email) error {
+func (me *sparkPostEmailSender) Send(e *Email) error {
+	emailFrom := e.From
+	if len(emailFrom) == 0 {
+		emailFrom = me.defaultEmailFrom
+	}
+	if len(emailFrom) == 0 {
+		return errors.New("the From attribute has to be populated to send an email")
+	}
 	content := sp.Content{
-		From:    e.From,
+		From:    emailFrom,
 		Subject: e.Subject,
 	}
 	//TODO make this if efficient to check for html content

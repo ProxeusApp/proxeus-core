@@ -4,9 +4,9 @@
 
 > Bringing blockchain compatibility to traditional companies.
 
-- Feature highlight 1
-- Feature highlight 2
-- Feature highlight 3
+Proxeus is all about document-centered processes that interact with the Blockchain.  
+Our app lets you drag & drop a workflow in the wink of an eye. Proxeus workflows may comprise forms, document templates and conditions.  
+Proxeus enables you to create tamper-proof and easily verifiable documents by registering them on the Ethereum Blockchain.  
 
-[GitHub](https://github.com/ProxeusApp)
-[Getting Started](#quickstart) 
+[GitHub](https://github.com/ProxeusApp/proxeus-core)
+[Getting Started](quickstart.md) 

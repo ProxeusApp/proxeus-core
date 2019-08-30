@@ -172,7 +172,7 @@ func (me *UserDataDB) GetByWorkflow(auth model.Authorization, wf *model.Workflow
 	return &item, nil
 }
 
-func (me *UserDataDB) GetData(auth model.Authorization, id, baseUri, dataPath string) (interface{}, error) {
+func (me *UserDataDB) GetData(auth model.Authorization, id, dataPath string) (interface{}, error) {
 	tx, err := me.db.Begin(false)
 	if err != nil {
 		return nil, err

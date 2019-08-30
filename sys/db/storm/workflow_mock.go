@@ -36,6 +36,21 @@ func (m *MockWorkflowDBInterface) EXPECT() *MockWorkflowDBInterfaceMockRecorder 
 	return m.recorder
 }
 
+// ListPublished mocks base method
+func (m *MockWorkflowDBInterface) ListPublished(auth model.Authorization, contains string, options map[string]interface{}) ([]*model.WorkflowItem, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ListPublished", auth, contains, options)
+	ret0, _ := ret[0].([]*model.WorkflowItem)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListPublished indicates an expected call of ListPublished
+func (mr *MockWorkflowDBInterfaceMockRecorder) ListPublished(auth, contains, options interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListPublished", reflect.TypeOf((*MockWorkflowDBInterface)(nil).ListPublished), auth, contains, options)
+}
+
 // List mocks base method
 func (m *MockWorkflowDBInterface) List(auth model.Authorization, contains string, options map[string]interface{}) ([]*model.WorkflowItem, error) {
 	m.ctrl.T.Helper()
@@ -49,6 +64,21 @@ func (m *MockWorkflowDBInterface) List(auth model.Authorization, contains string
 func (mr *MockWorkflowDBInterfaceMockRecorder) List(auth, contains, options interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "List", reflect.TypeOf((*MockWorkflowDBInterface)(nil).List), auth, contains, options)
+}
+
+// GetPublished mocks base method
+func (m *MockWorkflowDBInterface) GetPublished(auth model.Authorization, id string) (*model.WorkflowItem, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetPublished", auth, id)
+	ret0, _ := ret[0].(*model.WorkflowItem)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetPublished indicates an expected call of GetPublished
+func (mr *MockWorkflowDBInterfaceMockRecorder) GetPublished(auth, id interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetPublished", reflect.TypeOf((*MockWorkflowDBInterface)(nil).GetPublished), auth, id)
 }
 
 // Get mocks base method

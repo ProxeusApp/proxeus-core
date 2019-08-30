@@ -87,7 +87,7 @@ export default {
           this.$notify({
             group: 'app',
             title: this.$t('Warning'),
-            text: this.$t('Something wrong happened, please try again.'),
+            text: this.$t('There was an unexpected error. Please try again or if the error persists contact the platform operator.'),
             type: 'warning'
           })
         }

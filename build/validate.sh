@@ -2,7 +2,7 @@
 set -Eeuo pipefail
 
 # is dep in sync
-dep check
+# dep check
 
 # imports
 
@@ -15,10 +15,12 @@ require () {
 require goimports
 require gofmt
 
-if [[ "$(goimports -l -local git.proxeus.com main \
+
+if [[ "$(goimports -l -local git.proxeus.com main sys\
  | grep -v bindata.go \
  | wc -l)" -ne "0" ]]
 then
+    goimports -l -local git.proxeus.com main sys
     echo "code not formatted, run make fmt to fix"; exit 1;
 fi
 

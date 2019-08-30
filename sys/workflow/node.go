@@ -8,7 +8,7 @@ type (
 	NodeIF interface {
 		//Execute is being called when the node becomes the current target, doesn't matter whether it goes forward or backward.
 		//If the node was executed before and returned proceed = false, the same instance is being used again.
-		Execute(node *Node, data interface{}) (proceed bool, err error)
+		Execute(node *Node) (proceed bool, err error)
 		//Remove is being called when this node is not part of the path anymore. In other words, when it doesn't exist in the State
 		Remove(node *Node)
 		//Close will be called on the instance before the next node is being executed or when the end is reached

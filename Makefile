@@ -13,6 +13,9 @@ ui-dev:
 server:
 	./build/server.sh
 
+server-docker:
+	GOOS=linux GOARCH=amd64 ./build/server.sh --docker
+
 validate:
 	./build/validate.sh
 
@@ -36,7 +39,7 @@ all: ui server
 # used by CI
 link-repo:
 	mkdir -p /go/src/git.proxeus.com/core
-	ln -s ~/project /go/src/git.proxeus.com/core/central
+	ln -s /builds/core/central /go/src/git.proxeus.com/core/central
 
 .PHONY: init main all all-debug generate test clean fmt validate link-repo
 .PHONY: ui server

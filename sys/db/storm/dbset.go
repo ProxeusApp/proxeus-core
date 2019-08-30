@@ -236,6 +236,14 @@ func NewDBSet(sDB *SettingsDB, folderPath string) (me *DBSet, err error) {
 	if err != nil {
 		return nil, err
 	}
+	me.SignatureRequestsDB, err = NewSignatureDB(folderPath)
+	if err != nil {
+		return nil, err
+	}
+	me.WorkflowPaymentsDB, err = NewWorkflowPaymentDB(folderPath)
+	if err != nil {
+		return nil, err
+	}
 	return
 }
 
@@ -312,6 +320,20 @@ func (me *DBSet) Close() error {
 			return err
 		}
 		me.UserData = nil
+	}
+	if me.SignatureRequestsDB != nil {
+		err = me.SignatureRequestsDB.Close()
+		if err != nil {
+			return err
+		}
+		me.SignatureRequestsDB = nil
+	}
+	if me.WorkflowPaymentsDB != nil {
+		err = me.WorkflowPaymentsDB.Close()
+		if err != nil {
+			return err
+		}
+		me.WorkflowPaymentsDB = nil
 	}
 	return nil
 }

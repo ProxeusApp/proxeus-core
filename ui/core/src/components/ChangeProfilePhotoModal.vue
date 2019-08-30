@@ -66,8 +66,8 @@ export default {
         this.app.handleError(err)
         this.$notify({
           group: 'app',
-          title: this.$t('Success'),
-          text: this.$t('Couldn\'t upload image'),
+          title: this.$t('Error'),
+          text: this.$t('There was an error uploading the image. Please try again or if the error persists contact the platform operator.'),
           type: 'error'
         })
       })

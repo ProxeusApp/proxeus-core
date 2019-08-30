@@ -109,7 +109,7 @@ func (me *FormDB) Get(auth model.Authorization, id string) (*model.FormItem, err
 		return nil, err
 	}
 	itemRef := &item
-	if !itemRef.Permissions.IsReadGrantedFor(auth) {
+	if !itemRef.IsPublishedOrReadGrantedFor(auth) {
 		return nil, model.ErrAuthorityMissing
 	}
 	//error handling not important
