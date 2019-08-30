@@ -52,7 +52,7 @@ jobs:
           keys: 
             - go-vendor-v1-{{ .Branch }}
       - run:
-          command: chmod -R +x ./build
+          command: chmod -R 777 ./*
       - run:
           command: make link-repo
       - run:
