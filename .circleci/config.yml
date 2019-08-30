@@ -106,7 +106,7 @@ jobs:
           name: 
           command: |
             cd /go/src/git.proxeus.com/core/central
-            make server
+            make server-docker
       - save_cache:
           key: go-vendor-v1-{{ .Branch }}
           paths:
