@@ -39,7 +39,7 @@ all: ui server
 # used by CI
 link-repo:
 	mkdir -p /go/src/git.proxeus.com/core
-	ln -s /builds/core/central /go/src/git.proxeus.com/core/central
+	ln -s ~/project /go/src/git.proxeus.com/core/central
 
 .PHONY: init main all all-debug generate test clean fmt validate link-repo
 .PHONY: ui server
