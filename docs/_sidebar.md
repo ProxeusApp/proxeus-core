@@ -4,12 +4,6 @@
 
     - [Quick start](quickstart.md)
 
-- Deployment
-
-    - [Components](components.md)
-    - [Docker](docker.md)
-    - [Smart Contract](contract_deployment.md)
-
 - Build and Run
 
     - [Build All](build_all.md)
@@ -24,6 +18,12 @@
     - [Software Architecture](architecture.md)
     - [Back End](backend.md)
     - [Front End](frontend.md)
+
+- Deployment
+
+    - [Components](components.md)
+    - [Docker](docker.md)
+    - [Smart Contract](contract_deployment.md)
 
 - API
 

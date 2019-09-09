@@ -12,7 +12,7 @@ for Ethereum and email integration respectively.
 
 Please create an account on those platform and get an API Keys.
 
-## Proxeus Demo Etherum Smart Contract
+## Proxeus Demo Ethereum Smart Contract
 
 For your convenience, a demo smart contract is deployed on the Ropsten network at the following address:
 
