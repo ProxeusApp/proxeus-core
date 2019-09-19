@@ -170,7 +170,6 @@ export default {
     },
     signature_request () {
       let $smodal = $('#smodal' + this._uid)
-      console.log($smodal)
       $smodal.modal('show')
       this.$nextTick(() => {
         this.$refs.pdfMod.load()

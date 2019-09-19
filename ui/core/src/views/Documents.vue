@@ -26,8 +26,9 @@
       </template>
     </list-group>
     <list-item-dialog :setup="setupDeleteDialog" :sureFunc="deleteDialogAction" :iconFa="'mdi mdi-view-carousel'">
-      <div class="d-block fregular">{{$t('This action can\'t be undone.')}}</div>
-      <div class="d-block">{{$t('Are you sure, you want to delete?')}}</div>
+      <div class="d-block mb-2">{{$t('Are you sure, you want to delete?')}}</div>
+      <div class="d-block fregular mb-2">{{$t('workflow delete xes alert', 'If you have paid XES for this workflow, you will not be able to start the workflow again, unless you make another payment.')}}</div>
+      <div class="d-block fregular mb-2">{{$t('This action can\'t be undone.')}}</div>
     </list-item-dialog>
   </div>
   <first-login-overlay keyz="documents"

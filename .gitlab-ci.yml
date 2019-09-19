@@ -1,0 +1,175 @@
+variables:
+  DOCKER_HOST: tcp://localhost:2375
+  DOCKER_DRIVER: overlay2
+  CONTAINER_IMAGE_NAME: eu.gcr.io/blockfactory-01/proxeus-platform
+  PROJECT_ROOT_FOLDER: /builds/core/central 
+
+stages:
+  - validate
+  - test
+  - build-ui
+  - build-go
+  - build-docker
+  - tag-docker
+
+validate:
+  image: golang:1.11
+  stage: validate
+  only:
+    - branches
+  before_script:
+    # install ssh-agent if not already installed
+    - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
+    # run ssh-agent
+    - eval $(ssh-agent -s)
+    # add the SSH key stored in SSH_DEPLOY_KEY_CORE_SYS
+    - ssh-add <(echo "$SSH_DEPLOY_KEY_CORE_SYS")
+    # for Docker builds disable host key checking
+    - mkdir -p ~/.ssh
+    - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+    - make link-repo
+    - cd /go/src/git.proxeus.com/core/central
+    - curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
+    - go get golang.org/x/tools/cmd/goimports
+    - dep ensure -v
+  script:
+    - make validate
+  cache:
+    key: "go-vendor-$CI_COMMIT_REF_SLUG"
+    paths:
+      - vendor/
+
+# Removed dapp with PCO-1457 and ui isn't using it at the moment
+#validate-ui:
+#  image: node
+#  stage: validate
+#  script:
+#    - make validate-ui
+#  cache:
+#    key: "yarn-$CI_COMMIT_REF_SLUG"
+#    paths:
+#      - ui/.yarn/
+#      - ui/node_modules/
+#      - ui/core/node_modules/
+#      - ui/wallet/node_modules/
+
+test:
+  image: golang:1.11
+  stage: test
+  only:
+    - branches
+  before_script:
+    - make link-repo
+    - cd /go/src/git.proxeus.com/core/central
+  script:
+    - make test
+  cache:
+    key: "go-vendor-$CI_COMMIT_REF_SLUG"
+    paths:
+      - vendor/
+
+#--------------------ui build part----------------------
+
+xes-platform-ui:
+  image: node:10
+  stage: build-ui
+  only:
+    - branches
+  script:
+    - make ui
+  artifacts:
+    paths:
+      - artifacts/dist
+  cache:
+    key: "yarn-$CI_COMMIT_REF_SLUG"
+    paths:
+      - ui/.yarn/
+      - ui/node_modules/
+      - ui/core/node_modules/
+      - ui/wallet/node_modules/
+
+#--------------------go build part----------------------
+
+xes-platform-go:
+  image: golang:1.11
+  stage: build-go
+  only:
+    - branches
+  before_script:
+    - make link-repo
+    - cd /go/src/git.proxeus.com/core/central
+  script:
+    - make server-docker
+  artifacts:
+    paths:
+      - artifacts/server-docker
+  cache:
+    key: "go-vendor-$CI_COMMIT_REF_SLUG"
+    paths:
+      - vendor/
+
+#------------------docker build part--------------------
+
+xes-platform-docker:
+  stage: build-docker
+  image: docker:latest
+  tags:
+    - dind
+  only:
+    - master
+  dependencies:
+    - xes-platform-go
+  services:
+    - docker:18.09.8-dind
+  before_script:
+    - docker login -u _json_key -p "$GCLOUD_SERVICE_KEY" https://eu.gcr.io
+    - docker pull $CONTAINER_IMAGE_NAME:latest || true
+  script:
+    - docker build --cache-from $CONTAINER_IMAGE_NAME:latest -t $CONTAINER_IMAGE_NAME:latest -t $CONTAINER_IMAGE_NAME:$CI_COMMIT_SHA .
+    - docker push $CONTAINER_IMAGE_NAME:latest
+    - docker push $CONTAINER_IMAGE_NAME:$CI_COMMIT_SHA
+
+#------------------docker tag part---------------------
+
+xes-platform-docker-tag-staging:
+  stage: tag-docker
+  image: docker:latest
+  tags:
+    - dind
+  variables:
+    GIT_STRATEGY: none
+  only:
+    - master
+  when: manual
+  dependencies:
+    - xes-platform-docker
+  services:
+    - docker:18.09.8-dind
+  before_script:
+    - docker login -u _json_key -p "$GCLOUD_SERVICE_KEY" https://eu.gcr.io
+    - docker pull $CONTAINER_IMAGE_NAME:$CI_COMMIT_SHA
+  script:
+    - docker tag $CONTAINER_IMAGE_NAME:$CI_COMMIT_SHA $CONTAINER_IMAGE_NAME:staging
+    - docker push $CONTAINER_IMAGE_NAME:staging
+
+xes-platform-docker-tag-tags:
+  stage: tag-docker
+  image: docker:latest
+  tags:
+    - dind
+  variables:
+    GIT_STRATEGY: none
+  only:
+    - tags
+  dependencies:
+    - xes-platform-docker
+  services:
+    - docker:18.09.8-dind
+  before_script:
+    - docker login -u _json_key -p "$GCLOUD_SERVICE_KEY" https://eu.gcr.io
+    - docker pull $CONTAINER_IMAGE_NAME:$CI_COMMIT_SHA
+  script:
+    - docker tag $CONTAINER_IMAGE_NAME:$CI_COMMIT_SHA $CONTAINER_IMAGE_NAME:$CI_COMMIT_REF_NAME
+    - docker push $CONTAINER_IMAGE_NAME:$CI_COMMIT_REF_NAME
+    - docker tag $CONTAINER_IMAGE_NAME:$CI_COMMIT_SHA $CONTAINER_IMAGE_NAME:stable
+    - docker push $CONTAINER_IMAGE_NAME:stable

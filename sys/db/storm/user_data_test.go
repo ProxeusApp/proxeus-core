@@ -40,7 +40,7 @@ func TestPutGetData(t *testing.T) {
 		t.Error("data is nil")
 	}
 	if innerMap, ok := newUsrData.Data["input"].(map[string]interface{}); ok {
-		if someInt, ok := innerMap["someInt"].(uint16); ok {
+		if someInt, ok := innerMap["someInt"].(int64); ok {
 			if someInt != 1234 {
 				t.Error("someInt missing", someInt)
 			}
@@ -48,16 +48,16 @@ func TestPutGetData(t *testing.T) {
 			t.Error("someInt missing")
 		}
 		if list, ok := innerMap["list"].([]interface{}); ok {
-			if i, ok := list[0].(uint16); ok && i != 1 {
+			if i, ok := list[0].(int64); ok && i != 1 {
 				t.Error("not 1")
 			}
-			if i, ok := list[1].(uint16); ok && i != 2 {
+			if i, ok := list[1].(int64); ok && i != 2 {
 				t.Error("not 2")
 			}
-			if i, ok := list[2].(uint16); ok && i != 3 {
+			if i, ok := list[2].(int64); ok && i != 3 {
 				t.Error("not 3")
 			}
-			if i, ok := list[3].(uint16); ok && i != 4 {
+			if i, ok := list[3].(int64); ok && i != 4 {
 				t.Error("not 4")
 			}
 			if i, ok := list[4].(string); ok && i != "hello" {

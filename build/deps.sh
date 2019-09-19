@@ -21,7 +21,13 @@ go get golang.org/x/tools/cmd/goimports
 
 echo "Installing dependencies. This may take a while."
 dep ensure
-mkdir -p /data/hosted
+
+if [[ "$OSTYPE" == "darwin"* ]]; then
+	sudo mkdir -p /data/hosted
+	sudo chown $(id -u):$(id -g) /data/hosted
+else
+	mkdir -p /data/hosted
+fi
 
 
 # on macs use brew

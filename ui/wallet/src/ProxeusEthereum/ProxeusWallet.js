@@ -16,9 +16,9 @@ class ProxeusWallet {
       this.web3.eth.accounts.wallet[this.web3.eth.defaultAccount].privateKey).signature
   }
 
-  async transferXES (to, amount) {
+  async transferXES (to, amount, callback) {
     return this.xesTokenContract.methods.transfer(to, amount)
-      .send({ from: this.web3.eth.defaultAccount })
+      .send({ from: this.web3.eth.defaultAccount }, callback)
   }
 
   getCurrentAddress () {

@@ -7,8 +7,6 @@ export default {
     },
     methods: {
       hello: function () {
-        console.log('hello from mixin!')
-        this.settings.label.value = 'wtf! it works'
       }
     }
   }

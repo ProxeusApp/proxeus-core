@@ -16,7 +16,7 @@ func TestNew(t *testing.T) {
 	wfItem(m)
 }
 
-func wfItem(a model.PermissionItem) {
+func wfItem(a *model.WorkflowItem) {
 	bts, err := json.Marshal(a)
 	log.Println(err, string(bts))
 }

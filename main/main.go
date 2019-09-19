@@ -2,19 +2,17 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"net/http"
 	_ "net/http/pprof"
+	"os"
 	"path"
 
 	"github.com/labstack/echo"
-	"github.com/labstack/echo/middleware"
 
 	"strings"
 
 	cfg "git.proxeus.com/core/central/main/config"
 	"git.proxeus.com/core/central/main/handlers"
-	"git.proxeus.com/core/central/main/handlers/api"
 	"git.proxeus.com/core/central/main/handlers/assets"
 	"git.proxeus.com/core/central/main/www"
 	"git.proxeus.com/core/central/sys"
@@ -25,68 +23,26 @@ import (
 // ServerVersion is added to http headers and can be set during making a build
 var ServerVersion = "build-unknown"
 
-func xVersionHeader(next echo.HandlerFunc) echo.HandlerFunc {
-	return func(c echo.Context) error {
-		c.Response().Header().Set("X-Version", ServerVersion)
-		return next(c)
-	}
-}
-
 var embedded *www.Embedded
 
 func main() {
-	e := echo.New()
-	//Simple Request Logging
-	//e.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
-	//	Format: "[echo] ${time_rfc3339} client=${remote_ip}, method=${method}, uri=${uri}, status=${status}\n",
-	//}))
-
-	//Request Logging with User Info and Body on Error
-	e.Use(middleware.BodyDump(func(e echo.Context, reqBody, resBody []byte) {
-		c := www.Context{Context: e}
-		//c := e.(*www.Context)
-		s := c.Session(false)
-		if s == nil {
-			return
-		}
-		if s.ID() != "" {
-			id := s.UserID()
-			user, err := c.System().DB.User.Get(s, id)
-			if err != nil {
-				return
-			}
-			userName := user.Name
-			userAddr := user.EthereumAddr
-			log.Println("[echo] Method: "+e.Request().Method, "Status:", e.Response().Status, "User: "+userAddr, "("+userName+")", "URI: "+e.Request().RequestURI)
-			if len(reqBody) > 0 && c.Response().Status != 200 && c.Response().Status != 404 {
-				fmt.Printf("[echo][errorrequest] %s\n", reqBody)
-			}
-		}
-
-	}))
-	e.HTTPErrorHandler = www.DefaultHTTPErrorHandler
-	e.Use(func(h echo.HandlerFunc) echo.HandlerFunc {
-		return func(c echo.Context) error {
-			return h(&www.Context{Context: c})
-		}
-	})
-	e.Pre(xVersionHeader)
-	c := middleware.DefaultSecureConfig
-	c.XFrameOptions = ""
-	e.Pre(middleware.SecureWithConfig(c))
-
-	e.GET("/static/*", StaticHandler)
-
-	www.SetupSession(e)
 	system, err := sys.NewWithSettings(cfg.Config.Settings)
 	if err != nil {
 		panic(err)
 	}
+
+	if system.TestMode {
+		fmt.Println("#######################################################")
+		fmt.Println("# STARTING PROXEUS IN TEST MODE - NOT FOR PRODUCTION #")
+		fmt.Println("#######################################################")
+	}
+
+	www.SetSystem(system)
+
 	embedded = &www.Embedded{Asset: assets.Asset}
 	sys.ReadAllFile = func(path string) ([]byte, error) {
 		return embedded.Asset(path)
 	}
-	www.SetSystem(system)
 
 	go func() { //parse i18n from the UI assets to provide them under the translation section
 		i18nUIParser := i18n.NewUIParser()
@@ -122,14 +78,22 @@ func main() {
 		}
 	}()
 
-	secure := www.NewSecurity()
+	e := www.Setup(ServerVersion)
 
-	// Routes
-	e.Pre(middleware.Secure())
+	// Static route
+	e.GET("/static/*", StaticHandler)
 
-	api.ServerVersion = ServerVersion
+	// Initial config middleware
+	configured, err := system.Configured()
+	if err != nil && !os.IsNotExist(err) {
+		panic(err)
+	}
+	if !configured {
+		e.Use(www.NewInitialHandler(configured).Handler)
+	}
 
-	handlers.MainHostedAPI(e, secure, system)
+	// Main routes
+	handlers.MainHostedAPI(e, www.NewSecurity(), ServerVersion)
 
 	www.StartServer(e, cfg.Config.ServiceAddress, false)
 	system.Shutdown()

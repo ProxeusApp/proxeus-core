@@ -1,80 +1,106 @@
 package www
 
 import (
-	"bytes"
-	"io"
-	"io/ioutil"
+	"context"
+	"fmt"
+	"log"
 	"os"
+	"os/signal"
+	"path"
+	"syscall"
 
-	"path/filepath"
+	"golang.org/x/crypto/acme/autocert"
+
+	"github.com/labstack/echo"
+	"github.com/labstack/echo/middleware"
 )
 
-type MyServer struct {
-	quit chan os.Signal
-}
+func Setup(serverVersion string) *echo.Echo {
+	e := echo.New()
+	e.HTTPErrorHandler = DefaultHTTPErrorHandler
 
-func (ms *MyServer) Close() {
-	if ms.quit != nil {
-		ms.quit <- os.Interrupt
-	}
-}
+	// Pre routing middleware
+	e.Pre(xVersionHeader(serverVersion))
+	c := middleware.DefaultSecureConfig
+	c.XFrameOptions = ""
+	e.Pre(middleware.SecureWithConfig(c))
+	e.Pre(middleware.Secure())
 
-type MyHTMLTemplateLoader struct {
-	BaseDir  string
-	MoreDirs *[]string
-}
+	// Post routing middleware
+	e.Use(func(h echo.HandlerFunc) echo.HandlerFunc {
+		return func(c echo.Context) error {
+			return h(&Context{Context: c})
+		}
+	})
+	//Simple Request Logging
+	e.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
+		Format: "[echo] ${time_rfc3339} client=${remote_ip}, method=${method}, uri=${uri}, status=${status}\n",
+	}))
 
-// Abs calculates the path to a given template. Whenever a path must be resolved
-// due to an import from another template, the base equals the parent template's path.
-func (htl *MyHTMLTemplateLoader) Abs(base, name string) (absPath string) {
-	if filepath.IsAbs(name) {
-		return name
-	}
-
-	// Our own base dir has always priority; if there's none
-	// we use the path provided in base.
-	var err error
-	if htl.BaseDir == "" {
-		if base == "" {
-			base, err = os.Getwd()
+	//Request Logging with User Info and Body on Error
+	e.Use(middleware.BodyDump(func(e echo.Context, reqBody, resBody []byte) {
+		c := e.(*Context)
+		s := c.Session(false)
+		if s == nil {
+			return
+		}
+		if s.ID() != "" {
+			id := s.UserID()
+			user, err := c.System().DB.User.Get(s, id)
 			if err != nil {
-				panic(err)
+				return
 			}
-			absPath = filepath.Join(base, name)
-			htl.checkPath(&name, &absPath)
-			return
-		}
-		absPath = filepath.Join(filepath.Dir(base), name)
-		htl.checkPath(&name, &absPath)
-		return
-	}
-	absPath = filepath.Join(htl.BaseDir, name)
-	htl.checkPath(&name, &absPath)
-	return
-}
-
-func (htl *MyHTMLTemplateLoader) checkPath(relPath, absPath *string) {
-	if htl.MoreDirs != nil && len(*htl.MoreDirs) > 0 {
-		var err error
-		if _, err = os.Stat(*absPath); err == nil {
-			return
-		}
-		newPath := ""
-		for _, dirPath := range *htl.MoreDirs {
-			newPath = filepath.Join(dirPath, *relPath)
-			if _, err = os.Stat(newPath); err == nil {
-				*absPath = newPath
-				break
+			userName := user.Name
+			userAddr := user.EthereumAddr
+			log.Println("[echo] Method: "+e.Request().Method, "Status:", e.Response().Status, "User: "+userAddr, "("+userName+")", "URI: "+e.Request().RequestURI)
+			if len(reqBody) > 0 && c.Response().Status != 200 && c.Response().Status != 404 {
+				fmt.Printf("[echo][errorrequest] %s\n", reqBody)
 			}
 		}
+
+	}))
+
+	e.Use(SessionMiddleware())
+	e.Use(SessionTokenAuth)
+
+	return e
+}
+
+func StartServer(e *echo.Echo, addr string, autoTLS bool) {
+	if autoTLS {
+		dirCache := path.Join(os.TempDir(), ".cache")
+		e.AutoTLSManager.Cache = autocert.DirCache(dirCache)
+	}
+	quit := make(chan os.Signal)
+
+	// Start server
+	go func() {
+		if autoTLS {
+			fmt.Println("starting https at", addr)
+			if err := e.StartAutoTLS(addr); err != nil {
+				log.Println(err)
+			}
+		} else {
+			fmt.Println("starting plain http at", addr)
+			if err := e.Start(addr); err != nil {
+				log.Println(err)
+			}
+		}
+	}()
+
+	signal.Notify(quit, os.Interrupt)
+	signal.Notify(quit, syscall.SIGTERM)
+	<-quit
+	if err := e.Shutdown(context.Background()); err != nil {
+		log.Fatal(err)
 	}
 }
 
-// Get returns an io.Reader where the template's content can be read from.
-func (htl *MyHTMLTemplateLoader) Get(path string) (io.Reader, error) {
-	buf, err := ioutil.ReadFile(path)
-	if err != nil {
-		return nil, err
+func xVersionHeader(version string) echo.MiddlewareFunc {
+	return func(next echo.HandlerFunc) echo.HandlerFunc {
+		return func(c echo.Context) error {
+			c.Response().Header().Set("X-Version", version)
+			return next(c)
+		}
 	}
-	return bytes.NewReader(buf), nil
 }

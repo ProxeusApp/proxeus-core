@@ -110,7 +110,6 @@ export default {
     },
     hasUnsavedChangesMethodImplemented () {
       if (!this.hasUnsavedChanges) {
-        console.log('hasUnsavedChanges method not implemented')
         return false
       }
       return true

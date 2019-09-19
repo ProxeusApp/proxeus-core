@@ -14,11 +14,11 @@ import (
 	sysSess "git.proxeus.com/core/central/sys/session"
 )
 
-func SetupSession(e *echo.Echo) {
+func SessionMiddleware() echo.MiddlewareFunc {
 	gob.Register(map[string]interface{}{})
 	gob.Register(map[string]map[string]string{})
 	sessionStore := sessions.NewCookieStore([]byte("secret_Dummy_1234"), []byte("12345678901234567890123456789012"))
-	e.Use(session.Middleware(sessionStore))
+	return session.Middleware(sessionStore)
 }
 
 var anonymousUser = &model.User{Role: model.PUBLIC}
@@ -30,17 +30,16 @@ func init() {
 }
 
 func getSessionWithUser(c *Context, create bool, usr *model.User) (currentSession *sysSess.Session, err error) {
-	var sess *sessions.Session
-	var ok bool
 	if !create || usr == nil {
 		if csess := c.Get("sys.session"); csess != nil {
+			var ok bool
 			if currentSession, ok = csess.(*sysSess.Session); ok {
 				return
 			}
 		}
 	}
 
-	sess, err = session.Get("s", c)
+	sess, err := session.Get("s", c)
 	if sess == nil || err != nil {
 		return
 	}

@@ -230,6 +230,9 @@ func (me *Session) close() (err error) {
 		me.store.IterateMemStorage(func(key string, val interface{}) {
 			//ensure all changes during runtime are persisted before closing
 			me.store.UpdatedValueRef(key)
+			if closer, ok := val.(io.Closer); ok {
+				closer.Close()
+			}
 		})
 		me.store.Close()
 	}

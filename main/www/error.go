@@ -25,22 +25,28 @@ func DefaultHTTPErrorHandler(err error, c echo.Context) {
 	if _, ok := msg.(string); ok {
 		msg = echo.Map{"message": msg}
 	}
-	if !c.Response().Committed {
-		if c.Request().Header.Get("X-Requested-With") == "XMLHttpRequest" {
-			if err = c.JSON(code, msg); err != nil {
-				goto ERROR
-			}
-		} else {
-			bts, err = sys.ReadAllFile("frontend.html")
-			if err == nil {
-				if err = c.HTMLBlob(code, bts); err != nil {
-					goto ERROR
-				}
-				return
-			}
 
-		}
+	if c.Response().Committed {
+		log.Println(err)
+		return
 	}
-ERROR:
-	log.Println(err)
+
+	if c.Request().Header.Get("X-Requested-With") == "XMLHttpRequest" {
+		err := c.JSON(code, msg)
+		if err != nil {
+			log.Println(err)
+		}
+		return
+	}
+
+	bts, err = sys.ReadAllFile("frontend.html")
+	if err != nil {
+		log.Println(err)
+		return
+	}
+
+	err = c.HTMLBlob(code, bts)
+	if err != nil {
+		log.Println(err)
+	}
 }

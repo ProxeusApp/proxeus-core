@@ -23,6 +23,9 @@ type Configuration struct {
 
 	XESContractAddress string `json:"XESContractAddress" default:"0x84E0b37e8f5B4B86d5d299b0B0e33686405A3919"`
 
+	AirdropWalletfile string `json:"airdropWalletfile" usage:"Path to File containing Private Key of the Wallet to fund Airdrops of XES and Ether."`
+	AirdropWalletkey  string `json:"airdropWalletkey" usage:"Path to File containing the Key for the Airdrop Private Key."`
+
 	model.Settings // extend cmd line args with settings
 }
 

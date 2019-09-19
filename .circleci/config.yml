@@ -3,10 +3,13 @@ version: 2.1
 
 executors:
   docker-image-golang:
+    environment:
+      PROJECT_ROOT_FOLDER: ~/project
     docker:
       - image: golang:1.11
   docker-publisher:
     environment:
+      PROJECT_ROOT_FOLDER: ~/project
       CONTAINER_IMAGE_NAME: proxeus/proxeus-core
     docker:
       - image: circleci/buildpack-deps:stretch

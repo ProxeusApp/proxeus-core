@@ -95,7 +95,7 @@ func TestOnCreatedOnLoadOnExpireOnRemove(t *testing.T) {
 	}
 	time.Sleep(time.Second * 1)
 	if exired, exists := myOnExpireMap[s1ID]; !exists || !exired {
-		t.Error(s1ID, "not exired")
+		t.Error(s1ID, "not expired")
 	}
 	if exired, exists := myOnExpireMap[s2ID]; !exists || !exired {
 		t.Error(s2ID, "not exired")
@@ -178,8 +178,9 @@ type MySessionObject struct {
 	closeCalled bool
 }
 
-func (me *MySessionObject) Close() {
+func (me *MySessionObject) Close() error {
 	me.closeCalled = true
+	return nil
 }
 
 type MySessionObject2 struct {
@@ -195,13 +196,13 @@ type MySessionObject3 struct {
 	closeCalled bool
 }
 
-func (me *MySessionObject3) Close() (string, error) {
+func (me *MySessionObject3) Close() error {
 	me.closeCalled = true
-	return "", nil
+	return nil
 }
 
 func TestExtendExpiryAndCloseOnSessionMemStore(t *testing.T) {
-	sessDir := "./testSessionDir"
+	sessDir := "./testSessionDir2"
 	expiry := time.Millisecond * 800
 	myOnCreatedMap := make(map[string]bool)
 	myOnLoadMap := make(map[string]bool)
@@ -256,11 +257,11 @@ func TestExtendExpiryAndCloseOnSessionMemStore(t *testing.T) {
 	if err != nil || s == nil {
 		t.Error(err, s)
 	}
-	if exired, exists := myOnExpireMap[s1ID]; exists || exired {
+	if expired, exists := myOnExpireMap[s1ID]; exists || expired {
 		t.Error(s1ID, "should't exire")
 	}
 	time.Sleep(time.Second * 1)
-	if exired, exists := myOnExpireMap[s1ID]; !exists || !exired {
+	if expired, exists := myOnExpireMap[s1ID]; !exists || !expired {
 		t.Error(s1ID, "not exired")
 	}
 	if !obj1.closeCalled {
@@ -281,7 +282,7 @@ func TestExtendExpiryAndCloseOnSessionMemStore(t *testing.T) {
 }
 
 func TestCloseOnSessionMemStoreWhenClosingManager(t *testing.T) {
-	sessDir := "./testSessionDir"
+	sessDir := "./testSessionDir3"
 	expiry := time.Second * 3
 	sm, err := NewManager(sessDir, expiry)
 	if err != nil {

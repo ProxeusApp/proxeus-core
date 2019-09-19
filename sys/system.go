@@ -43,6 +43,7 @@ var (
 
 type (
 	System struct {
+		TestMode                    bool
 		SessionMgmnt                *session.Manager
 		DB                          *storm.DBSet
 		DS                          *eio.DocumentServiceClient
@@ -53,6 +54,7 @@ type (
 		fallbackSettings            *model.Settings
 		paymentListenerCancelFunc   context.CancelFunc
 		signatureListenerCancelFunc context.CancelFunc
+		tick                        *time.Ticker
 	}
 	sessionNotify struct {
 		system *System
@@ -93,6 +95,10 @@ func NewWithSettings(settings model.Settings) (*System, error) {
 	}
 	me := &System{settingsDB: stngsDB, fallbackSettings: &settings}
 
+	if strings.ToLower(settings.TestMode) == "true" {
+		me.TestMode = true
+	}
+
 	err = me.init(me.GetSettings())
 	if err != nil {
 		return nil, err
@@ -101,10 +107,9 @@ func NewWithSettings(settings model.Settings) (*System, error) {
 }
 
 func (me *System) init(stngs *model.Settings) error {
-	log.Println("Init with settings: ", stngs)
-	var err error
-	var expiry time.Duration
-	expiry, err = time.ParseDuration(stngs.SessionExpiry)
+	log.Printf("Init with settings: %#v\n", stngs)
+
+	expiry, err := time.ParseDuration(stngs.SessionExpiry)
 	if err != nil {
 		expiry = time.Hour
 	}
@@ -129,6 +134,10 @@ func (me *System) init(stngs *model.Settings) error {
 	} else {
 		log.Println("Wrong blockchain network: ", stngs.BlockchainNet)
 	}
+
+	cfg.Config.AirdropEnabled = stngs.AirdropEnabled
+	cfg.Config.AirdropAmountEther = stngs.AirdropAmountEther
+	cfg.Config.AirdropAmountXES = stngs.AirdropAmountXES
 
 	me.closeDBs()
 	var cacheExpiry time.Duration
@@ -201,7 +210,26 @@ func (me *System) init(stngs *model.Settings) error {
 	me.signatureListenerCancelFunc = cancelSig
 	go bcListenerSignature.Listen(ctxSig)
 
+	if me.tick != nil {
+		me.tick.Stop()
+	}
+	me.tick = time.NewTicker(time.Hour * 6)
+	go me.scheduledCleanup(me.tick)
+
 	return nil
+}
+
+func (me *System) scheduledCleanup(tick *time.Ticker) {
+	for range tick.C {
+		beforeTime := time.Now().AddDate(0, 0, -14)
+		log.Println("[scheduler][workflowpaymentcleanup] Timing out abandoned payments from before ", beforeTime)
+		err := me.DB.WorkflowPaymentsDB.SetAbandonedToTimeoutBeforeTime(beforeTime)
+		if err != nil {
+			log.Println("[scheduler][workflowpaymentcleanup] err: ", err.Error())
+			continue
+		}
+		log.Println("[scheduler][workflowpaymentcleanup] Done")
+	}
 }
 
 func (me *System) Configured() (bool, error) {

@@ -427,8 +427,6 @@ export default {
                 }
               }
             }
-            console.log('elements')
-            console.log(elements)
             if (elements.length) {
               this.showPublishResponseDialog(null, elements)
             }
@@ -1188,9 +1186,8 @@ function condition(){
               '</div>'
         },
         nodeIconMap: {
-          ibmsender: 'fcn-ibmsender node-icon mdi mdi-send',
-          mailsender: 'fcn-ibmsender node-icon mdi mdi-send',
-          priceretriever: 'fcn-ibmsender node-icon mdi mdi-send',
+          mailsender: 'fcn-externalnode node-icon mdi mdi-send',
+          priceretriever: 'fcn-externalnode node-icon mdi mdi-send',
           condition: 'fcn-condition node-icon mdi mdi-circle-outline',
           user: 'fcn-usr node-icon mdi mdi-account',
           form: 'fcn-form node-icon mdi mdi-view-quilt',
@@ -1370,59 +1367,6 @@ function condition(){
                   'click': function () {
                   },
                   'dblclick': _.onDblClick
-                }
-              },
-              ibmsender: {
-                connections: {
-                  from: [
-                    {
-                      node: {
-                        color: {
-                          background: '#8688ff',
-                          highlight: { background: '#5f5ff0' },
-                          hover: { background: '#5f5ff0' }
-                        },
-                        borderWidthSelected: 3
-                      },
-                      edge: {
-                        color: {
-                          color: '#8688ff',
-                          highlight: '#a8a5ff',
-                          hover: '#a8a5ff'
-                        }
-                      }
-                    }],
-                  to: Infinity,
-                  space: 1.1
-                },
-                font: {
-                  color: '#343434',
-                  size: 15,
-                  mod: 'bold',
-                  bold: {
-                    color: '#343434',
-                    size: 14, // px
-                    face: 'arial',
-                    vadjust: 0,
-                    mod: 'bold'
-                  }
-                },
-                icon: {
-                  face: 'Material Design Icons',
-                  code: '\uf48a',
-                  color: '#5353c0'
-                },
-                events: {
-                  'hoverIn': function () {
-                  },
-                  'hoverOut': function () {
-                  },
-                  'remove': function () {
-                  },
-                  'click': function () {
-                  },
-                  'dblclick': function () {
-                  }
                 }
               },
               mailsender: {

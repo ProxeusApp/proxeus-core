@@ -466,7 +466,6 @@ export default {
       return this.wallet.verifyHash(hash)
     },
     confirmDoc (hash) {
-      console.log('confirmDoc ' + hash)
       return new Promise(async (resolve, reject) => {
         let account = this.wallet.getCurrentAddress()
 
@@ -522,8 +521,6 @@ export default {
         console.log(e)
         return
       }
-      console.log(clientProvidedNet)
-      console.log(this.blockchainNet)
       if (this.blockchainNet !== clientProvidedNet) {
         this.$notify({
           group: 'app',

@@ -435,8 +435,9 @@ class WalletInterface {
     return this.formatBalance(decimalsToKeep, await this.web3.eth.getBalance(this.getCurrentAddress()))
   }
 
-  transferXES (to, amount) {
-    return this.wallet.transferXES(to, amount)
+  // optional callback parameter
+  transferXES (to, amount, callback) {
+    return this.wallet.transferXES(to, amount, callback)
   }
 
   async getXESBalance (decimalsToKeep, address) {

@@ -41,77 +41,13 @@ GET /api/document/3e6ece3d-6b5d-4e79-aea0-0c06e14935cb/allAtOnce/schema
          "AutoSteer":{
             "required":false
          },
-         "AutoSteer2":{
-            "required":false
-         },
-         "AutoSteer4":{
-            "required":false
-         },
          "CHFXES":{
             "required":true
          },
          "ETD":{
             "datePattern":"dd.MM.yyyy",
             "required":true
-         },
-         "ETD4":{
-            "datePattern":"dd.MM.yyyy",
-            "required":true
-         },
-         "EyeColor":{
-            "required":true
-         },
-         "EyeColor2":{
-            "required":true
-         },
-         "EyeColor4":{
-            "required":true
-         },
-         "Hurts":{
-            "required":true
-         },
-         "Hurts2":{
-            "required":true
-         },
-         "Hurts4":{
-            "required":true
-         },
-         "Name":{
-            "required":false
-         },
-         "Name2":{
-            "required":false
-         },
-         "Name4":{
-            "required":false
-         },
-         "SkinType":{
-            "required":false
-         },
-         "SkinType2":{
-            "required":false
-         },
-         "SkinType4":{
-            "required":false
-         },
-         "Status":{
-            "required":true
-         },
-         "Status2":{
-            "required":true
-         },
-         "Status4":{
-            "required":true
-         },
-         "Zodiac":{
-            "required":false
-         },
-         "Zodiac2":{
-            "required":false
-         },
-         "Zodiac4":{
-            "required":false
-         }
+         }      
       }
    }
 }
