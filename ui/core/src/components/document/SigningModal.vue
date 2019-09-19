@@ -85,14 +85,12 @@ export default {
       $('.smodal').modal('hide')
     },
     grantAdded (usrList) {
-      console.log(usrList)
       this.send(usrList[0].etherPK)
     },
     isGrantSelectorNotEmpty () {
       return this.grantReadWriteSelect !== null && this.grantReadWriteSelect !== undefined
     },
     onGrantSelect (item, id) {
-      console.log(item)
       this.signatory = item
     },
     deleteGrant (id) {

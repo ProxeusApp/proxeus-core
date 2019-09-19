@@ -96,6 +96,21 @@ func (mr *MockWorkflowDBInterfaceMockRecorder) Get(auth, id interface{}) *gomock
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Get", reflect.TypeOf((*MockWorkflowDBInterface)(nil).Get), auth, id)
 }
 
+// GetList mocks base method
+func (m *MockWorkflowDBInterface) GetList(auth model.Authorization, ids []string) ([]*model.WorkflowItem, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetList", auth, ids)
+	ret0, _ := ret[0].([]*model.WorkflowItem)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetList indicates an expected call of GetList
+func (mr *MockWorkflowDBInterfaceMockRecorder) GetList(auth, ids interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetList", reflect.TypeOf((*MockWorkflowDBInterface)(nil).GetList), auth, ids)
+}
+
 // Put mocks base method
 func (m *MockWorkflowDBInterface) Put(auth model.Authorization, item *model.WorkflowItem) error {
 	m.ctrl.T.Helper()

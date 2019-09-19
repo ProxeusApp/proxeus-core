@@ -7,9 +7,11 @@ Main repository of the proxeus platform.
 Proxeus combines a powerful document automation tool with the wide-ranging
 blockchain functionalities, enabling users to digitize and monetize their IP.
 
-## Quick Start
+## Quick Start with docker
 
 The quickest way to try Proxeus is to use `docker-compose`.
+
+(If you are a developer and want to build the project form the source code follow the instructions in [Build all](docs/build_all.md))
 
 ### Install docker and docker-compose
 1. [Install Docker Engine](https://docs.docker.com/install/)
@@ -21,7 +23,7 @@ for Ethereum and email integration respectively.
 
 Please create an account on those platform and get an API Keys.
 
-### Proxeus Demo Etherum Smart Contract
+### Proxeus Demo Ethereum Smart Contract
 
 For your convenience, a demo smart contract is deployed on the Ropsten network at the following address:
 
@@ -41,17 +43,20 @@ docker-compose up
 
 Proxeus should be available at http://localhost:1323
 
-The next step is to [configure](configure.md) your instance for the first time.
+The next step is to [configure](docs/configure.md) your instance for the first time.
 
-## User manual
+## Build Proxeus Platform from the source code
 
-The user manual is available here: [User Manual](https://docs.google.com/document/d/1SP0ZimG7uemfZ2cF2JkY5enUZnBJLDyfcJGZnyWOejQ)
+If you are a developer and want to build the project form the source code follow the instructions in [Build all](docs/build_all.md)
 
 ## Developer manual
 
 Please read the [Developer Manual](docs/_sidebar.md) to learn more about the 
 Proxeus platform. *TODO: link to the github pages documentation site when ready*
 
+## User manual
+
+The user manual is available here: [User Manual](https://docs.google.com/document/d/1SP0ZimG7uemfZ2cF2JkY5enUZnBJLDyfcJGZnyWOejQ)
 
 ## 3 Misc
 

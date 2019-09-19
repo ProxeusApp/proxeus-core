@@ -12,6 +12,10 @@ import (
 	"strings"
 	"time"
 
+	workflow2 "git.proxeus.com/core/central/sys/workflow"
+
+	"git.proxeus.com/core/central/main/handlers/payment"
+
 	"git.proxeus.com/core/central/main/handlers/blockchain"
 
 	"git.proxeus.com/core/central/sys/utils"
@@ -48,7 +52,6 @@ import (
 )
 
 var filenameRegex = regexp.MustCompile(`^[^\s][\p{L}\d.,_\-&: ]{3,}[^\s]$`)
-var ServerVersion string
 
 func html(c echo.Context, p string) error {
 	bts, err := sys.ReadAllFile(p)
@@ -249,7 +252,6 @@ func GetInit(e echo.Context) error {
 	if len(settings.PlatformDomain) == 0 {
 		settings.PlatformDomain = e.Request().Host
 	}
-
 	return c.JSON(http.StatusOK, map[string]interface{}{"settings": settings, "configured": configured})
 }
 
@@ -305,20 +307,22 @@ func PostInit(e echo.Context) error {
 	return c.NoContent(http.StatusOK)
 }
 
-func ConfigHandler(e echo.Context) error {
-	c := e.(*www.Context)
-	sess := c.Session(false)
-	var roles []model.RoleSet
-	if sess != nil {
-		roles = sess.AccessRights().RolesInRange()
+func ConfigHandler(version string) echo.HandlerFunc {
+	return func(e echo.Context) error {
+		c := e.(*www.Context)
+		sess := c.Session(false)
+		var roles []model.RoleSet
+		if sess != nil {
+			roles = sess.AccessRights().RolesInRange()
+		}
+		stngs := c.System().GetSettings()
+		return c.JSON(http.StatusOK, map[string]interface{}{
+			"roles":                      roles,
+			"blockchainNet":              strings.Replace(stngs.BlockchainNet, "mainnet", "main", 1),
+			"blockchainProxeusFSAddress": stngs.BlockchainContractAddress,
+			"version":                    version,
+		})
 	}
-	stngs := c.System().GetSettings()
-	return c.JSON(http.StatusOK, map[string]interface{}{
-		"roles":                      roles,
-		"blockchainNet":              strings.Replace(stngs.BlockchainNet, "mainnet", "main", 1),
-		"blockchainProxeusFSAddress": stngs.BlockchainContractAddress,
-		"version":                    ServerVersion,
-	})
 }
 
 type loginForm struct {
@@ -468,8 +472,60 @@ func LoginWithWallet(c *www.Context, challenge, signature string) (bool, *model.
 		}
 		created = true
 		usr, err = c.System().DB.User.GetByBCAddress(address)
+		if err == nil && c.System().GetSettings().BlockchainNet == "ropsten" && c.System().GetSettings().AirdropEnabled == "true" {
+			go func() {
+				defer func() {
+					if r := recover(); r != nil {
+						log.Println("airdrop recover with err ", r)
+					}
+				}()
+				blockchain.GiveTokens(address)
+			}()
+		}
 	}
 	return created, usr, err
+}
+
+func GetSessionTokenHandler(e echo.Context) (err error) {
+	c := e.(*www.Context)
+
+	username, apiKey := c.BasicAuth()
+
+	if username == "" || apiKey == "" {
+		return c.NoContent(http.StatusBadRequest)
+	}
+
+	user, err := c.System().DB.User.APIKey(apiKey)
+	if err != nil {
+		return c.NoContent(http.StatusBadRequest)
+	}
+
+	if user == nil {
+		return c.NoContent(http.StatusBadRequest)
+	}
+
+	if user.Email != username && user.EthereumAddr != username {
+		return c.NoContent(http.StatusBadRequest)
+	}
+
+	//create a new session only if role, id or name has changed
+	sess := c.SessionWithUser(user)
+	if sess == nil {
+		return c.NoContent(http.StatusBadRequest)
+	}
+	sess.Put("user", user)
+
+	c.Response().Header().Del("Set-Cookie")
+
+	return c.JSON(http.StatusOK, map[string]string{
+		"token": sess.ID(),
+	})
+}
+
+func DeleteSessionTokenHandler(e echo.Context) (err error) {
+	c := e.(*www.Context)
+	c.EndSession()
+	return c.NoContent(http.StatusOK)
 }
 
 type TokenRequest struct {
@@ -545,38 +601,50 @@ func RegisterRequest(e echo.Context) (err error) {
 	stngs := c.System().GetSettings()
 	m.Role = stngs.DefaultRole
 
-	if usr, err := c.System().DB.User.GetByEmail(m.Email); usr == nil {
-		resetKey := m.Email + "_register"
-		var token *TokenRequest
-		err = c.System().Cache.Get(resetKey, &token)
+	if usr, _ := c.System().DB.User.GetByEmail(m.Email); usr != nil {
+		// always return ok if provided email was valid
+		// otherwise public users can test what email accounts exist
+		return c.NoContent(http.StatusOK)
+	}
+
+	resetKey := m.Email + "_register"
+	var token *TokenRequest
+
+	err = c.System().Cache.Get(resetKey, &token)
+	if err == nil {
+		return c.NoContent(http.StatusOK)
+	}
+
+	token = m
+	u2 := uuid.NewV4()
+	token.Token = u2.String()
+
+	if c.System().TestMode {
+		c.Response().Header().Set("X-Test-Token", token.Token)
+	} else {
+		err = c.System().EmailSender.Send(&email.Email{
+			From:    stngs.EmailFrom,
+			To:      []string{m.Email},
+			Subject: c.I18n().T("Register"),
+			Body: fmt.Sprintf(
+				"Hi there,\n\nplease proceed with your registration by visiting this link:\n%s\n\nIf you didn't request this, please ignore this email.\n\nProxeus",
+				helpers.AbsoluteURL(c, "/register/", token.Token),
+			),
+		})
 		if err != nil {
-			token = m
-			u2 := uuid.NewV4()
-			token.Token = u2.String()
-			err = c.System().EmailSender.Send(&email.Email{
-				From:    stngs.EmailFrom,
-				To:      []string{m.Email},
-				Subject: c.I18n().T("Register"),
-				Body: fmt.Sprintf(
-					"Hi there,\n\nplease proceed with your registration by visiting this link:\n%s\n\nIf you didn't request this, please ignore this email.\n\nProxeus",
-					helpers.AbsoluteURL(c, "/register/", token.Token),
-				),
-			})
-			if err != nil {
-				return c.NoContent(http.StatusExpectationFailed)
-			}
-			err = c.System().Cache.Put(resetKey, token)
-			if err != nil {
-				return c.NoContent(http.StatusInternalServerError)
-			}
-			err = c.System().Cache.Put(token.Token, token)
-			if err != nil {
-				return c.NoContent(http.StatusInternalServerError)
-			}
+			return c.NoContent(http.StatusExpectationFailed)
 		}
 	}
-	// always return ok if provided email was valid
-	// otherwise public users can test what email accounts exist
+
+	err = c.System().Cache.Put(resetKey, token)
+	if err != nil {
+		return c.NoContent(http.StatusInternalServerError)
+	}
+	err = c.System().Cache.Put(token.Token, token)
+	if err != nil {
+		return c.NoContent(http.StatusInternalServerError)
+	}
+
 	return c.NoContent(http.StatusOK)
 }
 
@@ -602,6 +670,71 @@ func Register(e echo.Context) error {
 	if err != nil {
 		return c.NoContent(http.StatusExpectationFailed)
 	}
+
+	// If some default workflows have to be assigned to the user, then clone them
+	workflowIds := strings.Split(c.System().GetSettings().DefaultWorkflowIds, ",")
+	workflows, err := c.System().DB.Workflow.GetList(root, workflowIds)
+	if err != nil {
+		log.Printf("Can't retrieve list of workflows (%v). Please check the ids exist. Error: %s", workflowIds, err.Error())
+	}
+	for _, workflow := range workflows {
+		w := workflow.Clone()
+		w.OwnerEthAddress = newUser.EthereumAddr
+		w.Owner = newUser.ID
+		newNodes := make(map[string]*workflow2.Node)
+		oldToNewIdsMap := make(map[string]string)
+		for oldId, node := range w.Data.Flow.Nodes {
+			if node.Type == "form" {
+				form, er := c.System().DB.Form.Get(root, node.ID)
+				if er != nil {
+					log.Println(err.Error())
+				}
+				f := form.Clone()
+				er = c.System().DB.Form.Put(newUser, &f)
+				if er != nil {
+					log.Println("can't put form" + err.Error())
+				}
+
+				oldToNewIdsMap[node.ID] = f.ID
+				node.ID = f.ID
+				newNodes[node.ID] = node
+				delete(w.Data.Flow.Nodes, oldId)
+
+			} else if node.Type == "template" {
+				template, er := c.System().DB.Template.Get(root, node.ID)
+				if er != nil {
+					log.Println(err.Error())
+				}
+				t := template.Clone()
+				er = c.System().DB.Template.Put(newUser, &t)
+				if er != nil {
+					log.Println("can't put template" + err.Error())
+				}
+				oldToNewIdsMap[node.ID] = t.ID
+				node.ID = t.ID
+				newNodes[node.ID] = node
+				delete(w.Data.Flow.Nodes, oldId)
+			} else {
+				newNodes[node.ID] = node
+			}
+		}
+		oldStartNodeId := w.Data.Flow.Start.NodeID
+		if _, ok := oldToNewIdsMap[oldStartNodeId]; ok {
+			w.Data.Flow.Start.NodeID = oldToNewIdsMap[oldStartNodeId]
+		}
+
+		// Now go through all connections and map them with the new ids
+		for _, node := range newNodes {
+			for _, connection := range node.Connections {
+				if _, ok := oldToNewIdsMap[connection.NodeID]; ok {
+					connection.NodeID = oldToNewIdsMap[connection.NodeID]
+				}
+			}
+		}
+		w.Data.Flow.Nodes = newNodes
+		c.System().DB.Workflow.Put(newUser, &w)
+	}
+
 	err = c.System().DB.User.PutPw(newUser.ID, p.Password)
 	if err != nil {
 		return c.NoContent(http.StatusExpectationFailed)
@@ -902,6 +1035,44 @@ func GetProfilePhotoHandler(e echo.Context) error {
 	return c.NoContent(http.StatusOK)
 }
 
+// Check if a payment is required for current user for the workflow.
+// Return http OK if no payment is required or if payment is required and a payment a matching payment with status = "confirmed" is found
+func CheckForWorkflowPayment(e echo.Context) error {
+	c := e.(*www.Context)
+	sess := c.Session(true)
+	if sess == nil {
+		return c.NoContent(http.StatusNotFound)
+	}
+	workflowId := strings.TrimSpace(c.QueryParam("workflowId"))
+
+	if workflowId == "" {
+		return c.NoContent(http.StatusBadRequest)
+	}
+
+	user, err := c.System().DB.User.Get(sess, sess.UserID())
+	if err != nil {
+		return c.NoContent(http.StatusUnauthorized)
+	}
+
+	paymentRequired, err := payment.CheckIfWorkflowPaymentRequired(c, workflowId)
+	if err != nil {
+		return c.NoContent(http.StatusBadRequest)
+	}
+	if paymentRequired {
+		_, err := c.System().DB.WorkflowPaymentsDB.GetByWorkflowIdAndFromEthAddress(workflowId, user.EthereumAddr, []string{model.PaymentStatusConfirmed})
+		if err != nil {
+			if err == strm.ErrNotFound {
+				return c.NoContent(http.StatusNotFound)
+			}
+			return c.NoContent(http.StatusBadRequest)
+		}
+	}
+
+	return c.NoContent(http.StatusOK)
+}
+
+var errNoPaymentFound = errors.New("no payment for workflow")
+
 func DocumentHandler(e echo.Context) error {
 	c := e.(*www.Context)
 	ID := c.Param("ID")
@@ -918,32 +1089,49 @@ func DocumentHandler(e echo.Context) error {
 	if err != nil {
 		return c.String(http.StatusNotFound, err.Error())
 	}
+
 	docApp := getDocApp(c, sess, ID)
 	if docApp == nil {
-		var usrDataItem *model.UserDataItem
-		usrDataItem, err = c.System().DB.UserData.GetByWorkflow(sess, wf, false)
+		paymentRequired, err := payment.CheckIfWorkflowPaymentRequired(c, ID)
 		if err != nil {
 			return c.String(http.StatusNotFound, err.Error())
 		}
+
+		if paymentRequired {
+			sess := c.Session(false)
+			user, err := c.System().DB.User.Get(sess, sess.UserID())
+			if err != nil {
+				return c.NoContent(http.StatusBadRequest)
+			}
+			err = payment.RedeemPayment(c.System().DB.WorkflowPaymentsDB, wf.ID, user.EthereumAddr)
+			if err != nil {
+				log.Println("[redeemPayment] ", err.Error())
+				return c.String(http.StatusUnprocessableEntity, errNoPaymentFound.Error())
+			}
+		}
+
+		usrDataItem, _, err := c.System().DB.UserData.GetByWorkflow(sess, wf, false)
+		if err != nil {
+			if err != strm.ErrNotFound {
+				return c.String(http.StatusNotFound, err.Error())
+			}
+
+			usrDataItem = &model.UserDataItem{
+				WorkflowID: wf.ID,
+				Name:       wf.Name,
+				Detail:     wf.Detail,
+			}
+			err := c.System().DB.UserData.Put(sess, usrDataItem)
+			if err != nil {
+				return c.String(http.StatusInternalServerError, err.Error())
+			}
+		}
+
 		docApp, err = app.NewDocumentApp(usrDataItem, sess, c.System(), ID, sess.SessionDir())
 		if err != nil {
 			return c.String(http.StatusUnprocessableEntity, err.Error())
 		}
 		sess.Put("docApp_"+ID, docApp)
-	}
-
-	err = checkIfWorkflowNeedsPayment(c.System().DB.WorkflowPaymentsDB, wf, sess.UserID())
-	if err != nil {
-		log.Println("[checkIfWorkflowNeedsPayment] ", err.Error())
-		return c.String(http.StatusUnprocessableEntity, err.Error())
-	}
-
-	//check payment if not owner and not free
-	if wf.Owner != sess.UserID() && wf.Price != 0 {
-		workflowPaymentItem, err := c.System().DB.WorkflowPaymentsDB.GetByWorkflowId(ID)
-		if err != nil || workflowPaymentItem == nil {
-			return c.String(http.StatusUnprocessableEntity, "no payment for workflow")
-		}
 	}
 
 	st, err = docApp.Current(nil)
@@ -958,18 +1146,6 @@ func DocumentHandler(e echo.Context) error {
 		}
 		return c.String(http.StatusBadRequest, err.Error())
 	}
-}
-
-var errNoPaymentFound = errors.New("no payment for workflow")
-
-func checkIfWorkflowNeedsPayment(WorkflowPaymentsDB storm.WorkflowPaymentsDBInterface, wf *model.WorkflowItem, userId string) error {
-	if wf.Owner != userId && wf.Price != 0 {
-		workflowPaymentItem, err := WorkflowPaymentsDB.GetByWorkflowId(wf.ID)
-		if err != nil || workflowPaymentItem == nil {
-			return errNoPaymentFound
-		}
-	}
-	return nil
 }
 
 func DocumentDeleteHandler(e echo.Context) error {
@@ -1084,17 +1260,6 @@ func DocumentNextHandler(e echo.Context) error {
 				return c.String(http.StatusBadRequest, err.Error())
 			}
 
-			user, err := c.System().DB.User.Get(sess, sess.UserID())
-			if err != nil {
-				return c.NoContent(http.StatusBadRequest)
-			}
-
-			// Invalidate payment by removing from WorkflowPaymentsDB once workflow is finished.
-			err = DeletePaymentIfExists(c, ID, user.EthereumAddr)
-			if err != nil {
-				return c.String(http.StatusBadRequest, err.Error())
-			}
-
 			return c.JSON(http.StatusOK, map[string]interface{}{"id": dataID})
 		}
 	}
@@ -1114,24 +1279,6 @@ func DocumentNextHandler(e echo.Context) error {
 		return c.JSON(http.StatusBadRequest, err.Error())
 	}
 	return c.JSON(http.StatusOK, resData)
-}
-
-// Remove payment from workflowPaymentsDB if exists
-func DeletePaymentIfExists(c *www.Context, workflowID, ethereumAddr string) error {
-	workflowPaymentsDB := c.System().DB.WorkflowPaymentsDB
-	workflowPaymentItem, err := c.System().DB.WorkflowPaymentsDB.GetByWorkflowIdAndFromEthAddress(workflowID, ethereumAddr)
-	if err != nil {
-		if err.Error() != "not found" { //if workflow is free or started by owner no payment will be found
-			return err
-		}
-	} else {
-		err = workflowPaymentsDB.Delete(workflowPaymentItem.TxHash)
-		if err != nil {
-			return err
-		}
-	}
-
-	return nil
 }
 
 func DocumentPrevHandler(e echo.Context) error {
@@ -1289,13 +1436,13 @@ func getDocApp(c *www.Context, sess *session.Session, ID string) *app.DocumentFl
 
 func UserDocumentListHandler(e echo.Context) error {
 	c := e.(*www.Context)
-	a, err := c.Auth()
-	if err != nil {
+	sess := c.Session(false)
+	if sess == nil {
 		return c.NoContent(http.StatusUnauthorized)
 	}
 	contains := c.QueryParam("c")
 	settings := helpers.ReadReqSettings(c)
-	items, err := c.System().DB.UserData.List(a, contains, settings, false)
+	items, err := c.System().DB.UserData.List(sess, contains, settings, false)
 	if err == nil && items != nil {
 		return c.JSON(http.StatusOK, items)
 	}
@@ -1304,12 +1451,12 @@ func UserDocumentListHandler(e echo.Context) error {
 
 func UserDocumentGetHandler(e echo.Context) error {
 	c := e.(*www.Context)
-	a, err := c.Auth()
-	if err != nil {
+	sess := c.Session(false)
+	if sess == nil {
 		return c.NoContent(http.StatusUnauthorized)
 	}
 	id := c.Param("ID")
-	items, err := c.System().DB.UserData.Get(a, id)
+	items, err := c.System().DB.UserData.Get(sess, id)
 	if err == nil && items != nil {
 		return c.JSON(http.StatusOK, items)
 	}
@@ -1418,7 +1565,7 @@ func UserDeleteHandler(e echo.Context) error {
 	//set workflow templates to deactivated
 	workflowDB := c.System().DB.Workflow
 	workflows, err := workflowDB.List(sess, "", map[string]interface{}{})
-	if err != nil {
+	if err != nil && err.Error() != "not found" {
 		return c.NoContent(http.StatusInternalServerError)
 	}
 	for _, workflow := range workflows {
@@ -1832,16 +1979,16 @@ func AdminUserListHandler(e echo.Context) error {
 
 func WorkflowSchema(e echo.Context) error {
 	c := e.(*www.Context)
-	a, err := c.Auth()
-	if err != nil {
+	sess := c.Session(false)
+	if sess == nil {
 		return c.NoContent(http.StatusUnauthorized)
 	}
 	id := c.Param("ID")
-	wf, err := c.System().DB.Workflow.Get(a, id)
+	wf, err := c.System().DB.Workflow.Get(sess, id)
 	if err != nil {
 		return c.NoContent(http.StatusNotFound)
 	}
-	fieldsAndRules := utils.GetAllFormFieldsWithRulesOf(wf.Data, a, c.System())
+	fieldsAndRules := utils.GetAllFormFieldsWithRulesOf(wf.Data, sess, c.System())
 	wfDetails := &struct {
 		*model.WorkflowItem
 		Data interface{} `json:"data"`
@@ -1854,8 +2001,8 @@ func WorkflowSchema(e echo.Context) error {
 
 func WorkflowExecuteAtOnce(e echo.Context) error {
 	c := e.(*www.Context)
-	a, err := c.Auth()
-	if err != nil {
+	sess := c.Session(false)
+	if sess == nil {
 		return c.NoContent(http.StatusUnauthorized)
 	}
 	inputData, err := helpers.ParseDataFromReq(c)
@@ -1863,11 +2010,11 @@ func WorkflowExecuteAtOnce(e echo.Context) error {
 		return c.NoContent(http.StatusBadRequest)
 	}
 	id := c.Param("ID")
-	wItem, err := c.System().DB.Workflow.Get(a, id)
+	wItem, err := c.System().DB.Workflow.Get(sess, id)
 	if err != nil || wItem.Data == nil {
 		return c.NoContent(http.StatusNotFound)
 	}
-	err = app.ExecuteWorkflowAtOnce(c, a, wItem, inputData)
+	err = app.ExecuteWorkflowAtOnce(c, sess, wItem, inputData)
 	if err != nil {
 		if er, ok := err.(validate.ErrorMap); ok {
 			er.Translate(func(key string, args ...string) string {
@@ -1917,16 +2064,6 @@ func DeleteApiKeyHandler(e echo.Context) error {
 		sess.Delete("user")
 	}
 	return c.NoContent(http.StatusOK)
-}
-
-func ManagementListHandler(e echo.Context) error {
-	c := e.(*www.Context)
-	length := random(10, 40)
-	var a []map[string]interface{}
-	for i := 0; i < length; i++ {
-		a = append(a, map[string]interface{}{"id": fmt.Sprintf("id %v", i), "owner": "owner", "consignmentID": "cons", "timestamp": "time", "signatory": "sig"})
-	}
-	return c.JSON(http.StatusOK, a)
 }
 
 func random(min, max int) int {

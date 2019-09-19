@@ -5,7 +5,6 @@ import UserAdmin from '../views/UserAdmin.vue'
 import DocumentViewer from '../views/DocumentViewer.vue'
 import DocumentVerification from '../views/DocumentVerification.vue'
 import SignatureRequests from '../views/SignatureRequests.vue'
-import ManagementList from '../views/ManagementList.vue'
 import DocumentFlow from '../views/DocumentFlow.vue'
 import DocumentPayment from '../views/DocumentPayment.vue'
 import DocumentCreate from '../views/DocumentCreate.vue'
@@ -56,10 +55,6 @@ export default new Router({
           path: 'signature-requests',
           name: 'SignatureRequests',
           component: SignatureRequests
-        }, {
-          path: 'management-list',
-          name: 'ManagementList',
-          component: ManagementList
         }, {
           path: 'document/create',
           name: 'document-create',

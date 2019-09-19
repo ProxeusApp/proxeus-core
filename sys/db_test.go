@@ -38,7 +38,7 @@ func TestRemWildcards(t *testing.T) {
 }
 
 func TestUnifySelector(t *testing.T) {
-	var dbPath = "TestWriteReadTypeConversion.db"
+	var dbPath = "TestWriteReadTypeConversion2.db"
 	db, err := Open(dbPath)
 	sel, keys := db.unify(`omg.blabla["myemail@gmail.com"].omg.blabla[1]`)
 	fmt.Println(string(*sel))
@@ -52,7 +52,7 @@ func TestUnifySelector(t *testing.T) {
 }
 
 func TestAbsoluteKeyPath(t *testing.T) {
-	var dbPath = "TestWriteReadTypeConversion.db"
+	var dbPath = "TestWriteReadTypeConversion3.db"
 	db, err := Open(dbPath)
 	var config = map[string]interface{}{"absolute.key.path": true, "sort": map[string]interface{}{"firstObject": "asc"}}
 	_ = db.Write(map[string]interface{}{
@@ -94,7 +94,7 @@ func TestArray(t *testing.T) {
 }
 
 func TestDelete(t *testing.T) {
-	var dbPath = "TestWriteReadTypeConversion.db"
+	var dbPath = "TestWriteReadTypeConversion4.db"
 	db, err := Open(dbPath)
 	var i int = 2147483647
 	_ = db.Write(map[string]interface{}{
@@ -122,7 +122,7 @@ func TestDelete(t *testing.T) {
 }
 
 func TestWriteReadTypeConversion(t *testing.T) {
-	var dbPath = "TestWriteReadTypeConversion.db"
+	var dbPath = "TestWriteReadTypeConversion5.db"
 	db, err := Open(dbPath)
 	var i int = 2147483647
 	var imin int = -2147483648

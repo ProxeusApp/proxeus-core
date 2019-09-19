@@ -9,7 +9,11 @@
                         </span>
                     </td>
                     <td class="min">
-                        <span class="ss-arrow" :class="{selected:show}">&#9207;</span>
+                        <span class="ss-arrow" :class="{selected:show}">
+                          <i class="material-icons">
+                            arrow_drop_down
+                          </i>
+                        </span>
                     </td>
                 </tr>
             </table>

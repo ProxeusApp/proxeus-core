@@ -12,6 +12,10 @@ WORKDIR /app
 
 COPY artifacts/server-docker /app/server
 
+COPY demo/ /app/demo/
+
+RUN chmod +x ./demo/restore-demo.sh
+
 RUN chmod +x ./server
 
 CMD ["./server"]

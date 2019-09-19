@@ -115,12 +115,16 @@ func defaultMatcher(auth model.Authorization, contains string, params *simpleQue
 
 func publishedMatcher(auth model.Authorization, contains string, params *simpleQuery) []q.Matcher {
 	matchers := commonMatcher(auth, contains, params)
-	matchers = append(matchers, q.And(
-		q.Or(
+	var m q.Matcher
+	if auth == nil {
+		m = q.Eq("Published", true)
+	} else {
+		m = q.Or(
 			q.Eq("Owner", auth.UserID()),
 			q.Eq("Published", true),
-		),
-	))
+		)
+	}
+	matchers = append(matchers, q.And(m))
 	return matchers
 }
 

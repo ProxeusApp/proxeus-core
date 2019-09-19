@@ -153,8 +153,6 @@ const getters = {
     return state.components.find(component => component.id === id)
   },
   tt: (state) => (id) => {
-    console.log('wtf')
-    console.log(id)
     return state.formComponents.find(formComponent => formComponent.cid === id)
   }
 }

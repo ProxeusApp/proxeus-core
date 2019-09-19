@@ -4,12 +4,6 @@
 
     - [Quick start](quickstart.md)
 
-- Deployment
-
-    - [Components](components.md)
-    - [Docker](docker.md)
-    - [Smart Contract](contract_deployment.md)
-
 - Build and Run
 
     - [Build All](build_all.md)
@@ -25,6 +19,12 @@
     - [Back End](backend.md)
     - [Front End](frontend.md)
 
+- Deployment
+
+    - [Components](components.md)
+    - [Docker](docker.md)
+    - [Smart Contract](contract_deployment.md)
+
 - API
 
     - [Authentication](api_auth.md)
@@ -36,7 +36,7 @@
 
 - Workflow Extension
 
-    - [Customer Workflow Nodes](custom_workflow_nodes.md)
+    - [Custom Workflow Nodes](custom_workflow_nodes.md)
 
 - Contributing
 

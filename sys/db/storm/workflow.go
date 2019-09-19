@@ -19,6 +19,7 @@ type WorkflowDBInterface interface {
 	List(auth model.Authorization, contains string, options map[string]interface{}) ([]*model.WorkflowItem, error)
 	GetPublished(auth model.Authorization, id string) (*model.WorkflowItem, error)
 	Get(auth model.Authorization, id string) (*model.WorkflowItem, error)
+	GetList(auth model.Authorization, id []string) ([]*model.WorkflowItem, error)
 	Put(auth model.Authorization, item *model.WorkflowItem) error
 	put(auth model.Authorization, item *model.WorkflowItem, updated bool) error
 	getDB() *storm.DB
@@ -152,6 +153,19 @@ func (me *WorkflowDB) Get(auth model.Authorization, id string) (*model.WorkflowI
 	}
 	me.db.Get(workflowHeavyData, itemRef.ID, &itemRef.Data)
 	return itemRef, nil
+}
+
+// Retrieve multiple workflows. If one is not found, an error is returned
+func (me *WorkflowDB) GetList(auth model.Authorization, ids []string) ([]*model.WorkflowItem, error) {
+	var workflows []*model.WorkflowItem
+	for _, id := range ids {
+		workflow, err := me.Get(auth, id)
+		if err != nil {
+			return nil, err
+		}
+		workflows = append(workflows, workflow)
+	}
+	return workflows, nil
 }
 
 func (me *WorkflowDB) Put(auth model.Authorization, item *model.WorkflowItem) error {

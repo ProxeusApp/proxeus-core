@@ -137,6 +137,7 @@ export default {
       axios.post('/api/user/document/signingRequests/' + this.doc.id + '/' + this.doc.docID + '/reject')
         .then(response => {
           this.doc.rejected = true
+          this.deductSignerCount()
         }, (err) => {
           if (err.response && err.response.status === 404) {
             this.$notify({
@@ -157,6 +158,9 @@ export default {
             type: 'error'
           })
         })
+    },
+    deductSignerCount () {
+      this.$store.dispatch('UPDATE_SIGNERS_COUNT', { sigCount: this.$store.getters.signatureRequestCount - 1 })
     },
     async signFile () {
       this.processing = true
@@ -182,6 +186,7 @@ export default {
       }).then((result) => {
         this.processing = false
         self.getSigners()
+        this.deductSignerCount()
       }).catch((error) => {
         console.log(error)
         this.processing = false

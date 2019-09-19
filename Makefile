@@ -1,3 +1,5 @@
+PROXEUS_TEST_MODE?=false
+
 # required tooling
 init:
 	./build/deps.sh
@@ -29,17 +31,28 @@ test:
 	./build/test.sh
 
 test-payment:
-	go test ./main/handlers/api ./main/handlers/workflow ./main/handlers/blockchain
+	go test ./main/handlers/payment  ./main/handlers/blockchain
+
+test/bindata.go: $(wildcard ./test/assets/**)
+	go-bindata ${DEBUG_FLAG} -pkg test -o ./test/bindata.go ./test/assets
+
+test-api: test/bindata.go
+	go clean -testcache && go test ./test
 
 clean:
 	cd artifacts && rm -rf `ls . | grep -v 'cache'`
 
 all: ui server
 
+run:
+	artifacts/server -DataDir ./data/proxeus-platform/data/  -DocumentServiceUrl=http://document-service:2115 \
+		-BlockchainContractAddress=${PROXEUS_CONTRACT_ADDRESS} -InfuraApiKey=${PROXEUS_INFURA_KEY} \
+		-SparkpostApiKey=${PROXEUS_SPARKPOST_KEY} -EmailFrom=${PROXEUS_EMAIL_FROM} -TestMode=${PROXEUS_TEST_MODE}
+
 # used by CI
 link-repo:
 	mkdir -p /go/src/git.proxeus.com/core
-	ln -s ~/project /go/src/git.proxeus.com/core/central
+	ln -s ${PROJECT_ROOT_FOLDER} /go/src/git.proxeus.com/core/central
 
 .PHONY: init main all all-debug generate test clean fmt validate link-repo
 .PHONY: ui server

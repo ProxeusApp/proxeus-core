@@ -13,9 +13,10 @@ class MetamaskWallet {
     return this.web3.eth.personal.sign(message, address)
   }
 
-  async transferXES (to, amount) {
+  // optional callback parameter
+  async transferXES (to, amount, callback) {
     return this.xesTokenContract.methods.transfer(to, amount)
-      .send({ from: this.getCurrentAddress() })
+      .send({ from: this.getCurrentAddress() }, callback)
   }
 
   getCurrentAddress () {
