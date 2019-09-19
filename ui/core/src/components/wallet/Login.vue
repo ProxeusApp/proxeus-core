@@ -63,7 +63,6 @@ export default {
     },
     storeAuth (authObj) {
       let authStr = btoa(JSON.stringify(authObj))
-      console.log(authStr)
       this.$cookie.set('test', 'hallo')
       this.$cookie.set('mnidm', authStr, {
         secure: window.location.hostname !== 'localhost',

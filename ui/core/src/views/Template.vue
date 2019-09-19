@@ -498,7 +498,6 @@ export default {
 
       clearInterval(this.interval)
       if (file && file.name) {
-        console.log('updateFileName' + file.name)
         libreHub.updateFileName(file.name)
       }
       this.interval = setInterval(() => {

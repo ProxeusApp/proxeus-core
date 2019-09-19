@@ -12,7 +12,10 @@ const (
 	PaymentStatusCreated   = "created"
 	PaymentStatusPending   = "pending"
 	PaymentStatusConfirmed = "confirmed"
-	PaymentStatusFinished  = "finished"
+	PaymentStatusCancelled = "cancelled"
+	PaymentStatusRedeemed  = "redeemed"
+	PaymentStatusDeleted   = "deleted"
+	PaymentStatusTimeout   = "timeout"
 )
 
 type (
@@ -111,12 +114,13 @@ type (
 
 	WorkflowPaymentItem struct {
 		//save from who payment
-		TxHash     string    `json:"hash" storm:"id"`
+		ID         string    `json:"id" storm:"id,unique"`
+		TxHash     string    `json:"hash" storm:"index,unique"`
 		WorkflowID string    `json:"workflowID" storm:"index"`
-		From       string    `json:"From"`
-		To         string    `json:"To"`
+		From       string    `json:"from" storm:"index"`
+		To         string    `json:"to"`
 		Xes        uint64    `json:"xes"`
-		Status     string    `json:"Status"`
+		Status     string    `json:"status" storm:"index"`
 		CreatedAt  time.Time `json:"createdAt"`
 	}
 
@@ -127,12 +131,30 @@ func (me *FormItem) GetVersion() int {
 	return 0
 }
 
+func (me *FormItem) Clone() FormItem {
+	form := *me
+	form.ID = ""
+	return form
+}
+
 func (me *FormComponentItem) GetVersion() int {
 	return 0
 }
 
 func (me *WorkflowItem) GetVersion() int {
 	return 0
+}
+
+func (me *WorkflowItem) Clone() WorkflowItem {
+	workflow := *me
+	workflow.ID = "" // without id the repository will create a new one
+	return workflow
+}
+
+func (me *TemplateItem) Clone() TemplateItem {
+	template := *me
+	template.ID = ""
+	return template
 }
 
 func (me *TemplateItem) GetVersion() int {

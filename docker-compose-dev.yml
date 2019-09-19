@@ -17,8 +17,11 @@ services:
       DocumentServiceUrl: "http://document-service:2115/"
       BlockchainContractAddress: "${PROXEUS_CONTRACT_ADDRESS}"
       InfuraApiKey: "${PROXEUS_INFURA_KEY}"
-      SparkpostApiKey: "${PROXEUS_SPARKPOST_KEY}" 
+      SparkpostApiKey: "${PROXEUS_SPARKPOST_KEY}"
       EmailFrom: "${PROXEUS_EMAIL_FROM:-no-reply@proxeus.com}"
+      AirdropWalletfile: "${PROXEUS_AIRDROP_WALLET_FILE:-/root/.proxeus/settings/airdropwallet.json}"
+      AirdropWalletkey: "${PROXEUS_AIRDROP_WALLET_KEY:-/root/.proxeus/settings/airdropwallet.key}"
+      TestMode: "${PROXEUS_TEST_MODE:-false}"
     ports:
       - "1323:1323"
     volumes:

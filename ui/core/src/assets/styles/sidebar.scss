@@ -133,6 +133,12 @@ $nav-max-width: 265px;
   .main-nav {
     height: 100%;
   }
+  &.main-nav-backend {
+    margin-top: -23px;
+  }
+  &.main-nav-frontend {
+    margin-top: -8px;
+  }
 }
 
 .sidebar.sidebar-light {

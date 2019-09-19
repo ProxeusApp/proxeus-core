@@ -36,7 +36,7 @@ PATH=$PATH:$(go env GOPATH)/bin
 ### Clone repository
 Clone the repository to the right location below your GOPATH:
 ```
-git clone git@git.proxeus.com:core/central.git $(go env GOPATH)/src/git.proxeus.com/core/central
+git clone git@github.com:ProxeusApp/proxeus-core.git $(go env GOPATH)/src/git.proxeus.com/core/central
 cd $(go env GOPATH)/src/git.proxeus.com/core/central
 ```
 

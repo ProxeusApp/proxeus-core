@@ -281,7 +281,6 @@ export default {
               }
               $form.assignSubmitOnChange(changeOptions)
               $form.on('formFieldsAdded', function (event, parent) {
-                console.log('new fields added')
                 if (parent && parent.length) {
                   parent.assignSubmitOnChange(changeOptions)
                 }
@@ -483,7 +482,6 @@ export default {
         _this.myFormBuilder.init()
         window.__fb = _this.myFormBuilder
         if (store) {
-          console.log('storing defaults')
           _this.myFormBuilder.fb.componentsTab.storeComponents()
         }
       })

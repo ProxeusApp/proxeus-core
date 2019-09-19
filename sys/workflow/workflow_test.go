@@ -67,7 +67,7 @@ func NewUserImpl(n *Node) (NodeIF, error) {
 	return &UserImpl{}, nil
 }
 
-func (me *FormImpl) Execute(n *Node, data interface{}) (bool, error) {
+func (me *FormImpl) Execute(n *Node) (bool, error) {
 	if me.n == nil {
 		me.n = n
 	}
@@ -75,14 +75,14 @@ func (me *FormImpl) Execute(n *Node, data interface{}) (bool, error) {
 	if !me.presented {
 		//present
 		if testVerbose {
-			log.Println("--->WF TEST IMPL [form] Execute present state", n, data)
+			log.Println("--->WF TEST IMPL [form] Execute present state", n)
 		}
 		me.presented = true
 		return false, nil
 	}
 	//validate
 	if testVerbose {
-		log.Println("--->WF TEST IMPL [form] Execute validate state", n, data)
+		log.Println("--->WF TEST IMPL [form] Execute validate state", n)
 	}
 	return true, nil
 }
@@ -101,13 +101,13 @@ func (me *FormImpl) Close() {
 	me.n = nil
 }
 
-func (me *UserImpl) Execute(n *Node, data interface{}) (bool, error) {
+func (me *UserImpl) Execute(n *Node) (bool, error) {
 	if me.n == nil {
 		me.n = n
 	}
 	nodeStateMap[n.ID] = true
 	if testVerbose {
-		log.Println("--->WF TEST IMPL [user] Execute", n, data)
+		log.Println("--->WF TEST IMPL [user] Execute", n)
 	}
 	return true, nil
 }
@@ -126,13 +126,13 @@ func (me *UserImpl) Close() {
 	me.n = nil
 }
 
-func (me *TemplateImpl) Execute(n *Node, data interface{}) (bool, error) {
+func (me *TemplateImpl) Execute(n *Node) (bool, error) {
 	if me.n == nil {
 		me.n = n
 	}
 	nodeStateMap[n.ID] = true
 	if testVerbose {
-		log.Println("--->WF TEST IMPL [template] Execute", n, data)
+		log.Println("--->WF TEST IMPL [template] Execute", n)
 	}
 	return true, nil
 }

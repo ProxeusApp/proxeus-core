@@ -15,6 +15,11 @@ type Settings struct {
 	SparkpostApiKey           string `json:"sparkpostApiKey" validate:"required=true" usage:"Sparkpost API key which will be used to send out emails."`
 	EmailFrom                 string `json:"emailFrom" validate:"required=true,email=true" usage:"Email that is being used to send out emails."`
 	LogPath                   string `json:"logPath" default:"./log" usage:"Location of the log file of this service."`
+	DefaultWorkflowIds        string `json:"defaultWorkflowIds" usage:"Workflow IDs to set to clone and add to a new user"`
+	AirdropEnabled            string `json:"airdropEnabled" validate:"required=true" default:"false" usage:"Enables/Disables the XES & Ether airdrop feature on ropsten."`
+	AirdropAmountXES          string `json:"airdropAmountXES" default:"0" usage:"Amount of XES to airdrop to newly registered users."`
+	AirdropAmountEther        string `json:"airdropAmountEther" default:"0" usage:"Amount of Ether to airdrop to newly registered users."`
+	TestMode                  string `json:"testMode" default:"false" usage:"Run the server in test mode (NOT FOR PRODUCTION)."`
 }
 
 func NewDefaultSettings() *Settings {
