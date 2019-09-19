@@ -35,77 +35,148 @@ func (m *MockWorkflowPaymentsDBInterface) EXPECT() *MockWorkflowPaymentsDBInterf
 	return m.recorder
 }
 
-// GetByTxHash mocks base method
+// GetByTxHashAndStatusAndFromEthAddress mocks base method
 func (m *MockWorkflowPaymentsDBInterface) GetByTxHash(txHash string) (*model.WorkflowPaymentItem, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetByTxHash", txHash)
+	ret := m.ctrl.Call(m, "GetByTxHashAndStatusAndFromEthAddress", txHash)
 	ret0, _ := ret[0].(*model.WorkflowPaymentItem)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// GetByTxHash indicates an expected call of GetByTxHash
+// GetByTxHashAndStatusAndFromEthAddress indicates an expected call of GetByTxHashAndStatusAndFromEthAddress
 func (mr *MockWorkflowPaymentsDBInterfaceMockRecorder) GetByTxHash(txHash interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetByTxHash", reflect.TypeOf((*MockWorkflowPaymentsDBInterface)(nil).GetByTxHash), txHash)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetByTxHashAndStatusAndFromEthAddress", reflect.TypeOf((*MockWorkflowPaymentsDBInterface)(nil).GetByTxHash), txHash)
 }
 
-// GetByWorkflowId mocks base method
-func (m *MockWorkflowPaymentsDBInterface) GetByWorkflowId(workflowID string) (*model.WorkflowPaymentItem, error) {
+// Get mocks base method
+func (m *MockWorkflowPaymentsDBInterface) Get(paymentId, from string) (*model.WorkflowPaymentItem, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetByWorkflowId", workflowID)
+	ret := m.ctrl.Call(m, "Get", paymentId, from)
 	ret0, _ := ret[0].(*model.WorkflowPaymentItem)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// GetByWorkflowId indicates an expected call of GetByWorkflowId
-func (mr *MockWorkflowPaymentsDBInterfaceMockRecorder) GetByWorkflowId(workflowID interface{}) *gomock.Call {
+// Get indicates an expected call of Get
+func (mr *MockWorkflowPaymentsDBInterfaceMockRecorder) Get(paymentId, from interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetByWorkflowId", reflect.TypeOf((*MockWorkflowPaymentsDBInterface)(nil).GetByWorkflowId), workflowID)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Get", reflect.TypeOf((*MockWorkflowPaymentsDBInterface)(nil).Get), paymentId, from)
+}
+
+// ConfirmPayment mocks base method
+func (m *MockWorkflowPaymentsDBInterface) ConfirmPayment(txHash, from, to string, xes uint64) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ConfirmPayment", txHash, from, to, xes)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// ConfirmPayment indicates an expected call of ConfirmPayment
+func (mr *MockWorkflowPaymentsDBInterfaceMockRecorder) ConfirmPayment(txHash, from, to, xes interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ConfirmPayment", reflect.TypeOf((*MockWorkflowPaymentsDBInterface)(nil).ConfirmPayment), txHash, from, to, xes)
 }
 
 // GetByWorkflowIdAndFromEthAddress mocks base method
-func (m *MockWorkflowPaymentsDBInterface) GetByWorkflowIdAndFromEthAddress(workflowID, ethAddr string) (*model.WorkflowPaymentItem, error) {
+func (m *MockWorkflowPaymentsDBInterface) GetByWorkflowIdAndFromEthAddress(workflowID, ethAddr string, statuses []string) (*model.WorkflowPaymentItem, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetByWorkflowIdAndFromEthAddress", workflowID, ethAddr)
+	ret := m.ctrl.Call(m, "GetByWorkflowIdAndFromEthAddress", workflowID, ethAddr, statuses)
 	ret0, _ := ret[0].(*model.WorkflowPaymentItem)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // GetByWorkflowIdAndFromEthAddress indicates an expected call of GetByWorkflowIdAndFromEthAddress
-func (mr *MockWorkflowPaymentsDBInterfaceMockRecorder) GetByWorkflowIdAndFromEthAddress(workflowID, ethAddr interface{}) *gomock.Call {
+func (mr *MockWorkflowPaymentsDBInterfaceMockRecorder) GetByWorkflowIdAndFromEthAddress(workflowID, ethAddr, statuses interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetByWorkflowIdAndFromEthAddress", reflect.TypeOf((*MockWorkflowPaymentsDBInterface)(nil).GetByWorkflowIdAndFromEthAddress), workflowID, ethAddr)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetByWorkflowIdAndFromEthAddress", reflect.TypeOf((*MockWorkflowPaymentsDBInterface)(nil).GetByWorkflowIdAndFromEthAddress), workflowID, ethAddr, statuses)
 }
 
-// Add mocks base method
-func (m *MockWorkflowPaymentsDBInterface) Add(item *model.WorkflowPaymentItem) error {
+// Save mocks base method
+func (m *MockWorkflowPaymentsDBInterface) Save(item *model.WorkflowPaymentItem) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Add", item)
+	ret := m.ctrl.Call(m, "Save", item)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
-// Add indicates an expected call of Add
-func (mr *MockWorkflowPaymentsDBInterfaceMockRecorder) Add(item interface{}) *gomock.Call {
+// Save indicates an expected call of Save
+func (mr *MockWorkflowPaymentsDBInterfaceMockRecorder) Save(item interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Add", reflect.TypeOf((*MockWorkflowPaymentsDBInterface)(nil).Add), item)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Save", reflect.TypeOf((*MockWorkflowPaymentsDBInterface)(nil).Save), item)
+}
+
+// Update mocks base method
+func (m *MockWorkflowPaymentsDBInterface) Update(paymentId, status, txHash, from string) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Update", paymentId, status, txHash, from)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// Update indicates an expected call of Update
+func (mr *MockWorkflowPaymentsDBInterfaceMockRecorder) Update(paymentId, status, txHash, from interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Update", reflect.TypeOf((*MockWorkflowPaymentsDBInterface)(nil).Update), paymentId, status, txHash, from)
+}
+
+// Cancel mocks base method
+func (m *MockWorkflowPaymentsDBInterface) Cancel(paymentId, from string) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Cancel", paymentId, from)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// Cancel indicates an expected call of Cancel
+func (mr *MockWorkflowPaymentsDBInterfaceMockRecorder) Cancel(paymentId, from interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Cancel", reflect.TypeOf((*MockWorkflowPaymentsDBInterface)(nil).Cancel), paymentId, from)
 }
 
 // Delete mocks base method
-func (m *MockWorkflowPaymentsDBInterface) Delete(txHash string) error {
+func (m *MockWorkflowPaymentsDBInterface) Delete(paymentId string) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Delete", txHash)
+	ret := m.ctrl.Call(m, "Delete", paymentId)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // Delete indicates an expected call of Delete
-func (mr *MockWorkflowPaymentsDBInterfaceMockRecorder) Delete(txHash interface{}) *gomock.Call {
+func (mr *MockWorkflowPaymentsDBInterfaceMockRecorder) Delete(paymentId interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Delete", reflect.TypeOf((*MockWorkflowPaymentsDBInterface)(nil).Delete), txHash)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Delete", reflect.TypeOf((*MockWorkflowPaymentsDBInterface)(nil).Delete), paymentId)
+}
+
+// Redeem mocks base method
+func (m *MockWorkflowPaymentsDBInterface) Redeem(workflowId, from string) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Redeem", workflowId, from)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// Redeem indicates an expected call of Redeem
+func (mr *MockWorkflowPaymentsDBInterfaceMockRecorder) Redeem(workflowId, from interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Redeem", reflect.TypeOf((*MockWorkflowPaymentsDBInterface)(nil).Redeem), workflowId, from)
+}
+
+// All mocks base method
+func (m *MockWorkflowPaymentsDBInterface) All() ([]*model.WorkflowPaymentItem, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "All")
+	ret0, _ := ret[0].([]*model.WorkflowPaymentItem)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// All indicates an expected call of All
+func (mr *MockWorkflowPaymentsDBInterfaceMockRecorder) All() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "All", reflect.TypeOf((*MockWorkflowPaymentsDBInterface)(nil).All))
 }
 
 // Close mocks base method

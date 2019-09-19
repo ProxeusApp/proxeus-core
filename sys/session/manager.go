@@ -184,7 +184,10 @@ func (me *Manager) Clean() error {
 func (me *Manager) Close() (err error) {
 	me.sessionsDB.IterateMemStorage(func(key string, val interface{}) {
 		if sess, ok := val.(*Session); ok {
-			_ = sess.close()
+			err = sess.close()
+			if err != nil {
+				log.Println(err.Error())
+			}
 		}
 	})
 	me.sessionsDB.Close()

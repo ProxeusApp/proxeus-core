@@ -53,7 +53,6 @@ export default {
       if (this.translations[this.lk]) {
         t[this.lk] = this.translations[this.lk]
         if (this.lk.length <= 4) {
-          console.log('updateLangLabel....4')
           this.app.updateLangLabel()
           this.$root.$emit('translations-updated')
         }

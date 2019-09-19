@@ -123,7 +123,6 @@ export default {
       if (this.doc.Hash) {
         this.signers = await this.app.wallet.proxeusFS.getFileSigners(this.doc.Hash)
       }
-      console.log(this.signers)
     },
     revokeFile (signatory) {
       var bodyFormData = new FormData()

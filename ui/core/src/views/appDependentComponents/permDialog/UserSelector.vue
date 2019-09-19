@@ -78,7 +78,6 @@ export default {
     'vueTagsInputTarget': 'vueTagsInputSearch'
   },
   mounted () {
-    console.log(this.$refs.main)
     if (this.$refs.main) {
       let inputs = this.$refs.main.getElementsByClassName('ti-new-tag-input')
       if (inputs && inputs.length === 1) {
@@ -125,7 +124,6 @@ export default {
       return false
     },
     updateVueTagsInput (newTags) {
-      console.log('updateVueTagsInput')
       this.addresses = []
       this.toBeGranted = newTags
       this.vueTagsInputTarget = ''

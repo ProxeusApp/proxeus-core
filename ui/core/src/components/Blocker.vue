@@ -84,12 +84,10 @@ export default {
   },
   methods: {
     onServiceOn () {
-      console.log('recb onServiceOn')
       this.blocked = false
       this.disableActionBlocker()
     },
     onServiceOff () {
-      console.log('recb onServiceOff')
       this.blocked = true
       this.enableActionBlocker()
       if (this.$refs && this.$refs.blocker) {

@@ -47,8 +47,14 @@ func NewUserDataDB(dir string) (*UserDataDB, error) {
 	udb.baseFilePath = assetDir
 
 	example := &model.UserDataItem{}
-	udb.db.Init(example)
-	udb.db.ReIndex(example)
+	err = udb.db.Init(example)
+	if err != nil {
+		return nil, err
+	}
+	err = udb.db.ReIndex(example)
+	if err != nil {
+		return nil, err
+	}
 	var fVersion int
 	verr := udb.db.Get(usrdVersion, usrdVersion, &fVersion)
 	if verr == nil && fVersion != example.GetVersion() {
@@ -146,30 +152,21 @@ func (me *UserDataDB) GetAllFileInfosOf(ud *model.UserDataItem) []*file.IO {
 	return m.GetAllFileInfos(me.baseFilePath)
 }
 
-func (me *UserDataDB) GetByWorkflow(auth model.Authorization, wf *model.WorkflowItem, finished bool) (*model.UserDataItem, error) {
+func (me *UserDataDB) GetByWorkflow(auth model.Authorization, wf *model.WorkflowItem, finished bool) (*model.UserDataItem, bool, error) {
 	var item model.UserDataItem
 	matchers := defaultMatcher(auth, "", nil, true)
 	matchers = append(matchers, q.And(q.Eq("WorkflowID", wf.ID), q.Eq("Finished", finished)))
+	alreadyStarted := false
 	err := me.db.Select(matchers...).OrderBy("Created").Reverse().First(&item)
-	if err == storm.ErrNotFound && !finished {
-		item.WorkflowID = wf.ID
-		item.Name = wf.Name
-		item.Detail = wf.Detail
-		er := me.Put(auth, &item)
-		if er != nil {
-			return nil, er
-		} else {
-			return &item, nil
-		}
-	}
 	if err != nil {
-		return nil, err
+		return nil, alreadyStarted, err
 	}
+	alreadyStarted = true
 	if !item.Permissions.IsReadGrantedFor(auth) {
-		return nil, model.ErrAuthorityMissing
+		return nil, alreadyStarted, model.ErrAuthorityMissing
 	}
-	me.db.Get(usrdHeavyData, item.ID, &item.Data)
-	return &item, nil
+	err = me.db.Get(usrdHeavyData, item.ID, &item.Data)
+	return &item, alreadyStarted, err
 }
 
 func (me *UserDataDB) GetData(auth model.Authorization, id, dataPath string) (interface{}, error) {

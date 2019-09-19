@@ -3,6 +3,8 @@ package handlers
 import (
 	"strings"
 
+	"git.proxeus.com/core/central/main/handlers/payment"
+
 	"git.proxeus.com/core/central/main/handlers/api"
 
 	"github.com/labstack/echo"
@@ -12,22 +14,14 @@ import (
 	"git.proxeus.com/core/central/main/handlers/template_ide"
 	"git.proxeus.com/core/central/main/handlers/workflow"
 	"git.proxeus.com/core/central/main/www"
-	"git.proxeus.com/core/central/sys"
 	"git.proxeus.com/core/central/sys/model"
 )
 
-func MainHostedAPI(e *echo.Echo, s *www.Security, system *sys.System) {
-	configured, _ := system.Configured()
-	var initialHandler *www.InitialHandler
-	if !configured {
-		initialHandler = www.NewInitialHandler(configured)
-		e.Use(initialHandler.Handler)
-	}
-
+func MainHostedAPI(e *echo.Echo, s *www.Security, version string) {
 	const (
-		GET  = echo.GET
-		POST = echo.POST
-		//PUT    = echo.PUT
+		GET    = echo.GET
+		POST   = echo.POST
+		PUT    = echo.PUT
 		DELETE = echo.DELETE
 	)
 
@@ -80,9 +74,9 @@ func MainHostedAPI(e *echo.Echo, s *www.Security, system *sys.System) {
 		{POST, USER, "/api/import", api.PostImport},
 		{GET, ROOT, "/api/init", api.GetInit},
 		{POST, ROOT, "/api/init", api.PostInit},
-		{GET, PUBLIC, "/api/challenge", api.ChallengeHandler},
-		{POST, PUBLIC, "/api/change/bcaddress", api.UpdateAddress},
-		{POST, PUBLIC, "/api/change/email", api.ChangeEmailRequest},
+		{GET, PUBLIC, "/api/challenge", api.ChallengeHandler},       // Need session
+		{POST, PUBLIC, "/api/change/bcaddress", api.UpdateAddress},  // Need session
+		{POST, PUBLIC, "/api/change/email", api.ChangeEmailRequest}, // Need session
 		{POST, PUBLIC, "/api/change/email/:token", api.ChangeEmail},
 		{POST, PUBLIC, "/api/reset/password", api.ResetPasswordRequest},
 		{POST, PUBLIC, "/api/reset/password/:token", api.ResetPassword},
@@ -90,15 +84,19 @@ func MainHostedAPI(e *echo.Echo, s *www.Security, system *sys.System) {
 		{POST, PUBLIC, "/api/register/:token", api.Register},
 		{POST, PUBLIC, "/api/login", api.LoginHandler},
 		{POST, PUBLIC, "/api/logout", api.LogoutHandler},
-		{GET, PUBLIC, "/api/config", api.ConfigHandler},
-		{GET, PUBLIC, "/api/me", api.MeHandler},
+		{GET, PUBLIC, "/api/config", api.ConfigHandler(version)},
+		{GET, PUBLIC, "/api/me", api.MeHandler}, // Need session
 		{POST, USER, "/api/me", api.MeUpdateHandler},
+
+		// API Key session
+		{GET, PUBLIC, "/api/session/token", api.GetSessionTokenHandler},
+		{DELETE, USER, "/api/session/token", api.DeleteSessionTokenHandler},
 
 		{POST, USER, "/api/my/profile/photo", api.PutProfilePhotoHandler},
 
 		{GET, ROOT, "/api/settings/export", api.ExportSettings},
 		{GET, USER, "/api/userdata/export", api.ExportUserData},
-		{GET, PUBLIC, "/api/document/:ID", api.DocumentHandler},
+		{GET, PUBLIC, "/api/document/:ID", api.DocumentHandler}, // Need session
 
 		{GET, PUBLIC, "/api/document/list", workflow.ListPublishedHandler},
 		{GET, PUBLIC, "/api/document/:ID/allAtOnce/schema", api.WorkflowSchema},
@@ -107,10 +105,10 @@ func MainHostedAPI(e *echo.Echo, s *www.Security, system *sys.System) {
 		{POST, GUEST, "/api/document/:ID/name", api.DocumentEditHandler},
 		{POST, GUEST, "/api/document/:ID/data", api.DocumentDataHandler},
 		{POST, GUEST, "/api/document/:ID/next", api.DocumentNextHandler},
-		{GET, PUBLIC, "/api/document/:ID/prev", api.DocumentPrevHandler},
+		{GET, PUBLIC, "/api/document/:ID/prev", api.DocumentPrevHandler}, // Why PUBLIC access for prev when next is GUEST
 		{GET, GUEST, "/api/document/:ID/file/:inputName", api.DocumentFileGetHandler},
-		{POST, PUBLIC, "/api/document/:ID/file/:inputName", api.DocumentFilePostHandler},
-		{GET, PUBLIC, "/api/document/:ID/preview/:templateID/:lang/:format", api.DocumentPreviewHandler},
+		{POST, PUBLIC, "/api/document/:ID/file/:inputName", api.DocumentFilePostHandler},                 // Should be GUEST
+		{GET, PUBLIC, "/api/document/:ID/preview/:templateID/:lang/:format", api.DocumentPreviewHandler}, // Should be GUEST
 		{GET, GUEST, "/api/document/:ID/delete", api.DocumentDeleteHandler},
 
 		{GET, GUEST, "/api/user/document", api.UserDocumentListHandler},
@@ -151,53 +149,58 @@ func MainHostedAPI(e *echo.Echo, s *www.Security, system *sys.System) {
 		{GET, CREATOR, "/api/admin/workflow/:ID/delete", workflow.DeleteHandler},
 		{GET, USER, "/api/workflow/export", workflow.ExportWorkflow},
 		{GET, USER, "/api/user/workflow/list", workflow.ListPublishedHandler},
-		{GET, PUBLIC, "/api/admin/workflow/list", workflow.ListHandler},
-		{GET, PUBLIC, "/api/admin/workflow/:ID", workflow.GetHandler},
-		{POST, PUBLIC, "/api/admin/workflow/update", workflow.UpdateHandler},
+		{GET, PUBLIC, "/api/admin/workflow/list", workflow.ListHandler},      // Need session
+		{GET, PUBLIC, "/api/admin/workflow/:ID", workflow.GetHandler},        // Need session
+		{POST, PUBLIC, "/api/admin/workflow/update", workflow.UpdateHandler}, // Need session
 
-		{GET, PUBLIC, "/api/admin/workflow/:ID/payment", workflow.GetWorkflowPayment},
-		{POST, PUBLIC, "/api/admin/workflow/:ID/payment/:txHash", workflow.AddWorkflowPayment},
-
-		{GET, PUBLIC, "/api/management-list", api.ManagementListHandler},
+		// payment
+		{GET, USER, "/api/admin/payments/check", api.CheckForWorkflowPayment},
+		{POST, USER, "/api/admin/payments", payment.CreateWorkflowPayment},
+		{GET, USER, "/api/admin/payments/:paymentId", payment.GetWorkflowPaymentById},
+		{GET, USER, "/api/admin/payments", payment.GetWorkflowPayment},
+		{PUT, USER, "/api/admin/payments/:paymentId", payment.UpdateWorkflowPaymentPending},
+		{POST, USER, "/api/admin/payments/:paymentId/cancel", payment.CancelWorkflowPayment},
+		{GET, SUPERADMIN, "/api/admin/payments/list", payment.ListPayments},
+		{DELETE, SUPERADMIN, "/api/admin/payments/:paymentId", payment.DeleteWorkflowPayment},
 
 		// form builder
-		{GET, PUBLIC, "/api/form/component", formbuilder.GetComponentsHandler},
+		{GET, PUBLIC, "/api/form/component", formbuilder.GetComponentsHandler}, // `Need session`
 
 		{GET, USER, "/api/form/export", formbuilder.ExportForms},
 		{GET, CREATOR, "/api/admin/form/:ID/delete", formbuilder.DeleteHandler},
-		{GET, PUBLIC, "/api/admin/form/list", formbuilder.ListHandler},
+		{GET, PUBLIC, "/api/admin/form/list", formbuilder.ListHandler}, // Need session
 		{GET, USER, "/api/admin/:type/list", workflow.ListCustomNodeHandler},
-		{GET, PUBLIC, "/api/admin/form/:formID", formbuilder.GetOneFormHandler},
-		{POST, PUBLIC, "/api/admin/form/update", formbuilder.UpdateFormHandler},
+		{GET, PUBLIC, "/api/admin/form/:formID", formbuilder.GetOneFormHandler}, // Need session
+		{POST, PUBLIC, "/api/admin/form/update", formbuilder.UpdateFormHandler}, // Need session
 
-		{GET, PUBLIC, "/api/admin/form/component", formbuilder.GetComponentsHandler},
+		{GET, PUBLIC, "/api/admin/form/component", formbuilder.GetComponentsHandler}, // Need session
 		{POST, SUPERADMIN, "/api/admin/form/component", formbuilder.SetComponentHandler},
 		{DELETE, SUPERADMIN, "/api/admin/form/component/:id", formbuilder.DeleteComponentHandler},
-		{GET, PUBLIC, "/api/admin/form/vars", formbuilder.VarsHandler},
+		{GET, PUBLIC, "/api/admin/form/vars", formbuilder.VarsHandler}, // Need session
 
-		{POST, PUBLIC, "/api/admin/form/test/setFormSrc/:id", formbuilder.SetFormSrcHandler},
-		{GET, PUBLIC, "/api/admin/form/test/data/:id", formbuilder.GetDataId},
-		{POST, PUBLIC, "/api/admin/form/test/data/:id", formbuilder.TestFormDataHandler},
-		{GET, PUBLIC, "/api/admin/form/test/file/:id/:fieldname", formbuilder.GetFileIdFieldName},
+		{POST, PUBLIC, "/api/admin/form/test/setFormSrc/:id", formbuilder.SetFormSrcHandler},      // Need session
+		{GET, PUBLIC, "/api/admin/form/test/data/:id", formbuilder.GetDataId},                     // Need session
+		{POST, PUBLIC, "/api/admin/form/test/data/:id", formbuilder.TestFormDataHandler},          // Need session
+		{GET, PUBLIC, "/api/admin/form/test/file/:id/:fieldname", formbuilder.GetFileIdFieldName}, // Need session
 		{GET, PUBLIC, "/api/admin/form/file/types", formbuilder.GetFileTypes},
-		{POST, PUBLIC, "/api/admin/form/test/file/:id/:fieldname", formbuilder.PostFileIdFieldName},
+		{POST, PUBLIC, "/api/admin/form/test/file/:id/:fieldname", formbuilder.PostFileIdFieldName}, // Need session
 		// template IDE
 		{GET, CREATOR, "/api/admin/template/:ID/delete", template_ide.DeleteHandler},
 		{GET, USER, "/api/template/export", template_ide.ExportTemplate},
-		{GET, PUBLIC, "/api/admin/template/vars", template_ide.VarsTemplateHandler},
-		{GET, PUBLIC, "/api/admin/template/list", template_ide.ListHandler},
-		{POST, PUBLIC, "/api/admin/template/update", template_ide.UpdateHandler},
-		{GET, PUBLIC, "/api/admin/template/:id", template_ide.OneTmplHandler},
-		{GET, PUBLIC, "/api/admin/template/download/:id/:lang", template_ide.DownloadTemplateHandler},
-		{POST, PUBLIC, "/api/admin/template/upload/:id/:lang", template_ide.UploadTemplateHandler},
-		{GET, PUBLIC, "/api/admin/template/delete/:id/:lang", template_ide.DeleteTemplateHandler},
+		{GET, PUBLIC, "/api/admin/template/vars", template_ide.VarsTemplateHandler},                   // Need session
+		{GET, PUBLIC, "/api/admin/template/list", template_ide.ListHandler},                           // Need session
+		{POST, PUBLIC, "/api/admin/template/update", template_ide.UpdateHandler},                      // Need session
+		{GET, PUBLIC, "/api/admin/template/:id", template_ide.OneTmplHandler},                         // Need session
+		{GET, PUBLIC, "/api/admin/template/download/:id/:lang", template_ide.DownloadTemplateHandler}, // Need session
+		{POST, PUBLIC, "/api/admin/template/upload/:id/:lang", template_ide.UploadTemplateHandler},    // Need session
+		{GET, PUBLIC, "/api/admin/template/delete/:id/:lang", template_ide.DeleteTemplateHandler},     // Need session
 
-		{GET, PUBLIC, "/api/admin/template/ide/active/:id/:lang", template_ide.IdeSetActiveHandler},
-		{POST, PUBLIC, "/api/admin/template/ide/upload/:id/:lang", template_ide.IdePostUploadHandler},
-		{GET, PUBLIC, "/api/admin/template/ide/delete/:id/:lang", template_ide.IdeGetDeleteHandler},
-		{GET, PUBLIC, "/api/admin/template/ide/download/:id", template_ide.IdeGetDownloadHandler},
+		{GET, PUBLIC, "/api/admin/template/ide/active/:id/:lang", template_ide.IdeSetActiveHandler},   // Need session
+		{POST, PUBLIC, "/api/admin/template/ide/upload/:id/:lang", template_ide.IdePostUploadHandler}, // Need session
+		{GET, PUBLIC, "/api/admin/template/ide/delete/:id/:lang", template_ide.IdeGetDeleteHandler},   // Need session
+		{GET, PUBLIC, "/api/admin/template/ide/download/:id", template_ide.IdeGetDownloadHandler},     // Need session
 		{GET, CREATOR, "/api/admin/template/ide/tmplAssistanceDownload", template_ide.IdeGetTmpAssDownload},
-		{GET, PUBLIC, "/api/admin/template/ide/form", template_ide.IdeFormHandler},
+		{GET, PUBLIC, "/api/admin/template/ide/form", template_ide.IdeFormHandler}, // Need session
 	}
 
 	addEndpoint := func(r r, ms ...echo.MiddlewareFunc) {

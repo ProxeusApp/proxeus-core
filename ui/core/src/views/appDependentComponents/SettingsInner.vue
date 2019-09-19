@@ -30,6 +30,10 @@
         <span class="text-muted">{{$t('Document Service URL explanation','Set the Document Service URL which will be used to render documents.')}}</span>
         <animated-input name="settings.platformDomain" :max="100" :label="$t('Platform Domain')" v-model="settings.platformDomain"></animated-input>
         <span class="text-muted">{{$t('Platform Domain explanation','Set the Domain this Platform instance is identifying as (used for example for sending links to this instance)')}}</span>
+        <div class="d-none">
+          <animated-input name="settings.defaultWorkflowIds" :label="$t('Default Workflows')" v-model="settings.defaultWorkflowIds"></animated-input>
+          <span class="text-muted">{{$t('Default workflow ids explanation','Comma separated ids of workflows you want your new users to inherit (if any)')}}</span>
+        </div>
       </div>
       <div class="spanel"><span class="spanel-title">{{$t('Blockchain settings')}}</span>
         <animated-input name="settings.blockchainNet" :max="100" :label="$t('Blockchain net')" v-model="settings.blockchainNet"></animated-input>
@@ -38,6 +42,12 @@
         <span class="text-muted">{{$t('Infura API Key explanation','API Key to access Infura node.')}}</span>
         <animated-input name="settings.blockchainContractAddress" :max="100" :label="$t('Blockchain contract address')" v-model="settings.blockchainContractAddress"></animated-input>
         <span class="text-muted">{{$t('Blockchain contract address explanation','Set the ethereum contract address which will be used to register files and verify them.')}}</span>
+        <simple-select :unselect="false" style="margin-top: 15px;" name="settings.airdropEnabled" v-model="settings.airdropEnabled" :idProp="'value'" :labelProp="'label'" :options="this.airdropoptions"/>
+        <span class="text-muted">{{$t('Airdrop Enable Explanation','Enables/Disables the XES & Ether airdrop feature for new users on ropsten. The Amount and Wallet to be used is configured in the platform configuration.')}}</span>
+        <animated-input :disabled="settings.airdropEnabled!='true'" name="settings.airdropAmountXES" :max="100" :label="$t('Airdrop Amount XES')" v-model="settings.airdropAmountXES"></animated-input>
+        <span class="text-muted">{{$t('Airdrop Amount XES Explanation','Set the amount of XES to be airdropped to newly registered users.')}}</span>
+        <animated-input :disabled="settings.airdropEnabled!='true'" name="settings.airdropAmountEther" :max="100" :label="$t('Airdrop Amount Ether')" v-model="settings.airdropAmountEther"></animated-input>
+        <span class="text-muted">{{$t('Airdrop Amount Ether Explanation','Set the amount of Ether to be airdropped to newly registered users.')}}</span>
       </div>
       <div class="spanel"><span class="spanel-title">{{$t('Email settings')}}</span>
         <animated-input name="settings.emailFrom" :max="100" :label="$t('Email from')" v-model="settings.emailFrom"></animated-input>
@@ -226,7 +236,17 @@ export default {
       configured: false,
       initialized: false,
       importResultsAvailable: false,
-      results: null
+      results: null,
+      airdropoptions: [
+        {
+          label: 'Airdrop enabled on Ropsten',
+          value: 'true'
+        },
+        {
+          label: 'Airdrop disabled',
+          value: 'false'
+        }
+      ]
     }
   }
 }

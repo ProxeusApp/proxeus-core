@@ -64,7 +64,8 @@ export default {
       isConnectedAccount: false,
       appBlockchainNet: '',
       clientProvidedNet: '',
-      me: ''
+      me: '',
+      paymentId: ''
     }
   },
   created () {
@@ -95,6 +96,15 @@ export default {
     this.checkBlockchainNetwork()
   },
   methods: {
+    showGenericPaymentError () {
+      this.$notify({
+        group: 'app',
+        title: this.$t('Error'),
+        text: this.$t('Payment failed. Please try again or contact the platform operator.'),
+        type: 'error'
+      })
+      this.walletErrorMessage = this.$t('Payment failed. Please try again or contact the platform operator.')
+    },
     beforeUnload (e) {
       if (this.submitting) {
         e.preventDefault()
@@ -106,10 +116,14 @@ export default {
       }
     },
     checkPaymentAndRedirectIfExists () {
-      console.log('Check payment ' + this.documentId)
-      axios.get('/api/admin/workflow/' + this.documentId + '/payment').then(response => {
-        if (response.data) {
-          this.$router.push({ name: 'DocumentFlow', params: { id: response.data.workflowID } })
+      console.log('Check existing payment for workflow: ' + this.documentId)
+      axios.get('/api/admin/payments/check', {
+        params: {
+          workflowId: this.documentId
+        }
+      }).then(response => {
+        if (response.status === 200) {
+          this.$router.push({ name: 'DocumentFlow', params: { id: this.documentId } })
         }
       }, (error) => {
         if (error.response.status !== 404) {
@@ -192,21 +206,33 @@ export default {
     },
     // Check if payment has been registered in the backend by payment listener
     async checkPaymentReceived (txHash) {
-      let response = await axios.get('/api/admin/workflow/' + this.documentId + '/payment', {
-        params: {
-          txHash: txHash
-        }
-      })
-      if (response.data) {
-        return true
+      let response
+      try {
+        response = await axios.get('/api/admin/payments', {
+          params: {
+            txHash: txHash,
+            status: 'confirmed'
+          }
+        })
+      } catch (e) {
+        console.log(e)
+        return false
       }
-      return false
+
+      if (response.status !== 200) {
+        return false
+      }
+      return true
     },
     sleep (seconds) {
       return new Promise(resolve => setTimeout(resolve, seconds * 1000))
     },
     redirectWorkflow () {
-      this.$router.push({ name: 'DocumentFlow', params: { id: this.documentId } })
+      // only redirect if user stayed on payment page of same document(workflow)
+      const route = this.$router.currentRoute
+      if (route.name === 'DocumentPayment' && route.params.documentId === this.documentId) {
+        this.$router.push({ name: 'DocumentFlow', params: { id: this.documentId } })
+      }
     },
     async payDocument () {
       this.submitting = true
@@ -226,8 +252,37 @@ export default {
       this.nonce++
       let self = this
 
+      let response
+      try {
+        response = await axios.post('/api/admin/payments', {
+          workflowId: self.documentId
+        })
+      } catch (e) {
+        this.showGenericPaymentError()
+        return
+      }
+
+      this.paymentId = response.data.id
       const xesAmountWei = web3.utils.toWei(this.workflow.price.toString(), 'ether')
-      this.app.wallet.transferXES(this.workflow.ownerEthAddress, xesAmountWei)
+
+      // eslint-disable-next-line handle-callback-err
+      let callback = async function (error, transactionHash) {
+        if (error) {
+          console.log(error)
+          return
+        }
+        console.log('callback for txHash: ' + transactionHash)
+
+        try {
+          await axios.put('/api/admin/payments/' + self.paymentId, {
+            txHash: transactionHash
+          })
+        } catch (e) {
+          console.log(e)
+        }
+      }
+
+      this.app.wallet.transferXES(this.workflow.ownerEthAddress, xesAmountWei, callback)
         .then(async (result) => {
           this.submitting = false
           let txHash = result.transactionHash
@@ -236,31 +291,14 @@ export default {
           do {
             paymentReceived = await self.checkPaymentReceived(txHash)
             tryCount++
-            if (tryCount > 20) { // timeout after 200 seconds
-              this.$notify({
-                group: 'app',
-                title: this.$t('Error'),
-                text: this.$t('Payment failed. Please contact the platform operator.'),
-                type: 'error'
-              })
-              this.walletErrorMessage = this.$t('Payment failed. Please contact the platform operator.')
+            if (tryCount > 30) { // timeout after 300 seconds
+              this.showGenericPaymentError()
               return
             }
             if (paymentReceived !== true) {
-              await self.sleep(10000)
+              await self.sleep(10)
             }
           } while (paymentReceived !== true)
-          // Notify backend what workflow the user intended to buy
-          axios.post('/api/admin/workflow/' + this.documentId + '/payment/' + txHash).then(response => {
-          }).catch((error) => {
-            console.log(error)
-            this.$notify({
-              group: 'app',
-              title: this.$t('Error'),
-              text: this.$t('Payment failed. Please try again or if the error persists contact the platform operator.'),
-              type: 'error'
-            })
-          })
           self.redirectWorkflow()
         }).catch((error) => {
           this.submitting = false
@@ -270,6 +308,11 @@ export default {
             title: this.$t('Error'),
             text: this.$t('Payment failed. Please try again or if the error persists contact the platform operator.'),
             type: 'error'
+          })
+
+          // cancel payment
+          axios.post('/api/admin/payments/' + self.paymentId + '/cancel').catch((error) => {
+            console.log(error)
           })
         })
     }

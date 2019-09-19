@@ -6,12 +6,6 @@ import (
 
 func List(nodeType string) *workflow.Node {
 	var repositories = make(map[string]*workflow.Node)
-	repositories["ibmsender"] = &workflow.Node{
-		ID:     "1234123-1234123",
-		Name:   "IBM Sender",
-		Detail: "sends all workflow data to an IBM service",
-		Type:   "ibmsender",
-	}
 
 	repositories["mailsender"] = &workflow.Node{
 		ID:     "1234123-1234124",
