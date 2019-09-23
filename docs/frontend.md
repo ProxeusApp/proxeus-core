@@ -47,7 +47,7 @@ the latest production build. Use 3005 if you want to use the latest frontend fea
 
 - Progressive Web Apps https://developers.google.com/web/progressive-web-apps/
 - FileSystem API https://developer.mozilla.org/en-US/docs/Web/API/FileSystem
-- Web3 https://web3js.readthedocs.io/en/1.0/index.html
+- Web3 https://github.com/ethereum/web3.js/tree/v0.20.6 
 - ES6/ES7… https://codeburst.io/javascript-wtf-is-es6-es8-es-2017-ecmascript-dca859e4821c
 - Async/Await https://medium.com/@rafaelvidaurre/truly-understanding-async-await-491dd580500e
 - JavaScript https://developer.mozilla.org/bm/docs/Web/JavaScript

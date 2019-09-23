@@ -18,6 +18,57 @@ used to deploy the platform in different context:
 This is the simplest method to experiment with Proxeus.  This will start a local Proxeus platform 
 using images from Docker Hub.  
 
+### docker-compose.yml file 
+
+```
+version: '3.7'
+
+networks:
+  xes-platform-network:
+    name: xes-platform-network
+
+services:
+  platform:
+    image: proxeus/proxeus-core:latest
+    container_name: xes_platform
+    depends_on:
+      - document-service
+    networks:
+      - xes-platform-network
+    restart: unless-stopped
+    environment:
+      TZ: Europe/Zurich
+      DataDir: "/data/hosted"
+      DocumentServiceUrl: "http://document-service:2115/"
+      InfuraApiKey: "${PROXEUS_INFURA_KEY}"
+      SparkpostApiKey: "${PROXEUS_SPARKPOST_KEY}"
+      BlockchainContractAddress: "${PROXEUS_CONTRACT_ADDRESS}"
+      EmailFrom: "${PROXEUS_EMAIL_FROM:-no-reply@proxeus.com}"
+      AirdropWalletfile: "${PROXEUS_AIRDROP_WALLET_FILE:-./data/proxeus-platform/settings/airdropwallet.json}"
+      AirdropWalletkey: "${PROXEUS_AIRDROP_WALLET_KEY:-./data/proxeus-platform/settings/airdropwallet.key}"
+    ports:
+      - "1323:1323"
+    volumes:
+      - ${PROXEUS_DATA_DIR:-./data}/proxeus-platform/data:/data/hosted
+      - ${PROXEUS_DATA_DIR:-./data}/proxeus-platform/settings:/root/.proxeus/settings
+
+  document-service:
+    image: proxeus/document-service:latest
+    container_name: xes_document_service
+    networks:
+      - xes-platform-network
+    restart: unless-stopped
+    environment:
+      TZ: Europe/Zurich
+    ports:
+      - "2115:2115"
+    volumes:
+      - ${PROXEUS_DATA_DIR:-./data}/document-service/logs:/document-service/logs
+      - ${PROXEUS_DATA_DIR:-./data}/document-service/fonts:/document-service/fonts
+```
+
+### Start
+
 ```
 docker-compose up 
 ```
@@ -36,6 +87,56 @@ Environment:
 This file will start the document service available from Docker Hub but will start
 the local Platform built from your local files.  This method is preferred during development.
 
+### docker-compose-dev.yml
+
+```
+version: '3.7'
+
+networks:
+  xes-platform-network:
+    name: xes-platform-network
+
+services:
+  platform:
+    build:
+      context: .
+    container_name: xes_platform
+    networks: ['xes-platform-network']
+    restart: unless-stopped
+    environment:
+      TZ: Europe/Zurich
+      DataDir: "/data/hosted"
+      DocumentServiceUrl: "http://document-service:2115/"
+      BlockchainContractAddress: "${PROXEUS_CONTRACT_ADDRESS}"
+      InfuraApiKey: "${PROXEUS_INFURA_KEY}"
+      SparkpostApiKey: "${PROXEUS_SPARKPOST_KEY}"
+      EmailFrom: "${PROXEUS_EMAIL_FROM:-no-reply@proxeus.com}"
+      AirdropWalletfile: "${PROXEUS_AIRDROP_WALLET_FILE:-/root/.proxeus/settings/airdropwallet.json}"
+      AirdropWalletkey: "${PROXEUS_AIRDROP_WALLET_KEY:-/root/.proxeus/settings/airdropwallet.key}"
+      TestMode: "${PROXEUS_TEST_MODE:-false}"
+    ports:
+      - "1323:1323"
+    volumes:
+      - ${PROXEUS_DATA_DIR:-./data}/proxeus-platform/data:/data/hosted
+      - ${PROXEUS_DATA_DIR:-./data}/proxeus-platform/settings:/root/.proxeus/settings
+
+  document-service:
+    #todo: change image with proxeus docker registry
+    image: proxeus/document-service:latest
+    container_name: xes_document_service
+    networks: ['xes-platform-network']
+    restart: unless-stopped
+    environment:
+      TZ: Europe/Zurich
+    ports:
+      - "2115:2115"
+    volumes:
+      - ${PROXEUS_DATA_DIR:-./data}/document-service/logs:/document-service/logs
+      - ${PROXEUS_DATA_DIR:-./data}/document-service/fonts:/document-service/fonts
+```
+
+
+### Start
 ```
 make server-docker
 docker-compose -f docker-compose-dev.yml build
@@ -68,6 +169,101 @@ running docker compose in production.
 
 This is the method that we use to deploy the Proxeus Demo site.
 
+### docker-compose-cloud-override.yml 
+
+```
+# This file is an override and needs to be used in combination with docker-compose.yml like the following:
+# docker-compose -f docker-compose.yml -f docker-compose-hosted.yml up
+version: '3.7'
+
+networks:
+# Add Network for reverse-proxy
+  reverse-proxy:
+    name: reverse-proxy
+    driver: bridge
+
+volumes:
+# Add volume for nginx-proxy and letsencrypt
+  nginx-share:
+
+services:
+
+# Add Nginx reverse-proxy
+# https://hub.docker.com/r/jwilder/nginx-proxy/
+# Automated Nginx reverse proxy for docker containers
+  nginx-proxy:
+    container_name: nginx-proxy
+    image: jwilder/nginx-proxy
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - nginx-share:/etc/nginx/vhost.d
+      - nginx-share:/usr/share/nginx/html
+      - ${PROXEUS_DATA_DIR:-./data}/certs:/etc/nginx/certs:ro
+      - ${DOCKER_SOCK:-/var/run/docker.sock}:/tmp/docker.sock:ro
+    networks:
+      - reverse-proxy
+    labels:
+      com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy: "true"
+    restart: unless-stopped
+
+# Add Letsencrypt
+# https://hub.docker.com/r/jrcs/letsencrypt-nginx-proxy-companion/
+# LetsEncrypt container to use with nginx as proxy
+  letsencrypt:
+    image: jrcs/letsencrypt-nginx-proxy-companion
+    depends_on:
+      - nginx-proxy
+    networks:
+      - reverse-proxy
+    volumes:
+      - nginx-share:/etc/nginx/vhost.d
+      - nginx-share:/usr/share/nginx/html
+      - ${PROXEUS_DATA_DIR:-./data}/certs:/etc/nginx/certs:rw
+      - ${DOCKER_SOCK:-/var/run/docker.sock}:/var/run/docker.sock:ro
+    restart: unless-stopped
+
+  platform:
+    networks:
+      - reverse-proxy
+    labels:
+      com.centurylinklabs.watchtower.enable: "true"
+    environment:
+# Replace values for reverse-proxy
+      VIRTUAL_HOST: proxeus.example.com
+      VIRTUAL_PORT: 1323
+# Replace values for letsencrypt
+      LETSENCRYPT_HOST: proxeus.example.com
+      LETSENCRYPT_EMAIL: admin@example.com
+
+  document-service:
+    networks:
+      - reverse-proxy
+    labels:
+      com.centurylinklabs.watchtower.enable: "true"
+    environment:
+# Replace values for reverse-proxy
+      VIRTUAL_HOST: proxeus.example.com
+      VIRTUAL_PORT: 2115
+# Replace values for letsencrypt
+      LETSENCRYPT_HOST: proxeus.example.com
+      LETSENCRYPT_EMAIL: admin@example.com
+
+# Add Watchtower
+# https://hub.docker.com/r/v2tec/watchtower/
+# Watches your containers and automatically restarts them whenever their image is refreshed
+  watchtower:
+    image: v2tec/watchtower
+    container_name: watchtower
+    restart: always
+    volumes:
+      - ${DOCKER_SOCK:-/var/run/docker.sock}:/var/run/docker.sock:ro
+      - ${DOCKER_CONFIG_FILE:-/root/.docker/config.json}:/config.json
+    command: --interval 60 --label-enable
+```
+
+### Start
 
 ```
 docker-compose -f docker-compose.yml -f docker-compose-cloud-override.yml -d up
