@@ -43,3 +43,5 @@
     - [Coding Style](coding_style.md)
 
 - [FAQ](faq.md)
+
+- [License](license.md)
