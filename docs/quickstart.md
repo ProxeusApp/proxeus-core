@@ -1,5 +1,7 @@
 # Quick Start
 
+**By installing and using the Proxeus software you agree with the terms of the [Proxeus License Agreement](license.md).**
+
 The quickest way to try Proxeus is to use `docker-compose`.
 
 ## Install docker and docker-compose
