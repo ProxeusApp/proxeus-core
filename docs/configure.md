@@ -24,7 +24,7 @@ Generate a  [infura API Key](https://infura.io)
 no-reply@proxeus.com
 ```
 ## sparkpost api key
-setup a free account on https://www.sparkpost.com
+setup a free account on [SparkPost](https://www.sparkpost.com)
 
 ## Initial Email
 Use your email address for the root user and choose a secure password.

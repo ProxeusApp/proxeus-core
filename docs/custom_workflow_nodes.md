@@ -1,5 +1,9 @@
 # Custom Workflow Nodes
 
+**Note: Creating custom workflow nodes requires access to the source code and will be available at a later time
+when the Proxeus github repositories will be publicly accessible**
+
+
 Custom workflow nodes are the primary method to extend Proxeus workflow to any use cases.
 
 They are written in Golang and can
@@ -24,18 +28,21 @@ NodeIF interface {
 	}
 ```
 
-
-
 ## Workflow Context
 
 Each workflow node must have access to the `DocumentFlowInstance` context which gives full access to workflow data.
 
+
+
+<!--
 ## Examples
+
 You can find implementation example of this interface in the Proxeus repository under the [proxeus-core/main/app](https://github.com/ProxeusApp/proxeus-core/tree/master/main/app)
 directory:
 
 * [mail_sender.go](https://github.com/ProxeusApp/proxeus-core/tree/master/main/app/mail_sender.go) shows how to read data from the workflow,
 * [price_retriever.go](https://github.com/ProxeusApp/proxeus-core/tree/master/main/app/price_retriever.go) shows how to update workflow data.
+-->
 
 
 

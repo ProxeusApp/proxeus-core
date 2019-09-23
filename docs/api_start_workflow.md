@@ -1,6 +1,6 @@
 # Start Workflow using the API
 
-**Note**: Call to the API must be [autenticated](api_auth.md).
+**Note**: Call to the API must be [authenticated](api_auth.md).
 
 It is possible to start a workflow programmatically using the API.  This is a 
 three step process:
