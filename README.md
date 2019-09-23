@@ -58,10 +58,26 @@ Proxeus platform. *TODO: link to the github pages documentation site when ready*
 
 The user manual is available here: [User Manual](https://docs.google.com/document/d/1SP0ZimG7uemfZ2cF2JkY5enUZnBJLDyfcJGZnyWOejQ)
 
-## 3 Misc
+## Contributing
 
-### 3.1 XES-Payment
+As an open-source project, we welcome any kind of community involvement, whether that is by contributing code, reporting issues or 
+engaging in insightful discussions. Especially, we are looking forward to receiving contributions for custom workflow nodes.
+
+See the [coding style](coding_style.md) section for instructions on the coding style we use.
+
+Please use our support@proxeus.com email to open improvement and bug tickets.
+
+### Security Issues
+
+If you find a vulnerability that may affect live or testnet deployments please send your report privately to 
+security@proxeus.com. Please DO NOT file a public issue.
+
+## Misc
+
+### XES-Payment
 For more info check the [XES-Payment Readme](docs/xes-payment.md).
 
-### 3.2 Smart contracts & Solidity
+### Smart contracts & Solidity
 For more info check the [Smart contracts & Solidity Readme](https://github.com/ProxeusApp/proxeus-contract).
+
+
