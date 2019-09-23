@@ -38,7 +38,7 @@
 
     - [Custom Workflow Nodes](custom_workflow_nodes.md)
 
-- Contributing
+- [Contributing](contributing.md)
 
     - [Coding Style](coding_style.md)
 
