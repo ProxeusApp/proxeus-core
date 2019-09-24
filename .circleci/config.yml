@@ -193,13 +193,16 @@ workflows:
       - publish-latest:
           requires:
             - build-docker 
-      - hold:
+      - approve-demo:
           type: approval
           requires:
             - build-docker
+          filters:
+            branches:
+              only: master
       - publish-demo:
           requires:
-            - hold
+            - approve-demo
           filters:
             branches:
               only: master
