@@ -472,16 +472,20 @@ func LoginWithWallet(c *www.Context, challenge, signature string) (bool, *model.
 		}
 		created = true
 		usr, err = c.System().DB.User.GetByBCAddress(address)
-		if err == nil && c.System().GetSettings().BlockchainNet == "ropsten" && c.System().GetSettings().AirdropEnabled == "true" {
-			go func() {
-				defer func() {
-					if r := recover(); r != nil {
-						log.Println("airdrop recover with err ", r)
-					}
+		if err == nil {
+			copyWorkflows(c, usr)
+			if c.System().GetSettings().BlockchainNet == "ropsten" && c.System().GetSettings().AirdropEnabled == "true" {
+				go func() {
+					defer func() {
+						if r := recover(); r != nil {
+							log.Println("airdrop recover with err ", r)
+						}
+					}()
+					blockchain.GiveTokens(address)
 				}()
-				blockchain.GiveTokens(address)
-			}()
+			}
 		}
+
 	}
 	return created, usr, err
 }
@@ -671,69 +675,7 @@ func Register(e echo.Context) error {
 		return c.NoContent(http.StatusExpectationFailed)
 	}
 
-	// If some default workflows have to be assigned to the user, then clone them
-	workflowIds := strings.Split(c.System().GetSettings().DefaultWorkflowIds, ",")
-	workflows, err := c.System().DB.Workflow.GetList(root, workflowIds)
-	if err != nil {
-		log.Printf("Can't retrieve list of workflows (%v). Please check the ids exist. Error: %s", workflowIds, err.Error())
-	}
-	for _, workflow := range workflows {
-		w := workflow.Clone()
-		w.OwnerEthAddress = newUser.EthereumAddr
-		w.Owner = newUser.ID
-		newNodes := make(map[string]*workflow2.Node)
-		oldToNewIdsMap := make(map[string]string)
-		for oldId, node := range w.Data.Flow.Nodes {
-			if node.Type == "form" {
-				form, er := c.System().DB.Form.Get(root, node.ID)
-				if er != nil {
-					log.Println(err.Error())
-				}
-				f := form.Clone()
-				er = c.System().DB.Form.Put(newUser, &f)
-				if er != nil {
-					log.Println("can't put form" + err.Error())
-				}
-
-				oldToNewIdsMap[node.ID] = f.ID
-				node.ID = f.ID
-				newNodes[node.ID] = node
-				delete(w.Data.Flow.Nodes, oldId)
-
-			} else if node.Type == "template" {
-				template, er := c.System().DB.Template.Get(root, node.ID)
-				if er != nil {
-					log.Println(err.Error())
-				}
-				t := template.Clone()
-				er = c.System().DB.Template.Put(newUser, &t)
-				if er != nil {
-					log.Println("can't put template" + err.Error())
-				}
-				oldToNewIdsMap[node.ID] = t.ID
-				node.ID = t.ID
-				newNodes[node.ID] = node
-				delete(w.Data.Flow.Nodes, oldId)
-			} else {
-				newNodes[node.ID] = node
-			}
-		}
-		oldStartNodeId := w.Data.Flow.Start.NodeID
-		if _, ok := oldToNewIdsMap[oldStartNodeId]; ok {
-			w.Data.Flow.Start.NodeID = oldToNewIdsMap[oldStartNodeId]
-		}
-
-		// Now go through all connections and map them with the new ids
-		for _, node := range newNodes {
-			for _, connection := range node.Connections {
-				if _, ok := oldToNewIdsMap[connection.NodeID]; ok {
-					connection.NodeID = oldToNewIdsMap[connection.NodeID]
-				}
-			}
-		}
-		w.Data.Flow.Nodes = newNodes
-		c.System().DB.Workflow.Put(newUser, &w)
-	}
+	copyWorkflows(c, newUser)
 
 	err = c.System().DB.User.PutPw(newUser.ID, p.Password)
 	if err != nil {
@@ -2069,4 +2011,71 @@ func DeleteApiKeyHandler(e echo.Context) error {
 func random(min, max int) int {
 	rand.Seed(time.Now().Unix())
 	return rand.Intn(max-min) + min
+}
+
+func copyWorkflows(c *www.Context, newUser *model.User) {
+	log.Println("Copy workflows to new user, if any...")
+	// If some default workflows have to be assigned to the user, then clone them
+	workflowIds := strings.Split(c.System().GetSettings().DefaultWorkflowIds, ",")
+	workflows, err := c.System().DB.Workflow.GetList(root, workflowIds)
+	if err != nil {
+		log.Printf("Can't retrieve list of workflows (%v). Please check the ids exist. Error: %s", workflowIds, err.Error())
+	}
+	for _, workflow := range workflows {
+		w := workflow.Clone()
+		w.OwnerEthAddress = newUser.EthereumAddr
+		w.Owner = newUser.ID
+		newNodes := make(map[string]*workflow2.Node)
+		oldToNewIdsMap := make(map[string]string)
+		for oldId, node := range w.Data.Flow.Nodes {
+			if node.Type == "form" {
+				form, er := c.System().DB.Form.Get(root, node.ID)
+				if er != nil {
+					log.Println(err.Error())
+				}
+				f := form.Clone()
+				er = c.System().DB.Form.Put(newUser, &f)
+				if er != nil {
+					log.Println("can't put form" + err.Error())
+				}
+
+				oldToNewIdsMap[node.ID] = f.ID
+				node.ID = f.ID
+				newNodes[node.ID] = node
+				delete(w.Data.Flow.Nodes, oldId)
+
+			} else if node.Type == "template" {
+				template, er := c.System().DB.Template.Get(root, node.ID)
+				if er != nil {
+					log.Println(err.Error())
+				}
+				t := template.Clone()
+				er = c.System().DB.Template.Put(newUser, &t)
+				if er != nil {
+					log.Println("can't put template" + err.Error())
+				}
+				oldToNewIdsMap[node.ID] = t.ID
+				node.ID = t.ID
+				newNodes[node.ID] = node
+				delete(w.Data.Flow.Nodes, oldId)
+			} else {
+				newNodes[node.ID] = node
+			}
+		}
+		oldStartNodeId := w.Data.Flow.Start.NodeID
+		if _, ok := oldToNewIdsMap[oldStartNodeId]; ok {
+			w.Data.Flow.Start.NodeID = oldToNewIdsMap[oldStartNodeId]
+		}
+
+		// Now go through all connections and map them with the new ids
+		for _, node := range newNodes {
+			for _, connection := range node.Connections {
+				if _, ok := oldToNewIdsMap[connection.NodeID]; ok {
+					connection.NodeID = oldToNewIdsMap[connection.NodeID]
+				}
+			}
+		}
+		w.Data.Flow.Nodes = newNodes
+		c.System().DB.Workflow.Put(newUser, &w)
+	}
 }
