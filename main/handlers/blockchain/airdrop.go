@@ -3,11 +3,11 @@ package blockchain
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"math/big"
 	"os"
-	"strconv"
 	"sync"
 
 	"github.com/ethereum/go-ethereum/accounts/keystore"
@@ -22,7 +22,7 @@ import (
 	"git.proxeus.com/core/central/main/ethglue"
 )
 
-const etherUnit = 1000000000000000000.0
+const etherUnit = 1000000000000000000
 
 var conn *ethclient.Client
 var nonceManager ethglue.NonceManager
@@ -62,10 +62,19 @@ func GiveTokens(toWallet string) {
 // FreeXES sends ropsten XES to given wallet address
 func FreeXES(walletAddress string) {
 	log.Println("[airdrop] [Ropsten] Prepare XES for addr:", walletAddress)
-	amount := new(big.Int)
-	f, err := strconv.ParseFloat(config.Config.AirdropAmountXES, 64)
 
-	amount.SetInt64(int64(f * etherUnit))
+	amountFloat := new(big.Float)
+	_, parsedF := amountFloat.SetString(config.Config.AirdropAmountXES)
+	if !parsedF {
+		log.Panic("[airdrop] Couldn't parse AirdropAmountXES to Float:", config.Config.AirdropAmountXES)
+	}
+
+	amount := new(big.Float)
+	amount.Mul(amountFloat, big.NewFloat(etherUnit))
+
+	amountInt := new(big.Int)
+	amountDec := fmt.Sprintf("%f", amount)
+	amountInt.SetString(amountDec, 10)
 
 	// make transfer
 	token, err := NewToken(common.HexToAddress(config.Config.XESContractAddress), conn)
@@ -90,7 +99,7 @@ func FreeXES(walletAddress string) {
 	}
 
 	auth.Nonce = nonceManager.NextNonce()
-	tx, err := token.Transfer(auth, common.HexToAddress(walletAddress), amount)
+	tx, err := token.Transfer(auth, common.HexToAddress(walletAddress), amountInt)
 	nonceManager.OnError(err)
 	if err != nil {
 		log.Panic("[airdrop] Failed to request token transfer:", err)
@@ -100,9 +109,20 @@ func FreeXES(walletAddress string) {
 
 func FreeEth(walletAddress string) {
 	log.Println("[airdrop] [Ropsten] Prepare ETH for addr:", walletAddress)
-	amount := new(big.Int)
-	f, err := strconv.ParseFloat(config.Config.AirdropAmountEther, 64)
-	amount.SetInt64(int64(f * etherUnit))
+
+	amountFloat := new(big.Float)
+	_, parsedF := amountFloat.SetString(config.Config.AirdropAmountEther)
+	if !parsedF {
+		log.Panic("[airdrop] Couldn't parse AirdropAmountEther to Float:", config.Config.AirdropAmountEther)
+	}
+
+	amount := new(big.Float)
+	amount.Mul(amountFloat, big.NewFloat(etherUnit))
+
+	amountInt := new(big.Int)
+
+	amountDec := fmt.Sprintf("%f", amount)
+	amountInt.SetString(amountDec, 10)
 
 	var gasLimit = uint64(21000)
 	gasPrice, err := conn.SuggestGasPrice(context.Background())
@@ -127,7 +147,7 @@ func FreeEth(walletAddress string) {
 	}
 
 	nonce := nonceManager.NextNonce()
-	tx := types.NewTransaction(nonce.Uint64(), common.HexToAddress(walletAddress), amount, gasLimit, gasPrice, nil)
+	tx := types.NewTransaction(nonce.Uint64(), common.HexToAddress(walletAddress), amountInt, gasLimit, gasPrice, nil)
 	// chainid 3 = ropsten, see https://github.com/ethereum/EIPs/blob/master/EIPS/eip-155.md#list-of-chain-ids
 	signedTx, err := types.SignTx(tx, types.NewEIP155Signer(big.NewInt(3)), unlockedKey.PrivateKey)
 	if err != nil {
