@@ -5,7 +5,7 @@ if [ `id -u` -ne 0 ]; then
 fi
 
 CRON_FILE="/etc/cron.d/demo"
-dockerImageToStop="proxeus/proxeus-core:latest"
+dockerImageToStop="proxeus/proxeus-core:demo"
 RESTORE_COMMAND="/usr/bin/docker exec \$(/usr/bin/docker ps -a -q --filter ancestor=$dockerImageToStop --format='{{.ID}}') /app/demo/restore-demo.sh && /usr/bin/docker container restart \$(/usr/bin/docker ps -a -q --filter ancestor=$dockerImageToStop --format='{{.ID}}')"
 
 case "$1" in
