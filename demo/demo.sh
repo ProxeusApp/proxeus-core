@@ -20,7 +20,7 @@ case "$1" in
 
         if [ $? != 0 ]; then
             echo "Create cron task to clean environment every 3 days"
-            /bin/echo "* * */3 * * root "$RESTORE_COMMAND" >/dev/null 2>&1" >> $CRON_FILE
+            /bin/echo "* 23 * * 3 root "$RESTORE_COMMAND" >/dev/null 2>&1" >> $CRON_FILE
         fi
         ;;
 
