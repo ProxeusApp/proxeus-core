@@ -171,6 +171,24 @@ jobs:
             echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
             docker push $CONTAINER_IMAGE_NAME:demo
 
+
+  publish-stage:
+    executor: docker-publisher
+    steps:
+      - attach_workspace:
+          at: /tmp/workspace
+      - setup_remote_docker
+      - run:
+          name: Load archived Docker image
+          command: docker load -i /tmp/workspace/image.tar
+      - run:
+          name: Tag docker image
+          command: docker tag $CONTAINER_IMAGE_NAME $CONTAINER_IMAGE_NAME:stage
+      - run:
+          name: Publish Docker Image to Docker Hub
+          command: |
+            echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
+            docker push $CONTAINER_IMAGE_NAME:stage
             
 workflows:
   version: 2
@@ -193,6 +211,19 @@ workflows:
       - publish-latest:
           requires:
             - build-docker 
+      - approve-stage:
+          type: approval
+          requires:
+            - build-docker
+#          filters:
+#            branches:
+#              only: master
+      - publish-stage:
+          requires:
+            - approve-demo
+#          filters:
+#            branches:
+#              only: master
       - approve-demo:
           type: approval
           requires:
