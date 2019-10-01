@@ -215,15 +215,15 @@ workflows:
           type: approval
           requires:
             - build-docker
-#          filters:
-#            branches:
-#              only: master
+          filters:
+            branches:
+              only: master
       - publish-stage:
           requires:
             - approve-stage
-#          filters:
-#            branches:
-#              only: master
+          filters:
+            branches:
+              only: master
       - approve-demo:
           type: approval
           requires:
