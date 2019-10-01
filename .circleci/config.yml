@@ -220,7 +220,7 @@ workflows:
 #              only: master
       - publish-stage:
           requires:
-            - approve-demo
+            - approve-stage
 #          filters:
 #            branches:
 #              only: master
