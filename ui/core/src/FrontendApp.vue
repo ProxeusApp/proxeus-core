@@ -15,7 +15,7 @@
            class="footer-link">Handbook
         </a>
         <a target="_blank" href="https://proxeus.com/en/privacy-policy/" class="footer-link ml-3">Privacy Policy</a>
-        <a target="_blank" v-bind:href="$t('Terms Conditions Link')" class="footer-link ml-3">Terms & Conditions</a>
+        <a target="_blank" v-bind:href="$t('Terms & Conditions link')" class="footer-link ml-3">Terms & Conditions</a>
       </div>
     </div>
   </div>
