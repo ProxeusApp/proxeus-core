@@ -208,9 +208,15 @@ workflows:
           requires:
             - build-ui
             - build-go
+          filters:
+            branches:
+              only: master
       - publish-latest:
           requires:
             - build-docker 
+          filters:
+            branches:
+              only: master
       - approve-stage:
           type: approval
           requires:
