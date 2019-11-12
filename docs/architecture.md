@@ -5,7 +5,7 @@
 
 ### Backend
 
-- **Tansport Layer IO**: Does not necessarily need to be http
+- **Transport Layer IO**: Does not necessarily need to be http
 
 - **Security Layer lvl 1**: Is checking on the session the authority. Usually it is only accessing the memory but in case of a restart, the session will be loaded from the disk when it is requested by this layer.
 
