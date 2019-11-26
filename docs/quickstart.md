@@ -54,6 +54,7 @@ services:
       EmailFrom: "${PROXEUS_EMAIL_FROM:-no-reply@proxeus.com}"
       AirdropWalletfile: "${PROXEUS_AIRDROP_WALLET_FILE:-./data/proxeus-platform/settings/airdropwallet.json}"
       AirdropWalletkey: "${PROXEUS_AIRDROP_WALLET_KEY:-./data/proxeus-platform/settings/airdropwallet.key}"
+      TestMode: "true"
     ports:
       - "1323:1323"
     volumes:

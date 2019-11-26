@@ -4,6 +4,7 @@ import (
 	"encoding/gob"
 	"net/http"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/gorilla/sessions"
@@ -64,6 +65,17 @@ func getSessionWithUser(c *Context, create bool, usr *model.User) (currentSessio
 		currentSession, err = c.System().SessionMgmnt.New(usr.ID, usr.Name, usr.Role)
 		if currentSession != nil {
 			sess.Values["id"] = currentSession.ID()
+			options := sessions.Options{
+				Path:     "/",
+				MaxAge:   60 * 30, // 30 minutes,
+				HttpOnly: true,
+				SameSite: http.SameSiteStrictMode,
+			}
+			settings := c.System().GetSettings()
+			if strings.ToLower(settings.TestMode) == "true" {
+				options.Secure = true
+			}
+			sess.Options = &options
 			c.Set("sys.session", currentSession)
 			err = sess.Save(c.Request(), c.Response())
 		}
