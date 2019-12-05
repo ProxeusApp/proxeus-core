@@ -4,6 +4,7 @@ import (
 	"os"
 	"reflect"
 	"strconv"
+	"strings"
 
 	"flag"
 
@@ -32,7 +33,7 @@ type Configuration struct {
 var Config Configuration
 
 func init() {
-	if flag.Lookup("test.v") != nil {
+	if strings.HasSuffix(os.Args[0], ".test") {
 		return
 	}
 	flagStruct(Config)

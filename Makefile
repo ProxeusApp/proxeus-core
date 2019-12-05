@@ -39,6 +39,12 @@ test/bindata.go: $(wildcard ./test/assets/**)
 test-api: test/bindata.go
 	go clean -testcache && go test ./test
 
+coverage:
+	build/coverage.sh
+
+print-coverage:
+	go tool cover -html artifacts/cover.out
+
 clean:
 	cd artifacts && rm -rf `ls . | grep -v 'cache'`
 
@@ -56,3 +62,4 @@ link-repo:
 
 .PHONY: init main all all-debug generate test clean fmt validate link-repo
 .PHONY: ui server
+.PHONY: coverage print-coverage
