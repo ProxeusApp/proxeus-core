@@ -211,8 +211,6 @@ func ComponentsFrom(formSrc map[string]interface{}) map[string]interface{} {
 	return formSrc
 }
 
-var zero = r.Value{}
-
 // GenericLoop executes a function on elements of a slice or array
 func GenericLoop(m interface{}, f func(int, interface{}) bool) bool {
 	v := r.ValueOf(m)

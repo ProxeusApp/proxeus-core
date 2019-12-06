@@ -1,7 +1,6 @@
 package cache
 
 import (
-	"encoding/binary"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -1151,12 +1150,6 @@ func diskErrorPrint(err error) {
 	if err != nil {
 		log.Println("disk error when cleaning up cache: ", err)
 	}
-}
-
-func toByteSlice(a uint64) []byte {
-	bs := make([]byte, 8)
-	binary.BigEndian.PutUint64(bs, uint64(a))
-	return bs
 }
 
 //Size correctness is not guaranteed
