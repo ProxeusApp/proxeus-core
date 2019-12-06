@@ -31,7 +31,6 @@ import (
 	"encoding/json"
 	"io"
 	"io/ioutil"
-	"math/rand"
 	"os"
 	"strconv"
 
@@ -2006,11 +2005,6 @@ func DeleteApiKeyHandler(e echo.Context) error {
 		sess.Delete("user")
 	}
 	return c.NoContent(http.StatusOK)
-}
-
-func random(min, max int) int {
-	rand.Seed(time.Now().Unix())
-	return rand.Intn(max-min) + min
 }
 
 func copyWorkflows(c *www.Context, newUser *model.User) {
