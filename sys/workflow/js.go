@@ -17,20 +17,6 @@ func NewJSParser() *JS {
 	return js
 }
 
-func (js *JS) SetGlobalVar(name string, data interface{}) error {
-	if data != nil {
-		b, err := json.Marshal(data)
-		if err != nil {
-			return err
-		}
-		_, err = js.vm.Eval(fmt.Sprintf("var %s = %s;", name, string(b)))
-		return err
-	} else {
-		js.vm.Eval(fmt.Sprintf("var %s = null;", name))
-	}
-	return nil
-}
-
 func (js *JS) SetGlobal(data interface{}) error {
 	if data != nil {
 		if dataMap, ok := data.(map[string]interface{}); ok {
