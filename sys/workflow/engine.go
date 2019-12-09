@@ -343,15 +343,6 @@ func (me *Engine) execute(nn *Node, considerSteps bool) (proceed bool, err error
 	return
 }
 
-func (me *Engine) checkNodeImpl(n *Node) bool {
-	if len(me.nodeImpls) > 0 {
-		if s, ok := me.nodeImpls[n.Type]; ok && s.InitImplFunc != nil {
-			return true
-		}
-	}
-	return false
-}
-
 func (me *Engine) setJSGlobalData() error {
 	return me.jsParser.SetGlobal(me.getData())
 }
