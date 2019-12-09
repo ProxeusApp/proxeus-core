@@ -1,9 +1,10 @@
 #!/bin/bash
 set -Eeuo pipefail
 
-go test -v -coverprofile artifacts/cover.out \
+
+go test -v -timeout=24h -coverprofile artifacts/cover.out \
       -coverpkg="$(go list \
           git.proxeus.com/core/central/main/... \
           git.proxeus.com/core/central/sys/... \
-          | tr '\n' ',' | sed 's/.$//')" \
+          | grep -v /assets | tr '\n' ',' | sed 's/.$//')" \
   ./main

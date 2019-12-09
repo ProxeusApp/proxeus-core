@@ -33,12 +33,11 @@ type Configuration struct {
 var Config Configuration
 
 func init() {
-	if strings.HasSuffix(os.Args[0], ".test") {
-		return
-	}
 	flagStruct(Config)
 	pCfg := &Config
-	flag.Parse()
+	if !strings.HasSuffix(os.Args[0], ".test") {
+		flag.Parse()
+	}
 	v := reflect.ValueOf(pCfg)
 	flag.VisitAll(func(f *flag.Flag) {
 		field := v.Elem().FieldByName(f.Name)
