@@ -29,8 +29,6 @@ import (
 )
 
 var (
-	ErrAccessDenied = fmt.Errorf("access denied")
-
 	ReadAllFile = func(path string) ([]byte, error) {
 		f, err := os.Open(path)
 		if err != nil {
@@ -72,20 +70,6 @@ func provideProxeusSettings() (*storm.SettingsDB, error) {
 		return nil, err
 	}
 	return stngsDB, nil
-}
-
-func New() (*System, error) {
-	stngsDB, err := provideProxeusSettings()
-	if err != nil {
-		return nil, err
-	}
-	me := &System{settingsDB: stngsDB}
-
-	err = me.init(me.GetSettings())
-	if err != nil {
-		return nil, err
-	}
-	return me, err
 }
 
 func NewWithSettings(settings model.Settings) (*System, error) {
