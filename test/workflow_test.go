@@ -29,6 +29,7 @@ func TestWorkflow(t *testing.T) {
 	tpl := createTemplate(s, u, "template-"+s.id)
 	w1.Data = simpleWorkflowData(s.id, f.ID, tpl.ID)
 	updateWorkflow(s, w1)
+	exportWorkflow(s, w1)
 
 	deleteWorkflow(s, w1.ID, false)
 	deleteWorkflow(s, w2.ID, true)
@@ -39,11 +40,13 @@ func createWorkflow(s *session, u *user, name string) *workflow {
 	f := &workflow{
 		permissions: permissions{Owner: u.uuid},
 		Name:        name,
+		Detail:      "details0",
 		Created:     now,
 		Updated:     now,
 	}
 
-	s.e.POST("/api/admin/workflow/update").WithJSON(f).Expect().Status(http.StatusOK)
+	s.e.POST("/api/admin/workflow/update").WithJSON(f).
+		WithQueryString("publish=true").Expect().Status(http.StatusOK)
 
 	l := s.e.GET("/api/admin/workflow/list").Expect().Status(http.StatusOK).JSON()
 
@@ -115,6 +118,10 @@ func updateWorkflow(s *session, f *workflow) *workflow {
 		JSON().Object().ContainsMap(expected)
 
 	return f
+}
+
+func exportWorkflow(s *session, f *workflow) {
+	s.e.GET("/api/workflow/export").WithQuery("contains", f.Name).WithJSON(f).Expect().Status(http.StatusOK)
 }
 
 func deleteWorkflow(s *session, id string, expectEmptyList bool) {
