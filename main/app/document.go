@@ -10,8 +10,6 @@ import (
 	"strconv"
 	"sync"
 
-	"git.proxeus.com/core/central/sys/utils"
-
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/labstack/echo"
 
@@ -161,17 +159,6 @@ func (me *DocumentFlowInstance) getWorkflow(id string) (*workflow.Workflow, erro
 	return nil, os.ErrNotExist
 }
 
-func (me *DocumentFlowInstance) findFormFieldNames(containing ...string) []string {
-	if me.allFormFields == nil {
-		workflowItem, err := me.system.DB.Workflow.Get(me.auth, me.WFID)
-		if err != nil || workflowItem.Data == nil {
-			return nil
-		}
-		me.allFormFields = utils.GetAllFormFieldsOf(workflowItem.Data, me.auth, me.system)
-	}
-	return utils.FindFieldNameContaining(me.allFormFields, containing...)
-}
-
 func (me *DocumentFlowInstance) getData() interface{} {
 	dd, _ := me.DataCluster.GetAllData()
 	return map[string]interface{}{"input": dd}
@@ -248,17 +235,6 @@ func (me *DocumentFlowInstance) UpdateData(d map[string]interface{}, submit bool
 		}
 	}
 	return
-}
-
-// updateFormFieldsContaining by providing a value and some words that could match a form field.
-// containing is case insensitive
-func (me *DocumentFlowInstance) updateFormFieldsContaining(n *workflow.Node, v interface{}, containing ...string) error {
-	fields := me.findFormFieldNames(containing...)
-	newData := map[string]interface{}{}
-	for _, fname := range fields {
-		newData[fname] = v
-	}
-	return me.writeData(n, newData)
 }
 
 func (me *DocumentFlowInstance) readData(dataPath string) (interface{}, error) {

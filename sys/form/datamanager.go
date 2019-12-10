@@ -42,53 +42,6 @@ func (me *DataManager) GetDataFile(formID, name string) (*file.IO, error) {
 	return nil, os.ErrInvalid
 }
 
-func (me *DataManager) GetDataFiles(formID, baseUri string) (files map[string]*file.IO, err error) {
-	if formID != "" {
-		me.RLock()
-		if formDataMap, ok := me.DataCluster[formID]; ok {
-			files = make(map[string]*file.IO)
-			for name, maybeFile := range formDataMap {
-				if maybeFile != nil {
-					if fileInfo, ok := maybeFile.(*file.IO); ok {
-						files[name] = fileInfo
-					}
-				}
-			}
-		}
-		me.RUnlock()
-		return
-	}
-	err = os.ErrInvalid
-	return
-}
-
-func (me *DataManager) GetDataFileWriter(formID, name string, writer io.Writer) (n int64, f *file.IO, err error) {
-	if formID != "" && name != "" {
-		f, err = me.GetDataFile(formID, name)
-		if err == nil {
-			if writer != nil {
-				var tmplFile *os.File
-				tmplFile, err = os.OpenFile(f.Path(), os.O_RDONLY, 0600)
-				if err != nil {
-					return
-				}
-				defer tmplFile.Close()
-				var fstat os.FileInfo
-				fstat, err = tmplFile.Stat()
-				if err != nil {
-					return
-				}
-				n, err = io.CopyN(writer, tmplFile, fstat.Size())
-				return
-			}
-		}
-		return
-	}
-	err = os.ErrInvalid
-	return
-
-}
-
 func (me *DataManager) GetData(formID string) (map[string]interface{}, error) {
 	if formID != "" {
 		me.RLock()
@@ -190,28 +143,6 @@ func (me *DataManager) GetAllDataFilePathNameOnly() (dat map[string]interface{},
 				}
 				dat[name] = maybeFile
 			}
-		}
-	}
-	return
-}
-
-func (me *DataManager) GetAllDataFile(baseUri string) (dat map[string]interface{}, files map[string]*file.IO, err error) {
-	me.RLock()
-	defer me.RUnlock()
-	if len(me.DataCluster) == 0 {
-		return
-	}
-	dat = make(map[string]interface{})
-	files = make(map[string]*file.IO)
-	for _, formDataMap := range me.DataCluster {
-		for name, maybeFile := range formDataMap {
-			if maybeFile != nil {
-				if fileInfo, ok := maybeFile.(*file.IO); ok {
-					files[name] = fileInfo
-					continue
-				}
-			}
-			dat[name] = maybeFile
 		}
 	}
 	return
