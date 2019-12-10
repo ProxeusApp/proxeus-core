@@ -43,7 +43,10 @@ coverage:
 	build/coverage.sh
 
 print-coverage:
-	go tool cover -html artifacts/cover.out
+	grep -v "_mock.go" artifacts/cover.out > artifacts/cover2.out
+	gocovmerge artifacts/cover_unittests.out artifacts/cover2.out > artifacts/cover_merged.out
+	go tool cover -func artifacts/cover_merged.out
+	go tool cover -html artifacts/cover_merged.out
 
 clean:
 	cd artifacts && rm -rf `ls . | grep -v 'cache'`
