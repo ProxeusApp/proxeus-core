@@ -9,8 +9,8 @@ import (
 
 	uuid "github.com/satori/go.uuid"
 
-	"git.proxeus.com/core/central/sys/cache"
-	"git.proxeus.com/core/central/sys/model"
+	"github.com/ProxeusApp/proxeus-core/sys/cache"
+	"github.com/ProxeusApp/proxeus-core/sys/model"
 )
 
 type (

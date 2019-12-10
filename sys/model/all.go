@@ -4,8 +4,8 @@ import (
 	"os"
 	"time"
 
-	"git.proxeus.com/core/central/sys/file"
-	"git.proxeus.com/core/central/sys/workflow"
+	"github.com/ProxeusApp/proxeus-core/sys/file"
+	"github.com/ProxeusApp/proxeus-core/sys/workflow"
 )
 
 const (

@@ -7,7 +7,7 @@ import (
 
 	"github.com/davecgh/go-spew/spew"
 
-	"git.proxeus.com/core/central/sys/model"
+	"github.com/ProxeusApp/proxeus-core/sys/model"
 )
 
 func TestSigning(t *testing.T) {

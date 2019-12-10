@@ -7,7 +7,7 @@ import (
 	"testing"
 	"time"
 
-	w "git.proxeus.com/core/central/sys/workflow"
+	w "github.com/ProxeusApp/proxeus-core/sys/workflow"
 )
 
 func TestUnattendedWorkflow(t *testing.T) {

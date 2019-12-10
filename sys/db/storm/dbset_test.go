@@ -4,7 +4,7 @@ import (
 	"os"
 	"testing"
 
-	"git.proxeus.com/core/central/sys/model"
+	"github.com/ProxeusApp/proxeus-core/sys/model"
 )
 
 func TestProxeusDB(t *testing.T) {

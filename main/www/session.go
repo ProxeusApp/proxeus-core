@@ -11,8 +11,8 @@ import (
 	"github.com/labstack/echo"
 	"github.com/labstack/echo-contrib/session"
 
-	"git.proxeus.com/core/central/sys/model"
-	sysSess "git.proxeus.com/core/central/sys/session"
+	"github.com/ProxeusApp/proxeus-core/sys/model"
+	sysSess "github.com/ProxeusApp/proxeus-core/sys/session"
 )
 
 func SessionMiddleware() echo.MiddlewareFunc {

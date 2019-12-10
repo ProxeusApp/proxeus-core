@@ -6,7 +6,7 @@ import (
 	"os"
 	"testing"
 
-	"git.proxeus.com/core/central/main/handlers/api"
+	"github.com/ProxeusApp/proxeus-core/main/handlers/api"
 	uuid "github.com/satori/go.uuid"
 	"gopkg.in/gavv/httpexpect.v2"
 )

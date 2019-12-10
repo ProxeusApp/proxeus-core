@@ -1,6 +1,6 @@
 package email
 
-import "git.proxeus.com/core/central/sys/file"
+import "github.com/ProxeusApp/proxeus-core/sys/file"
 
 type Email struct {
 	From        string

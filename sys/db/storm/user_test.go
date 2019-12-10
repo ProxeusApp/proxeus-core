@@ -9,7 +9,7 @@ import (
 	"github.com/asdine/storm"
 	"github.com/asdine/storm/q"
 
-	"git.proxeus.com/core/central/sys/model"
+	"github.com/ProxeusApp/proxeus-core/sys/model"
 
 	//"reflect"
 	//"git.proxeus.com/core/form"

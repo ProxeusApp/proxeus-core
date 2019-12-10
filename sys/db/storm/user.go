@@ -5,7 +5,7 @@ import (
 	"encoding/base64"
 	"regexp"
 
-	"git.proxeus.com/core/central/sys/db"
+	"github.com/ProxeusApp/proxeus-core/sys/db"
 
 	//"encoding/json"
 	"image"
@@ -24,7 +24,7 @@ import (
 	uuid "github.com/satori/go.uuid"
 	"golang.org/x/crypto/bcrypt"
 
-	"git.proxeus.com/core/central/sys/model"
+	"github.com/ProxeusApp/proxeus-core/sys/model"
 )
 
 //TODO(ave) how come we have even private methods in an interface... Doesn't look like the correct approach for an interface.
@@ -40,15 +40,15 @@ type UserDBInterface interface {
 	UpdateEmail(id, email string) error
 	Put(auth model.Authorization, item *model.User) error
 	PutPw(id, pass string) error
-	put(auth model.Authorization, item *model.User, updated bool) error
-	setTinyUserIconBase64(item *model.User) error
-	tinyUserIconBase64(reader *os.File) (string, error)
+	ImportUser(auth model.Authorization, item *model.User) error
+	SetTinyUserIconBase64(item *model.User) error
+	TinyUserIconBase64(reader *os.File) (string, error)
 	GetProfilePhoto(auth model.Authorization, id string, writer io.Writer) (n int64, err error)
-	readPhoto(u *model.User) (*os.File, error)
+	ReadPhoto(u *model.User) (*os.File, error)
 	PutProfilePhoto(auth model.Authorization, id string, reader io.Reader) (written int64, err error)
 	Import(imex *Imex) error
 	Export(imex *Imex, id ...string) error
-	cpProfilePhoto(imex *Imex, from UserDBInterface, to UserDBInterface, item *model.User) (err error)
+	CpProfilePhoto(imex *Imex, from UserDBInterface, to UserDBInterface, item *model.User) (err error)
 	APIKey(key string) (*model.User, error)
 	CreateApiKey(auth model.Authorization, userId, apiKeyName string) (string, error)
 	DeleteApiKey(auth model.Authorization, userId, hiddenApiKey string) error
@@ -320,7 +320,7 @@ func (me *UserDB) List(auth model.Authorization, contains string, options map[st
 				_ = tx.Get(userHeavyDataBucket, item.ID, &item.Data)
 
 				//	//error handling not needed
-				_ = me.setTinyUserIconBase64(item)
+				_ = me.SetTinyUserIconBase64(item)
 			}
 		}
 	}
@@ -380,6 +380,10 @@ func (me *UserDB) PutPw(id, pass string) error {
 
 func (me *UserDB) Put(auth model.Authorization, item *model.User) error {
 	return me.put(auth, item, true)
+}
+
+func (me *UserDB) ImportUser(auth model.Authorization, item *model.User) error {
+	return me.put(auth, item, false)
 }
 
 func (me *UserDB) put(auth model.Authorization, item *model.User, updated bool) error {
@@ -464,15 +468,15 @@ func (me *UserDB) updateApiKeys(u *model.User, tx storm.Node) error {
 	return nil
 }
 
-func (me *UserDB) setTinyUserIconBase64(item *model.User) error {
-	f, err := me.readPhoto(item)
+func (me *UserDB) SetTinyUserIconBase64(item *model.User) error {
+	f, err := me.ReadPhoto(item)
 	if err == nil {
-		item.Photo, err = me.tinyUserIconBase64(f)
+		item.Photo, err = me.TinyUserIconBase64(f)
 	}
 	return err
 }
 
-func (me *UserDB) tinyUserIconBase64(reader *os.File) (string, error) {
+func (me *UserDB) TinyUserIconBase64(reader *os.File) (string, error) {
 	//b := &bytes.Buffer{}
 	//io.Copy(b, reader)
 	var (
@@ -503,7 +507,7 @@ func (me *UserDB) GetProfilePhoto(auth model.Authorization, id string, writer io
 	}
 	u.CheckIfAuthIsAllowedToReadPersonalData(auth)
 	var tmplFile *os.File
-	tmplFile, err = me.readPhoto(u)
+	tmplFile, err = me.ReadPhoto(u)
 	if err != nil {
 		if tmplFile != nil {
 			tmplFile.Close()
@@ -514,7 +518,7 @@ func (me *UserDB) GetProfilePhoto(auth model.Authorization, id string, writer io
 	return io.Copy(writer, tmplFile)
 }
 
-func (me *UserDB) readPhoto(u *model.User) (*os.File, error) {
+func (me *UserDB) ReadPhoto(u *model.User) (*os.File, error) {
 	if u.PhotoPath == "" {
 		return nil, os.ErrNotExist
 	}
@@ -606,7 +610,7 @@ func (me *UserDB) Import(imex *Imex) error {
 					_ = imex.db.User.GetDB().Get(userApiKeysBucket, item.ID, &item.ApiKeys)
 				}
 
-				err = imex.sysDB.User.put(imex.auth, item, false)
+				err = imex.sysDB.User.ImportUser(imex.auth, item)
 				if err != nil {
 					imex.processedEntry(imexUser, item.ID, err)
 					continue
@@ -619,7 +623,7 @@ func (me *UserDB) Import(imex *Imex) error {
 				}
 
 				if item.PhotoPath != "" {
-					err = me.cpProfilePhoto(imex, imex.db.User, imex.sysDB.User, item)
+					err = me.CpProfilePhoto(imex, imex.db.User, imex.sysDB.User, item)
 					if err != nil {
 						continue
 					}
@@ -721,7 +725,7 @@ func (me *UserDB) Export(imex *Imex, id ...string) error {
 						continue
 					}
 					if item.PhotoPath != "" {
-						err = me.cpProfilePhoto(imex, imex.sysDB.User, imex.db.User, item)
+						err = me.CpProfilePhoto(imex, imex.sysDB.User, imex.db.User, item)
 						if err != nil {
 							imex.processedEntry(imexUser, item.ID, err)
 							continue
@@ -745,7 +749,7 @@ func (me *UserDB) Export(imex *Imex, id ...string) error {
 	return nil
 }
 
-func (me *UserDB) cpProfilePhoto(imex *Imex, from UserDBInterface, to UserDBInterface, item *model.User) (err error) {
+func (me *UserDB) CpProfilePhoto(imex *Imex, from UserDBInterface, to UserDBInterface, item *model.User) (err error) {
 	var readFile *os.File
 	readFile, err = os.Open(filepath.Join(from.GetBaseFilePath(), item.PhotoPath))
 	if os.IsExist(err) {

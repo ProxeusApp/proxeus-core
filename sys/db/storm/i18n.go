@@ -2,7 +2,7 @@ package storm
 
 import (
 	//"fmt"
-	//"git.proxeus.com/core/central/sys/model"
+	//"github.com/ProxeusApp/proxeus-core/sys/model"
 	//"github.com/asdine/storm/codec/msgpack"
 	//"github.com/asdine/storm/q"
 	//"path/filepath"
@@ -17,8 +17,8 @@ import (
 	"github.com/asdine/storm/codec/msgpack"
 	"github.com/asdine/storm/q"
 
-	"git.proxeus.com/core/central/sys/i18n"
-	"git.proxeus.com/core/central/sys/model"
+	"github.com/ProxeusApp/proxeus-core/sys/i18n"
+	"github.com/ProxeusApp/proxeus-core/sys/model"
 )
 
 //

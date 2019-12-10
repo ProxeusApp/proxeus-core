@@ -6,7 +6,7 @@ import (
 	"os"
 	"testing"
 
-	"git.proxeus.com/core/central/sys/validate"
+	"github.com/ProxeusApp/proxeus-core/sys/validate"
 )
 
 //Use this when you are extending the tests

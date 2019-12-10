@@ -12,19 +12,19 @@ import (
 	"strings"
 	"time"
 
-	workflow2 "git.proxeus.com/core/central/sys/workflow"
+	workflow2 "github.com/ProxeusApp/proxeus-core/sys/workflow"
 
-	"git.proxeus.com/core/central/main/handlers/payment"
+	"github.com/ProxeusApp/proxeus-core/main/handlers/payment"
 
-	"git.proxeus.com/core/central/main/handlers/blockchain"
+	"github.com/ProxeusApp/proxeus-core/main/handlers/blockchain"
 
-	"git.proxeus.com/core/central/sys/utils"
+	"github.com/ProxeusApp/proxeus-core/sys/utils"
 
 	uuid "github.com/satori/go.uuid"
 
 	"github.com/ethereum/go-ethereum/crypto"
 
-	"git.proxeus.com/core/central/sys/db"
+	"github.com/ProxeusApp/proxeus-core/sys/db"
 
 	"github.com/labstack/echo"
 
@@ -34,20 +34,20 @@ import (
 	"os"
 	"strconv"
 
-	"git.proxeus.com/core/central/main/app"
-	"git.proxeus.com/core/central/main/helpers"
-	"git.proxeus.com/core/central/main/www"
-	"git.proxeus.com/core/central/sys"
-	"git.proxeus.com/core/central/sys/db/storm"
+	"github.com/ProxeusApp/proxeus-core/main/app"
+	"github.com/ProxeusApp/proxeus-core/main/helpers"
+	"github.com/ProxeusApp/proxeus-core/main/www"
+	"github.com/ProxeusApp/proxeus-core/sys"
+	"github.com/ProxeusApp/proxeus-core/sys/db/storm"
 
 	strm "github.com/asdine/storm"
 
-	"git.proxeus.com/core/central/sys/eio"
-	"git.proxeus.com/core/central/sys/email"
-	"git.proxeus.com/core/central/sys/file"
-	"git.proxeus.com/core/central/sys/model"
-	"git.proxeus.com/core/central/sys/session"
-	"git.proxeus.com/core/central/sys/validate"
+	"github.com/ProxeusApp/proxeus-core/sys/eio"
+	"github.com/ProxeusApp/proxeus-core/sys/email"
+	"github.com/ProxeusApp/proxeus-core/sys/file"
+	"github.com/ProxeusApp/proxeus-core/sys/model"
+	"github.com/ProxeusApp/proxeus-core/sys/session"
+	"github.com/ProxeusApp/proxeus-core/sys/validate"
 )
 
 var filenameRegex = regexp.MustCompile(`^[^\s][\p{L}\d.,_\-&: ]{3,}[^\s]$`)

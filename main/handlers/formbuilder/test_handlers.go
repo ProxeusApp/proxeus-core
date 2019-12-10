@@ -11,12 +11,12 @@ import (
 	"io/ioutil"
 	"strings"
 
-	"git.proxeus.com/core/central/main/helpers"
-	"git.proxeus.com/core/central/main/www"
-	"git.proxeus.com/core/central/sys/file"
-	"git.proxeus.com/core/central/sys/form"
-	"git.proxeus.com/core/central/sys/session"
-	"git.proxeus.com/core/central/sys/validate"
+	"github.com/ProxeusApp/proxeus-core/main/helpers"
+	"github.com/ProxeusApp/proxeus-core/main/www"
+	"github.com/ProxeusApp/proxeus-core/sys/file"
+	"github.com/ProxeusApp/proxeus-core/sys/form"
+	"github.com/ProxeusApp/proxeus-core/sys/session"
+	"github.com/ProxeusApp/proxeus-core/sys/validate"
 )
 
 func GetDataId(e echo.Context) error {

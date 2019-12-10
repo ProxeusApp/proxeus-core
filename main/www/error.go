@@ -6,7 +6,7 @@ import (
 
 	"github.com/labstack/echo"
 
-	"git.proxeus.com/core/central/sys"
+	"github.com/ProxeusApp/proxeus-core/sys"
 )
 
 // DefaultHTTPErrorHandler is the default HTTP error handler

@@ -1,5 +1,5 @@
 # This file is an override and needs to be used in combination with docker-compose.yml like the following:
-# docker-compose -f docker-compose.yml -f docker-compose-hosted.yml up
+# docker-compose -f docker-compose.yml -f docker-compose-cloude-override.yml up
 version: '3.7'
 
 networks:

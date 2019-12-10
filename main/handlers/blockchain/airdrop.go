@@ -12,14 +12,14 @@ import (
 
 	"github.com/ethereum/go-ethereum/accounts/keystore"
 
-	"git.proxeus.com/core/central/main/config"
+	"github.com/ProxeusApp/proxeus-core/main/config"
 
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/ethclient"
 
-	"git.proxeus.com/core/central/main/ethglue"
+	"github.com/ProxeusApp/proxeus-core/main/ethglue"
 )
 
 const etherUnit = 1000000000000000000

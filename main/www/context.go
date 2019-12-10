@@ -8,9 +8,9 @@ import (
 
 	"github.com/labstack/echo"
 
-	"git.proxeus.com/core/central/sys"
-	"git.proxeus.com/core/central/sys/model"
-	"git.proxeus.com/core/central/sys/session"
+	"github.com/ProxeusApp/proxeus-core/sys"
+	"github.com/ProxeusApp/proxeus-core/sys/model"
+	"github.com/ProxeusApp/proxeus-core/sys/session"
 )
 
 var singleSystem *sys.System
