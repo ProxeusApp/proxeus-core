@@ -1,7 +1,7 @@
 package customNode
 
 import (
-	"git.proxeus.com/core/central/sys/workflow"
+	"github.com/ProxeusApp/proxeus-core/sys/workflow"
 )
 
 func List(nodeType string) *workflow.Node {

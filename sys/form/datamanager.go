@@ -5,7 +5,7 @@ import (
 	"os"
 	"sync"
 
-	"git.proxeus.com/core/central/sys/file"
+	"github.com/ProxeusApp/proxeus-core/sys/file"
 )
 
 type DataManager struct {

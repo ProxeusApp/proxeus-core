@@ -12,20 +12,20 @@ type (
 		XESContractAddress string
 		XESABI             abi.ABI
 	}
-	adapter interface {
-		getContractAddress() string
-		eventFromLog(out interface{}, lg *types.Log, eventType string) error
+	Adapter interface {
+		GetContractAddress() string
+		EventFromLog(out interface{}, lg *types.Log, eventType string) error
 	}
 )
 
-func NewAdapter(XESContractAddress string, XESABI abi.ABI) adapter {
+func NewAdapter(XESContractAddress string, XESABI abi.ABI) *xesAdapter {
 	me := &xesAdapter{}
 	me.XESContractAddress = XESContractAddress
 	me.XESABI = XESABI
 	return me
 }
 
-func (me *xesAdapter) eventFromLog(out interface{}, lg *types.Log, eventType string) error {
+func (me *xesAdapter) EventFromLog(out interface{}, lg *types.Log, eventType string) error {
 	pfsLogUnpacker := bind.NewBoundContract(common.HexToAddress(me.XESContractAddress), me.XESABI,
 		nil, nil, nil)
 
@@ -35,6 +35,6 @@ func (me *xesAdapter) eventFromLog(out interface{}, lg *types.Log, eventType str
 	}
 	return nil
 }
-func (me *xesAdapter) getContractAddress() string {
+func (me *xesAdapter) GetContractAddress() string {
 	return me.XESContractAddress
 }

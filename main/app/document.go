@@ -10,19 +10,19 @@ import (
 	"strconv"
 	"sync"
 
-	"git.proxeus.com/core/central/sys/utils"
+	"github.com/ProxeusApp/proxeus-core/sys/utils"
 
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/labstack/echo"
 
-	"git.proxeus.com/core/central/sys"
-	"git.proxeus.com/core/central/sys/db/storm"
-	"git.proxeus.com/core/central/sys/eio"
-	"git.proxeus.com/core/central/sys/file"
-	"git.proxeus.com/core/central/sys/form"
-	"git.proxeus.com/core/central/sys/model"
-	"git.proxeus.com/core/central/sys/validate"
-	"git.proxeus.com/core/central/sys/workflow"
+	"github.com/ProxeusApp/proxeus-core/sys"
+	"github.com/ProxeusApp/proxeus-core/sys/db/storm"
+	"github.com/ProxeusApp/proxeus-core/sys/eio"
+	"github.com/ProxeusApp/proxeus-core/sys/file"
+	"github.com/ProxeusApp/proxeus-core/sys/form"
+	"github.com/ProxeusApp/proxeus-core/sys/model"
+	"github.com/ProxeusApp/proxeus-core/sys/validate"
+	"github.com/ProxeusApp/proxeus-core/sys/workflow"
 )
 
 //TODO replace DataCluster with file.MapIO. DataCluster was meant to be used for guest users only to prevent from storing data that will be never used again after the session is expired

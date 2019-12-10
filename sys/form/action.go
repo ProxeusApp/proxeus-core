@@ -5,7 +5,7 @@ import (
 
 	"github.com/dop251/goja"
 
-	"git.proxeus.com/core/central/sys/validate"
+	"github.com/ProxeusApp/proxeus-core/sys/validate"
 )
 
 const (

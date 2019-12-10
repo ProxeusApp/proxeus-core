@@ -12,8 +12,8 @@ import (
 	"github.com/asdine/storm/q"
 	uuid "github.com/satori/go.uuid"
 
-	"git.proxeus.com/core/central/sys/file"
-	"git.proxeus.com/core/central/sys/model"
+	"github.com/ProxeusApp/proxeus-core/sys/file"
+	"github.com/ProxeusApp/proxeus-core/sys/model"
 )
 
 type UserDataDB struct {

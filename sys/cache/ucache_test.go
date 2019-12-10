@@ -1,3 +1,5 @@
+// +build flakytest
+
 package cache
 
 import (

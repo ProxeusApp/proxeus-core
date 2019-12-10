@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"log"
 
-	"git.proxeus.com/core/central/sys/email"
+	"github.com/ProxeusApp/proxeus-core/sys/email"
 
-	"git.proxeus.com/core/central/sys/workflow"
+	"github.com/ProxeusApp/proxeus-core/sys/workflow"
 )
 
 type mailSenderNode struct {

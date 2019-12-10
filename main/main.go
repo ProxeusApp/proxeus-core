@@ -11,13 +11,13 @@ import (
 
 	"strings"
 
-	cfg "git.proxeus.com/core/central/main/config"
-	"git.proxeus.com/core/central/main/handlers"
-	"git.proxeus.com/core/central/main/handlers/assets"
-	"git.proxeus.com/core/central/main/www"
-	"git.proxeus.com/core/central/sys"
-	"git.proxeus.com/core/central/sys/i18n"
-	"git.proxeus.com/core/central/sys/validate"
+	cfg "github.com/ProxeusApp/proxeus-core/main/config"
+	"github.com/ProxeusApp/proxeus-core/main/handlers"
+	"github.com/ProxeusApp/proxeus-core/main/handlers/assets"
+	"github.com/ProxeusApp/proxeus-core/main/www"
+	"github.com/ProxeusApp/proxeus-core/sys"
+	"github.com/ProxeusApp/proxeus-core/sys/i18n"
+	"github.com/ProxeusApp/proxeus-core/sys/validate"
 )
 
 // ServerVersion is added to http headers and can be set during making a build

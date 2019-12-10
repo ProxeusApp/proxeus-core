@@ -6,8 +6,8 @@ import (
 
 	"github.com/labstack/echo"
 
-	"git.proxeus.com/core/central/sys"
-	"git.proxeus.com/core/central/sys/model"
+	"github.com/ProxeusApp/proxeus-core/sys"
+	"github.com/ProxeusApp/proxeus-core/sys/model"
 )
 
 type InitialHandler struct {

@@ -14,15 +14,15 @@ import (
 
 	"github.com/labstack/echo"
 
-	"git.proxeus.com/core/central/main/handlers/api"
-	"git.proxeus.com/core/central/main/handlers/formbuilder"
-	"git.proxeus.com/core/central/main/helpers"
-	"git.proxeus.com/core/central/main/www"
-	"git.proxeus.com/core/central/sys/db/storm"
-	"git.proxeus.com/core/central/sys/eio"
-	"git.proxeus.com/core/central/sys/file"
-	"git.proxeus.com/core/central/sys/model"
-	"git.proxeus.com/core/central/sys/session"
+	"github.com/ProxeusApp/proxeus-core/main/handlers/api"
+	"github.com/ProxeusApp/proxeus-core/main/handlers/formbuilder"
+	"github.com/ProxeusApp/proxeus-core/main/helpers"
+	"github.com/ProxeusApp/proxeus-core/main/www"
+	"github.com/ProxeusApp/proxeus-core/sys/db/storm"
+	"github.com/ProxeusApp/proxeus-core/sys/eio"
+	"github.com/ProxeusApp/proxeus-core/sys/file"
+	"github.com/ProxeusApp/proxeus-core/sys/model"
+	"github.com/ProxeusApp/proxeus-core/sys/session"
 )
 
 var rendererHelper = func(e echo.Context, tmplPath, fileName string) error {

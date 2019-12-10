@@ -14,8 +14,8 @@ import (
 
 	uuid "github.com/satori/go.uuid"
 
-	"git.proxeus.com/core/central/sys/model"
-	"git.proxeus.com/core/central/sys/tar"
+	"github.com/ProxeusApp/proxeus-core/sys/model"
+	"github.com/ProxeusApp/proxeus-core/sys/tar"
 )
 
 var ErrNotProxeusDB = fmt.Errorf("not a Proxeus DB file")

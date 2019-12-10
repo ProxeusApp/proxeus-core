@@ -5,9 +5,9 @@ import (
 	"os"
 	"path/filepath"
 
-	"git.proxeus.com/core/central/sys/db"
-	"git.proxeus.com/core/central/sys/model"
-	"git.proxeus.com/core/central/sys/validate"
+	"github.com/ProxeusApp/proxeus-core/sys/db"
+	"github.com/ProxeusApp/proxeus-core/sys/model"
+	"github.com/ProxeusApp/proxeus-core/sys/validate"
 )
 
 type SettingsDB struct {

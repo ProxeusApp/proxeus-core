@@ -8,7 +8,7 @@ import (
 	"github.com/asdine/storm/codec/msgpack"
 	"github.com/asdine/storm/q"
 
-	"git.proxeus.com/core/central/sys/model"
+	"github.com/ProxeusApp/proxeus-core/sys/model"
 )
 
 type SignatureRequestsDB struct {

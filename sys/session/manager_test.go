@@ -1,3 +1,5 @@
+// +build flakytest
+
 package session
 
 import (
@@ -5,7 +7,7 @@ import (
 	"testing"
 	"time"
 
-	"git.proxeus.com/core/central/sys/model"
+	"github.com/ProxeusApp/proxeus-core/sys/model"
 )
 
 type myNotify struct {
