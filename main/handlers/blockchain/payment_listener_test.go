@@ -14,9 +14,9 @@ import (
 
 	strm "github.com/asdine/storm"
 
-	"git.proxeus.com/core/central/sys/model"
+	"github.com/ProxeusApp/proxeus-core/sys/model"
 
-	"git.proxeus.com/core/central/sys/db/storm"
+	"github.com/ProxeusApp/proxeus-core/sys/db/storm"
 )
 
 var errCleanupTestData = errors.New("db data has not been cleanup up after finishing tests")

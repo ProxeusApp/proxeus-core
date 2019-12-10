@@ -10,7 +10,7 @@ import (
 	storm0 "github.com/asdine/storm"
 	gomock "github.com/golang/mock/gomock"
 
-	model "git.proxeus.com/core/central/sys/model"
+	model "github.com/ProxeusApp/proxeus-core/sys/model"
 )
 
 // MockWorkflowDBInterface is a mock of WorkflowDBInterface interface

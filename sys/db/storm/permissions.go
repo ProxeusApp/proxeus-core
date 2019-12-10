@@ -3,7 +3,7 @@ package storm
 import (
 	"github.com/asdine/storm/q"
 
-	"git.proxeus.com/core/central/sys/model"
+	"github.com/ProxeusApp/proxeus-core/sys/model"
 )
 
 func IsReadGrantedFor(auth model.Authorization, includeGrant bool) q.Matcher {

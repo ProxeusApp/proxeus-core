@@ -9,14 +9,14 @@ import (
 
 	uuid "github.com/satori/go.uuid"
 
-	"git.proxeus.com/core/central/sys/db/storm"
+	"github.com/ProxeusApp/proxeus-core/sys/db/storm"
 
 	strm "github.com/asdine/storm"
 
 	"github.com/labstack/echo"
 
-	"git.proxeus.com/core/central/main/www"
-	"git.proxeus.com/core/central/sys/model"
+	"github.com/ProxeusApp/proxeus-core/main/www"
+	"github.com/ProxeusApp/proxeus-core/sys/model"
 )
 
 var errNotAuthorized = errors.New("user not authorized")

@@ -3,7 +3,7 @@ const path = require('path')
 
 module.exports = {
   assetsDir: 'static/assets/',
-  outputDir: path.resolve(__dirname, '../../artifacts/dist'),
+  outputDir: path.resolve(__dirname, 'dist'),
   runtimeCompiler: true,
   productionSourceMap: false,
 

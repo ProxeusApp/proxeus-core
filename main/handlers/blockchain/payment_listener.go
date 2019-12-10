@@ -11,8 +11,8 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
 
-	"git.proxeus.com/core/central/main/ethglue"
-	"git.proxeus.com/core/central/sys/db/storm"
+	"github.com/ProxeusApp/proxeus-core/main/ethglue"
+	"github.com/ProxeusApp/proxeus-core/sys/db/storm"
 
 	strm "github.com/asdine/storm"
 )

@@ -7,7 +7,7 @@ import (
 	"io"
 	r "reflect"
 
-	"git.proxeus.com/core/central/sys/validate"
+	"github.com/ProxeusApp/proxeus-core/sys/validate"
 )
 
 var (

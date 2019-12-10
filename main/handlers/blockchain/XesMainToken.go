@@ -1,9 +1,10 @@
 package blockchain
 
 import (
+	"math/big"
+
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
-	"math/big"
 )
 
 // XesMainTokenABI is the input ABI used to generate the binding from.

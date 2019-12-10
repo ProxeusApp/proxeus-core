@@ -1,4 +1,3 @@
-
 version: 2.1
 
 executors:
@@ -6,7 +5,7 @@ executors:
     environment:
       PROJECT_ROOT_FOLDER: ~/project
     docker:
-      - image: golang:1.11
+      - image: golang:1.13
   docker-publisher:
     environment:
       PROJECT_ROOT_FOLDER: ~/project
@@ -21,31 +20,14 @@ jobs:
       - checkout
       - restore_cache:
           keys: 
-            - go-vendor-v1-{{ .Branch }}
+            - go-mod-v1-{{ checksum "go.sum" }}
       - run:
-          command: make link-repo
-      - run:
-          command: curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
-      - run:
-          command: go get golang.org/x/tools/cmd/goimports
-      - run:
-          command: |
-            cd /go/src/git.proxeus.com/core/central
-            dep ensure -v
-      - run:
-          command: chmod -R +x ./build
-      - run:
-          command: |
-            cd /go/src/git.proxeus.com/core/central
-            make fmt
-      - run:
-          command: |
-            cd /go/src/git.proxeus.com/core/central
-            make validate
+          name: Validate
+          command: make init validate
       - save_cache:
-          key: go-vendor-v1-{{ .Branch }}
+          key: go-mod-v1-{{ checksum "go.sum" }}
           paths:
-            - vendor/
+            - "/go/pkg/mod"
 
   test:
     executor: docker-image-golang
@@ -53,19 +35,17 @@ jobs:
       - checkout
       - restore_cache:
           keys: 
-            - go-vendor-v1-{{ .Branch }}
+            - go-mod-v1-{{ checksum "go.sum" }}
       - run:
-          command: chmod -R +x ./build
+           name: Add git.proxeus.com to known_hosts
+           command: ssh-keyscan -H git.proxeus.com >> ~/.ssh/known_hosts
       - run:
-          command: make link-repo
-      - run:
-          command: |
-            cd /go/src/git.proxeus.com/core/central
-            make test
+          name: Test
+          command: make test
       - save_cache:
-          key: go-vendor-v1-{{ .Branch }}
+          key: go-mod-v1-{{ checksum "go.sum" }}
           paths:
-            - vendor/
+            - "/go/pkg/mod"
 
   build-ui:
     docker:
@@ -76,8 +56,7 @@ jobs:
           keys: 
             - yarn-v1-{{ .Branch }}
       - run:
-          command: chmod -R +x ./build
-      - run:
+          name: Build UI
           command: make ui
       - save_cache:
           key: yarn-v1-{{ .Branch }}
@@ -89,7 +68,7 @@ jobs:
       - persist_to_workspace:
           root: .
           paths:
-            - ./artifacts/dist
+            - ./ui/core/dist
 
   build-go:
     executor: docker-image-golang
@@ -99,21 +78,14 @@ jobs:
           at: ~/project/
       - restore_cache:
           keys: 
-            - go-vendor-v1-{{ .Branch }}
+            - go-mod-v1-{{ checksum "go.sum" }}
       - run:
-          command: chmod -R +x ./build
-      - run:
-          name: 
-          command: make link-repo
-      - run:
-          name: 
-          command: |
-            cd /go/src/git.proxeus.com/core/central
-            make server-docker
+          name: Build server binary
+          command: make server-docker
       - save_cache:
-          key: go-vendor-v1-{{ .Branch }}
+          key: go-mod-v1-{{ checksum "go.sum" }}
           paths:
-            - vendor/
+            - "/go/pkg/mod"
       - persist_to_workspace:
           root: .
           paths:

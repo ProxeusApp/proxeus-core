@@ -5,7 +5,7 @@ import (
 	"encoding/base64"
 	"regexp"
 
-	"git.proxeus.com/core/central/sys/db"
+	"github.com/ProxeusApp/proxeus-core/sys/db"
 
 	//"encoding/json"
 	"image"
@@ -24,7 +24,7 @@ import (
 	uuid "github.com/satori/go.uuid"
 	"golang.org/x/crypto/bcrypt"
 
-	"git.proxeus.com/core/central/sys/model"
+	"github.com/ProxeusApp/proxeus-core/sys/model"
 )
 
 //TODO(ave) how come we have even private methods in an interface... Doesn't look like the correct approach for an interface.

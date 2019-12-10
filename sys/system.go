@@ -13,19 +13,19 @@ import (
 
 	"github.com/ethereum/go-ethereum/accounts/abi"
 
-	"git.proxeus.com/core/central/main/handlers/blockchain"
+	"github.com/ProxeusApp/proxeus-core/main/handlers/blockchain"
 
 	"log"
 
-	cfg "git.proxeus.com/core/central/main/config"
-	"git.proxeus.com/core/central/sys/cache"
-	"git.proxeus.com/core/central/sys/email"
-	"git.proxeus.com/core/central/sys/validate"
+	cfg "github.com/ProxeusApp/proxeus-core/main/config"
+	"github.com/ProxeusApp/proxeus-core/sys/cache"
+	"github.com/ProxeusApp/proxeus-core/sys/email"
+	"github.com/ProxeusApp/proxeus-core/sys/validate"
 
-	"git.proxeus.com/core/central/sys/db/storm"
-	"git.proxeus.com/core/central/sys/eio"
-	"git.proxeus.com/core/central/sys/model"
-	"git.proxeus.com/core/central/sys/session"
+	"github.com/ProxeusApp/proxeus-core/sys/db/storm"
+	"github.com/ProxeusApp/proxeus-core/sys/eio"
+	"github.com/ProxeusApp/proxeus-core/sys/model"
+	"github.com/ProxeusApp/proxeus-core/sys/session"
 )
 
 var (

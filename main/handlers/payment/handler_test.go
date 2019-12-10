@@ -18,12 +18,12 @@ import (
 
 	strm "github.com/asdine/storm"
 
-	"git.proxeus.com/core/central/main/www"
-	"git.proxeus.com/core/central/sys"
-	"git.proxeus.com/core/central/sys/db/storm"
-	"git.proxeus.com/core/central/sys/model"
+	"github.com/ProxeusApp/proxeus-core/main/www"
+	"github.com/ProxeusApp/proxeus-core/sys"
+	"github.com/ProxeusApp/proxeus-core/sys/db/storm"
+	"github.com/ProxeusApp/proxeus-core/sys/model"
 
-	sysSess "git.proxeus.com/core/central/sys/session"
+	sysSess "github.com/ProxeusApp/proxeus-core/sys/session"
 )
 
 func setupPaymentRequestTest(httpMethod, targetUrl, body string) (*www.Context, *httptest.ResponseRecorder, *model.User, *model.User) {

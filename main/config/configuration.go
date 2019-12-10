@@ -8,7 +8,7 @@ import (
 
 	"flag"
 
-	"git.proxeus.com/core/central/sys/model"
+	"github.com/ProxeusApp/proxeus-core/sys/model"
 )
 
 //This configuration can be used in two ways:

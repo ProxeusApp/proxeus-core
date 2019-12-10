@@ -7,14 +7,14 @@ import (
 
 	"github.com/labstack/echo"
 
-	"git.proxeus.com/core/central/main/handlers/api"
+	"github.com/ProxeusApp/proxeus-core/main/handlers/api"
 
 	"io/ioutil"
 
-	"git.proxeus.com/core/central/main/helpers"
-	"git.proxeus.com/core/central/main/www"
-	"git.proxeus.com/core/central/sys/db/storm"
-	"git.proxeus.com/core/central/sys/model"
+	"github.com/ProxeusApp/proxeus-core/main/helpers"
+	"github.com/ProxeusApp/proxeus-core/main/www"
+	"github.com/ProxeusApp/proxeus-core/sys/db/storm"
+	"github.com/ProxeusApp/proxeus-core/sys/model"
 )
 
 func ExportForms(e echo.Context) error {

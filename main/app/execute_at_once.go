@@ -11,11 +11,11 @@ import (
 
 	"github.com/asdine/storm"
 
-	"git.proxeus.com/core/central/main/www"
-	"git.proxeus.com/core/central/sys/eio"
-	"git.proxeus.com/core/central/sys/form"
-	"git.proxeus.com/core/central/sys/model"
-	"git.proxeus.com/core/central/sys/workflow"
+	"github.com/ProxeusApp/proxeus-core/main/www"
+	"github.com/ProxeusApp/proxeus-core/sys/eio"
+	"github.com/ProxeusApp/proxeus-core/sys/form"
+	"github.com/ProxeusApp/proxeus-core/sys/model"
+	"github.com/ProxeusApp/proxeus-core/sys/workflow"
 )
 
 type ExecuteAtOnceContext struct {

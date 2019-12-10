@@ -9,7 +9,7 @@ import (
 
 	gomock "github.com/golang/mock/gomock"
 
-	model "git.proxeus.com/core/central/sys/model"
+	model "github.com/ProxeusApp/proxeus-core/sys/model"
 )
 
 // MockWorkflowPaymentsDBInterface is a mock of WorkflowPaymentsDBInterface interface

@@ -15,8 +15,8 @@ import (
 	"github.com/asdine/storm/q"
 	uuid "github.com/satori/go.uuid"
 
-	"git.proxeus.com/core/central/sys/form"
-	"git.proxeus.com/core/central/sys/model"
+	"github.com/ProxeusApp/proxeus-core/sys/form"
+	"github.com/ProxeusApp/proxeus-core/sys/model"
 )
 
 type FormDB struct {
