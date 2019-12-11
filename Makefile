@@ -25,6 +25,7 @@ init:
 	@for d in $(dependencies); do (echo "Checking $$d is installed... " && which $$d ) || ( echo "Please install $$d before continuing" && exit 1 ); done
 	go install golang.org/x/tools/cmd/goimports
 	go install github.com/asticode/go-bindata/go-bindata
+	go install github.com/golang/mock/mockgen
 
 .PHONY: ui
 ui:
@@ -34,16 +35,27 @@ ui:
 ui-dev:
 	make -C ui serve-main-hosted
 
+.PHONY: bindata
+bindata: main/handlers/assets/bindata.go  
+
+main/handlers/assets/bindata.go: $(wildcard ./ui/core/dist/**)
+	go-bindata ${BINDATA_OPTS} -tags !coverage -pkg assets -o ./main/handlers/assets/bindata.go -prefix ./ui/core/dist ./ui/core/dist/...
+
+.PHONY: mock
+mock: main/handlers/blockchain/adapter_mock.go sys/db/storm/workflow_payments_mock.go sys/db/storm/user_mock.go sys/db/storm/workflow_mock.go 
+%_mock.go: %.go
+	mockgen -package $(shell basename $(dir $<)) -source $<  -destination $@.tmp -self_package github.com/ProxeusApp/proxeus-core/$(shell dirname $@) 
+	echo "// +build !coverage" > $@ && cat $@.tmp >> $@ # To add the build tag at the begining of the file
+	rm $@.tmp
+	goimports -w $@
+
 .PHONY: server
-server: main/handlers/assets/bindata.go
+server: bindata mock
 	go build $(GO_OPTS) -tags nocgo -o ./artifacts/server ./main 
 
 .PHONY: server-docker
-server-docker: main/handlers/assets/bindata.go
+server-docker: bindata mock
 	$(DOCKER_LINUX) go build $(GO_OPTS) -tags nocgo -o ./artifacts/server-docker ./main
-
-main/handlers/assets/bindata.go: $(wildcard ./ui/core/dist/**)
-	go-bindata ${BINDATA_OPTS} -pkg assets -o ./main/handlers/assets/bindata.go -prefix ./ui/core/dist ./ui/core/dist/...
 
 .PHONY: validate
 validate:
@@ -52,17 +64,13 @@ validate:
 	fi
 	@echo "Format validated"
 
-.PHONY: validate-ui
-validate-ui:
-	make -C ui validate
-
 .PHONY: fmt
 fmt:
 	goimports -w -local git.proxeus.com main sys
 
 .PHONY: test
 test: main/handlers/assets/bindata.go
-	go test ./main/... ./sys/... 
+	go test  ./main/... ./sys/... 
 
 .PHONY:test-payment
 test-payment:
