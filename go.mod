@@ -11,16 +11,16 @@ require (
 	github.com/aristanetworks/goarista v0.0.0-20190522184417-004c259faaeb // indirect
 	github.com/asdine/storm v0.0.0-20190418133842-e0f77eada154
 	github.com/asticode/go-bindata v1.0.0 // indirect
-	github.com/boltdb/bolt v1.3.1
+	github.com/boltdb/bolt v1.3.1 // indirect
 	github.com/btcsuite/btcd v0.0.0-20190523000118-16327141da8c // indirect
 	github.com/c2h5oh/datasize v0.0.0-20171227191756-4eba002a5eae
 	github.com/cespare/cp v1.1.1 // indirect
-	github.com/coreos/bbolt v1.3.3
+	github.com/coreos/bbolt v1.3.3 // indirect
 	github.com/cznic/b v0.0.0-20181122101859-a26611c4d92d // indirect
 	github.com/cznic/fileutil v0.0.0-20181122101858-4d67cfea8c87 // indirect
 	github.com/cznic/golex v0.0.0-20181122101858-9c343928389c // indirect
 	github.com/cznic/mathutil v0.0.0-20181122101859-297441e03548 // indirect
-	github.com/cznic/ql v1.2.0
+	github.com/cznic/ql v1.2.0 // indirect
 	github.com/cznic/sortutil v0.0.0-20181122101858-f5f958428db8 // indirect
 	github.com/cznic/strutil v0.0.0-20181122101858-275e90344537 // indirect
 	github.com/cznic/zappy v0.0.0-20181122101859-ca47d358d4b1 // indirect
@@ -89,5 +89,8 @@ require (
 	gopkg.in/gavv/httpexpect.v2 v2.0.0
 	gopkg.in/natefinch/npipe.v2 v2.0.0-20160621034901-c1b8fa8bdcce // indirect
 	gopkg.in/sourcemap.v1 v1.0.5 // indirect
+	gopkg.in/urfave/cli.v1 v1.20.0 // indirect
 	src.techknowlogick.com/xgo v0.0.0-20191206145604-980bc3ce3f09 // indirect
 )
+
+replace github.com/ProxeusApp/proxeus-core => ./

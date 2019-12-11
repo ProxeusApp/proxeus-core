@@ -62,7 +62,7 @@ fmt:
 	goimports -w -local git.proxeus.com main sys
 
 .PHONY: test
-test:
+test: main/handlers/assets/bindata.go
 	go test ./main/... ./sys/... 
 
 .PHONY:test-payment
