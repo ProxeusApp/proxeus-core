@@ -23,8 +23,8 @@ all: ui server
 .PHONY: init
 init:
 	@for d in $(dependencies); do (echo "Checking $$d is installed... " && which $$d ) || ( echo "Please install $$d before continuing" && exit 1 ); done
-	go get golang.org/x/tools/cmd/goimports
-	go get github.com/asticode/go-bindata/go-bindata
+	go install golang.org/x/tools/cmd/goimports
+	go install github.com/asticode/go-bindata/go-bindata
 
 .PHONY: ui
 ui:

@@ -76,9 +76,6 @@ jobs:
           keys:
             - go-mod-v1-{{ checksum "go.sum" }}
       - run:
-          name: Add git.proxeus.com to known_hosts
-          command: ssh-keyscan -H git.proxeus.com >> ~/.ssh/known_hosts
-      - run:
           name: Test
           command: make test
       - save_cache:
