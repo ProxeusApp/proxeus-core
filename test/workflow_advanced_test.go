@@ -9,6 +9,7 @@ import (
 )
 
 const fieldName = "test_name"
+const field2Name = "test2_name"
 
 func TestWorkflowAdvanced(t *testing.T) {
 	s := new(t, serverURL)
@@ -18,15 +19,20 @@ func TestWorkflowAdvanced(t *testing.T) {
 	w2 := createWorkflow(s, u, "workflow2-"+s.id)
 
 	f := createSimpleForm(s, u, "form-"+s.id, fieldName)
+	f2 := createSimpleForm(s, u, "form2-"+s.id, field2Name)
+
 	tpl := createSimpleTemplate(s, u, "template-"+s.id, "test/assets/test_template.odt")
+
 	w1.Data = advancedWorkflowData(t, workflow1Data, map[string]string{
 		"formId":     f.ID,
 		"templateId": tpl.ID,
 	})
 	w2.Data = advancedWorkflowData(t, workflow2Data, map[string]string{
 		"formId":        f.ID,
+		"form2Id":       f2.ID,
 		"subworkflowId": w1.ID,
 	})
+
 	updateWorkflow(s, w1)
 	updateWorkflow(s, w2)
 
@@ -41,7 +47,7 @@ func TestWorkflowAdvanced(t *testing.T) {
 func advancedWorkflowData(t *testing.T, data string, dataValues map[string]string) map[string]interface{} {
 	tp, err := tpl.New("").Parse(data)
 	if err != nil {
-		t.Error(err)
+		t.Fatal(err)
 	}
 
 	var buf bytes.Buffer
@@ -50,7 +56,7 @@ func advancedWorkflowData(t *testing.T, data string, dataValues map[string]strin
 	var result map[string]interface{}
 	err = json.Unmarshal(buf.Bytes(), &result)
 	if err != nil {
-		t.Error(err)
+		t.Fatal(err)
 	}
 	return result
 }
@@ -64,13 +70,14 @@ func executeWorkflow(s *session, w *workflow) string {
 		r.Path("$.data").NotNull()
 	}
 	d := map[string]string{fieldName: "value1"}
+	d2 := map[string]string{field2Name: "value2"}
 	// filling a form
 	{
 		s.e.POST("/api/document/" + w.ID + "/data").WithJSON(d).Expect().Status(http.StatusOK)
 
 		r := s.e.POST("/api/document/" + w.ID + "/next").WithJSON(d).Expect().Status(http.StatusOK).
 			JSON().Path("$.status")
-		r.Path("$.steps").Array().Length().Equal(2)
+		r.Path("$.steps").Array().Length().Equal(3)
 		r.Path("$.userData").Object().ContainsKey(fieldName)
 		r.Path("$.data").NotNull()
 	}
@@ -80,10 +87,19 @@ func executeWorkflow(s *session, w *workflow) string {
 		s.e.GET("/api/document/" + w.ID + "/prev").Expect().Status(http.StatusOK)
 		// go forward
 		s.e.POST("/api/document/" + w.ID + "/next").WithJSON(d).Expect().Status(http.StatusOK).JSON()
-		// execute some unattended nodes
-		r := s.e.POST("/api/document/" + w.ID + "/next").WithJSON(d).Expect().Status(http.StatusOK).JSON()
+		// execute some unattended nodes, including template generation
+		s.e.POST("/api/document/" + w.ID + "/next").WithJSON(d).Expect().Status(http.StatusOK).JSON()
 
-		// final node
+		// step back, removing template step
+		s.e.GET("/api/document/" + w.ID + "/prev").Expect().Status(http.StatusOK)
+		// go forward
+		s.e.POST("/api/document/" + w.ID + "/next").WithJSON(d).Expect().Status(http.StatusOK).JSON()
+
+		// fill last form
+		s.e.POST("/api/document/" + w.ID + "/data").WithJSON(d2).Expect().Status(http.StatusOK)
+		r := s.e.POST("/api/document/" + w.ID + "/next").WithJSON(d2).Expect().Status(http.StatusOK).JSON()
+
+		// check if it's a final node
 		r.Path("$.status.hasNext").Boolean().False()
 	}
 
@@ -149,7 +165,7 @@ const workflow2Data = `{
           "x": -68,
           "y": -19
         },
-        "node": "{{.formId}}"
+        "node": "3"
       },
       "nodes": {
         "3": {
@@ -158,12 +174,12 @@ const workflow2Data = `{
           "detail": "Retrieves CHF/XES price",
           "type": "priceretriever",
           "p": {
-            "x": 196,
-            "y": -294
+            "x": -220,
+            "y": -151
           },
           "conns": [
             {
-              "id": "1234123-1234124"
+              "id": "{{.formId}}"
             }
           ]
         },
@@ -173,8 +189,40 @@ const workflow2Data = `{
           "detail": "sends an email",
           "type": "mailsender",
           "p": {
-            "x": 356,
-            "y": -185
+            "x": 388,
+            "y": -94
+          }
+        },
+        "14_49lea1daf77": {
+          "id": "14_49lea1daf77",
+          "name": "condition",
+          "type": "condition",
+          "p": {
+            "x": 214,
+            "y": -196
+          },
+          "conns": [
+            {
+              "id": "{{.form2Id}}",
+              "value": "standard"
+            },
+            {
+              "id": "1234123-1234124",
+              "value": "skip"
+            }
+          ],
+          "cases": [
+            {
+              "name": "skip",
+              "value": "skip"
+            },
+            {
+              "name": "standard",
+              "value": "standard"
+            }
+          ],
+          "data": {
+            "js": "\nfunction condition(){\n  if( input[\"test_name\"] == \"skip\" ){\n    return \"skip\";\n  }else{\n    return \"standard\";\n  }\n}\n                                        "
           }
         },
         "{{.formId}}": {
@@ -182,12 +230,26 @@ const workflow2Data = `{
           "name": "test",
           "type": "form",
           "p": {
-            "x": -85,
-            "y": -210
+            "x": -114,
+            "y": -327
           },
           "conns": [
             {
               "id": "{{.subworkflowId}}"
+            }
+          ]
+        },
+        "{{.form2Id}}": {
+          "id": "{{.form2Id}}",
+          "name": "test2",
+          "type": "form",
+          "p": {
+            "x": 385,
+            "y": -302
+          },
+          "conns": [
+            {
+              "id": "1234123-1234124"
             }
           ]
         },
@@ -196,15 +258,16 @@ const workflow2Data = `{
           "name": "sub-flow",
           "type": "workflow",
           "p": {
-            "x": 22,
-            "y": -377
+            "x": 89,
+            "y": -359
           },
           "conns": [
             {
-              "id": "3"
+              "id": "14_49lea1daf77"
             }
           ]
         }
       }
     }
-  }`
+  }
+`

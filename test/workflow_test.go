@@ -111,7 +111,9 @@ func simpleWorkflowData(id string, formId, templateId string) map[string]interfa
 }
 
 func updateWorkflow(s *session, f *workflow) *workflow {
-	s.e.POST("/api/admin/workflow/update").WithQuery("id", f.ID).WithJSON(f).Expect().Status(http.StatusOK)
+	s.e.POST("/api/admin/workflow/update").
+		WithQuery("id", f.ID).WithQuery("publish", true).WithJSON(f).
+		Expect().Status(http.StatusOK)
 
 	expected := removeUpdatedField(toMap(f))
 	s.e.GET("/api/admin/workflow/{id}").WithPath("id", f.ID).Expect().Status(http.StatusOK).
