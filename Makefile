@@ -39,14 +39,12 @@ ui-dev:
 bindata: main/handlers/assets/bindata.go  
 
 main/handlers/assets/bindata.go: $(wildcard ./ui/core/dist/**)
-	go-bindata ${BINDATA_OPTS} -tags !coverage -pkg assets -o ./main/handlers/assets/bindata.go -prefix ./ui/core/dist ./ui/core/dist/...
+	go-bindata ${BINDATA_OPTS} -pkg assets -o ./main/handlers/assets/bindata.go -prefix ./ui/core/dist ./ui/core/dist/...
 
 .PHONY: mock
 mock: main/handlers/blockchain/adapter_mock.go sys/db/storm/workflow_payments_mock.go sys/db/storm/user_mock.go sys/db/storm/workflow_mock.go 
 %_mock.go: %.go
-	mockgen -package $(shell basename $(dir $<)) -source $<  -destination $@.tmp -self_package github.com/ProxeusApp/proxeus-core/$(shell dirname $@) 
-	echo "// +build !coverage" > $@ && cat $@.tmp >> $@ # To add the build tag at the begining of the file
-	rm $@.tmp
+	mockgen -package $(shell basename $(dir $<)) -source $<  -destination $@ -self_package github.com/ProxeusApp/proxeus-core/$(shell dirname $@)
 	goimports -w $@
 
 .PHONY: server
@@ -84,8 +82,9 @@ test-api: test/bindata.go
 	go clean -testcache && go test ./test
 
 .PHONY: coverage
-coverage:
-	go test -v -tags coverage -coverprofile artifacts/cover.out -coverpkg=./main/...,./sys/... ./main
+coverpkg=$(filter-out %/assets, $(shell go list ./main/... ./sys/...))
+coverage: bindata mock
+	go test -v -tags coverage -coverprofile artifacts/cover.out -coverpkg="$(coverpkg)" ./main
 
 .PHONY: print-coverage
 print-coverage:
