@@ -1,3 +1,4 @@
+---
 version: 2.1
 
 executors:
@@ -14,13 +15,48 @@ executors:
       - image: circleci/buildpack-deps:stretch
 
 jobs:
-  validate:
+  build-ui:
+    docker:
+      - image: node:10
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - yarn-v1-{{ checksum "ui/yarn.lock" }}
+      - run:
+          name: Build UI
+          command: make ui
+      - save_cache:
+          key: yarn-v1-{{ checksum "ui/yarn.lock" }}
+          paths:
+            - ./ui/.yarn/
+            - ./ui/node_modules/
+            - ./ui/core/node_modules/
+            - ./ui/wallet/node_modules/
+      - persist_to_workspace:
+          root: .
+          paths:
+            - ./ui/core/dist
+
+  init-go:
+    executor: docker-image-golang
+    steps:
+      - checkout
+      - run:
+          name: Initialize
+          command: make init
+      - save_cache:
+          key: go-mod-v1-{{ checksum "go.sum" }}
+          paths:
+            - "/go/pkg/mod"
+            - "/go/bin"
+  validate-go:
     executor: docker-image-golang
     steps:
       - checkout
       - restore_cache:
-          keys: 
-            - go-mod-v1-{{ checksum "go.sum" }}
+          keys:
+            - go-mod-v1-{{ .Revision }}
       - run:
           name: Validate
           command: make init validate
@@ -28,17 +64,20 @@ jobs:
           key: go-mod-v1-{{ checksum "go.sum" }}
           paths:
             - "/go/pkg/mod"
+            - "/go/bin"
 
-  test:
+  test-go:
     executor: docker-image-golang
     steps:
       - checkout
+      - attach_workspace:
+          at: ~/project/
       - restore_cache:
-          keys: 
+          keys:
             - go-mod-v1-{{ checksum "go.sum" }}
       - run:
-           name: Add git.proxeus.com to known_hosts
-           command: ssh-keyscan -H git.proxeus.com >> ~/.ssh/known_hosts
+          name: Add git.proxeus.com to known_hosts
+          command: ssh-keyscan -H git.proxeus.com >> ~/.ssh/known_hosts
       - run:
           name: Test
           command: make test
@@ -46,38 +85,16 @@ jobs:
           key: go-mod-v1-{{ checksum "go.sum" }}
           paths:
             - "/go/pkg/mod"
+            - "/go/bin"
 
-  build-ui:
-    docker:
-      - image: node:10
-    steps:
-      - checkout
-      - restore_cache:
-          keys: 
-            - yarn-v1-{{ .Branch }}
-      - run:
-          name: Build UI
-          command: make ui
-      - save_cache:
-          key: yarn-v1-{{ .Branch }}
-          paths:
-            - ui/.yarn/
-            - ui/node_modules/
-            - ui/core/node_modules/
-            - ui/wallet/node_modules/
-      - persist_to_workspace:
-          root: .
-          paths:
-            - ./ui/core/dist
-
-  build-go:
+  build-server-docker:
     executor: docker-image-golang
     steps:
       - checkout
       - attach_workspace:
           at: ~/project/
       - restore_cache:
-          keys: 
+          keys:
             - go-mod-v1-{{ checksum "go.sum" }}
       - run:
           name: Build server binary
@@ -86,12 +103,13 @@ jobs:
           key: go-mod-v1-{{ checksum "go.sum" }}
           paths:
             - "/go/pkg/mod"
+            - "/go/bin"
       - persist_to_workspace:
           root: .
           paths:
             - ./artifacts/server-docker
-  
-  build-docker:
+
+  build-docker-image:
     executor: docker-publisher
     steps:
       - checkout
@@ -112,7 +130,7 @@ jobs:
 
   publish-latest:
     executor: docker-publisher
-    steps:      
+    steps:
       - attach_workspace:
           at: /tmp/workspace
       - setup_remote_docker
@@ -123,7 +141,7 @@ jobs:
           name: Publish Docker Image to Docker Hub
           command: |
             echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
-            docker push $CONTAINER_IMAGE_NAME     
+            docker push $CONTAINER_IMAGE_NAME
 
   publish-demo:
     executor: docker-publisher
@@ -161,38 +179,39 @@ jobs:
           command: |
             echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
             docker push $CONTAINER_IMAGE_NAME:stage
-            
+
 workflows:
   version: 2
   build-master:
     jobs:
-      - validate
-      - test:
+      - build-ui
+      - init-go
+      - validate-go:
           requires:
-            - validate
-      - build-ui:
+            - init-go
+      - test-go:
           requires:
-            - test
-      - build-go:
-          requires:
+            - validate-go
             - build-ui
-      - build-docker:
+      - build-server-docker:
           requires:
-            - build-ui
-            - build-go
+            - test-go
+      - build-docker-image:
+          requires:
+            - build-server-docker
           filters:
             branches:
               only: master
       - publish-latest:
           requires:
-            - build-docker 
+            - build-docker-image
           filters:
             branches:
               only: master
       - approve-stage:
           type: approval
           requires:
-            - build-docker
+            - build-docker-image
           filters:
             branches:
               only: master
@@ -205,7 +224,7 @@ workflows:
       - approve-demo:
           type: approval
           requires:
-            - build-docker
+            - build-docker-image
           filters:
             branches:
               only: master

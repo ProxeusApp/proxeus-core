@@ -25,7 +25,6 @@ init:
 	@for d in $(dependencies); do (echo "Checking $$d is installed... " && which $$d ) || ( echo "Please install $$d before continuing" && exit 1 ); done
 	go get golang.org/x/tools/cmd/goimports
 	go get github.com/asticode/go-bindata/go-bindata
-	if [[ "$$(uname)" == "Darwin" ]]; then go get src.techknowlogick.com/xgo; fi
 
 .PHONY: ui
 ui:
