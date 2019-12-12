@@ -95,9 +95,14 @@ func updateForm(s *session, f *form) *form {
 	s.e.POST("/api/admin/form/update").WithQuery("id", f.ID).WithJSON(f).Expect().Status(http.StatusOK)
 
 	expected := removeUpdatedField(toMap(f))
-	s.e.GET("/api/admin/form/{id}").WithPath("id", f.ID).Expect().Status(http.StatusOK).
-		JSON().Object().ContainsMap(expected)
+	updated := s.e.GET("/api/admin/form/{id}").WithPath("id", f.ID).Expect().Status(http.StatusOK).
+		JSON().Object().ContainsMap(expected).Path("$.updated").String().Raw()
 
+	ti, err := time.Parse(time.RFC3339Nano, updated)
+	if err != nil {
+		s.t.Error(err)
+	}
+	f.Updated = ti
 	return f
 }
 

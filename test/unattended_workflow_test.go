@@ -18,7 +18,7 @@ func TestUnattendedWorkflow(t *testing.T) {
 	apiKey, summary := createApiKey(s, u, "test-"+s.id)
 	w := createWorkflow(s, u, "workflow-"+s.id)
 	f := createSimpleForm(s, u, "form-"+s.id, "test_name")
-	tpl := createSimpleTemplate(s, u, "template-"+s.id, "test/assets/test_template.odt")
+	tpl := createSimpleTemplate(s, u, "template-"+s.id, templateOdtPath)
 	w.Data = simpleWorkflowData(s.id, f.ID, tpl.ID)
 	updateWorkflow(s, w)
 	logout(s)
