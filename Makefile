@@ -69,7 +69,9 @@ test-api: generate
 	go clean -testcache && go test ./test
 
 .PHONY: coverage
-coverpkg=$(filter-out %/assets %/mock, $(shell go list ./main/... ./sys/...))
+comma:=,
+space:= $() $()
+coverpkg=$(filter-out %/assets %/mock, $(subst $(space),$(comma),$(shell go list ./main/... ./sys/...)))
 coverage: generate
 	go test  -coverprofile artifacts/cover_unittests.out -coverpkg="$(coverpkg)" ./main/... ./sys/...
 	go test -v -tags coverage -coverprofile artifacts/cover_integration.out -coverpkg="$(coverpkg)" ./main
