@@ -21,6 +21,7 @@ import (
 	"github.com/ProxeusApp/proxeus-core/main/www"
 	"github.com/ProxeusApp/proxeus-core/sys"
 	"github.com/ProxeusApp/proxeus-core/sys/db/storm"
+	sm "github.com/ProxeusApp/proxeus-core/sys/db/storm/mock"
 	"github.com/ProxeusApp/proxeus-core/sys/model"
 
 	sysSess "github.com/ProxeusApp/proxeus-core/sys/session"
@@ -64,12 +65,12 @@ func TestCreateWorkflowPayment(t *testing.T) {
 
 	wwwContext, rec, user, _ := setupPaymentRequestTest(http.MethodPost, "/api/admin/payments", body)
 
-	userDBMock := storm.NewMockUserDBInterface(mockCtrl)
+	userDBMock := sm.NewMockUserDBInterface(mockCtrl)
 	userDBMock.EXPECT().Get(gomock.Any(), gomock.Eq("1")).Return(user, nil).Times(1)
 
 	workflow := &model.WorkflowItem{Price: 2000000000000000000}
 	workflow.Owner = user.EthereumAddr
-	workflowDBMock := storm.NewMockWorkflowDBInterface(mockCtrl)
+	workflowDBMock := sm.NewMockWorkflowDBInterface(mockCtrl)
 	workflowDBMock.EXPECT().Get(gomock.Any(), gomock.Any()).Return(workflow, nil)
 
 	system := &sys.System{}
@@ -107,7 +108,7 @@ func TestGetWorkflowPaymentById(t *testing.T) {
 		wwwContext.SetParamNames("paymentId")
 		wwwContext.SetParamValues(paymentId)
 
-		userDBMock := storm.NewMockUserDBInterface(mockCtrl)
+		userDBMock := sm.NewMockUserDBInterface(mockCtrl)
 		userDBMock.EXPECT().Get(gomock.Any(), gomock.Eq("1")).Return(user, nil).Times(1)
 
 		system := &sys.System{}
@@ -144,7 +145,7 @@ func TestGetWorkflowPaymentById(t *testing.T) {
 		wwwContext.SetParamNames("paymentId")
 		wwwContext.SetParamValues(paymentId)
 
-		userDBMock := storm.NewMockUserDBInterface(mockCtrl)
+		userDBMock := sm.NewMockUserDBInterface(mockCtrl)
 		userDBMock.EXPECT().Get(gomock.Any(), gomock.Eq("1")).Return(user, nil).Times(1)
 
 		system := &sys.System{}

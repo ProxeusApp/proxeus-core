@@ -17,6 +17,8 @@ import (
 	"github.com/ProxeusApp/proxeus-core/sys/model"
 
 	"github.com/ProxeusApp/proxeus-core/sys/db/storm"
+
+	mock "github.com/ProxeusApp/proxeus-core/main/handlers/blockchain/mock"
 )
 
 var errCleanupTestData = errors.New("db data has not been cleanup up after finishing tests")
@@ -272,7 +274,7 @@ func TestPaymentEventHandling(t *testing.T) {
 func runTest(mockCtrl *gomock.Controller, workflowPaymentsDB *storm.WorkflowPaymentsDB,
 	eventXesAmount *big.Int, eventTxHash, paymentID, paymentTxHash, from, to, status string, xesAmount *big.Int) error {
 
-	adapterMock := NewMockadapter(mockCtrl)
+	adapterMock := mock.NewMockadapter(mockCtrl)
 	adapterMock.EXPECT().eventFromLog(gomock.Any(), gomock.Any(), gomock.Eq("Transfer")).Return(nil).Times(1)
 
 	newPaymentItem := &model.WorkflowPaymentItem{

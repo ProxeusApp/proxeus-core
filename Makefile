@@ -16,6 +16,7 @@ ifeq ($(shell uname), Darwin)
 endif
 #########################################################
 dependencies=go curl
+mocks=main/handlers/blockchain/mock/adapter_mock.go sys/db/storm/mock/workflow_payments_mock.go sys/db/storm/mock/user_mock.go sys/db/storm/mock/workflow_mock.go 
 
 .PHONY: all
 all: ui server
@@ -42,10 +43,7 @@ main/handlers/assets/bindata.go: $(wildcard ./ui/core/dist/**)
 	go-bindata ${BINDATA_OPTS} -pkg assets -o ./main/handlers/assets/bindata.go -prefix ./ui/core/dist ./ui/core/dist/...
 
 .PHONY: mock
-mock: main/handlers/blockchain/adapter_mock.go sys/db/storm/workflow_payments_mock.go sys/db/storm/user_mock.go sys/db/storm/workflow_mock.go 
-%_mock.go: %.go
-	mockgen -package $(shell basename $(dir $<)) -source $<  -destination $@ -self_package github.com/ProxeusApp/proxeus-core/$(shell dirname $@)
-	goimports -w $@
+mock: $(mocks)
 
 .PHONY: server
 server: bindata mock
@@ -82,7 +80,7 @@ test-api: test/bindata.go
 	go clean -testcache && go test ./test
 
 .PHONY: coverage
-coverpkg=$(filter-out %/assets, $(shell go list ./main/... ./sys/...))
+coverpkg=$(filter-out %/assets %/mock, $(shell go list ./main/... ./sys/...))
 coverage: bindata mock
 	go test -v -tags coverage -coverprofile artifacts/cover.out -coverpkg="$(coverpkg)" ./main
 
@@ -100,3 +98,8 @@ run:
 	artifacts/server -DataDir ./data/proxeus-platform/data/  -DocumentServiceUrl=http://document-service:2115 \
 		-BlockchainContractAddress=${PROXEUS_CONTRACT_ADDRESS} -InfuraApiKey=${PROXEUS_INFURA_KEY} \
 		-SparkpostApiKey=${PROXEUS_SPARKPOST_KEY} -EmailFrom=${PROXEUS_EMAIL_FROM} -TestMode=${PROXEUS_TEST_MODE}
+
+.SECONDEXPANSION: # See https://www.gnu.org/software/make/manual/make.html#Secondary-Expansion
+$(mocks): $$(patsubst %_mock.go, %.go, $$(subst /mock,, $$@))
+	mockgen -package mock  -source $<  -destination $@  -self_package github.com/ProxeusApp/proxeus-core/$(shell dirname $@)
+	goimports -w $@
