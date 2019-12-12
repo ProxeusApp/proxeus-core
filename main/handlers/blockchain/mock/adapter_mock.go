@@ -11,53 +11,53 @@ import (
 	gomock "github.com/golang/mock/gomock"
 )
 
-// Mockadapter is a mock of adapter interface
-type Mockadapter struct {
+// MockAdapter is a mock of Adapter interface
+type MockAdapter struct {
 	ctrl     *gomock.Controller
-	recorder *MockadapterMockRecorder
+	recorder *MockAdapterMockRecorder
 }
 
-// MockadapterMockRecorder is the mock recorder for Mockadapter
-type MockadapterMockRecorder struct {
-	mock *Mockadapter
+// MockAdapterMockRecorder is the mock recorder for MockAdapter
+type MockAdapterMockRecorder struct {
+	mock *MockAdapter
 }
 
-// NewMockadapter creates a new mock instance
-func NewMockadapter(ctrl *gomock.Controller) *Mockadapter {
-	mock := &Mockadapter{ctrl: ctrl}
-	mock.recorder = &MockadapterMockRecorder{mock}
+// NewMockAdapter creates a new mock instance
+func NewMockAdapter(ctrl *gomock.Controller) *MockAdapter {
+	mock := &MockAdapter{ctrl: ctrl}
+	mock.recorder = &MockAdapterMockRecorder{mock}
 	return mock
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use
-func (m *Mockadapter) EXPECT() *MockadapterMockRecorder {
+func (m *MockAdapter) EXPECT() *MockAdapterMockRecorder {
 	return m.recorder
 }
 
-// getContractAddress mocks base method
-func (m *Mockadapter) getContractAddress() string {
+// GetContractAddress mocks base method
+func (m *MockAdapter) GetContractAddress() string {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "getContractAddress")
+	ret := m.ctrl.Call(m, "GetContractAddress")
 	ret0, _ := ret[0].(string)
 	return ret0
 }
 
-// getContractAddress indicates an expected call of getContractAddress
-func (mr *MockadapterMockRecorder) getContractAddress() *gomock.Call {
+// GetContractAddress indicates an expected call of GetContractAddress
+func (mr *MockAdapterMockRecorder) GetContractAddress() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "getContractAddress", reflect.TypeOf((*Mockadapter)(nil).getContractAddress))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetContractAddress", reflect.TypeOf((*MockAdapter)(nil).GetContractAddress))
 }
 
-// eventFromLog mocks base method
-func (m *Mockadapter) eventFromLog(out interface{}, lg *types.Log, eventType string) error {
+// EventFromLog mocks base method
+func (m *MockAdapter) EventFromLog(out interface{}, lg *types.Log, eventType string) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "eventFromLog", out, lg, eventType)
+	ret := m.ctrl.Call(m, "EventFromLog", out, lg, eventType)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
-// eventFromLog indicates an expected call of eventFromLog
-func (mr *MockadapterMockRecorder) eventFromLog(out, lg, eventType interface{}) *gomock.Call {
+// EventFromLog indicates an expected call of EventFromLog
+func (mr *MockAdapterMockRecorder) EventFromLog(out, lg, eventType interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "eventFromLog", reflect.TypeOf((*Mockadapter)(nil).eventFromLog), out, lg, eventType)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "EventFromLog", reflect.TypeOf((*MockAdapter)(nil).EventFromLog), out, lg, eventType)
 }

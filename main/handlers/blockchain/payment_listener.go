@@ -27,11 +27,11 @@ type (
 	PaymentListener struct {
 		listener
 		workflowPaymentsDB storm.WorkflowPaymentsDBInterface
-		xesAdapter         adapter
+		xesAdapter         Adapter
 	}
 )
 
-func NewPaymentListener(xesAdapter adapter, ethWebSocketURL, ethURL string, workflowPaymentsDB storm.WorkflowPaymentsDBInterface) *PaymentListener {
+func NewPaymentListener(xesAdapter Adapter, ethWebSocketURL, ethURL string, workflowPaymentsDB storm.WorkflowPaymentsDBInterface) *PaymentListener {
 	me := &PaymentListener{}
 	me.xesAdapter = xesAdapter
 	me.ethWebSocketURL = ethWebSocketURL
@@ -48,7 +48,7 @@ func (me *PaymentListener) Listen(ctx context.Context) {
 		readyCh = me.ethConnectWebSocketsAsync(ctx)
 		select {
 		case <-readyCh:
-			log.Println("[paymentlistener] listen on contract started. contract address: ", me.xesAdapter.getContractAddress())
+			log.Println("[paymentlistener] listen on contract started. contract address: ", me.xesAdapter.GetContractAddress())
 			reconnect := me.listenLoop(ctx)
 			if !reconnect {
 				log.Printf("[paymentlistener][eventHandler] finished")
@@ -93,7 +93,7 @@ func (me *PaymentListener) listenLoop(ctx context.Context) (shouldReconnect bool
 
 func (me *PaymentListener) ethConnectWebSocketsAsync(ctx context.Context) <-chan struct{} {
 
-	filterAddresses := []common.Address{common.HexToAddress(me.xesAdapter.getContractAddress())}
+	filterAddresses := []common.Address{common.HexToAddress(me.xesAdapter.GetContractAddress())}
 
 	readyCh := make(chan struct{})
 	go func() {
@@ -134,7 +134,7 @@ var xesOverflowError = errors.New("overflow on xes event")
 func (me *PaymentListener) eventsHandler(lg *types.Log, event *XesMainTokenTransfer) error {
 	log.Printf("[PaymentListener][eventHandler] txHash: %s, value: %s, %v",
 		lg.TxHash.String(), event.Value.String(), lg)
-	err := me.xesAdapter.eventFromLog(event, lg, "Transfer")
+	err := me.xesAdapter.EventFromLog(event, lg, "Transfer")
 	if err != nil {
 		return err
 	}

@@ -17,6 +17,7 @@ endif
 #########################################################
 dependencies=go curl
 mocks=main/handlers/blockchain/mock/adapter_mock.go sys/db/storm/mock/workflow_payments_mock.go sys/db/storm/mock/user_mock.go sys/db/storm/mock/workflow_mock.go 
+bindata=main/handlers/assets/bindata.go test/bindata.go
 
 .PHONY: all
 all: ui server
@@ -36,21 +37,15 @@ ui:
 ui-dev:
 	make -C ui serve-main-hosted
 
-.PHONY: bindata
-bindata: main/handlers/assets/bindata.go  
-
-main/handlers/assets/bindata.go: $(wildcard ./ui/core/dist/**)
-	go-bindata ${BINDATA_OPTS} -pkg assets -o ./main/handlers/assets/bindata.go -prefix ./ui/core/dist ./ui/core/dist/...
-
-.PHONY: mock
-mock: $(mocks)
+.PHONY: generate
+generate: $(bindata) $(mocks)
 
 .PHONY: server
-server: bindata mock
+server: generate
 	go build $(GO_OPTS) -tags nocgo -o ./artifacts/server ./main 
 
 .PHONY: server-docker
-server-docker: bindata mock
+server-docker: generate
 	$(DOCKER_LINUX) go build $(GO_OPTS) -tags nocgo -o ./artifacts/server-docker ./main
 
 .PHONY: validate
@@ -65,23 +60,20 @@ fmt:
 	goimports -w -local git.proxeus.com main sys
 
 .PHONY: test
-test: main/handlers/assets/bindata.go
+test: generate 
 	go test  ./main/... ./sys/... 
 
 .PHONY:test-payment
-test-payment:
+test-payment: generate
 	go test ./main/handlers/payment  ./main/handlers/blockchain
 
-test/bindata.go: $(wildcard ./test/assets/**)
-	go-bindata ${BINDATA_OPTS} -pkg test -o ./test/bindata.go ./test/assets
-
 .PHONY: test-api
-test-api: test/bindata.go
+test-api: generate
 	go clean -testcache && go test ./test
 
 .PHONY: coverage
 coverpkg=$(filter-out %/assets %/mock, $(shell go list ./main/... ./sys/...))
-coverage: bindata mock
+coverage: generate
 	go test -v -tags coverage -coverprofile artifacts/cover.out -coverpkg="$(coverpkg)" ./main
 
 .PHONY: print-coverage
@@ -98,6 +90,12 @@ run:
 	artifacts/server -DataDir ./data/proxeus-platform/data/  -DocumentServiceUrl=http://document-service:2115 \
 		-BlockchainContractAddress=${PROXEUS_CONTRACT_ADDRESS} -InfuraApiKey=${PROXEUS_INFURA_KEY} \
 		-SparkpostApiKey=${PROXEUS_SPARKPOST_KEY} -EmailFrom=${PROXEUS_EMAIL_FROM} -TestMode=${PROXEUS_TEST_MODE}
+
+main/handlers/assets/bindata.go: $(wildcard ./ui/core/dist/**)
+	go-bindata ${BINDATA_OPTS} -pkg assets -o ./main/handlers/assets/bindata.go -prefix ./ui/core/dist ./ui/core/dist/...
+
+test/bindata.go: $(wildcard ./test/assets/**)
+	go-bindata ${BINDATA_OPTS} -pkg test -o ./test/bindata.go ./test/assets
 
 .SECONDEXPANSION: # See https://www.gnu.org/software/make/manual/make.html#Secondary-Expansion
 $(mocks): $$(patsubst %_mock.go, %.go, $$(subst /mock,, $$@))

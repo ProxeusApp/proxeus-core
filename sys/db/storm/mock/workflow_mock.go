@@ -125,46 +125,46 @@ func (mr *MockWorkflowDBInterfaceMockRecorder) Put(auth, item interface{}) *gomo
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Put", reflect.TypeOf((*MockWorkflowDBInterface)(nil).Put), auth, item)
 }
 
-// put mocks base method
-func (m *MockWorkflowDBInterface) put(auth model.Authorization, item *model.WorkflowItem, updated bool) error {
+// ImportWorkflowItem mocks base method
+func (m *MockWorkflowDBInterface) ImportWorkflowItem(auth model.Authorization, item *model.WorkflowItem) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "put", auth, item, updated)
+	ret := m.ctrl.Call(m, "ImportWorkflowItem", auth, item)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
-// put indicates an expected call of put
-func (mr *MockWorkflowDBInterfaceMockRecorder) put(auth, item, updated interface{}) *gomock.Call {
+// ImportWorkflowItem indicates an expected call of ImportWorkflowItem
+func (mr *MockWorkflowDBInterfaceMockRecorder) ImportWorkflowItem(auth, item interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "put", reflect.TypeOf((*MockWorkflowDBInterface)(nil).put), auth, item, updated)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ImportWorkflowItem", reflect.TypeOf((*MockWorkflowDBInterface)(nil).ImportWorkflowItem), auth, item)
 }
 
-// getDB mocks base method
-func (m *MockWorkflowDBInterface) getDB() *storm0.DB {
+// GetDB mocks base method
+func (m *MockWorkflowDBInterface) GetDB() *storm0.DB {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "getDB")
+	ret := m.ctrl.Call(m, "GetDB")
 	ret0, _ := ret[0].(*storm0.DB)
 	return ret0
 }
 
-// getDB indicates an expected call of getDB
-func (mr *MockWorkflowDBInterfaceMockRecorder) getDB() *gomock.Call {
+// GetDB indicates an expected call of GetDB
+func (mr *MockWorkflowDBInterfaceMockRecorder) GetDB() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "getDB", reflect.TypeOf((*MockWorkflowDBInterface)(nil).getDB))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetDB", reflect.TypeOf((*MockWorkflowDBInterface)(nil).GetDB))
 }
 
-// updateWF mocks base method
-func (m *MockWorkflowDBInterface) updateWF(auth model.Authorization, item *model.WorkflowItem, tx storm0.Node) error {
+// UpdateWF mocks base method
+func (m *MockWorkflowDBInterface) UpdateWF(auth model.Authorization, item *model.WorkflowItem, tx storm0.Node) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "updateWF", auth, item, tx)
+	ret := m.ctrl.Call(m, "UpdateWF", auth, item, tx)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
-// updateWF indicates an expected call of updateWF
-func (mr *MockWorkflowDBInterfaceMockRecorder) updateWF(auth, item, tx interface{}) *gomock.Call {
+// UpdateWF indicates an expected call of UpdateWF
+func (mr *MockWorkflowDBInterfaceMockRecorder) UpdateWF(auth, item, tx interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "updateWF", reflect.TypeOf((*MockWorkflowDBInterface)(nil).updateWF), auth, item, tx)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateWF", reflect.TypeOf((*MockWorkflowDBInterface)(nil).UpdateWF), auth, item, tx)
 }
 
 // Delete mocks base method
@@ -181,18 +181,18 @@ func (mr *MockWorkflowDBInterfaceMockRecorder) Delete(auth, id interface{}) *gom
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Delete", reflect.TypeOf((*MockWorkflowDBInterface)(nil).Delete), auth, id)
 }
 
-// saveOnly mocks base method
-func (m *MockWorkflowDBInterface) saveOnly(item *model.WorkflowItem, tx storm0.Node) error {
+// SaveOnly mocks base method
+func (m *MockWorkflowDBInterface) SaveOnly(item *model.WorkflowItem, tx storm0.Node) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "saveOnly", item, tx)
+	ret := m.ctrl.Call(m, "SaveOnly", item, tx)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
-// saveOnly indicates an expected call of saveOnly
-func (mr *MockWorkflowDBInterfaceMockRecorder) saveOnly(item, tx interface{}) *gomock.Call {
+// SaveOnly indicates an expected call of SaveOnly
+func (mr *MockWorkflowDBInterfaceMockRecorder) SaveOnly(item, tx interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "saveOnly", reflect.TypeOf((*MockWorkflowDBInterface)(nil).saveOnly), item, tx)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SaveOnly", reflect.TypeOf((*MockWorkflowDBInterface)(nil).SaveOnly), item, tx)
 }
 
 // Import mocks base method
