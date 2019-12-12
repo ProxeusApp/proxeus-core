@@ -34,6 +34,7 @@ func TestTemplate(t *testing.T) {
 
 	deleteTemplate(s, t1.ID, false)
 	deleteTemplate(s, t2.ID, true)
+	deleteUser(s, u)
 }
 
 func createSimpleTemplate(s *session, u *user, name, path string) *template {
