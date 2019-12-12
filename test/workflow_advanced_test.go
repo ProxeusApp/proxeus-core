@@ -36,6 +36,9 @@ func TestWorkflowAdvanced(t *testing.T) {
 	updateWorkflow(s, w1)
 	updateWorkflow(s, w2)
 
+	exported := exportWorkflow(s, w2)
+	importWorkflowNewUser(t, exported, w2)
+
 	documentId := executeWorkflow(s, w2)
 
 	testDocumentActions(s, documentId)
