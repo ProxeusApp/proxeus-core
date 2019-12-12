@@ -63,10 +63,6 @@ fmt:
 test: generate 
 	go test  ./main/... ./sys/... 
 
-.PHONY:test-payment
-test-payment: generate
-	go test ./main/handlers/payment  ./main/handlers/blockchain
-
 .PHONY: test-api
 test-api: generate
 	go clean -testcache && go test ./test
