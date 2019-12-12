@@ -27,6 +27,7 @@ func TestForm(t *testing.T) {
 
 	deleteForm(s, f1.ID, false)
 	deleteForm(s, f2.ID, true)
+	deleteUser(s, u)
 }
 
 func createForm(s *session, u *user, name string) *form {

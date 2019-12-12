@@ -33,6 +33,7 @@ func TestWorkflow(t *testing.T) {
 
 	deleteWorkflow(s, w1.ID, false)
 	deleteWorkflow(s, w2.ID, true)
+	deleteUser(s, u)
 }
 
 func createWorkflow(s *session, u *user, name string) *workflow {

@@ -42,6 +42,7 @@ func TestWorkflowAdvanced(t *testing.T) {
 
 	deleteWorkflow(s, w2.ID, false)
 	deleteWorkflow(s, w1.ID, true)
+	deleteUser(s, u)
 }
 
 func advancedWorkflowData(t *testing.T, data string, dataValues map[string]string) map[string]interface{} {
