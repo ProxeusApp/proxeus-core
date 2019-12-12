@@ -28,6 +28,7 @@ init:
 	go install golang.org/x/tools/cmd/goimports
 	go install github.com/asticode/go-bindata/go-bindata
 	go install github.com/golang/mock/mockgen
+	go install github.com/wadey/gocovmerge
 
 .PHONY: ui
 ui:
@@ -70,11 +71,14 @@ test-api: generate
 .PHONY: coverage
 coverpkg=$(filter-out %/assets %/mock, $(shell go list ./main/... ./sys/...))
 coverage: generate
-	go test -v -tags coverage -coverprofile artifacts/cover.out -coverpkg="$(coverpkg)" ./main
+	go test  -coverprofile artifacts/cover_unittests.out -coverpkg="$(coverpkg)" ./main/... ./sys/...
+	go test -v -tags coverage -coverprofile artifacts/cover_integration.out -coverpkg="$(coverpkg)" ./main
 
 .PHONY: print-coverage
 print-coverage:
-	go tool cover -html artifacts/cover.out
+	gocovmerge artifacts/cover_unittests.out artifacts/cover_integration.out > artifacts/cover_merged.out
+	go tool cover -func artifacts/cover_merged.out
+	go tool cover -html artifacts/cover_merged.out
 
 .PHONY: clean
 clean:
