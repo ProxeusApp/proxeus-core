@@ -8,6 +8,7 @@ require (
 	github.com/ajg/form v1.5.1 // indirect
 	github.com/aristanetworks/goarista v0.0.0-20190522184417-004c259faaeb // indirect
 	github.com/asdine/storm v0.0.0-20190418133842-e0f77eada154
+	github.com/asticode/go-bindata v1.0.0 // indirect
 	github.com/btcsuite/btcd v0.0.0-20190523000118-16327141da8c // indirect
 	github.com/c2h5oh/datasize v0.0.0-20171227191756-4eba002a5eae
 	github.com/cespare/cp v1.1.1 // indirect
