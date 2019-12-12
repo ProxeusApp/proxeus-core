@@ -29,7 +29,7 @@ func TestUnattendedWorkflow(t *testing.T) {
 
 	data := map[string]interface{}{}
 	i := 0
-	for k, _ := range schema {
+	for k := range schema {
 		data[k] = fmt.Sprintf("value-%d", i)
 		i++
 	}
