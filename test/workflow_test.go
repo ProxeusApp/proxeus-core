@@ -29,7 +29,6 @@ func TestWorkflow(t *testing.T) {
 	tpl := createTemplate(s, u, "template-"+s.id)
 	w1.Data = simpleWorkflowData(s.id, f.ID, tpl.ID)
 	updateWorkflow(s, w1)
-	exportWorkflow(s, w1)
 
 	deleteWorkflow(s, w1.ID, false)
 	deleteWorkflow(s, w2.ID, true)
@@ -121,10 +120,6 @@ func updateWorkflow(s *session, f *workflow) *workflow {
 		JSON().Object().ContainsMap(expected)
 
 	return f
-}
-
-func exportWorkflow(s *session, f *workflow) {
-	s.e.GET("/api/workflow/export").WithQuery("contains", f.Name).WithJSON(f).Expect().Status(http.StatusOK)
 }
 
 func deleteWorkflow(s *session, id string, expectEmptyList bool) {
