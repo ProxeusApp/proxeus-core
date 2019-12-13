@@ -6,12 +6,10 @@ package mock
 
 import (
 	io "io"
-	os "os"
 	reflect "reflect"
 
 	storm "github.com/ProxeusApp/proxeus-core/sys/db/storm"
 	model "github.com/ProxeusApp/proxeus-core/sys/model"
-	storm0 "github.com/asdine/storm"
 	gomock "github.com/golang/mock/gomock"
 )
 
@@ -36,20 +34,6 @@ func NewMockUserDBInterface(ctrl *gomock.Controller) *MockUserDBInterface {
 // EXPECT returns an object that allows the caller to indicate expected use
 func (m *MockUserDBInterface) EXPECT() *MockUserDBInterfaceMockRecorder {
 	return m.recorder
-}
-
-// GetDB mocks base method
-func (m *MockUserDBInterface) GetDB() *storm0.DB {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetDB")
-	ret0, _ := ret[0].(*storm0.DB)
-	return ret0
-}
-
-// GetDB indicates an expected call of GetDB
-func (mr *MockUserDBInterfaceMockRecorder) GetDB() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetDB", reflect.TypeOf((*MockUserDBInterface)(nil).GetDB))
 }
 
 // GetBaseFilePath mocks base method
@@ -198,49 +182,6 @@ func (mr *MockUserDBInterfaceMockRecorder) PutPw(id, pass interface{}) *gomock.C
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "PutPw", reflect.TypeOf((*MockUserDBInterface)(nil).PutPw), id, pass)
 }
 
-// ImportUser mocks base method
-func (m *MockUserDBInterface) ImportUser(auth model.Authorization, item *model.User) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ImportUser", auth, item)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// ImportUser indicates an expected call of ImportUser
-func (mr *MockUserDBInterfaceMockRecorder) ImportUser(auth, item interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ImportUser", reflect.TypeOf((*MockUserDBInterface)(nil).ImportUser), auth, item)
-}
-
-// SetTinyUserIconBase64 mocks base method
-func (m *MockUserDBInterface) SetTinyUserIconBase64(item *model.User) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SetTinyUserIconBase64", item)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// SetTinyUserIconBase64 indicates an expected call of SetTinyUserIconBase64
-func (mr *MockUserDBInterfaceMockRecorder) SetTinyUserIconBase64(item interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetTinyUserIconBase64", reflect.TypeOf((*MockUserDBInterface)(nil).SetTinyUserIconBase64), item)
-}
-
-// TinyUserIconBase64 mocks base method
-func (m *MockUserDBInterface) TinyUserIconBase64(reader *os.File) (string, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "TinyUserIconBase64", reader)
-	ret0, _ := ret[0].(string)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// TinyUserIconBase64 indicates an expected call of TinyUserIconBase64
-func (mr *MockUserDBInterfaceMockRecorder) TinyUserIconBase64(reader interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "TinyUserIconBase64", reflect.TypeOf((*MockUserDBInterface)(nil).TinyUserIconBase64), reader)
-}
-
 // GetProfilePhoto mocks base method
 func (m *MockUserDBInterface) GetProfilePhoto(auth model.Authorization, id string, writer io.Writer) (int64, error) {
 	m.ctrl.T.Helper()
@@ -254,21 +195,6 @@ func (m *MockUserDBInterface) GetProfilePhoto(auth model.Authorization, id strin
 func (mr *MockUserDBInterfaceMockRecorder) GetProfilePhoto(auth, id, writer interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetProfilePhoto", reflect.TypeOf((*MockUserDBInterface)(nil).GetProfilePhoto), auth, id, writer)
-}
-
-// ReadPhoto mocks base method
-func (m *MockUserDBInterface) ReadPhoto(u *model.User) (*os.File, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ReadPhoto", u)
-	ret0, _ := ret[0].(*os.File)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// ReadPhoto indicates an expected call of ReadPhoto
-func (mr *MockUserDBInterfaceMockRecorder) ReadPhoto(u interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ReadPhoto", reflect.TypeOf((*MockUserDBInterface)(nil).ReadPhoto), u)
 }
 
 // PutProfilePhoto mocks base method
@@ -317,20 +243,6 @@ func (mr *MockUserDBInterfaceMockRecorder) Export(imex interface{}, id ...interf
 	mr.mock.ctrl.T.Helper()
 	varargs := append([]interface{}{imex}, id...)
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Export", reflect.TypeOf((*MockUserDBInterface)(nil).Export), varargs...)
-}
-
-// CpProfilePhoto mocks base method
-func (m *MockUserDBInterface) CpProfilePhoto(imex *storm.Imex, from, to storm.UserDBInterface, item *model.User) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CpProfilePhoto", imex, from, to, item)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// CpProfilePhoto indicates an expected call of CpProfilePhoto
-func (mr *MockUserDBInterfaceMockRecorder) CpProfilePhoto(imex, from, to, item interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CpProfilePhoto", reflect.TypeOf((*MockUserDBInterface)(nil).CpProfilePhoto), imex, from, to, item)
 }
 
 // APIKey mocks base method
