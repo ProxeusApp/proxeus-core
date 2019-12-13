@@ -180,17 +180,6 @@ func CompName(comp map[string]interface{}) (string, bool) {
 	return "", false
 }
 
-func CompValidateFile(comp map[string]interface{}) (map[string]interface{}, bool) {
-	validateMap, ok := CompValidate(comp)
-	if ok {
-		fileMap, ok := validateMap["file"].(map[string]interface{})
-		if ok {
-			return fileMap, true
-		}
-	}
-	return nil, false
-}
-
 func CompValidate(comp map[string]interface{}) (validate.Rules, bool) {
 	if comp != nil {
 		validMap, ok := comp["validate"].(map[string]interface{})

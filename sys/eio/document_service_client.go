@@ -284,43 +284,6 @@ func (ds *DocumentServiceClient) DownloadExtension(arch string) (resp *http.Resp
 	return
 }
 
-//Download the how it works document.
-func (ds *DocumentServiceClient) DownloadHowItWorksPDF(writer io.Writer) error {
-	return ds.downloadPDF("how-it-works", false, writer)
-}
-
-//Download the example document.
-func (ds *DocumentServiceClient) DownloadExamplePDF(raw bool, writer io.Writer) error {
-	return ds.downloadPDF("example", raw, writer)
-}
-
-func (ds *DocumentServiceClient) downloadPDF(method string, raw bool, writer io.Writer) error {
-	rp := ""
-	if raw {
-		rp = "?raw"
-	}
-	req, err := http.NewRequest("GET", ds.makeUrl(method)+rp, nil)
-	if err != nil {
-		return err
-	}
-	client := &http.Client{}
-	client.Timeout = time.Duration(time.Second * 10)
-	resp, err := client.Do(req)
-	if err != nil {
-		return err
-	}
-	if resp.StatusCode != 200 {
-		return os.ErrInvalid
-	}
-	err = checkGzip(resp)
-	if err != nil {
-		return err
-	}
-	_, err = io.Copy(writer, resp.Body)
-	resp.Body.Close()
-	return err
-}
-
 func checkGzip(resp *http.Response) (err error) {
 	switch resp.Header.Get("Content-Encoding") {
 	case "gzip":
