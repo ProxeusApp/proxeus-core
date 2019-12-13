@@ -5,6 +5,19 @@ import (
 	"testing"
 )
 
+func TestImportExport(t *testing.T) {
+	s := new(t, serverURL)
+	u := registerTestUser(s)
+	login(s, u)
+
+	b1 := s.e.GET("api/export").WithQueryString("include=UserData").
+		Expect().Body().Raw()
+	s.e.POST("api/import").WithQueryString("skipExisting=false").WithBytes([]byte(b1)).
+		Expect().Status(http.StatusOK)
+
+	deleteUser(s, u)
+}
+
 func exportWorkflow(s *session, w *workflow) []byte {
 	// export by name
 	b1 := s.e.GET("api/workflow/export").WithQueryString("include=workflow&contains=" + w.Name).
