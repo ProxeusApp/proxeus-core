@@ -32,11 +32,11 @@ init:
 
 .PHONY: ui
 ui:
-	make -C ui
+	$(MAKE) -C ui
 
 .PHONY: ui-dev
 ui-dev:
-	make -C ui serve-main-hosted
+	$(MAKE) -C ui serve-main-hosted
 
 .PHONY: generate
 generate: $(bindata) $(mocks)
@@ -95,9 +95,11 @@ run:
 
 main/handlers/assets/bindata.go: $(wildcard ./ui/core/dist/**)
 	go-bindata ${BINDATA_OPTS} -pkg assets -o ./main/handlers/assets/bindata.go -prefix ./ui/core/dist ./ui/core/dist/...
+	goimports -w $@
 
 test/bindata.go: $(wildcard ./test/assets/**)
 	go-bindata ${BINDATA_OPTS} -pkg test -o ./test/bindata.go ./test/assets
+	goimports -w $@
 
 .SECONDEXPANSION: # See https://www.gnu.org/software/make/manual/make.html#Secondary-Expansion
 $(mocks): $$(patsubst %_mock.go, %.go, $$(subst /mock,, $$@))
