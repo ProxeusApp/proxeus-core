@@ -7,16 +7,15 @@ import (
 	"github.com/ethereum/go-ethereum/core/types"
 )
 
-type (
-	xesAdapter struct {
-		XESContractAddress string
-		XESABI             abi.ABI
-	}
-	Adapter interface {
-		GetContractAddress() string
-		EventFromLog(out interface{}, lg *types.Log, eventType string) error
-	}
-)
+type xesAdapter struct {
+	XESContractAddress string
+	XESABI             abi.ABI
+}
+
+type Adapter interface {
+	GetContractAddress() string
+	EventFromLog(out interface{}, lg *types.Log, eventType string) error
+}
 
 func NewAdapter(XESContractAddress string, XESABI abi.ABI) *xesAdapter {
 	me := &xesAdapter{}

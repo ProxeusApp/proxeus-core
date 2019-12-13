@@ -21,11 +21,7 @@ type WorkflowDBInterface interface {
 	Get(auth model.Authorization, id string) (*model.WorkflowItem, error)
 	GetList(auth model.Authorization, id []string) ([]*model.WorkflowItem, error)
 	Put(auth model.Authorization, item *model.WorkflowItem) error
-	ImportWorkflowItem(auth model.Authorization, item *model.WorkflowItem) error
-	GetDB() *storm.DB                                                                 // TODO(emeka) remove
-	UpdateWF(auth model.Authorization, item *model.WorkflowItem, tx storm.Node) error // TODO(emeka) remove
 	Delete(auth model.Authorization, id string) error
-	SaveOnly(item *model.WorkflowItem, tx storm.Node) error // TODO(emeka) remove
 	Import(imex *Imex) error
 	Export(imex *Imex, id ...string) error
 	Close() error
@@ -74,7 +70,7 @@ func NewWorkflowDB(dir string) (*WorkflowDB, error) {
 	return udb, nil
 }
 
-func (me *WorkflowDB) GetDB() *storm.DB {
+func (me *WorkflowDB) getDB() *storm.DB {
 	return me.db
 }
 
@@ -172,10 +168,6 @@ func (me *WorkflowDB) Put(auth model.Authorization, item *model.WorkflowItem) er
 	return me.put(auth, item, true)
 }
 
-func (me *WorkflowDB) ImportWorkflowItem(auth model.Authorization, item *model.WorkflowItem) error {
-	return me.put(auth, item, false)
-}
-
 func (me *WorkflowDB) put(auth model.Authorization, item *model.WorkflowItem, updated bool) error {
 	if item == nil {
 		return os.ErrInvalid
@@ -194,7 +186,7 @@ func (me *WorkflowDB) put(auth model.Authorization, item *model.WorkflowItem, up
 		defer tx.Rollback()
 		item.Created = time.Now()
 		item.Updated = time.Now()
-		return me.UpdateWF(auth, item, tx)
+		return me.updateWF(auth, item, tx)
 	} else {
 		tx, err := me.db.Begin(true)
 		if err != nil {
@@ -211,7 +203,7 @@ func (me *WorkflowDB) put(auth model.Authorization, item *model.WorkflowItem, up
 				item.Permissions = model.Permissions{Owner: auth.UserID()}
 				item.Updated = time.Now()
 			}
-			return me.UpdateWF(auth, item, tx)
+			return me.updateWF(auth, item, tx)
 		}
 		if err != nil {
 			return err
@@ -221,15 +213,15 @@ func (me *WorkflowDB) put(auth model.Authorization, item *model.WorkflowItem, up
 			if updated {
 				item.Updated = time.Now()
 			}
-			return me.UpdateWF(auth, item, tx)
+			return me.updateWF(auth, item, tx)
 		} else {
 			return model.ErrAuthorityMissing
 		}
 	}
 }
 
-func (me *WorkflowDB) UpdateWF(auth model.Authorization, item *model.WorkflowItem, tx storm.Node) error {
-	err := me.SaveOnly(item, tx)
+func (me *WorkflowDB) updateWF(auth model.Authorization, item *model.WorkflowItem, tx storm.Node) error {
+	err := me.saveOnly(item, tx)
 	if err != nil {
 		return err
 	}
@@ -261,7 +253,7 @@ func (me *WorkflowDB) Delete(auth model.Authorization, id string) error {
 	return tx.Commit()
 }
 
-func (me *WorkflowDB) SaveOnly(item *model.WorkflowItem, tx storm.Node) error {
+func (me *WorkflowDB) saveOnly(item *model.WorkflowItem, tx storm.Node) error {
 	if item.Data != nil {
 		err := tx.Set(workflowHeavyData, item.ID, item.Data)
 		if err != nil {
@@ -290,7 +282,7 @@ func (me *WorkflowDB) Import(imex *Imex) error {
 				}
 				item.Permissions.UpdateUserID(imex.locatedSameUserWithDifferentID)
 
-				err = imex.sysDB.Workflow.ImportWorkflowItem(imex.auth, item)
+				err = me.put(imex.auth, item, false)
 				if err != nil {
 					imex.processedEntry(imexWorkflow, item.ID, err)
 					continue
@@ -335,13 +327,13 @@ func (me *WorkflowDB) Export(imex *Imex, id ...string) error {
 		items, err := me.List(imex.auth, "", map[string]interface{}{"include": id, "index": i, "limit": 1000, "metaOnly": false})
 		if err == nil && len(items) > 0 {
 			var tx storm.Node
-			tx, err = imex.db.Workflow.GetDB().Begin(true)
+			tx, err = me.getDB().Begin(true)
 			if err != nil {
 				return err
 			}
 			for _, item := range items {
 				if !imex.isProcessed(imexWorkflow, item.ID) {
-					err = imex.db.Workflow.SaveOnly(item, tx)
+					err = me.saveOnly(item, tx)
 					if err != nil {
 						imex.processedEntry(imexWorkflow, item.ID, err)
 						continue
