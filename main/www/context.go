@@ -2,7 +2,6 @@ package www
 
 import (
 	"encoding/base64"
-	"errors"
 	"regexp"
 	"strings"
 
@@ -62,23 +61,6 @@ func (me *Context) I18n() *WebI18n {
 	}
 	me.webI18n = NewI18n(me.System().DB.I18n, me)
 	return me.webI18n
-}
-
-var errInvalidRole = errors.New("the role of the user did not match")
-
-func (me *Context) EnsureUserRole(role model.Role) error {
-	sess := me.Session(false)
-	if sess == nil {
-		return errInvalidRole
-	}
-	user, err := me.System().DB.User.Get(sess, sess.UserID())
-	if err != nil {
-		return errInvalidRole
-	}
-	if !user.IsGrantedFor(role) {
-		return errInvalidRole
-	}
-	return nil
 }
 
 // Extract the session token from the header

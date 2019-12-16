@@ -7,6 +7,12 @@ import (
 	"strings"
 	"time"
 
+	"github.com/ProxeusApp/proxeus-core/main/handlers/blockchain"
+
+	cfg "github.com/ProxeusApp/proxeus-core/main/config"
+	"github.com/ethereum/go-ethereum/common"
+	"github.com/ethereum/go-ethereum/core/types"
+
 	uuid "github.com/satori/go.uuid"
 
 	"github.com/ProxeusApp/proxeus-core/sys/db/storm"
@@ -273,4 +279,30 @@ func ListPayments(e echo.Context) error {
 func getUser(c *www.Context) (*model.User, error) {
 	sess := c.Session(false)
 	return c.System().DB.User.Get(sess, sess.UserID())
+}
+
+func PutTestPayment(e echo.Context) error {
+	c := e.(*www.Context)
+	if !c.System().TestMode {
+		return echo.ErrBadRequest
+	}
+	var req struct {
+		TxHash string
+		From   string
+		To     string
+	}
+	c.Bind(&req)
+	l := types.Log{
+		Address: common.HexToAddress(cfg.Config.XESContractAddress),
+		Topics: []common.Hash{
+			common.HexToHash("0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef"),
+			common.HexToHash("0x000000000000000000000000" + req.From[2:]),
+			common.HexToHash("0x000000000000000000000000" + req.To[2:]),
+		},
+		TxHash: common.HexToHash(req.TxHash),
+	}
+	l.Data = []byte{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x0d, 0xe0, 0xb6, 0xb3, 0xa7, 0x64, 0x00, 0x00}
+
+	blockchain.TestChannelPayment <- l
+	return nil
 }

@@ -201,6 +201,9 @@ func MainHostedAPI(e *echo.Echo, s *www.Security, version string) {
 		{GET, PUBLIC, "/api/admin/template/ide/download/:id", template_ide.IdeGetDownloadHandler},     // Need session
 		{GET, CREATOR, "/api/admin/template/ide/tmplAssistanceDownload", template_ide.IdeGetTmpAssDownload},
 		{GET, PUBLIC, "/api/admin/template/ide/form", template_ide.IdeFormHandler}, // Need session
+
+		// test
+		{PUT, PUBLIC, "/api/test/payments", payment.PutTestPayment},
 	}
 
 	addEndpoint := func(r r, ms ...echo.MiddlewareFunc) {
