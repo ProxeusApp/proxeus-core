@@ -20,5 +20,13 @@ func List(nodeType string) *workflow.Node {
 		Detail: "Retrieves CHF/XES price",
 		Type:   "priceretriever",
 	}
+
+	repositories["ibmsender"] = &workflow.Node{
+		ID:     "1234123-1234123",
+		Name:   "IBM Sender",
+		Detail: "sends all workflow data to an IBM service",
+		Type:   "ibmsender",
+	}
+
 	return repositories[nodeType]
 }

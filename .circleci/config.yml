@@ -140,6 +140,24 @@ jobs:
             echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
             docker push $CONTAINER_IMAGE_NAME
 
+  publish-stage:
+    executor: docker-publisher
+    steps:
+      - attach_workspace:
+          at: /tmp/workspace
+      - setup_remote_docker
+      - run:
+          name: Load archived Docker image
+          command: docker load -i /tmp/workspace/image.tar
+      - run:
+          name: Tag docker image
+          command: docker tag $CONTAINER_IMAGE_NAME $CONTAINER_IMAGE_NAME:stage
+      - run:
+          name: Publish Docker Image to Docker Hub
+          command: |
+            echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
+            docker push $CONTAINER_IMAGE_NAME:stage
+
   publish-demo:
     executor: docker-publisher
     steps:
@@ -158,8 +176,7 @@ jobs:
             echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
             docker push $CONTAINER_IMAGE_NAME:demo
 
-
-  publish-stage:
+  publish-handelsregister:
     executor: docker-publisher
     steps:
       - attach_workspace:
@@ -170,12 +187,12 @@ jobs:
           command: docker load -i /tmp/workspace/image.tar
       - run:
           name: Tag docker image
-          command: docker tag $CONTAINER_IMAGE_NAME $CONTAINER_IMAGE_NAME:stage
+          command: docker tag $CONTAINER_IMAGE_NAME $CONTAINER_IMAGE_NAME:handelsregister
       - run:
           name: Publish Docker Image to Docker Hub
           command: |
             echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
-            docker push $CONTAINER_IMAGE_NAME:stage
+            docker push $CONTAINER_IMAGE_NAME:handelsregister
 
 workflows:
   version: 2
@@ -228,6 +245,19 @@ workflows:
       - publish-demo:
           requires:
             - approve-demo
+          filters:
+            branches:
+              only: master
+      - approve-handelsregister:
+          type: approval
+          requires:
+            - build-docker-image
+          filters:
+            branches:
+              only: master
+      - publish-handelsregister:
+          requires:
+            - approve-handelsregister
           filters:
             branches:
               only: master

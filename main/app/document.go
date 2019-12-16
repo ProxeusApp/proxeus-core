@@ -26,9 +26,9 @@ import (
 //TODO replace DataCluster with file.MapIO. DataCluster was meant to be used for guest users only to prevent from storing data that will be never used again after the session is expired
 type (
 	DocumentFlowInstance struct {
-		WFID             string            `json:"WFID"`
-		DataID           string            `json:"dataID"`
-		DataCluster      *form.DataManager `json:"dataCluster"`
+		WFID             string           `json:"WFID"`
+		DataID           string           `json:"dataID"`
+		DataCluster      form.DataManager `json:"dataCluster"`
 		wfContext        *workflow.Engine
 		system           *sys.System
 		statusResult     *Status
@@ -130,6 +130,11 @@ func (me *DocumentFlowInstance) init(wfd *workflow.Workflow, state []workflow.St
 			"template":       {InitImplFunc: me.newDocTmplNodeImpl, Background: true},
 		},
 	}
+
+	if os.Getenv("FF_IBM_SENDER_ENABLED") == "true" {
+		conf.NodeImpl["ibmsender"] = &workflow.NodeDef{InitImplFunc: me.newIBMSenderNodeImpl, Background: true}
+	}
+
 	var err error
 	me.wfContext, err = workflow.New(wfd, conf)
 	return err
@@ -203,6 +208,10 @@ func (me *DocumentFlowInstance) newFormNodeImpl(n *workflow.Node) (workflow.Node
 
 func (me *DocumentFlowInstance) newDocTmplNodeImpl(n *workflow.Node) (workflow.NodeIF, error) {
 	return &DocTmplNodeImpl{ctx: me}, nil
+}
+
+func (me *DocumentFlowInstance) newIBMSenderNodeImpl(n *workflow.Node) (workflow.NodeIF, error) {
+	return &IBMSenderNodeImpl{ctx: me}, nil
 }
 
 func (me *DocumentFlowInstance) getDataWithFiles() (d map[string]interface{}, files []string) {
