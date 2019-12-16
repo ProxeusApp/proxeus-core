@@ -8,25 +8,39 @@ import (
 	"github.com/ProxeusApp/proxeus-core/sys/file"
 )
 
-type DataManager struct {
+type DataManager interface {
+	OnLoad()
+	GetDataFile(formID, name string) (*file.IO, error)
+	GetData(formID string) (map[string]interface{}, error)
+	GetDataByPath(formID, dataPath string) (interface{}, error)
+	Clear(formID string) error
+	GetAllData() (dat map[string]interface{}, err error)
+	GetAllDataFilePathNameOnly() (dat map[string]interface{}, files []string)
+	PutData(formID string, dat map[string]interface{}) error
+	PutDataWithoutMerge(formID string, dat map[string]interface{}) error
+	PutDataFile(formID, name string, f file.Meta, reader io.Reader) (written int64, err error)
+	Close() (err error)
+}
+
+type dataManager struct {
 	sync.RWMutex
 	DataCluster   map[string]file.MapIO
 	BaseFilePath  string
 	madeFileInfos bool
 }
 
-func NewDataManager(baseFilePath string) *DataManager {
-	return &DataManager{
+func NewDataManager(baseFilePath string) *dataManager {
+	return &dataManager{
 		BaseFilePath: baseFilePath,
 		DataCluster:  make(map[string]file.MapIO),
 	}
 }
 
-func (me *DataManager) OnLoad() {
+func (me *dataManager) OnLoad() {
 	me.mkFileInfos()
 }
 
-func (me *DataManager) GetDataFile(formID, name string) (*file.IO, error) {
+func (me *dataManager) GetDataFile(formID, name string) (*file.IO, error) {
 	if formID != "" && name != "" {
 		me.RLock()
 		if mapIO, ok := me.DataCluster[formID]; ok {
@@ -42,7 +56,7 @@ func (me *DataManager) GetDataFile(formID, name string) (*file.IO, error) {
 	return nil, os.ErrInvalid
 }
 
-func (me *DataManager) GetData(formID string) (map[string]interface{}, error) {
+func (me *dataManager) GetData(formID string) (map[string]interface{}, error) {
 	if formID != "" {
 		me.RLock()
 		defer me.RUnlock()
@@ -51,7 +65,7 @@ func (me *DataManager) GetData(formID string) (map[string]interface{}, error) {
 	return nil, os.ErrInvalid
 }
 
-func (me *DataManager) Clear(formID string) error {
+func (me *dataManager) Clear(formID string) error {
 	if formID != "" {
 		me.RLock()
 		defer me.RUnlock()
@@ -61,7 +75,7 @@ func (me *DataManager) Clear(formID string) error {
 	return os.ErrInvalid
 }
 
-func (me *DataManager) GetDataByPath(formID, dataPath string) (interface{}, error) {
+func (me *dataManager) GetDataByPath(formID, dataPath string) (interface{}, error) {
 	if formID != "" {
 		me.RLock()
 		defer me.RUnlock()
@@ -85,7 +99,7 @@ returns:
 	}
 }
 */
-func (me *DataManager) GetAllData() (dat map[string]interface{}, err error) {
+func (me *dataManager) GetAllData() (dat map[string]interface{}, err error) {
 	me.RLock()
 	defer me.RUnlock()
 	if len(me.DataCluster) > 0 {
@@ -126,7 +140,7 @@ files = [
 	...
 ]
 */
-func (me *DataManager) GetAllDataFilePathNameOnly() (dat map[string]interface{}, files []string) {
+func (me *dataManager) GetAllDataFilePathNameOnly() (dat map[string]interface{}, files []string) {
 	me.RLock()
 	defer me.RUnlock()
 	if len(me.DataCluster) > 0 {
@@ -148,7 +162,7 @@ func (me *DataManager) GetAllDataFilePathNameOnly() (dat map[string]interface{},
 	return
 }
 
-func (me *DataManager) PutData(formID string, dat map[string]interface{}) error {
+func (me *dataManager) PutData(formID string, dat map[string]interface{}) error {
 	if formID != "" {
 		me.Lock()
 		if mapIO, ok := me.DataCluster[formID]; ok {
@@ -164,7 +178,7 @@ func (me *DataManager) PutData(formID string, dat map[string]interface{}) error 
 	return os.ErrInvalid
 }
 
-func (me *DataManager) PutDataWithoutMerge(formID string, dat map[string]interface{}) error {
+func (me *dataManager) PutDataWithoutMerge(formID string, dat map[string]interface{}) error {
 	if formID != "" {
 		me.Lock()
 		me.DataCluster[formID] = dat
@@ -174,7 +188,7 @@ func (me *DataManager) PutDataWithoutMerge(formID string, dat map[string]interfa
 	return os.ErrInvalid
 }
 
-func (me *DataManager) PutDataFile(formID, name string, f file.Meta, reader io.Reader) (written int64, err error) {
+func (me *dataManager) PutDataFile(formID, name string, f file.Meta, reader io.Reader) (written int64, err error) {
 	var existingFileInfo *file.IO
 	existingFileInfo, err = me.GetDataFile(formID, name)
 	me.Lock()
@@ -198,7 +212,7 @@ func (me *DataManager) PutDataFile(formID, name string, f file.Meta, reader io.R
 	return
 }
 
-func (me *DataManager) mkFileInfos() {
+func (me *dataManager) mkFileInfos() {
 	if !me.madeFileInfos {
 		for _, mapIO := range me.DataCluster {
 			mapIO.MakeFileInfos(me.BaseFilePath)
@@ -207,6 +221,6 @@ func (me *DataManager) mkFileInfos() {
 	}
 }
 
-func (me *DataManager) Close() (err error) {
+func (me *dataManager) Close() (err error) {
 	return nil
 }

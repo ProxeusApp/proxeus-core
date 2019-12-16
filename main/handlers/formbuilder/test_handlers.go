@@ -180,8 +180,8 @@ func PostFileIdFieldName(e echo.Context) error {
 	return c.NoContent(http.StatusBadRequest)
 }
 
-func GetDataManager(sess *session.Session) *form.DataManager {
-	var dc *form.DataManager
+func GetDataManager(sess *session.Session) form.DataManager {
+	var dc form.DataManager
 	sess.Get("testDC", &dc)
 	if dc == nil {
 		dc = form.NewDataManager(sess.SessionDir())
