@@ -17,19 +17,20 @@ import (
 	strm "github.com/asdine/storm"
 )
 
-type (
-	listener struct {
-		logs            chan types.Log
-		ethWebSocketURL string
-		ethURL          string
-		sub             ethereum.Subscription
-	}
-	PaymentListener struct {
-		listener
-		workflowPaymentsDB storm.WorkflowPaymentsDBInterface
-		xesAdapter         Adapter
-	}
-)
+type listener struct {
+	logs            chan types.Log
+	ethWebSocketURL string
+	ethURL          string
+	sub             ethereum.Subscription
+}
+
+type PaymentListener struct {
+	listener
+	workflowPaymentsDB storm.WorkflowPaymentsDBInterface
+	xesAdapter         Adapter
+}
+
+var TestChannelPayment chan types.Log
 
 func NewPaymentListener(xesAdapter Adapter, ethWebSocketURL, ethURL string, workflowPaymentsDB storm.WorkflowPaymentsDBInterface) *PaymentListener {
 	me := &PaymentListener{}
@@ -38,6 +39,7 @@ func NewPaymentListener(xesAdapter Adapter, ethWebSocketURL, ethURL string, work
 	me.ethURL = ethURL
 	me.workflowPaymentsDB = workflowPaymentsDB
 	me.logs = make(chan types.Log, 200)
+	TestChannelPayment = me.logs
 	return me
 }
 

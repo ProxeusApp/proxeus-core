@@ -1,10 +1,14 @@
 package test
 
 import (
+	"crypto/ecdsa"
+	"encoding/hex"
 	"fmt"
 	"net/http"
 	"os"
 	"testing"
+
+	"github.com/ethereum/go-ethereum/crypto"
 
 	"github.com/ProxeusApp/proxeus-core/main/handlers/api"
 	uuid "github.com/satori/go.uuid"
@@ -17,6 +21,8 @@ type user struct {
 	uuid     string
 	username string
 	password string
+
+	ethPrivateKey *ecdsa.PrivateKey
 }
 
 type session struct {
@@ -93,6 +99,34 @@ func login(s *session, u *user) {
 	me.ValueEqual("email", u.username)
 
 	u.uuid = me.Value("id").String().Raw()
+}
+
+func setEthKey(s *session, u *user) {
+	challenge := s.e.GET("/api/challenge").Expect().Status(http.StatusOK).Body().Raw()
+	var err error
+	u.ethPrivateKey, err = crypto.GenerateKey()
+	if err != nil {
+		s.t.Error(err)
+	}
+
+	sig, err := crypto.Sign(signHash(challenge), u.ethPrivateKey)
+	if err != nil {
+		s.t.Error(err)
+	}
+	sig[64] += 27
+
+	s.e.POST("/api/change/bcaddress").WithJSON(
+		struct {
+			Signature string `json:"signature"`
+		}{Signature: "0x" + hex.EncodeToString(sig)}).Expect().Status(http.StatusOK)
+
+	s.e.GET("/api/me").Expect().Status(http.StatusOK).JSON().
+		Path("$.etherPK").String().Length().Gt(10)
+}
+
+func signHash(data string) []byte {
+	msg := fmt.Sprintf("\x19Ethereum Signed Message:\n%d%s", len(data), data)
+	return crypto.Keccak256([]byte(msg))
 }
 
 func logout(s *session) {
