@@ -26,22 +26,6 @@ func IsReadGrantedFor(auth model.Authorization, includeGrant bool) q.Matcher {
 	return m
 }
 
-func IsWriteGrantedFor(auth model.Authorization) q.Matcher {
-	if auth.AccessRights().IsGrantedFor(model.ROOT) {
-		return q.True()
-	}
-	m := q.Or(
-		q.Eq("Owner", auth.UserID()),
-		//PublicByIDWrite,
-		q.NewFieldMatcher("Grant", &GrantMatcher{Auth: auth, CheckWrite: true}),
-		q.NewFieldMatcher("GroupAndOthers", &GroupAndOthersMatcher{Auth: auth, CheckWrite: true}),
-	)
-	return m
-}
-
-var PublicByIDRead = q.NewFieldMatcher("PublicByID", &PublicByIDMatcher{CheckWrite: false})
-var PublicByIDWrite = q.NewFieldMatcher("PublicByID", &PublicByIDMatcher{CheckWrite: true})
-
 type PublicByIDMatcher struct {
 	CheckWrite bool //false checks for read perm
 }
