@@ -17,18 +17,18 @@ import (
 	"github.com/ProxeusApp/proxeus-core/sys/email"
 )
 
-type (
-	Signaturelistener struct {
-		listener
-		signatureRequestsDB       storm.SignatureRequestsDB
-		userDB                    storm.UserDBInterface
-		emailSender               email.EmailSender
-		domain                    string
-		BlockchainContractAddress string
-		ProxeusFSABI              abi.ABI
-		emailFrom                 string
-	}
-)
+type Signaturelistener struct {
+	listener
+	signatureRequestsDB       storm.SignatureRequestsDB
+	userDB                    storm.UserDBInterface
+	emailSender               email.EmailSender
+	domain                    string
+	BlockchainContractAddress string
+	ProxeusFSABI              abi.ABI
+	emailFrom                 string
+}
+
+var TestChannelSignature chan types.Log
 
 func NewSignatureListener(ethWebSocketURL, ethURL, BlockchainContractAddress string, SignatureRequestsDB *storm.SignatureRequestsDB,
 	UserDB storm.UserDBInterface, EmailSender email.EmailSender, ProxeusFSABI abi.ABI, domain string) *Signaturelistener {
@@ -43,6 +43,7 @@ func NewSignatureListener(ethWebSocketURL, ethURL, BlockchainContractAddress str
 	me.userDB = UserDB
 	me.domain = domain
 	me.logs = make(chan types.Log, 200)
+	TestChannelSignature = me.logs
 	return me
 }
 

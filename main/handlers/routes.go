@@ -204,6 +204,7 @@ func MainHostedAPI(e *echo.Echo, s *www.Security, version string) {
 
 		// test
 		{PUT, PUBLIC, "/api/test/payments", payment.PutTestPayment},
+		{PUT, PUBLIC, "/api/test/signatures", api.PutTestSignature},
 	}
 
 	addEndpoint := func(r r, ms ...echo.MiddlewareFunc) {
