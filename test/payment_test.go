@@ -82,7 +82,6 @@ func canStartWorkflow(s *session, w *workflow) {
 }
 
 func putMockedPayment(s *session, p *model.WorkflowPaymentItem) {
-
 	req := struct {
 		TxHash string
 		From   string

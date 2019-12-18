@@ -23,6 +23,7 @@ type user struct {
 	password string
 
 	ethPrivateKey *ecdsa.PrivateKey
+	EthereumAddr  string
 }
 
 type session struct {
@@ -120,8 +121,24 @@ func setEthKey(s *session, u *user) {
 			Signature string `json:"signature"`
 		}{Signature: "0x" + hex.EncodeToString(sig)}).Expect().Status(http.StatusOK)
 
-	s.e.GET("/api/me").Expect().Status(http.StatusOK).JSON().
-		Path("$.etherPK").String().Length().Gt(10)
+	addr := s.e.GET("/api/me").Expect().Status(http.StatusOK).JSON().
+		Path("$.etherPK").String()
+	addr.Length().Gt(10)
+	u.EthereumAddr = addr.Raw()
+
+	s.e.POST("/api/me").WithJSON(
+		struct {
+			ID            string `json:"id"`
+			Email         string `json:"email"`
+			WantToBeFound bool   `json:"wantToBeFound"`
+		}{
+			ID:            u.uuid,
+			Email:         u.username,
+			WantToBeFound: true,
+		}).Expect().Status(http.StatusOK)
+
+	s.e.GET("/api/admin/user/list").WithQuery("c", u.EthereumAddr).Expect().
+		Status(http.StatusOK).JSON().Array().Length().Equal(1)
 }
 
 func signHash(data string) []byte {
