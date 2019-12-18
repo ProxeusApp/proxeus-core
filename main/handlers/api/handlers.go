@@ -12,6 +12,10 @@ import (
 	"strings"
 	"time"
 
+	cfg "github.com/ProxeusApp/proxeus-core/main/config"
+	"github.com/ethereum/go-ethereum/common"
+	"github.com/ethereum/go-ethereum/core/types"
+
 	workflow2 "github.com/ProxeusApp/proxeus-core/sys/workflow"
 
 	"github.com/ProxeusApp/proxeus-core/main/handlers/payment"
@@ -1788,6 +1792,31 @@ func UserDocumentSignatureRequestRevokeHandler(e echo.Context) error {
 	}
 
 	return c.NoContent(http.StatusOK)
+}
+
+func PutTestSignature(e echo.Context) error {
+	c := e.(*www.Context)
+	if !c.System().TestMode {
+		return echo.ErrBadRequest
+	}
+	var req struct {
+		TxHash     string
+		FileHash   string
+		SignerAddr string
+	}
+	c.Bind(&req)
+	l := types.Log{
+		Address: common.HexToAddress(cfg.Config.XESContractAddress),
+		Topics: []common.Hash{
+			common.HexToHash("0xe898b82efcc77a621bbc620d08e84d0b44e341fd7720cc544de745bdec8ebece"),
+			common.HexToHash(req.FileHash),
+			common.HexToHash("0x000000000000000000000000" + req.SignerAddr[2:]),
+		},
+		TxHash: common.HexToHash(req.TxHash),
+	}
+
+	blockchain.TestChannelSignature <- l
+	return nil
 }
 
 func UserDocumentFileHandler(e echo.Context) error {
