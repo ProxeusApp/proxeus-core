@@ -2,56 +2,45 @@ package api
 
 import (
 	"encoding/base64"
+	"encoding/json"
 	"errors"
 	"fmt"
+	"io"
+	"io/ioutil"
 	"log"
 	"net"
 	"net/http"
 	"net/url"
+	"os"
 	"regexp"
+	"strconv"
 	"strings"
 	"time"
 
-	cfg "github.com/ProxeusApp/proxeus-core/main/config"
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/core/types"
-
-	workflow2 "github.com/ProxeusApp/proxeus-core/sys/workflow"
-
-	"github.com/ProxeusApp/proxeus-core/main/handlers/payment"
-
-	"github.com/ProxeusApp/proxeus-core/main/handlers/blockchain"
-
-	"github.com/ProxeusApp/proxeus-core/sys/utils"
-
-	uuid "github.com/satori/go.uuid"
-
-	"github.com/ethereum/go-ethereum/crypto"
-
-	"github.com/ProxeusApp/proxeus-core/sys/db"
-
-	"github.com/labstack/echo"
-
-	"encoding/json"
-	"io"
-	"io/ioutil"
-	"os"
-	"strconv"
-
 	"github.com/ProxeusApp/proxeus-core/main/app"
+	cfg "github.com/ProxeusApp/proxeus-core/main/config"
+	"github.com/ProxeusApp/proxeus-core/main/handlers/blockchain"
+	"github.com/ProxeusApp/proxeus-core/main/handlers/payment"
 	"github.com/ProxeusApp/proxeus-core/main/helpers"
 	"github.com/ProxeusApp/proxeus-core/main/www"
+	"github.com/ProxeusApp/proxeus-core/storage"
+	"github.com/ProxeusApp/proxeus-core/storage/db"
 	"github.com/ProxeusApp/proxeus-core/sys"
-	"github.com/ProxeusApp/proxeus-core/sys/db/storm"
-
-	strm "github.com/asdine/storm"
-
 	"github.com/ProxeusApp/proxeus-core/sys/eio"
 	"github.com/ProxeusApp/proxeus-core/sys/email"
 	"github.com/ProxeusApp/proxeus-core/sys/file"
 	"github.com/ProxeusApp/proxeus-core/sys/model"
 	"github.com/ProxeusApp/proxeus-core/sys/session"
+	"github.com/ProxeusApp/proxeus-core/sys/utils"
 	"github.com/ProxeusApp/proxeus-core/sys/validate"
+	workflow2 "github.com/ProxeusApp/proxeus-core/sys/workflow"
+
+	strm "github.com/asdine/storm"
+	"github.com/ethereum/go-ethereum/common"
+	"github.com/ethereum/go-ethereum/core/types"
+	"github.com/ethereum/go-ethereum/crypto"
+	"github.com/labstack/echo"
+	uuid "github.com/satori/go.uuid"
 )
 
 var filenameRegex = regexp.MustCompile(`^[^\s][\p{L}\d.,_\-&: ]{3,}[^\s]$`)
@@ -151,7 +140,7 @@ func ExportUserData(e echo.Context) error {
 			}
 		}
 	}
-	return Export(sess, []storm.ImexIF{c.System().DB.UserData}, c, id...)
+	return Export(sess, []storage.ImporterExporter{c.System().DB.UserData}, c, id...)
 }
 
 func ExportSettings(e echo.Context) error {
@@ -160,7 +149,7 @@ func ExportSettings(e echo.Context) error {
 	if sess == nil {
 		return c.NoContent(http.StatusUnauthorized)
 	}
-	return Export(sess, []storm.ImexIF{c.System().DB.Settings}, c, "Settings")
+	return Export(sess, []storage.ImporterExporter{c.System().DB.Settings}, c, "Settings")
 }
 
 func ExportUser(e echo.Context) error {
@@ -181,10 +170,10 @@ func ExportUser(e echo.Context) error {
 			}
 		}
 	}
-	return Export(sess, []storm.ImexIF{c.System().DB.User}, c, id...)
+	return Export(sess, []storage.ImporterExporter{c.System().DB.User}, c, id...)
 }
 
-func Export(sess *session.Session, exportEntities []storm.ImexIF, e echo.Context, id ...string) error {
+func Export(sess *session.Session, exportEntities []storage.ImporterExporter, e echo.Context, id ...string) error {
 	c := e.(*www.Context)
 	if len(exportEntities) == 0 {
 		return c.NoContent(http.StatusBadRequest)
@@ -1004,7 +993,7 @@ func CheckForWorkflowPayment(e echo.Context) error {
 		return c.NoContent(http.StatusBadRequest)
 	}
 	if paymentRequired {
-		_, err := c.System().DB.WorkflowPaymentsDB.GetByWorkflowIdAndFromEthAddress(workflowId, user.EthereumAddr, []string{model.PaymentStatusConfirmed})
+		_, err := c.System().DB.WorkflowPayments.GetByWorkflowIdAndFromEthAddress(workflowId, user.EthereumAddr, []string{model.PaymentStatusConfirmed})
 		if err != nil {
 			if err == strm.ErrNotFound {
 				return c.NoContent(http.StatusNotFound)
@@ -1048,7 +1037,7 @@ func DocumentHandler(e echo.Context) error {
 			if err != nil {
 				return c.NoContent(http.StatusBadRequest)
 			}
-			err = payment.RedeemPayment(c.System().DB.WorkflowPaymentsDB, wf.ID, user.EthereumAddr)
+			err = payment.RedeemPayment(c.System().DB.WorkflowPayments, wf.ID, user.EthereumAddr)
 			if err != nil {
 				log.Println("[redeemPayment] ", err.Error())
 				return c.String(http.StatusUnprocessableEntity, errNoPaymentFound.Error())
@@ -1423,7 +1412,7 @@ func UserDocumentSignatureRequestGetCurrentUserHandler(e echo.Context) error {
 	if len(ethAddr) != 42 {
 		return c.NoContent(http.StatusNotFound)
 	}
-	signatureRequests, err := c.System().DB.SignatureRequestsDB.GetBySignatory(ethAddr)
+	signatureRequests, err := c.System().DB.SignatureRequests.GetBySignatory(ethAddr)
 	if err != nil {
 		return c.String(http.StatusNotFound, err.Error())
 	}
@@ -1555,7 +1544,7 @@ func UserDocumentSignatureRequestGetByDocumentIDHandler(e echo.Context) error {
 	docId := c.Param("docID")
 	id := c.Param("ID")
 
-	signatureRequests, err := c.System().DB.SignatureRequestsDB.GetByID(id, docId)
+	signatureRequests, err := c.System().DB.SignatureRequests.GetByID(id, docId)
 	if err != nil {
 		return c.String(http.StatusNotFound, err.Error())
 	}
@@ -1672,7 +1661,7 @@ func UserDocumentSignatureRequestAddHandler(e echo.Context) error {
 		Rejected:    false,
 	}
 
-	signatureRequests, err := c.System().DB.SignatureRequestsDB.GetByID(id, docId)
+	signatureRequests, err := c.System().DB.SignatureRequests.GetByID(id, docId)
 
 	if err == nil {
 		for _, sigreq := range *signatureRequests {
@@ -1685,7 +1674,7 @@ func UserDocumentSignatureRequestAddHandler(e echo.Context) error {
 		}
 	}
 
-	err = c.System().DB.SignatureRequestsDB.Add(&requestItem)
+	err = c.System().DB.SignatureRequests.Add(&requestItem)
 	if err != nil {
 		return c.String(http.StatusNotFound, err.Error())
 	}
@@ -1725,11 +1714,11 @@ func UserDocumentSignatureRequestRejectHandler(e echo.Context) error {
 		return c.NoContent(http.StatusInternalServerError)
 	}
 	signatoryAddr := item.EthereumAddr
-	signatureRequests, err := c.System().DB.SignatureRequestsDB.GetByID(id, docId)
+	signatureRequests, err := c.System().DB.SignatureRequests.GetByID(id, docId)
 	signatureRequest := (*signatureRequests)[0]
 	req := signatureRequest.Requestor
 
-	err = c.System().DB.SignatureRequestsDB.SetRejected(id, docId, signatoryAddr)
+	err = c.System().DB.SignatureRequests.SetRejected(id, docId, signatoryAddr)
 	if err != nil {
 		return c.String(http.StatusNotFound, err.Error())
 	}
@@ -1770,7 +1759,7 @@ func UserDocumentSignatureRequestRevokeHandler(e echo.Context) error {
 	}
 	signatoryEmail := sig.Email
 
-	err = c.System().DB.SignatureRequestsDB.SetRevoked(id, docId, signatory)
+	err = c.System().DB.SignatureRequests.SetRevoked(id, docId, signatory)
 	if err != nil {
 		return c.String(http.StatusNotFound, err.Error())
 	}

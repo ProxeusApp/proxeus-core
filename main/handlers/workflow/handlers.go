@@ -4,6 +4,7 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/ProxeusApp/proxeus-core/storage"
 	"github.com/ProxeusApp/proxeus-core/sys/workflow"
 
 	"github.com/labstack/echo"
@@ -13,7 +14,6 @@ import (
 	"github.com/ProxeusApp/proxeus-core/main/customNode"
 	"github.com/ProxeusApp/proxeus-core/main/helpers"
 	"github.com/ProxeusApp/proxeus-core/main/www"
-	"github.com/ProxeusApp/proxeus-core/sys/db/storm"
 	"github.com/ProxeusApp/proxeus-core/sys/model"
 )
 
@@ -35,7 +35,7 @@ func ExportWorkflow(e echo.Context) error {
 			}
 		}
 	}
-	return api.Export(sess, []storm.ImexIF{c.System().DB.Workflow}, c, id...)
+	return api.Export(sess, []storage.ImporterExporter{c.System().DB.Workflow}, c, id...)
 }
 
 func GetHandler(e echo.Context) error {
@@ -178,7 +178,7 @@ func ListHandler(e echo.Context) error {
 }
 
 func listHandler(c *www.Context, publishedOnly bool) error {
-	var sess model.Authorization
+	var sess model.Auth
 	if s := c.Session(false); s != nil {
 		sess = s
 	}

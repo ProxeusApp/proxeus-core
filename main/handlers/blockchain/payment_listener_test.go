@@ -8,6 +8,8 @@ import (
 	"testing"
 	"time"
 
+	"github.com/ProxeusApp/proxeus-core/storage"
+
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/golang/mock/gomock"
@@ -16,14 +18,14 @@ import (
 
 	"github.com/ProxeusApp/proxeus-core/sys/model"
 
-	"github.com/ProxeusApp/proxeus-core/sys/db/storm"
+	"github.com/ProxeusApp/proxeus-core/storage/db/storm"
 
 	"github.com/ProxeusApp/proxeus-core/main/handlers/blockchain/mock"
 )
 
 var errCleanupTestData = errors.New("db data has not been cleanup up after finishing tests")
 
-func removePaymentIfExists(workflowPaymentsDB storm.WorkflowPaymentsDBInterface,
+func removePaymentIfExists(workflowPaymentsDB storage.WorkflowPaymentsIF,
 	persistedPaymentItem **model.WorkflowPaymentItem) {
 
 	if *persistedPaymentItem != nil {

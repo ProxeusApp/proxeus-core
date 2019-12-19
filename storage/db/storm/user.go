@@ -5,7 +5,9 @@ import (
 	"encoding/base64"
 	"regexp"
 
-	"github.com/ProxeusApp/proxeus-core/sys/db"
+	"github.com/ProxeusApp/proxeus-core/storage"
+
+	"github.com/ProxeusApp/proxeus-core/storage/db"
 
 	//"encoding/json"
 	"image"
@@ -26,28 +28,6 @@ import (
 
 	"github.com/ProxeusApp/proxeus-core/sys/model"
 )
-
-//TODO(ave) how come we have even private methods in an interface... Doesn't look like the correct approach for an interface.
-type UserDBInterface interface {
-	GetBaseFilePath() string
-	Login(name, pw string) (*model.User, error)
-	Count() (int, error)
-	List(auth model.Authorization, contains string, options map[string]interface{}) ([]*model.User, error)
-	Get(auth model.Authorization, id string) (*model.User, error)
-	GetByBCAddress(bcAddress string) (*model.User, error)
-	GetByEmail(email string) (*model.User, error)
-	UpdateEmail(id, email string) error
-	Put(auth model.Authorization, item *model.User) error
-	PutPw(id, pass string) error
-	GetProfilePhoto(auth model.Authorization, id string, writer io.Writer) (n int64, err error)
-	PutProfilePhoto(auth model.Authorization, id string, reader io.Reader) (written int64, err error)
-	Import(imex *Imex) error
-	Export(imex *Imex, id ...string) error
-	APIKey(key string) (*model.User, error)
-	CreateApiKey(auth model.Authorization, userId, apiKeyName string) (string, error)
-	DeleteApiKey(auth model.Authorization, userId, hiddenApiKey string) error
-	Close() error
-}
 
 type UserDB struct {
 	db           *storm.DB
@@ -149,7 +129,7 @@ func (me *UserDB) APIKey(key string) (*model.User, error) {
 	return &user, nil
 }
 
-func (me *UserDB) CreateApiKey(auth model.Authorization, userId, apiKeyName string) (string, error) {
+func (me *UserDB) CreateApiKey(auth model.Auth, userId, apiKeyName string) (string, error) {
 	userItem, err := me.Get(auth, userId)
 	if err != nil {
 		return "", err
@@ -172,7 +152,7 @@ func (me *UserDB) CreateApiKey(auth model.Authorization, userId, apiKeyName stri
 	return initiallyReadableApiKey, nil
 }
 
-func (me *UserDB) DeleteApiKey(auth model.Authorization, userId, hiddenApiKey string) error {
+func (me *UserDB) DeleteApiKey(auth model.Auth, userId, hiddenApiKey string) error {
 	userItem, err := me.Get(auth, userId)
 	if err != nil {
 		return err
@@ -244,7 +224,7 @@ func (me *UserDB) Count() (int, error) {
 	return me.db.Count(&model.User{})
 }
 
-func (me *UserDB) List(auth model.Authorization, contains string, options map[string]interface{}) ([]*model.User, error) {
+func (me *UserDB) List(auth model.Auth, contains string, options map[string]interface{}) ([]*model.User, error) {
 	contains = containsCaseInsensitiveReg(contains)
 	params := makeSimpleQuery(options)
 	items := make([]*model.User, 0)
@@ -321,7 +301,7 @@ func (me *UserDB) List(auth model.Authorization, contains string, options map[st
 	return items, nil
 }
 
-func (me *UserDB) Get(auth model.Authorization, id string) (*model.User, error) {
+func (me *UserDB) Get(auth model.Auth, id string) (*model.User, error) {
 	var err error
 	var user model.User
 	err = me.db.One("ID", id, &user)
@@ -372,11 +352,11 @@ func (me *UserDB) PutPw(id, pass string) error {
 	return me.db.Set(passwordBucket, id, &pass)
 }
 
-func (me *UserDB) Put(auth model.Authorization, item *model.User) error {
+func (me *UserDB) Put(auth model.Auth, item *model.User) error {
 	return me.put(auth, item, true)
 }
 
-func (me *UserDB) put(auth model.Authorization, item *model.User, updated bool) error {
+func (me *UserDB) put(auth model.Auth, item *model.User, updated bool) error {
 	if item == nil {
 		return os.ErrInvalid
 	}
@@ -490,7 +470,7 @@ func (me *UserDB) tinyUserIconBase64(reader *os.File) (string, error) {
 	return prefix + base64.StdEncoding.EncodeToString(w.Bytes()), nil
 }
 
-func (me *UserDB) GetProfilePhoto(auth model.Authorization, id string, writer io.Writer) (n int64, err error) {
+func (me *UserDB) GetProfilePhoto(auth model.Auth, id string, writer io.Writer) (n int64, err error) {
 	u, err := me.Get(auth, id)
 	if err != nil {
 		return 0, os.ErrNotExist
@@ -515,7 +495,7 @@ func (me *UserDB) readPhoto(u *model.User) (*os.File, error) {
 	return os.OpenFile(filepath.Join(me.GetBaseFilePath(), u.PhotoPath), os.O_RDONLY, 0600)
 }
 
-func (me *UserDB) PutProfilePhoto(auth model.Authorization, id string, reader io.Reader) (written int64, err error) {
+func (me *UserDB) PutProfilePhoto(auth model.Auth, id string, reader io.Reader) (written int64, err error) {
 	if id == "" {
 		return 0, os.ErrInvalid
 	}
@@ -550,29 +530,29 @@ func (me *UserDB) PutProfilePhoto(auth model.Authorization, id string, reader io
 	return io.Copy(tmplFile, reader)
 }
 
-func (me *UserDB) Import(imex *Imex) error {
+func (me *UserDB) Import(imex storage.ImexIF) error {
 	err := me.init(imex)
 	if err != nil {
 		return err
 	}
 	for i := 0; true; i++ {
-		items, err := imex.db.User.List(imex.auth, "", map[string]interface{}{"index": i, "limit": 1000, "metaOnly": false})
+		items, err := imex.DB().User.List(imex.Auth(), "", map[string]interface{}{"index": i, "limit": 1000, "metaOnly": false})
 		if err == nil && len(items) > 0 {
 			for _, item := range items {
 				var existingItem *model.User
-				existingItem, err = imex.sysDB.User.Get(imex.auth, item.ID)
-				if err == nil && imex.skipExistingOnImport {
+				existingItem, err = imex.SysDB().User.Get(imex.Auth(), item.ID)
+				if err == nil && imex.SkipExistingOnImport() {
 					continue
 				}
 
 				if existingItem == nil {
 					//treat email as an ID and update all references on this import package if user was located on the target system
 					if item.Email != "" {
-						existingItem, _ = imex.sysDB.User.GetByEmail(item.Email)
+						existingItem, _ = imex.SysDB().User.GetByEmail(item.Email)
 						if existingItem != nil {
 							//provide user id correction map for entities with permissions item.ID -> existingItem.ID
-							imex.locatedSameUserWithDifferentID[item.ID] = existingItem.ID
-							if imex.skipExistingOnImport {
+							imex.LocatedSameUserWithDifferentID()[item.ID] = existingItem.ID
+							if imex.SkipExistingOnImport() {
 								continue
 							} else {
 								item.ID = existingItem.ID
@@ -582,11 +562,11 @@ func (me *UserDB) Import(imex *Imex) error {
 					}
 					//treat Ethereum address as an ID and update all references on this import package if user was located on the target system
 					if item.EthereumAddr != "" {
-						existingItem, _ = imex.sysDB.User.GetByBCAddress(item.EthereumAddr)
+						existingItem, _ = imex.SysDB().User.GetByBCAddress(item.EthereumAddr)
 						if existingItem != nil {
 							//provide user id correction map for entities with permissions item.ID -> existingItem.ID
-							imex.locatedSameUserWithDifferentID[item.ID] = existingItem.ID
-							if imex.skipExistingOnImport {
+							imex.LocatedSameUserWithDifferentID()[item.ID] = existingItem.ID
+							if imex.SkipExistingOnImport() {
 								continue
 							} else {
 								item.ID = existingItem.ID
@@ -600,25 +580,25 @@ func (me *UserDB) Import(imex *Imex) error {
 					_ = me.GetDB().Get(userApiKeysBucket, item.ID, &item.ApiKeys)
 				}
 
-				err = me.put(imex.auth, item, false)
+				err = me.put(imex.Auth(), item, false)
 				if err != nil {
-					imex.processedEntry(imexUser, item.ID, err)
+					imex.ProcessedEntry(imexUser, item.ID, err)
 					continue
 				}
 				//no permission errors when writing ... we are allowed to set the photo too
 
 				if existingItem != nil && existingItem.PhotoPath != "" && existingItem.PhotoPath != item.PhotoPath {
 					//remove old photo of existingItem before the reference is lost
-					_ = os.Remove(filepath.Join(imex.sysDB.User.GetBaseFilePath(), existingItem.PhotoPath))
+					_ = os.Remove(filepath.Join(imex.SysDB().User.GetBaseFilePath(), existingItem.PhotoPath))
 				}
 
 				if item.PhotoPath != "" {
-					err = me.cpProfilePhoto(imex, imex.db.User, imex.sysDB.User, item)
+					err = me.cpProfilePhoto(imex, imex.DB().User, imex.SysDB().User, item)
 					if err != nil {
 						continue
 					}
 				}
-				imex.processedEntry(imexUser, item.ID, nil)
+				imex.ProcessedEntry(imexUser, item.ID, nil)
 			}
 		} else {
 			break
@@ -653,38 +633,38 @@ func updateEmptyFields(of, by *model.User) {
 
 const imexUser = "User"
 
-func (me *UserDB) init(imex *Imex) error {
+func (me *UserDB) init(imex storage.ImexIF) error {
 	var err error
-	if imex.db.User == nil {
-		imex.db.User, err = NewUserDB(imex.dir)
+	if imex.DB().User == nil {
+		imex.DB().User, err = NewUserDB(imex.Dir())
 	}
 	return err
 }
 
-func (me *UserDB) Export(imex *Imex, id ...string) error {
+func (me *UserDB) Export(imex storage.ImexIF, id ...string) error {
 	err := me.init(imex)
 	if err != nil {
 		return err
 	}
 	specificIds := len(id) > 0
 	if len(id) == 1 {
-		if imex.isProcessed(imexUser, id[0]) {
+		if imex.IsProcessed(imexUser, id[0]) {
 			return nil
 		}
 	}
 	if !specificIds {
-		imex.exportingAllUsersAnyway = true
+		imex.SetExportingAllUsersAnyway(true)
 	}
 	var tx storm.Node
 	for i := 0; true; i++ {
-		items, err := imex.sysDB.User.List(imex.auth, "", map[string]interface{}{"include": id, "index": i, "limit": 1000, "metaOnly": false})
+		items, err := imex.SysDB().User.List(imex.Auth(), "", map[string]interface{}{"include": id, "index": i, "limit": 1000, "metaOnly": false})
 		if err == nil && len(items) > 0 {
 			tx, err = me.GetDB().Begin(true)
 			if err != nil {
 				return err
 			}
 			for _, item := range items {
-				if !imex.isProcessed(imexUser, item.ID) {
+				if !imex.IsProcessed(imexUser, item.ID) {
 					item.Photo = ""
 					if len(item.ApiKeys) > 0 {
 						var apiKeys []*model.ApiKey
@@ -699,29 +679,29 @@ func (me *UserDB) Export(imex *Imex, id ...string) error {
 								}
 							}
 							if err != nil {
-								imex.processedEntry(imexUser, item.ID, err)
+								imex.ProcessedEntry(imexUser, item.ID, err)
 								continue
 							}
 							err = tx.Set(userApiKeysBucket, item.ID, apiKeys)
 							if err != nil {
-								imex.processedEntry(imexUser, item.ID, err)
+								imex.ProcessedEntry(imexUser, item.ID, err)
 								continue
 							}
 						}
 					}
 					err = tx.Save(item)
 					if err != nil {
-						imex.processedEntry(imexUser, item.ID, err)
+						imex.ProcessedEntry(imexUser, item.ID, err)
 						continue
 					}
 					if item.PhotoPath != "" {
-						err = me.cpProfilePhoto(imex, imex.sysDB.User, imex.db.User, item)
+						err = me.cpProfilePhoto(imex, imex.SysDB().User, imex.DB().User, item)
 						if err != nil {
-							imex.processedEntry(imexUser, item.ID, err)
+							imex.ProcessedEntry(imexUser, item.ID, err)
 							continue
 						}
 					}
-					imex.processedEntry(imexUser, item.ID, nil)
+					imex.ProcessedEntry(imexUser, item.ID, nil)
 				}
 			}
 			err = tx.Commit()
@@ -739,7 +719,7 @@ func (me *UserDB) Export(imex *Imex, id ...string) error {
 	return nil
 }
 
-func (me *UserDB) cpProfilePhoto(imex *Imex, from UserDBInterface, to UserDBInterface, item *model.User) (err error) {
+func (me *UserDB) cpProfilePhoto(imex storage.ImexIF, from storage.UserIF, to storage.UserIF, item *model.User) (err error) {
 	var readFile *os.File
 	readFile, err = os.Open(filepath.Join(from.GetBaseFilePath(), item.PhotoPath))
 	if os.IsExist(err) {
@@ -749,7 +729,7 @@ func (me *UserDB) cpProfilePhoto(imex *Imex, from UserDBInterface, to UserDBInte
 		if readFile != nil {
 			_ = readFile.Close()
 		}
-		imex.processedEntry(imexUser, item.ID, err)
+		imex.ProcessedEntry(imexUser, item.ID, err)
 		return
 	}
 	var exportFile *os.File
@@ -764,14 +744,14 @@ func (me *UserDB) cpProfilePhoto(imex *Imex, from UserDBInterface, to UserDBInte
 		if readFile != nil {
 			_ = readFile.Close()
 		}
-		imex.processedEntry(imexUser, item.ID, err)
+		imex.ProcessedEntry(imexUser, item.ID, err)
 		return
 	}
 	_, err = io.Copy(exportFile, readFile)
 	if err != nil {
 		_ = readFile.Close()
 		_ = exportFile.Close()
-		imex.processedEntry(imexUser, item.ID, err)
+		imex.ProcessedEntry(imexUser, item.ID, err)
 		return
 	}
 	_ = readFile.Close()

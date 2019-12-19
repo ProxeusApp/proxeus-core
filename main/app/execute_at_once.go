@@ -21,12 +21,12 @@ import (
 type ExecuteAtOnceContext struct {
 	data       map[string]interface{}
 	c          *www.Context
-	a          model.Authorization
+	a          model.Auth
 	tmpDirPath string
 	lang       string
 }
 
-func ExecuteWorkflowAtOnce(c *www.Context, a model.Authorization, wfi *model.WorkflowItem, inputData map[string]interface{}) error {
+func ExecuteWorkflowAtOnce(c *www.Context, a model.Auth, wfi *model.WorkflowItem, inputData map[string]interface{}) error {
 	tmpDirPath, err := ioutil.TempDir(os.TempDir(), "wfAtOnce")
 	if err != nil {
 		return err

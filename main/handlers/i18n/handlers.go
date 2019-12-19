@@ -6,6 +6,7 @@ import (
 	"github.com/labstack/echo"
 
 	"github.com/ProxeusApp/proxeus-core/main/handlers/api"
+	"github.com/ProxeusApp/proxeus-core/storage"
 
 	"encoding/json"
 	"fmt"
@@ -15,7 +16,6 @@ import (
 	"github.com/ProxeusApp/proxeus-core/main/helpers"
 	"github.com/ProxeusApp/proxeus-core/main/www"
 	"github.com/ProxeusApp/proxeus-core/sys"
-	"github.com/ProxeusApp/proxeus-core/sys/db/storm"
 )
 
 func IndexHandler(e echo.Context) error {
@@ -56,7 +56,7 @@ func ExportI18n(e echo.Context) error {
 	} else if key != "" || value != "" {
 		//TODO specific translations could be added
 	}
-	return api.Export(sess, []storm.ImexIF{c.System().DB.I18n}, c, id...)
+	return api.Export(sess, []storage.ImporterExporter{c.System().DB.I18n}, c, id...)
 }
 
 func AllHandler(e echo.Context) error {

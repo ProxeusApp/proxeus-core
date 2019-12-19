@@ -18,15 +18,15 @@ type Permission []byte
 const read = 1
 const write = 2
 
-type Authorization interface {
+type Auth interface {
 	UserID() string
 	AccessRights() Role
 }
 
 type AccessibleItem interface {
-	IsReadGrantedFor(auth Authorization) bool
-	IsWriteGrantedFor(auth Authorization) bool
-	OwnedBy(auth Authorization) bool
+	IsReadGrantedFor(auth Auth) bool
+	IsWriteGrantedFor(auth Auth) bool
+	OwnedBy(auth Auth) bool
 }
 
 type GroupAndOthers struct {
@@ -159,7 +159,7 @@ func (me Permission) String() string {
 }
 
 //TODO improve perm modification
-func (me *Permissions) Change(auth Authorization, changed *Permissions) *Permissions {
+func (me *Permissions) Change(auth Auth, changed *Permissions) *Permissions {
 	if me.OwnedBy(auth) {
 		if changed.Owner != "" {
 			me.Owner = changed.Owner
@@ -229,7 +229,7 @@ func (me *Permissions) UpdateUserID(usrOldIdNewID map[string]string) {
 //		                     	 	 				 --     --
 //default value is:                	    				----
 //example for group and others with read perm:	    	r-r-
-func (me *Permissions) IsReadGrantedFor(auth Authorization) bool {
+func (me *Permissions) IsReadGrantedFor(auth Auth) bool {
 	if auth == nil {
 		return false
 	}
@@ -271,7 +271,7 @@ func (me *Permissions) IsReadGrantedFor(auth Authorization) bool {
 	return false
 }
 
-func (me *GroupAndOthers) IsGroupRead(auth Authorization) bool {
+func (me *GroupAndOthers) IsGroupRead(auth Auth) bool {
 	//check group
 	if auth.AccessRights() != 0 {
 		if me.Group != 0 {
@@ -284,7 +284,7 @@ func (me *GroupAndOthers) IsGroupRead(auth Authorization) bool {
 	return false
 }
 
-func (me *GroupAndOthers) IsGroupWrite(auth Authorization) bool {
+func (me *GroupAndOthers) IsGroupWrite(auth Auth) bool {
 	//check group
 	if auth.AccessRights() != 0 {
 		if me.Group != 0 {
@@ -312,7 +312,7 @@ func (me *GroupAndOthers) IsOthersWrite() bool {
 //		                     	 	 				 --     --
 //default value is:                	    				----
 //example for group and others with read perm:	    	r-r-
-func (me *Permissions) IsWriteGrantedFor(auth Authorization) bool {
+func (me *Permissions) IsWriteGrantedFor(auth Auth) bool {
 	if auth == nil {
 		return false
 	}
@@ -352,15 +352,15 @@ func (me *Permissions) IsWriteGrantedFor(auth Authorization) bool {
 	return false
 }
 
-func (me *Permissions) IsPublishedOrReadGrantedFor(auth Authorization) bool {
+func (me *Permissions) IsPublishedOrReadGrantedFor(auth Auth) bool {
 	return me.IsReadGrantedFor(auth) || me.IsPublishedFor(auth)
 }
 
-func (me *Permissions) IsPublishedFor(auth Authorization) bool {
+func (me *Permissions) IsPublishedFor(auth Auth) bool {
 	return /*activate if needed auth.AccessRights().IsGrantedFor(CREATOR) && */ me.Published
 }
 
-func (me *Permissions) OwnedBy(auth Authorization) bool {
+func (me *Permissions) OwnedBy(auth Auth) bool {
 	if auth != nil && auth.UserID() != "" {
 		if auth.UserID() == me.Owner {
 			return true

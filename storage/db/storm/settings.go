@@ -5,7 +5,10 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/ProxeusApp/proxeus-core/sys/db"
+	"github.com/ProxeusApp/proxeus-core/storage"
+
+	"github.com/ProxeusApp/proxeus-core/storage/db"
+
 	"github.com/ProxeusApp/proxeus-core/sys/model"
 	"github.com/ProxeusApp/proxeus-core/sys/validate"
 )
@@ -56,61 +59,61 @@ func (me *SettingsDB) Get() (*model.Settings, error) {
 	return &stngs, nil
 }
 
-func (me *SettingsDB) Import(imex *Imex) error {
+func (me *SettingsDB) Import(imex storage.ImexIF) error {
 	var err error
-	imex.db.Settings, err = NewSettingsDB(imex.dir)
+	imex.DB().Settings, err = NewSettingsDB(imex.Dir())
 	if err != nil {
-		imex.processedEntry(imexSettings, imexSettings, err)
+		imex.ProcessedEntry(imexSettings, imexSettings, err)
 		return nil
 	}
 	var s *model.Settings
-	s, err = imex.db.Settings.Get()
+	s, err = imex.DB().Settings.Get()
 	if err != nil { //does not exist
 		return nil
 	}
-	if !imex.auth.AccessRights().IsGrantedFor(model.ROOT) {
-		imex.processedEntry(imexSettings, imexSettings, fmt.Errorf("no authority to import"))
+	if !imex.Auth().AccessRights().IsGrantedFor(model.ROOT) {
+		imex.ProcessedEntry(imexSettings, imexSettings, fmt.Errorf("no authority to import"))
 		//return nil to not break the export, just ignore the call
 		return nil
 	}
-	err = imex.sysDB.Settings.Put(s)
+	err = imex.SysDB().Settings.Put(s)
 	if err != nil {
-		imex.processedEntry(imexSettings, imexSettings, err)
+		imex.ProcessedEntry(imexSettings, imexSettings, err)
 		return nil
 	}
-	imex.processedEntry(imexSettings, imexSettings, nil)
+	imex.ProcessedEntry(imexSettings, imexSettings, nil)
 	return nil
 }
 
 const imexSettings = "Settings"
 
-func (me *SettingsDB) Export(imex *Imex, id ...string) error {
-	if !imex.auth.AccessRights().IsGrantedFor(model.ROOT) {
-		imex.processedEntry(imexSettings, imexSettings, fmt.Errorf("no authority to export"))
+func (me *SettingsDB) Export(imex storage.ImexIF, id ...string) error {
+	if !imex.Auth().AccessRights().IsGrantedFor(model.ROOT) {
+		imex.ProcessedEntry(imexSettings, imexSettings, fmt.Errorf("no authority to export"))
 		//return nil to not break the export, just ignore the call
 		return nil
 	}
 	settings, err := me.Get()
 	if err != nil {
-		imex.processedEntry(imexSettings, imexSettings, err)
+		imex.ProcessedEntry(imexSettings, imexSettings, err)
 		return nil
 	}
 	var sdb *SettingsDB
-	sdb, err = NewSettingsDB(imex.dir)
+	sdb, err = NewSettingsDB(imex.Dir())
 	if err != nil {
-		imex.processedEntry(imexSettings, imexSettings, err)
+		imex.ProcessedEntry(imexSettings, imexSettings, err)
 		return nil
 	}
 	err = sdb.Put(settings)
 	if err != nil {
-		imex.processedEntry(imexSettings, imexSettings, err)
+		imex.ProcessedEntry(imexSettings, imexSettings, err)
 		return nil
 	}
 	sdb.Close()
-	imex.processedEntry(imexSettings, imexSettings, nil)
+	imex.ProcessedEntry(imexSettings, imexSettings, nil)
 	return nil
 }
 
-func (me *SettingsDB) Close() {
-	_ = me.jfdb.Close()
+func (me *SettingsDB) Close() error {
+	return me.jfdb.Close()
 }

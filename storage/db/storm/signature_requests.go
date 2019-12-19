@@ -126,7 +126,7 @@ func (me *SignatureRequestsDB) SetRevoked(docid string, docpath string, signator
 	return err
 }
 
-func (me *SignatureRequestsDB) List(auth model.Authorization, contains string, options map[string]interface{}) ([]*model.UserDataItem, error) {
+func (me *SignatureRequestsDB) List(auth model.Auth, contains string, options map[string]interface{}) ([]*model.UserDataItem, error) {
 	params := makeSimpleQuery(options)
 	items := make([]*model.UserDataItem, 0)
 	tx, err := me.db.Begin(false)
