@@ -6,6 +6,8 @@ import (
 	"path/filepath"
 	"time"
 
+	"github.com/ProxeusApp/proxeus-core/storage"
+
 	"github.com/asdine/storm"
 	"github.com/asdine/storm/codec/msgpack"
 	"github.com/asdine/storm/q"
@@ -13,19 +15,6 @@ import (
 
 	"github.com/ProxeusApp/proxeus-core/sys/model"
 )
-
-type WorkflowDBInterface interface {
-	ListPublished(auth model.Authorization, contains string, options map[string]interface{}) ([]*model.WorkflowItem, error)
-	List(auth model.Authorization, contains string, options map[string]interface{}) ([]*model.WorkflowItem, error)
-	GetPublished(auth model.Authorization, id string) (*model.WorkflowItem, error)
-	Get(auth model.Authorization, id string) (*model.WorkflowItem, error)
-	GetList(auth model.Authorization, id []string) ([]*model.WorkflowItem, error)
-	Put(auth model.Authorization, item *model.WorkflowItem) error
-	Delete(auth model.Authorization, id string) error
-	Import(imex *Imex) error
-	Export(imex *Imex, id ...string) error
-	Close() error
-}
 
 type WorkflowDB struct {
 	db           *storm.DB
@@ -74,15 +63,15 @@ func (me *WorkflowDB) getDB() *storm.DB {
 	return me.db
 }
 
-func (me *WorkflowDB) ListPublished(auth model.Authorization, contains string, options map[string]interface{}) ([]*model.WorkflowItem, error) {
+func (me *WorkflowDB) ListPublished(auth model.Auth, contains string, options map[string]interface{}) ([]*model.WorkflowItem, error) {
 	return me.list(auth, contains, options, true)
 }
 
-func (me *WorkflowDB) List(auth model.Authorization, contains string, options map[string]interface{}) ([]*model.WorkflowItem, error) {
+func (me *WorkflowDB) List(auth model.Auth, contains string, options map[string]interface{}) ([]*model.WorkflowItem, error) {
 	return me.list(auth, contains, options, false)
 }
 
-func (me *WorkflowDB) list(auth model.Authorization, contains string, options map[string]interface{}, publishedOnly bool) ([]*model.WorkflowItem, error) {
+func (me *WorkflowDB) list(auth model.Auth, contains string, options map[string]interface{}, publishedOnly bool) ([]*model.WorkflowItem, error) {
 	params := makeSimpleQuery(options)
 	items := make([]*model.WorkflowItem, 0)
 	tx, err := me.db.Begin(false)
@@ -123,7 +112,7 @@ func (me *WorkflowDB) list(auth model.Authorization, contains string, options ma
 	return items, nil
 }
 
-func (me *WorkflowDB) GetPublished(auth model.Authorization, id string) (*model.WorkflowItem, error) {
+func (me *WorkflowDB) GetPublished(auth model.Auth, id string) (*model.WorkflowItem, error) {
 	var item model.WorkflowItem
 	err := me.db.One("ID", id, &item)
 	if err != nil {
@@ -137,7 +126,7 @@ func (me *WorkflowDB) GetPublished(auth model.Authorization, id string) (*model.
 	return itemRef, nil
 }
 
-func (me *WorkflowDB) Get(auth model.Authorization, id string) (*model.WorkflowItem, error) {
+func (me *WorkflowDB) Get(auth model.Auth, id string) (*model.WorkflowItem, error) {
 	var item model.WorkflowItem
 	err := me.db.One("ID", id, &item)
 	if err != nil {
@@ -152,7 +141,7 @@ func (me *WorkflowDB) Get(auth model.Authorization, id string) (*model.WorkflowI
 }
 
 // Retrieve multiple workflows. If one is not found, an error is returned
-func (me *WorkflowDB) GetList(auth model.Authorization, ids []string) ([]*model.WorkflowItem, error) {
+func (me *WorkflowDB) GetList(auth model.Auth, ids []string) ([]*model.WorkflowItem, error) {
 	var workflows []*model.WorkflowItem
 	for _, id := range ids {
 		workflow, err := me.Get(auth, id)
@@ -164,11 +153,11 @@ func (me *WorkflowDB) GetList(auth model.Authorization, ids []string) ([]*model.
 	return workflows, nil
 }
 
-func (me *WorkflowDB) Put(auth model.Authorization, item *model.WorkflowItem) error {
+func (me *WorkflowDB) Put(auth model.Auth, item *model.WorkflowItem) error {
 	return me.put(auth, item, true)
 }
 
-func (me *WorkflowDB) put(auth model.Authorization, item *model.WorkflowItem, updated bool) error {
+func (me *WorkflowDB) put(auth model.Auth, item *model.WorkflowItem, updated bool) error {
 	if item == nil {
 		return os.ErrInvalid
 	}
@@ -220,7 +209,7 @@ func (me *WorkflowDB) put(auth model.Authorization, item *model.WorkflowItem, up
 	}
 }
 
-func (me *WorkflowDB) updateWF(auth model.Authorization, item *model.WorkflowItem, tx storm.Node) error {
+func (me *WorkflowDB) updateWF(auth model.Auth, item *model.WorkflowItem, tx storm.Node) error {
 	err := me.saveOnly(item, tx)
 	if err != nil {
 		return err
@@ -228,7 +217,7 @@ func (me *WorkflowDB) updateWF(auth model.Authorization, item *model.WorkflowIte
 	return tx.Commit()
 }
 
-func (me *WorkflowDB) Delete(auth model.Authorization, id string) error {
+func (me *WorkflowDB) Delete(auth model.Auth, id string) error {
 	tx, err := me.db.Begin(true)
 	if err != nil {
 		return err
@@ -265,29 +254,29 @@ func (me *WorkflowDB) saveOnly(item *model.WorkflowItem, tx storm.Node) error {
 	return tx.Save(&cp)
 }
 
-func (me *WorkflowDB) Import(imex *Imex) error {
+func (me *WorkflowDB) Import(imex storage.ImexIF) error {
 	err := me.init(imex)
 	if err != nil {
 		return err
 	}
 	for i := 0; true; i++ {
-		items, err := imex.db.Workflow.List(imex.auth, "", map[string]interface{}{"index": i, "limit": 1000, "metaOnly": false})
+		items, err := imex.DB().Workflow.List(imex.Auth(), "", map[string]interface{}{"index": i, "limit": 1000, "metaOnly": false})
 		if err == nil && len(items) > 0 {
 			for _, item := range items {
-				if imex.skipExistingOnImport {
-					_, err = imex.sysDB.Workflow.Get(imex.auth, item.ID)
+				if imex.SkipExistingOnImport() {
+					_, err = imex.SysDB().Workflow.Get(imex.Auth(), item.ID)
 					if err == nil {
 						continue
 					}
 				}
-				item.Permissions.UpdateUserID(imex.locatedSameUserWithDifferentID)
+				item.Permissions.UpdateUserID(imex.LocatedSameUserWithDifferentID())
 
-				err = me.put(imex.auth, item, false)
+				err = me.put(imex.Auth(), item, false)
 				if err != nil {
-					imex.processedEntry(imexWorkflow, item.ID, err)
+					imex.ProcessedEntry(imexWorkflow, item.ID, err)
 					continue
 				}
-				imex.processedEntry(imexWorkflow, item.ID, nil)
+				imex.ProcessedEntry(imexWorkflow, item.ID, nil)
 			}
 		} else {
 			break
@@ -298,15 +287,15 @@ func (me *WorkflowDB) Import(imex *Imex) error {
 
 const imexWorkflow = "Workflow"
 
-func (me *WorkflowDB) init(imex *Imex) error {
+func (me *WorkflowDB) init(imex storage.ImexIF) error {
 	var err error
-	if imex.db.Workflow == nil {
-		imex.db.Workflow, err = NewWorkflowDB(imex.dir)
+	if imex.DB().Workflow == nil {
+		imex.DB().Workflow, err = NewWorkflowDB(imex.Dir())
 	}
 	return err
 }
 
-func (me *WorkflowDB) Export(imex *Imex, id ...string) error {
+func (me *WorkflowDB) Export(imex storage.ImexIF, id ...string) error {
 	var err error
 	err = me.init(imex)
 	if err != nil {
@@ -314,17 +303,17 @@ func (me *WorkflowDB) Export(imex *Imex, id ...string) error {
 	}
 	specificIds := len(id) > 0
 	if len(id) == 1 {
-		if imex.isProcessed(imexWorkflow, id[0]) {
+		if imex.IsProcessed(imexWorkflow, id[0]) {
 			return nil
 		}
 	}
 	type NodesAfter struct {
 		id    string
-		store ImexIF
+		store storage.ImporterExporter
 	}
 	nodes := make(map[string]*NodesAfter)
 	for i := 0; true; i++ {
-		items, err := me.List(imex.auth, "", map[string]interface{}{"include": id, "index": i, "limit": 1000, "metaOnly": false})
+		items, err := me.List(imex.Auth(), "", map[string]interface{}{"include": id, "index": i, "limit": 1000, "metaOnly": false})
 		if err == nil && len(items) > 0 {
 			var tx storm.Node
 			tx, err = me.getDB().Begin(true)
@@ -332,25 +321,25 @@ func (me *WorkflowDB) Export(imex *Imex, id ...string) error {
 				return err
 			}
 			for _, item := range items {
-				if !imex.isProcessed(imexWorkflow, item.ID) {
+				if !imex.IsProcessed(imexWorkflow, item.ID) {
 					err = me.saveOnly(item, tx)
 					if err != nil {
-						imex.processedEntry(imexWorkflow, item.ID, err)
+						imex.ProcessedEntry(imexWorkflow, item.ID, err)
 						continue
 					}
 					if item.Data != nil && item.Data.Flow != nil {
 						for _, v := range item.Data.Flow.Nodes {
-							if im := imex.sysDB.ImexIFByName(v.Type); im != nil {
+							if im := imex.SysDB().ImexIFByName(v.Type); im != nil {
 								nodes[v.ID] = &NodesAfter{id: item.ID, store: im}
 							}
 						}
 					}
-					item.Permissions.UserIdsMap(imex.neededUsers)
+					item.Permissions.UserIdsMap(imex.NeededUsers())
 					if err != nil {
-						imex.processedEntry(imexWorkflow, item.ID, err)
+						imex.ProcessedEntry(imexWorkflow, item.ID, err)
 						continue
 					}
-					imex.processedEntry(imexWorkflow, item.ID, nil)
+					imex.ProcessedEntry(imexWorkflow, item.ID, nil)
 				}
 			}
 			err = tx.Commit()
@@ -368,7 +357,7 @@ func (me *WorkflowDB) Export(imex *Imex, id ...string) error {
 	for k, v := range nodes {
 		err = v.store.Export(imex, k)
 		if err != nil {
-			imex.processedEntry(imexWorkflow, v.id, err)
+			imex.ProcessedEntry(imexWorkflow, v.id, err)
 		}
 	}
 	return nil

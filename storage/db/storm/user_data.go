@@ -12,6 +12,7 @@ import (
 	"github.com/asdine/storm/q"
 	uuid "github.com/satori/go.uuid"
 
+	"github.com/ProxeusApp/proxeus-core/storage"
 	"github.com/ProxeusApp/proxeus-core/sys/file"
 	"github.com/ProxeusApp/proxeus-core/sys/model"
 )
@@ -67,7 +68,7 @@ func NewUserDataDB(dir string) (*UserDataDB, error) {
 	return udb, nil
 }
 
-func (me *UserDataDB) List(auth model.Authorization, contains string, options map[string]interface{}, includeReadGranted bool) ([]*model.UserDataItem, error) {
+func (me *UserDataDB) List(auth model.Auth, contains string, options map[string]interface{}, includeReadGranted bool) ([]*model.UserDataItem, error) {
 	params := makeSimpleQuery(options)
 	items := make([]*model.UserDataItem, 0)
 	tx, err := me.db.Begin(false)
@@ -96,7 +97,7 @@ func (me *UserDataDB) List(auth model.Authorization, contains string, options ma
 	return items, nil
 }
 
-func (me *UserDataDB) Delete(auth model.Authorization, id string) error {
+func (me *UserDataDB) Delete(auth model.Auth, id string) error {
 	tx, err := me.db.Begin(true)
 	if err != nil {
 		return err
@@ -132,7 +133,7 @@ func (me *UserDataDB) Delete(auth model.Authorization, id string) error {
 	return tx.Commit()
 }
 
-func (me *UserDataDB) Get(auth model.Authorization, id string) (*model.UserDataItem, error) {
+func (me *UserDataDB) Get(auth model.Auth, id string) (*model.UserDataItem, error) {
 	var item model.UserDataItem
 	err := me.db.One("ID", id, &item)
 	if err != nil {
@@ -152,7 +153,7 @@ func (me *UserDataDB) GetAllFileInfosOf(ud *model.UserDataItem) []*file.IO {
 	return m.GetAllFileInfos(me.baseFilePath)
 }
 
-func (me *UserDataDB) GetByWorkflow(auth model.Authorization, wf *model.WorkflowItem, finished bool) (*model.UserDataItem, bool, error) {
+func (me *UserDataDB) GetByWorkflow(auth model.Auth, wf *model.WorkflowItem, finished bool) (*model.UserDataItem, bool, error) {
 	var item model.UserDataItem
 	matchers := defaultMatcher(auth, "", nil, true)
 	matchers = append(matchers, q.And(q.Eq("WorkflowID", wf.ID), q.Eq("Finished", finished)))
@@ -169,7 +170,7 @@ func (me *UserDataDB) GetByWorkflow(auth model.Authorization, wf *model.Workflow
 	return &item, alreadyStarted, err
 }
 
-func (me *UserDataDB) GetData(auth model.Authorization, id, dataPath string) (interface{}, error) {
+func (me *UserDataDB) GetData(auth model.Auth, id, dataPath string) (interface{}, error) {
 	tx, err := me.db.Begin(false)
 	if err != nil {
 		return nil, err
@@ -195,7 +196,7 @@ func (me *UserDataDB) GetData(auth model.Authorization, id, dataPath string) (in
 	return nil, os.ErrNotExist
 }
 
-func (me *UserDataDB) GetDataAndFiles(auth model.Authorization, id, dataPath string) (interface{}, []string, error) {
+func (me *UserDataDB) GetDataAndFiles(auth model.Auth, id, dataPath string) (interface{}, []string, error) {
 	tx, err := me.db.Begin(false)
 	if err != nil {
 		return nil, nil, err
@@ -226,7 +227,7 @@ func (me *UserDataDB) GetDataAndFiles(auth model.Authorization, id, dataPath str
 	return nil, nil, os.ErrNotExist
 }
 
-func (me *UserDataDB) PutData(auth model.Authorization, id string, dataObj map[string]interface{}) error {
+func (me *UserDataDB) PutData(auth model.Auth, id string, dataObj map[string]interface{}) error {
 	tx, err := me.db.Begin(true)
 	if err != nil {
 		return err
@@ -261,11 +262,11 @@ func (me *UserDataDB) PutData(auth model.Authorization, id string, dataObj map[s
 	return tx.Commit()
 }
 
-func (me *UserDataDB) NewFile(auth model.Authorization, meta file.Meta) *file.IO {
+func (me *UserDataDB) NewFile(auth model.Auth, meta file.Meta) *file.IO {
 	return file.New(me.baseFilePath, meta)
 }
 
-func (me *UserDataDB) GetDataFile(auth model.Authorization, id, dataPath string) (*file.IO, error) {
+func (me *UserDataDB) GetDataFile(auth model.Auth, id, dataPath string) (*file.IO, error) {
 	tx, err := me.db.Begin(false)
 	if err != nil {
 		return nil, err
@@ -290,11 +291,11 @@ func (me *UserDataDB) GetDataFile(auth model.Authorization, id, dataPath string)
 	return nil, os.ErrNotExist
 }
 
-func (me *UserDataDB) Put(auth model.Authorization, item *model.UserDataItem) error {
+func (me *UserDataDB) Put(auth model.Auth, item *model.UserDataItem) error {
 	return me.put(auth, item, true)
 }
 
-func (me *UserDataDB) put(auth model.Authorization, item *model.UserDataItem, updated bool) error {
+func (me *UserDataDB) put(auth model.Auth, item *model.UserDataItem, updated bool) error {
 	if item == nil {
 		return os.ErrInvalid
 	}
@@ -346,7 +347,7 @@ func (me *UserDataDB) put(auth model.Authorization, item *model.UserDataItem, up
 	}
 }
 
-func (me *UserDataDB) updateItem(auth model.Authorization, item *model.UserDataItem, tx storm.Node) error {
+func (me *UserDataDB) updateItem(auth model.Auth, item *model.UserDataItem, tx storm.Node) error {
 	err := me.saveOnly(item, tx)
 	if err != nil {
 		return err
@@ -366,51 +367,51 @@ func (me *UserDataDB) saveOnly(item *model.UserDataItem, tx storm.Node) error {
 	return tx.Save(&cp)
 }
 
-func (me *UserDataDB) Import(imex *Imex) error {
+func (me *UserDataDB) Import(imex storage.ImexIF) error {
 	err := me.init(imex)
 	if err != nil {
 		return err
 	}
 
 	for i := 0; true; i++ {
-		items, err := imex.db.UserData.List(imex.auth, "", map[string]interface{}{"index": i, "limit": 1000, "metaOnly": false}, true)
+		items, err := imex.DB().UserData.List(imex.Auth(), "", map[string]interface{}{"index": i, "limit": 1000, "metaOnly": false}, true)
 		if err == nil && len(items) > 0 {
 			for _, item := range items {
-				if imex.skipExistingOnImport {
-					_, err = imex.sysDB.UserData.Get(imex.auth, item.ID)
+				if imex.SkipExistingOnImport() {
+					_, err = imex.SysDB().UserData.Get(imex.Auth(), item.ID)
 					if err == nil {
 						continue
 					}
 				}
-				item.Permissions.UpdateUserID(imex.locatedSameUserWithDifferentID)
+				item.Permissions.UpdateUserID(imex.LocatedSameUserWithDifferentID())
 
-				err = imex.sysDB.UserData.put(imex.auth, item, false)
+				err = imex.SysDB().UserData.(*UserDataDB).put(imex.Auth(), item, false)
 				if err != nil {
-					imex.processedEntry(imexUserData, item.ID, err)
+					imex.ProcessedEntry(imexUserData, item.ID, err)
 					continue
 				}
 				hadError := false
-				fios := imex.db.UserData.GetAllFileInfosOf(item)
+				fios := imex.DB().UserData.GetAllFileInfosOf(item)
 				for _, fio := range fios {
-					f, err := os.OpenFile(filepath.Join(imex.sysDB.UserData.baseFilePath, fio.PathName()), os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0600)
+					f, err := os.OpenFile(filepath.Join(imex.SysDB().UserData.(*UserDataDB).baseFilePath, fio.PathName()), os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0600)
 					if err != nil {
 						hadError = true
-						imex.processedEntry(imexUserData, item.ID, err)
+						imex.ProcessedEntry(imexUserData, item.ID, err)
 						continue
 					}
 					_, err = fio.Read(f)
 					if err != nil {
 						hadError = true
-						imex.processedEntry(imexUserData, item.ID, err)
+						imex.ProcessedEntry(imexUserData, item.ID, err)
 					}
 					err = f.Close()
 					if err != nil {
 						hadError = true
-						imex.processedEntry(imexUserData, item.ID, err)
+						imex.ProcessedEntry(imexUserData, item.ID, err)
 					}
 				}
 				if !hadError {
-					imex.processedEntry(imexUserData, item.ID, nil)
+					imex.ProcessedEntry(imexUserData, item.ID, nil)
 				}
 			}
 		} else {
@@ -422,15 +423,15 @@ func (me *UserDataDB) Import(imex *Imex) error {
 
 const imexUserData = "UserData"
 
-func (me *UserDataDB) init(imex *Imex) error {
+func (me *UserDataDB) init(imex storage.ImexIF) error {
 	var err error
-	if imex.db.UserData == nil {
-		imex.db.UserData, err = NewUserDataDB(imex.dir)
+	if imex.DB().UserData == nil {
+		imex.DB().UserData, err = NewUserDataDB(imex.Dir())
 	}
 	return err
 }
 
-func (me *UserDataDB) Export(imex *Imex, id ...string) error {
+func (me *UserDataDB) Export(imex storage.ImexIF, id ...string) error {
 	err := me.init(imex)
 	if err != nil {
 		return err
@@ -438,10 +439,10 @@ func (me *UserDataDB) Export(imex *Imex, id ...string) error {
 
 	specificIds := len(id) > 0
 	for i := 0; true; i++ {
-		items, err := me.List(imex.auth, "", map[string]interface{}{"include": id, "index": i, "limit": 1000, "metaOnly": false}, true)
+		items, err := me.List(imex.Auth(), "", map[string]interface{}{"include": id, "index": i, "limit": 1000, "metaOnly": false}, true)
 		if err == nil && len(items) > 0 {
 			var tx storm.Node
-			tx, err = imex.db.UserData.db.Begin(true)
+			tx, err = imex.DB().UserData.(*UserDataDB).db.Begin(true)
 			if err != nil {
 				return err
 			}
@@ -453,7 +454,7 @@ func (me *UserDataDB) Export(imex *Imex, id ...string) error {
 				for _, item := range items {
 					fios := me.GetAllFileInfosOf(item)
 					for _, fio := range fios {
-						f, err := os.OpenFile(filepath.Join(imex.db.UserData.baseFilePath, fio.PathName()), os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0600)
+						f, err := os.OpenFile(filepath.Join(imex.DB().UserData.(*UserDataDB).baseFilePath, fio.PathName()), os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0600)
 						if err != nil {
 							fileCopyErrs[item.ID] = err
 							continue
@@ -471,21 +472,21 @@ func (me *UserDataDB) Export(imex *Imex, id ...string) error {
 				wg.Done()
 			}()
 			for _, item := range items {
-				if !imex.isProcessed(imexUserData, item.ID) {
-					err = imex.db.UserData.saveOnly(item, tx)
+				if !imex.IsProcessed(imexUserData, item.ID) {
+					err = imex.DB().UserData.(*UserDataDB).saveOnly(item, tx)
 					if err != nil {
-						imex.processedEntry(imexUserData, item.ID, err)
+						imex.ProcessedEntry(imexUserData, item.ID, err)
 						continue
 					}
 					if item.WorkflowID != "" {
 						workflows[item.WorkflowID] = true
 					}
-					item.Permissions.UserIdsMap(imex.neededUsers)
+					item.Permissions.UserIdsMap(imex.NeededUsers())
 					if err != nil {
-						imex.processedEntry(imexUserData, item.ID, err)
+						imex.ProcessedEntry(imexUserData, item.ID, err)
 						continue
 					}
-					imex.processedEntry(imexUserData, item.ID, nil)
+					imex.ProcessedEntry(imexUserData, item.ID, nil)
 				}
 			}
 			err = tx.Commit()
@@ -500,14 +501,14 @@ func (me *UserDataDB) Export(imex *Imex, id ...string) error {
 					wfIds[i] = wfID
 					i++
 				}
-				err = imex.sysDB.Workflow.Export(imex, wfIds...)
+				err = imex.SysDB().Workflow.Export(imex, wfIds...)
 				if err != nil {
 					return err
 				}
 			}
 			wg.Wait()
 			for k, v := range fileCopyErrs {
-				imex.processedEntry(imexUserData, k, v)
+				imex.ProcessedEntry(imexUserData, k, v)
 			}
 		} else {
 			break

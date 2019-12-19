@@ -15,6 +15,7 @@ import (
 	"github.com/asdine/storm/q"
 	uuid "github.com/satori/go.uuid"
 
+	"github.com/ProxeusApp/proxeus-core/storage"
 	"github.com/ProxeusApp/proxeus-core/sys/form"
 	"github.com/ProxeusApp/proxeus-core/sys/model"
 )
@@ -76,7 +77,7 @@ func NewFormDB(dir string) (*FormDB, error) {
 	return udb, nil
 }
 
-func (me *FormDB) List(auth model.Authorization, contains string, options map[string]interface{}) ([]*model.FormItem, error) {
+func (me *FormDB) List(auth model.Auth, contains string, options map[string]interface{}) ([]*model.FormItem, error) {
 	params := makeSimpleQuery(options)
 	var items []*model.FormItem
 	tx, err := me.db.Begin(false)
@@ -102,7 +103,7 @@ func (me *FormDB) List(auth model.Authorization, contains string, options map[st
 	return items, nil
 }
 
-func (me *FormDB) Get(auth model.Authorization, id string) (*model.FormItem, error) {
+func (me *FormDB) Get(auth model.Auth, id string) (*model.FormItem, error) {
 	var item model.FormItem
 	err := me.db.One("ID", id, &item)
 	if err != nil {
@@ -117,11 +118,11 @@ func (me *FormDB) Get(auth model.Authorization, id string) (*model.FormItem, err
 	return itemRef, nil
 }
 
-func (me *FormDB) Put(auth model.Authorization, item *model.FormItem) error {
+func (me *FormDB) Put(auth model.Auth, item *model.FormItem) error {
 	return me.put(auth, item, true)
 }
 
-func (me *FormDB) put(auth model.Authorization, item *model.FormItem, updated bool) error {
+func (me *FormDB) put(auth model.Auth, item *model.FormItem, updated bool) error {
 	if item == nil {
 		return os.ErrInvalid
 	}
@@ -175,7 +176,7 @@ func (me *FormDB) put(auth model.Authorization, item *model.FormItem, updated bo
 	}
 }
 
-func (me *FormDB) Delete(auth model.Authorization, id string) error {
+func (me *FormDB) Delete(auth model.Auth, id string) error {
 	tx, err := me.db.Begin(true)
 	if err != nil {
 		return err
@@ -205,7 +206,7 @@ func (me *FormDB) Delete(auth model.Authorization, id string) error {
 	return tx.Commit()
 }
 
-func (me *FormDB) updateForm(auth model.Authorization, item *model.FormItem, tx storm.Node) error {
+func (me *FormDB) updateForm(auth model.Auth, item *model.FormItem, tx storm.Node) error {
 	err := me.updateVars(auth, item, tx)
 	if err != nil {
 		return err
@@ -225,7 +226,7 @@ func (me *FormDB) updateForm(auth model.Authorization, item *model.FormItem, tx 
 	return tx.Commit()
 }
 
-func (me *FormDB) updateVars(auth model.Authorization, item *model.FormItem, tx storm.Node) error {
+func (me *FormDB) updateVars(auth model.Auth, item *model.FormItem, tx storm.Node) error {
 	formVars := form.Vars(item.Data)
 	if len(formVars) > 0 {
 		err := updateVarsOf(auth, item.ID, formVars, tx)
@@ -236,7 +237,7 @@ func (me *FormDB) updateVars(auth model.Authorization, item *model.FormItem, tx 
 	return nil
 }
 
-func (me *FormDB) DelComp(auth model.Authorization, id string) error {
+func (me *FormDB) DelComp(auth model.Auth, id string) error {
 	if !auth.AccessRights().IsGrantedForUserModifications() {
 		return model.ErrAuthorityMissing
 	}
@@ -257,7 +258,7 @@ func (me *FormDB) DelComp(auth model.Authorization, id string) error {
 	return tx.Commit()
 }
 
-func (me *FormDB) PutComp(auth model.Authorization, comp *model.FormComponentItem) error {
+func (me *FormDB) PutComp(auth model.Auth, comp *model.FormComponentItem) error {
 	if comp == nil {
 		return errors.New("item cannot be nil")
 	}
@@ -273,7 +274,7 @@ func (me *FormDB) PutComp(auth model.Authorization, comp *model.FormComponentIte
 	return me.db.Save(comp)
 }
 
-func (me *FormDB) GetComp(auth model.Authorization, id string) (*model.FormComponentItem, error) {
+func (me *FormDB) GetComp(auth model.Auth, id string) (*model.FormComponentItem, error) {
 	if id == "" {
 		return nil, fmt.Errorf("id can't be empty")
 	}
@@ -311,7 +312,7 @@ func (me *formComponentSearchMatcher) MatchField(v interface{}) (bool, error) {
 	return len(me.re.FindIndex(bts)) > 0, nil
 }
 
-func (me *FormDB) ListComp(auth model.Authorization, contains string, options map[string]interface{}) (map[string]*model.FormComponentItem, error) {
+func (me *FormDB) ListComp(auth model.Auth, contains string, options map[string]interface{}) (map[string]*model.FormComponentItem, error) {
 	params := makeSimpleQuery(options)
 	items := make(map[string]*model.FormComponentItem)
 	tx, err := me.db.Begin(false)
@@ -364,7 +365,7 @@ func (me *FormDB) ListComp(auth model.Authorization, contains string, options ma
 	return items, nil
 }
 
-func (me *FormDB) Vars(auth model.Authorization, contains string, options map[string]interface{}) ([]string, error) {
+func (me *FormDB) Vars(auth model.Auth, contains string, options map[string]interface{}) ([]string, error) {
 	contains = regexp.QuoteMeta(contains)
 	params := makeSimpleQuery(options)
 	tx, err := me.db.Begin(false)
@@ -375,51 +376,51 @@ func (me *FormDB) Vars(auth model.Authorization, contains string, options map[st
 	return getVars(contains, params.limit, params.index, tx)
 }
 
-func (me *FormDB) Import(imex *Imex) error {
+func (me *FormDB) Import(imex storage.ImexIF) error {
 	err := me.init(imex)
 	if err != nil {
 		return err
 	}
 	for i := 0; true; i++ {
-		items, err := imex.db.Form.ListComp(imex.auth, "", map[string]interface{}{"index": i, "limit": 1000, "metaOnly": false})
+		items, err := imex.DB().Form.ListComp(imex.Auth(), "", map[string]interface{}{"index": i, "limit": 1000, "metaOnly": false})
 		if err == nil && len(items) > 0 {
 			for _, item := range items {
-				if imex.skipExistingOnImport {
-					_, err = imex.sysDB.Form.GetComp(imex.auth, item.ID)
+				if imex.SkipExistingOnImport() {
+					_, err = imex.SysDB().Form.GetComp(imex.Auth(), item.ID)
 					if err == nil {
 						continue
 					}
 				}
-				err = imex.sysDB.Form.PutComp(imex.auth, item)
+				err = imex.SysDB().Form.PutComp(imex.Auth(), item)
 				if err != nil {
-					imex.processedEntry(imexFormComponent, item.ID, err)
+					imex.ProcessedEntry(imexFormComponent, item.ID, err)
 					continue
 				}
-				imex.processedEntry(imexFormComponent, item.ID, nil)
+				imex.ProcessedEntry(imexFormComponent, item.ID, nil)
 			}
 		} else {
 			break
 		}
 	}
 	for i := 0; true; i++ {
-		items, err := imex.db.Form.List(imex.auth, "", map[string]interface{}{"index": i, "limit": 1000, "metaOnly": false})
+		items, err := imex.DB().Form.List(imex.Auth(), "", map[string]interface{}{"index": i, "limit": 1000, "metaOnly": false})
 		if err == nil && len(items) > 0 {
 			for _, item := range items {
-				if imex.skipExistingOnImport {
-					_, err = imex.sysDB.Form.Get(imex.auth, item.ID)
+				if imex.SkipExistingOnImport() {
+					_, err = imex.SysDB().Form.Get(imex.Auth(), item.ID)
 					if err == nil {
 						continue
 					}
 				}
 
-				item.Permissions.UpdateUserID(imex.locatedSameUserWithDifferentID)
+				item.Permissions.UpdateUserID(imex.LocatedSameUserWithDifferentID())
 
-				err = imex.sysDB.Form.put(imex.auth, item, false)
+				err = imex.SysDB().Form.(*FormDB).put(imex.Auth(), item, false)
 				if err != nil {
-					imex.processedEntry(imexForm, item.ID, err)
+					imex.ProcessedEntry(imexForm, item.ID, err)
 					continue
 				}
-				imex.processedEntry(imexForm, item.ID, nil)
+				imex.ProcessedEntry(imexForm, item.ID, nil)
 				//TODO export i18n of comps
 			}
 		} else {
@@ -432,15 +433,15 @@ func (me *FormDB) Import(imex *Imex) error {
 const imexForm = "Form"
 const imexFormComponent = "FormComponent"
 
-func (me *FormDB) init(imex *Imex) error {
+func (me *FormDB) init(imex storage.ImexIF) error {
 	var err error
-	if imex.db.Form == nil {
-		imex.db.Form, err = NewFormDB(imex.dir)
+	if imex.DB().Form == nil {
+		imex.DB().Form, err = NewFormDB(imex.Dir())
 	}
 	return err
 }
 
-func (me *FormDB) Export(imex *Imex, id ...string) error {
+func (me *FormDB) Export(imex storage.ImexIF, id ...string) error {
 	var err error
 	err = me.init(imex)
 	if err != nil {
@@ -448,28 +449,28 @@ func (me *FormDB) Export(imex *Imex, id ...string) error {
 	}
 	specificIds := len(id) > 0
 	if len(id) == 1 {
-		if imex.isProcessed(imexForm, id[0]) {
+		if imex.IsProcessed(imexForm, id[0]) {
 			return nil
 		}
 	}
 	formComps := make(map[string]bool)
 
 	for i := 0; true; i++ {
-		items, err := imex.sysDB.Form.List(imex.auth, "", map[string]interface{}{"include": id, "index": i, "limit": 1000, "metaOnly": false})
+		items, err := imex.SysDB().Form.List(imex.Auth(), "", map[string]interface{}{"include": id, "index": i, "limit": 1000, "metaOnly": false})
 		if err == nil && len(items) > 0 {
 			var tx storm.Node
-			tx, err = imex.db.Form.db.Begin(true)
+			tx, err = imex.DB().Form.(*FormDB).db.Begin(true)
 			if err != nil {
 				return err
 			}
 			for _, item := range items {
-				if imex.isProcessed(imexForm, item.ID) {
+				if imex.IsProcessed(imexForm, item.ID) {
 					continue
 				}
 				if len(item.Data) > 0 {
 					err = tx.Set(formHeavyData, item.ID, item.Data)
 					if err != nil {
-						imex.processedEntry(imexForm, item.ID, err)
+						imex.ProcessedEntry(imexForm, item.ID, err)
 						continue
 					}
 				}
@@ -477,18 +478,18 @@ func (me *FormDB) Export(imex *Imex, id ...string) error {
 				item.Data = nil //
 				err = tx.Save(item)
 				if err != nil {
-					imex.processedEntry(imexForm, item.ID, err)
+					imex.ProcessedEntry(imexForm, item.ID, err)
 					continue
 				}
 				form.LoopComponents(formSrc, func(compId, compInstId string, compMain interface{}, comp map[string]interface{}) bool {
 					if compId == "" {
-						imex.processedEntry(imexForm, item.ID, fmt.Errorf("form contains a component with an empty id"))
+						imex.ProcessedEntry(imexForm, item.ID, fmt.Errorf("form contains a component with an empty id"))
 					}
 					formComps[compId] = true
 					return true
 				})
-				item.Permissions.UserIdsMap(imex.neededUsers)
-				imex.processedEntry(imexForm, item.ID, nil)
+				item.Permissions.UserIdsMap(imex.NeededUsers())
+				imex.ProcessedEntry(imexForm, item.ID, nil)
 				//TODO export i18n of comps
 			}
 			err = tx.Commit()
@@ -505,19 +506,19 @@ func (me *FormDB) Export(imex *Imex, id ...string) error {
 	}
 	if len(formComps) > 0 {
 		var tx storm.Node
-		tx, err = imex.db.Form.db.Begin(true)
+		tx, err = imex.DB().Form.(*FormDB).db.Begin(true)
 		if err != nil {
 			return err
 		}
 		for compId := range formComps {
 			var fbi model.FormComponentItem
-			err = imex.sysDB.Form.db.One("ID", compId, &fbi)
+			err = imex.SysDB().Form.(*FormDB).db.One("ID", compId, &fbi)
 			if err != nil {
-				imex.processedEntry(imexFormComponent, compId, err)
+				imex.ProcessedEntry(imexFormComponent, compId, err)
 				continue
 			}
 			err = tx.Save(&fbi)
-			imex.processedEntry(imexFormComponent, compId, err)
+			imex.ProcessedEntry(imexFormComponent, compId, err)
 		}
 		err = tx.Commit()
 		if err != nil {

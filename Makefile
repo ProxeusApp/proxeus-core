@@ -16,7 +16,7 @@ ifeq ($(shell uname), Darwin)
 endif
 #########################################################
 dependencies=go curl
-mocks=main/handlers/blockchain/mock/adapter_mock.go sys/db/storm/mock/workflow_payments_mock.go sys/db/storm/mock/user_mock.go sys/db/storm/mock/workflow_mock.go 
+mocks=main/handlers/blockchain/mock/adapter_mock.go
 bindata=main/handlers/assets/bindata.go test/bindata.go
 
 .PHONY: all
@@ -39,7 +39,7 @@ ui-dev:
 	$(MAKE) -C ui serve-main-hosted
 
 .PHONY: generate
-generate: $(bindata) $(mocks)
+generate: $(bindata) $(mocks) storage/db/storm/mock/mocks.go
 
 .PHONY: server
 server: generate
@@ -62,7 +62,7 @@ fmt:
 
 .PHONY: test
 test: generate 
-	go test  ./main/... ./sys/... 
+	go test  ./main/... ./sys/... ./storage/...
 
 .PHONY: test-api
 test-api: generate
@@ -71,9 +71,9 @@ test-api: generate
 .PHONY: coverage
 comma:=,
 space:= $() $()
-coverpkg=$(filter-out %/assets %/mock, $(subst $(space),$(comma),$(shell go list ./main/... ./sys/...)))
+coverpkg=$(subst $(space),$(comma), $(filter-out %/mock %/assets, $(shell go list ./main/... ./sys/... ./storage/...)))
 coverage: generate
-	go test  -coverprofile artifacts/cover_unittests.out -coverpkg="$(coverpkg)" ./main/... ./sys/...
+	go test -coverprofile artifacts/cover_unittests.out ./main/... ./sys/... ./storage/...
 	go test -v -tags coverage -coverprofile artifacts/cover_integration.out -coverpkg="$(coverpkg)" ./main
 
 .PHONY: print-coverage
@@ -104,4 +104,8 @@ test/bindata.go: $(wildcard ./test/assets/**)
 .SECONDEXPANSION: # See https://www.gnu.org/software/make/manual/make.html#Secondary-Expansion
 $(mocks): $$(patsubst %_mock.go, %.go, $$(subst /mock,, $$@))
 	mockgen -package mock  -source $<  -destination $@  -self_package github.com/ProxeusApp/proxeus-core/$(shell dirname $@)
+	goimports -w $@
+
+storage/db/storm/mock/mocks.go: storage/interfaces.go
+	mockgen -package mock  -source storage/interfaces.go -destination $@  -self_package github.com/ProxeusApp/proxeus-core/$(shell dirname $@)
 	goimports -w $@

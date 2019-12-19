@@ -17,6 +17,7 @@ import (
 	"github.com/asdine/storm/codec/msgpack"
 	"github.com/asdine/storm/q"
 
+	"github.com/ProxeusApp/proxeus-core/storage"
 	"github.com/ProxeusApp/proxeus-core/sys/i18n"
 	"github.com/ProxeusApp/proxeus-core/sys/model"
 )
@@ -337,39 +338,39 @@ const imexI18n = "I18n"
 //to provide an error for the entire region
 const imexAllKeysMarker = "_all"
 
-func (me *I18nDB) Import(imex *Imex) error {
+func (me *I18nDB) Import(imex storage.ImexIF) error {
 	var err error
 	err = me.init(imex)
 	if err != nil {
 		return err
 	}
 	var langs []*model.Lang
-	langs, err = imex.db.I18n.GetAllLangs()
+	langs, err = imex.DB().I18n.GetAllLangs()
 	if err == nil && len(langs) > 0 {
 		for _, lang := range langs {
-			if imex.skipExistingOnImport {
-				if !imex.sysDB.I18n.HasLang(lang.Code) {
-					err = imex.sysDB.I18n.PutLang(lang.Code, lang.Enabled)
-					imex.processedEntry(imexI18n, lang.Code, err)
+			if imex.SkipExistingOnImport() {
+				if !imex.SysDB().I18n.HasLang(lang.Code) {
+					err = imex.SysDB().I18n.PutLang(lang.Code, lang.Enabled)
+					imex.ProcessedEntry(imexI18n, lang.Code, err)
 				}
 			} else {
-				err = imex.sysDB.I18n.PutLang(lang.Code, lang.Enabled)
-				imex.processedEntry(imexI18n, lang.Code, err)
+				err = imex.SysDB().I18n.PutLang(lang.Code, lang.Enabled)
+				imex.ProcessedEntry(imexI18n, lang.Code, err)
 			}
 			var trans map[string]string
-			trans, err = imex.db.I18n.GetAll(lang.Code)
+			trans, err = imex.DB().I18n.GetAll(lang.Code)
 			if err != nil {
-				imex.processedEntry(imexI18n, lang.Code+imexAllKeysMarker, err)
+				imex.ProcessedEntry(imexI18n, lang.Code+imexAllKeysMarker, err)
 				continue
 			}
-			if imex.skipExistingOnImport {
+			if imex.SkipExistingOnImport() {
 				var transExisting map[string]string
-				transExisting, err = imex.sysDB.I18n.GetAll(lang.Code)
+				transExisting, err = imex.SysDB().I18n.GetAll(lang.Code)
 				if err != nil {
-					imex.processedEntry(imexI18n, lang.Code+imexAllKeysMarker, err)
+					imex.ProcessedEntry(imexI18n, lang.Code+imexAllKeysMarker, err)
 					continue
 				}
-				tx, err := imex.sysDB.I18n.db.Begin(true)
+				tx, err := imex.SysDB().I18n.(*I18nDB).db.Begin(true)
 				if err != nil {
 					return err
 				}
@@ -377,28 +378,28 @@ func (me *I18nDB) Import(imex *Imex) error {
 					if _, exists := transExisting[k]; exists {
 						continue
 					} else {
-						err = imex.sysDB.I18n.put(&lang.Code, &k, &v, tx)
-						imex.processedEntry(imexI18n, lang.Code+"_"+k, err)
+						err = imex.SysDB().I18n.(*I18nDB).put(&lang.Code, &k, &v, tx)
+						imex.ProcessedEntry(imexI18n, lang.Code+"_"+k, err)
 					}
 				}
 				if err != nil {
 					_ = tx.Rollback()
-					imex.processedEntry(imexI18n, lang.Code+imexAllKeysMarker, err)
+					imex.ProcessedEntry(imexI18n, lang.Code+imexAllKeysMarker, err)
 				} else {
 					err = tx.Commit()
 					if err != nil {
 						_ = tx.Rollback()
-						imex.processedEntry(imexI18n, lang.Code+imexAllKeysMarker, err)
+						imex.ProcessedEntry(imexI18n, lang.Code+imexAllKeysMarker, err)
 					}
 				}
 			} else {
-				err = imex.sysDB.I18n.PutAll(lang.Code, trans)
+				err = imex.SysDB().I18n.PutAll(lang.Code, trans)
 				for k, t := range trans {
 					if k == "" {
-						imex.processedEntry(imexI18n, lang.Code+"_"+k, fmt.Errorf("invalid argument: key can not be empty {key:'%s',text:'%s'}", k, t))
+						imex.ProcessedEntry(imexI18n, lang.Code+"_"+k, fmt.Errorf("invalid argument: key can not be empty {key:'%s',text:'%s'}", k, t))
 						continue
 					}
-					imex.processedEntry(imexI18n, lang.Code+"_"+k, err)
+					imex.ProcessedEntry(imexI18n, lang.Code+"_"+k, err)
 				}
 			}
 		}
@@ -406,15 +407,15 @@ func (me *I18nDB) Import(imex *Imex) error {
 	return nil
 }
 
-func (me *I18nDB) init(imex *Imex) error {
+func (me *I18nDB) init(imex storage.ImexIF) error {
 	var err error
-	if imex.db.I18n == nil {
-		imex.db.I18n, err = NewI18nDB(imex.dir)
+	if imex.DB().I18n == nil {
+		imex.DB().I18n, err = NewI18nDB(imex.Dir())
 	}
 	return err
 }
 
-func (me *I18nDB) Export(imex *Imex, id ...string) error {
+func (me *I18nDB) Export(imex storage.ImexIF, id ...string) error {
 	var err error
 	err = me.init(imex)
 	if err != nil {
@@ -423,58 +424,58 @@ func (me *I18nDB) Export(imex *Imex, id ...string) error {
 	var langs []*model.Lang
 
 	specificIds := len(id) > 0
-	langs, err = imex.sysDB.I18n.GetAllLangs()
+	langs, err = imex.SysDB().I18n.GetAllLangs()
 	if err == nil && len(langs) > 0 {
 		for _, lang := range langs {
-			if !imex.isProcessed(imexI18n, lang.Code) {
-				err = imex.db.I18n.PutLang(lang.Code, lang.Enabled)
-				imex.processedEntry(imexI18n, lang.Code, err)
+			if !imex.IsProcessed(imexI18n, lang.Code) {
+				err = imex.DB().I18n.PutLang(lang.Code, lang.Enabled)
+				imex.ProcessedEntry(imexI18n, lang.Code, err)
 			}
 			if specificIds {
 				var trans map[string]string
-				trans, err = imex.sysDB.I18n.GetAll(lang.Code)
+				trans, err = imex.SysDB().I18n.GetAll(lang.Code)
 				if err != nil {
-					imex.processedEntry(imexI18n, lang.Code+imexAllKeysMarker, err)
+					imex.ProcessedEntry(imexI18n, lang.Code+imexAllKeysMarker, err)
 					continue
 				}
-				tx, err := imex.db.I18n.db.Begin(true)
+				tx, err := imex.DB().I18n.(*I18nDB).db.Begin(true)
 				if err != nil {
 					return err
 				}
 				for _, v := range id {
-					if !imex.isProcessed(imexI18n, lang.Code+"_"+v) {
+					if !imex.IsProcessed(imexI18n, lang.Code+"_"+v) {
 						if text, ok := trans[v]; ok {
-							err = imex.db.I18n.put(&lang.Code, &v, &text, tx)
-							imex.processedEntry(imexI18n, lang.Code+"_"+v, err)
+							err = imex.DB().I18n.(*I18nDB).put(&lang.Code, &v, &text, tx)
+							imex.ProcessedEntry(imexI18n, lang.Code+"_"+v, err)
 						}
 					}
 				}
 				if err != nil {
 					_ = tx.Rollback()
-					imex.processedEntry(imexI18n, lang.Code+imexAllKeysMarker, err)
+					imex.ProcessedEntry(imexI18n, lang.Code+imexAllKeysMarker, err)
 				} else {
 					err = tx.Commit()
 					if err != nil {
 						_ = tx.Rollback()
-						imex.processedEntry(imexI18n, lang.Code+imexAllKeysMarker, err)
+						imex.ProcessedEntry(imexI18n, lang.Code+imexAllKeysMarker, err)
 					}
 				}
-			} else if !imex.isProcessed(imexI18n, lang.Code+imexAllKeysMarker) {
+			} else if !imex.IsProcessed(imexI18n, lang.Code+imexAllKeysMarker) {
 				var trans map[string]string
-				trans, err = imex.sysDB.I18n.GetAll(lang.Code)
+				trans, err = imex.SysDB().I18n.GetAll(lang.Code)
 				if err != nil {
-					imex.processedEntry(imexI18n, lang.Code+imexAllKeysMarker, err)
+					imex.ProcessedEntry(imexI18n, lang.Code+imexAllKeysMarker, err)
 					continue
 				}
-				err = imex.db.I18n.PutAll(lang.Code, trans)
+				err = imex.DB().I18n.PutAll(lang.Code, trans)
 				if err != nil {
-					imex.processedEntry(imexI18n, lang.Code+imexAllKeysMarker, err)
+					imex.ProcessedEntry(imexI18n, lang.Code+imexAllKeysMarker, err)
 					continue
 				}
 				for k := range trans {
-					imex.processedEntry(imexI18n, lang.Code+"_"+k, nil)
+					imex.ProcessedEntry(imexI18n, lang.Code+"_"+k, nil)
 				}
-				imex.processedEntry(imexI18n, lang.Code+imexAllKeysMarker, nil)
+				imex.ProcessedEntry(imexI18n, lang.Code+imexAllKeysMarker, nil)
 			}
 		}
 	}

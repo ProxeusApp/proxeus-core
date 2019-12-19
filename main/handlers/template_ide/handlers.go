@@ -18,7 +18,7 @@ import (
 	"github.com/ProxeusApp/proxeus-core/main/handlers/formbuilder"
 	"github.com/ProxeusApp/proxeus-core/main/helpers"
 	"github.com/ProxeusApp/proxeus-core/main/www"
-	"github.com/ProxeusApp/proxeus-core/sys/db/storm"
+	"github.com/ProxeusApp/proxeus-core/storage"
 	"github.com/ProxeusApp/proxeus-core/sys/eio"
 	"github.com/ProxeusApp/proxeus-core/sys/file"
 	"github.com/ProxeusApp/proxeus-core/sys/model"
@@ -84,7 +84,7 @@ func ExportTemplate(e echo.Context) error {
 			}
 		}
 	}
-	return api.Export(sess, []storm.ImexIF{c.System().DB.Template}, c, id...)
+	return api.Export(sess, []storage.ImporterExporter{c.System().DB.Template}, c, id...)
 }
 
 func IdeFormHandler(e echo.Context) error {

@@ -7,22 +7,17 @@ import (
 	"strings"
 	"time"
 
-	"github.com/ProxeusApp/proxeus-core/main/handlers/blockchain"
-
 	cfg "github.com/ProxeusApp/proxeus-core/main/config"
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/core/types"
-
-	uuid "github.com/satori/go.uuid"
-
-	"github.com/ProxeusApp/proxeus-core/sys/db/storm"
+	"github.com/ProxeusApp/proxeus-core/main/handlers/blockchain"
+	"github.com/ProxeusApp/proxeus-core/main/www"
+	"github.com/ProxeusApp/proxeus-core/storage"
+	"github.com/ProxeusApp/proxeus-core/sys/model"
 
 	strm "github.com/asdine/storm"
-
+	"github.com/ethereum/go-ethereum/common"
+	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/labstack/echo"
-
-	"github.com/ProxeusApp/proxeus-core/main/www"
-	"github.com/ProxeusApp/proxeus-core/sys/model"
+	uuid "github.com/satori/go.uuid"
 )
 
 var errNotAuthorized = errors.New("user not authorized")
@@ -69,7 +64,7 @@ func CreateWorkflowPayment(e echo.Context) error {
 		WorkflowID: createPaymentRequest.WorkflowId,
 	}
 
-	err = c.System().DB.WorkflowPaymentsDB.Save(payment)
+	err = c.System().DB.WorkflowPayments.Save(payment)
 	if err != nil {
 		return c.NoContent(http.StatusBadRequest)
 	}
@@ -88,7 +83,7 @@ func GetWorkflowPaymentById(e echo.Context) error {
 		return c.NoContent(http.StatusUnauthorized)
 	}
 
-	payment, err := c.System().DB.WorkflowPaymentsDB.Get(paymentId)
+	payment, err := c.System().DB.WorkflowPayments.Get(paymentId)
 	if err != nil {
 		log.Println("[GetWorkflowPaymentById] getUserPaymentById err: ", err.Error())
 		return c.NoContent(http.StatusBadRequest)
@@ -113,7 +108,7 @@ func GetWorkflowPayment(e echo.Context) error {
 		return c.NoContent(http.StatusUnauthorized)
 	}
 
-	payment, err := getWorkflowPayment(c.System().DB.WorkflowPaymentsDB, txHash, user.EthereumAddr, status)
+	payment, err := getWorkflowPayment(c.System().DB.WorkflowPayments, txHash, user.EthereumAddr, status)
 	if err != nil {
 		if err == strm.ErrNotFound {
 			return c.NoContent(http.StatusNotFound)
@@ -127,7 +122,7 @@ func GetWorkflowPayment(e echo.Context) error {
 
 var errRequiredParamMissing = errors.New("required parameter missing")
 
-func getWorkflowPayment(workflowPaymentsDB storm.WorkflowPaymentsDBInterface, txHash,
+func getWorkflowPayment(workflowPaymentsDB storage.WorkflowPaymentsIF, txHash,
 	ethAddr, status string) (*model.WorkflowPaymentItem, error) {
 
 	if txHash == "" {
@@ -169,7 +164,7 @@ func UpdateWorkflowPaymentPending(e echo.Context) error {
 		return err
 	}
 
-	err = updateWorkflowPaymentPending(c.System().DB.WorkflowPaymentsDB, paymentId, updatePaymentRequest.TxHash, user.EthereumAddr)
+	err = updateWorkflowPaymentPending(c.System().DB.WorkflowPayments, paymentId, updatePaymentRequest.TxHash, user.EthereumAddr)
 	if err != nil {
 		log.Printf("[UpdateWorkflowPayment] err: %s", err.Error())
 		if err == errTxHashEmpty {
@@ -181,7 +176,7 @@ func UpdateWorkflowPaymentPending(e echo.Context) error {
 	return c.NoContent(http.StatusOK)
 }
 
-func updateWorkflowPaymentPending(workflowPaymentsDB storm.WorkflowPaymentsDBInterface, paymentId, txHash, ethAddr string) error {
+func updateWorkflowPaymentPending(workflowPaymentsDB storage.WorkflowPaymentsIF, paymentId, txHash, ethAddr string) error {
 	txHash = strings.TrimSpace(txHash)
 	if txHash == "" {
 		return errTxHashEmpty
@@ -189,7 +184,7 @@ func updateWorkflowPaymentPending(workflowPaymentsDB storm.WorkflowPaymentsDBInt
 
 	err := workflowPaymentsDB.Update(paymentId, model.PaymentStatusPending, txHash, ethAddr)
 	if err != nil {
-		log.Printf("[UpdateWorkflowPayment] WorkflowPaymentsDB.Update err: %s", err.Error())
+		log.Printf("[UpdateWorkflowPayment] WorkflowPayments.Update err: %s", err.Error())
 		return err
 	}
 
@@ -206,7 +201,7 @@ func CancelWorkflowPayment(e echo.Context) error {
 		return errNotAuthorized
 	}
 
-	err = cancelWorkflowPayment(c.System().DB.WorkflowPaymentsDB, paymentId, user.EthereumAddr)
+	err = cancelWorkflowPayment(c.System().DB.WorkflowPayments, paymentId, user.EthereumAddr)
 	if err != nil {
 		return c.String(http.StatusNotFound, err.Error())
 	}
@@ -214,12 +209,12 @@ func CancelWorkflowPayment(e echo.Context) error {
 	return c.NoContent(http.StatusOK)
 }
 
-func cancelWorkflowPayment(workflowPaymentsDB storm.WorkflowPaymentsDBInterface, paymentId, ethAddr string) error {
+func cancelWorkflowPayment(workflowPaymentsDB storage.WorkflowPaymentsIF, paymentId, ethAddr string) error {
 	return workflowPaymentsDB.Cancel(paymentId, ethAddr)
 }
 
 // Set the payment status from confirmed to redeemed
-func RedeemPayment(workflowPaymentsDB storm.WorkflowPaymentsDBInterface, workflowId, ethAddr string) error {
+func RedeemPayment(workflowPaymentsDB storage.WorkflowPaymentsIF, workflowId, ethAddr string) error {
 	return workflowPaymentsDB.Redeem(workflowId, ethAddr)
 }
 
@@ -256,7 +251,7 @@ func DeleteWorkflowPayment(e echo.Context) error {
 		return c.NoContent(http.StatusBadRequest)
 	}
 
-	err := c.System().DB.WorkflowPaymentsDB.Delete(paymentId)
+	err := c.System().DB.WorkflowPayments.Delete(paymentId)
 	if err != nil {
 		return c.String(http.StatusBadRequest, err.Error())
 	}
@@ -268,7 +263,7 @@ func DeleteWorkflowPayment(e echo.Context) error {
 func ListPayments(e echo.Context) error {
 	c := e.(*www.Context)
 
-	payments, err := c.System().DB.WorkflowPaymentsDB.All()
+	payments, err := c.System().DB.WorkflowPayments.All()
 	if err != nil {
 		return c.NoContent(http.StatusBadRequest)
 	}

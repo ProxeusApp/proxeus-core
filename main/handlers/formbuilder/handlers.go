@@ -8,12 +8,12 @@ import (
 	"github.com/labstack/echo"
 
 	"github.com/ProxeusApp/proxeus-core/main/handlers/api"
+	"github.com/ProxeusApp/proxeus-core/storage"
 
 	"io/ioutil"
 
 	"github.com/ProxeusApp/proxeus-core/main/helpers"
 	"github.com/ProxeusApp/proxeus-core/main/www"
-	"github.com/ProxeusApp/proxeus-core/sys/db/storm"
 	"github.com/ProxeusApp/proxeus-core/sys/model"
 )
 
@@ -35,7 +35,7 @@ func ExportForms(e echo.Context) error {
 			}
 		}
 	}
-	return api.Export(sess, []storm.ImexIF{c.System().DB.Form}, c, id...)
+	return api.Export(sess, []storage.ImporterExporter{c.System().DB.Form}, c, id...)
 }
 
 func ListHandler(e echo.Context) error {

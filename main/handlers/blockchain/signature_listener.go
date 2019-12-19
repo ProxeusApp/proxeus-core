@@ -6,6 +6,8 @@ import (
 	"log"
 	"time"
 
+	"github.com/ProxeusApp/proxeus-core/storage"
+
 	"github.com/ethereum/go-ethereum"
 	"github.com/ethereum/go-ethereum/accounts/abi"
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
@@ -13,14 +15,13 @@ import (
 	"github.com/ethereum/go-ethereum/core/types"
 
 	"github.com/ProxeusApp/proxeus-core/main/ethglue"
-	"github.com/ProxeusApp/proxeus-core/sys/db/storm"
 	"github.com/ProxeusApp/proxeus-core/sys/email"
 )
 
 type Signaturelistener struct {
 	listener
-	signatureRequestsDB       storm.SignatureRequestsDB
-	userDB                    storm.UserDBInterface
+	signatureRequestsDB       storage.SignatureRequestsIF
+	userDB                    storage.UserIF
 	emailSender               email.EmailSender
 	domain                    string
 	BlockchainContractAddress string
@@ -30,15 +31,15 @@ type Signaturelistener struct {
 
 var TestChannelSignature chan types.Log
 
-func NewSignatureListener(ethWebSocketURL, ethURL, BlockchainContractAddress string, SignatureRequestsDB *storm.SignatureRequestsDB,
-	UserDB storm.UserDBInterface, EmailSender email.EmailSender, ProxeusFSABI abi.ABI, domain string) *Signaturelistener {
+func NewSignatureListener(ethWebSocketURL, ethURL, BlockchainContractAddress string, SignatureRequestsDB storage.SignatureRequestsIF,
+	UserDB storage.UserIF, EmailSender email.EmailSender, ProxeusFSABI abi.ABI, domain string) *Signaturelistener {
 
 	me := &Signaturelistener{}
 	me.BlockchainContractAddress = BlockchainContractAddress
 	me.ethWebSocketURL = ethWebSocketURL
 	me.ethURL = ethURL
 	me.ProxeusFSABI = ProxeusFSABI
-	me.signatureRequestsDB = *SignatureRequestsDB
+	me.signatureRequestsDB = SignatureRequestsDB
 	me.emailSender = EmailSender
 	me.userDB = UserDB
 	me.domain = domain
