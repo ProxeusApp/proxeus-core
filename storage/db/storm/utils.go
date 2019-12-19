@@ -107,13 +107,13 @@ func ensureDir(dir string) error {
 	return nil
 }
 
-func defaultMatcher(auth model.Authorization, contains string, params *simpleQuery, includeReadGranted bool) []q.Matcher {
+func defaultMatcher(auth model.Auth, contains string, params *simpleQuery, includeReadGranted bool) []q.Matcher {
 	matchers := commonMatcher(auth, contains, params)
 	matchers = append(matchers, q.And(IsReadGrantedFor(auth, includeReadGranted)))
 	return matchers
 }
 
-func publishedMatcher(auth model.Authorization, contains string, params *simpleQuery) []q.Matcher {
+func publishedMatcher(auth model.Auth, contains string, params *simpleQuery) []q.Matcher {
 	matchers := commonMatcher(auth, contains, params)
 	var m q.Matcher
 	if auth == nil {
@@ -128,7 +128,7 @@ func publishedMatcher(auth model.Authorization, contains string, params *simpleQ
 	return matchers
 }
 
-func commonMatcher(auth model.Authorization, contains string, params *simpleQuery) []q.Matcher {
+func commonMatcher(auth model.Auth, contains string, params *simpleQuery) []q.Matcher {
 	contains = containsCaseInsensitiveReg(contains)
 	matchers := make([]q.Matcher, 0)
 	if contains != "" {

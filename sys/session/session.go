@@ -62,12 +62,12 @@ func (me *Session) ID() string {
 	return me.id
 }
 
-//AccessRights provides the users permission role and implements the Authorization interface
+//AccessRights provides the users permission role and implements the Auth interface
 func (me *Session) AccessRights() model.Role {
 	return me.rights
 }
 
-//UserID provides a unique user identification and implements the Authorization interface
+//UserID provides a unique user identification and implements the Auth interface
 func (me *Session) UserID() string {
 	return me.userID
 }

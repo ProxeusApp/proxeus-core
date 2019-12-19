@@ -14,22 +14,6 @@ import (
 	"github.com/ProxeusApp/proxeus-core/sys/model"
 )
 
-type WorkflowPaymentsDBInterface interface {
-	GetByTxHashAndStatusAndFromEthAddress(txHash, status, from string) (*model.WorkflowPaymentItem, error)
-	Get(paymentId string) (*model.WorkflowPaymentItem, error)
-	ConfirmPayment(txHash, from, to string, xes uint64) error
-	GetByWorkflowIdAndFromEthAddress(workflowID, fromEthAddr string, statuses []string) (*model.WorkflowPaymentItem, error)
-	SetAbandonedToTimeoutBeforeTime(beforeTime time.Time) error
-	Save(item *model.WorkflowPaymentItem) error
-	Update(paymentId, status, txHash, from string) error
-	Cancel(paymentId, from string) error
-	Redeem(workflowId, from string) error
-	Delete(paymentId string) error
-	Remove(payment *model.WorkflowPaymentItem) error
-	All() ([]*model.WorkflowPaymentItem, error)
-	Close() error
-}
-
 type WorkflowPaymentsDB struct {
 	db *storm.DB
 }
@@ -166,7 +150,7 @@ func (me *WorkflowPaymentsDB) ConfirmPayment(txHash, from, to string, xes uint64
 	}
 	defer func() {
 		if err := tx.Rollback(); err != nil && err != storm.ErrNotInTransaction {
-			log.Println("[WorkflowPaymentsDB] Rollback error: ", err.Error())
+			log.Println("[WorkflowPayments] Rollback error: ", err.Error())
 		}
 	}()
 
@@ -236,7 +220,7 @@ func (me *WorkflowPaymentsDB) Redeem(workflowId, from string) error {
 	}
 	defer func() {
 		if err := tx.Rollback(); err != nil && err != storm.ErrNotInTransaction {
-			log.Println("[WorkflowPaymentsDB] Rollback error: ", err.Error())
+			log.Println("[WorkflowPayments] Rollback error: ", err.Error())
 		}
 	}()
 
@@ -269,7 +253,7 @@ func (me *WorkflowPaymentsDB) Cancel(paymentId, from string) error {
 	}
 	defer func() {
 		if err := tx.Rollback(); err != nil && err != storm.ErrNotInTransaction {
-			log.Println("[WorkflowPaymentsDB] Rollback error: ", err.Error())
+			log.Println("[WorkflowPayments] Rollback error: ", err.Error())
 		}
 	}()
 	var item model.WorkflowPaymentItem
@@ -301,7 +285,7 @@ func (me *WorkflowPaymentsDB) Delete(paymentId string) error {
 	}
 	defer func() {
 		if err := tx.Rollback(); err != nil && err != storm.ErrNotInTransaction {
-			log.Println("[WorkflowPaymentsDB] Rollback error: ", err.Error())
+			log.Println("[WorkflowPayments] Rollback error: ", err.Error())
 		}
 	}()
 	var item model.WorkflowPaymentItem
@@ -333,7 +317,7 @@ func (me *WorkflowPaymentsDB) Update(paymentId, status, txHash, from string) err
 	}
 	defer func() {
 		if err := tx.Rollback(); err != nil && err != storm.ErrNotInTransaction {
-			log.Println("[WorkflowPaymentsDB] Rollback error: ", err.Error())
+			log.Println("[WorkflowPayments] Rollback error: ", err.Error())
 		}
 	}()
 	var item model.WorkflowPaymentItem

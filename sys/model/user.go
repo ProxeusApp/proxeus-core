@@ -55,7 +55,7 @@ func (me *User) IsGrantedFor(role Role) bool {
 	return role <= me.Role
 }
 
-//----Authorization interface----------------
+//----Auth interface----------------
 func (me *User) UserID() string {
 	return me.ID
 }
@@ -66,7 +66,7 @@ func (me *User) AccessRights() Role {
 
 //-------------------------------------------
 
-func (me *User) CheckIfAuthIsAllowedToReadPersonalData(auth Authorization) bool {
+func (me *User) CheckIfAuthIsAllowedToReadPersonalData(auth Auth) bool {
 	if auth.AccessRights().IsGrantedForUserModifications() {
 		return true
 	}

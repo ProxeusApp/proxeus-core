@@ -12,6 +12,7 @@ import (
 	"github.com/asdine/storm/codec/msgpack"
 	uuid "github.com/satori/go.uuid"
 
+	"github.com/ProxeusApp/proxeus-core/storage"
 	"github.com/ProxeusApp/proxeus-core/sys/file"
 	"github.com/ProxeusApp/proxeus-core/sys/model"
 )
@@ -106,7 +107,7 @@ func NewDocTemplateDB(dir string) (*DocTemplateDB, error) {
 	return udb, nil
 }
 
-func (me *DocTemplateDB) List(auth model.Authorization, contains string, options map[string]interface{}) ([]*model.TemplateItem, error) {
+func (me *DocTemplateDB) List(auth model.Auth, contains string, options map[string]interface{}) ([]*model.TemplateItem, error) {
 	params := makeSimpleQuery(options)
 	items := make([]*model.TemplateItem, 0)
 	tx, err := me.db.Begin(false)
@@ -140,7 +141,7 @@ func (me *DocTemplateDB) List(auth model.Authorization, contains string, options
 	return items, nil
 }
 
-func (me *DocTemplateDB) Get(auth model.Authorization, id string) (*model.TemplateItem, error) {
+func (me *DocTemplateDB) Get(auth model.Auth, id string) (*model.TemplateItem, error) {
 	var item model.TemplateItem
 	err := me.db.One("ID", id, &item)
 	if err != nil {
@@ -157,11 +158,11 @@ func (me *DocTemplateDB) Get(auth model.Authorization, id string) (*model.Templa
 }
 
 // On return, n == len(buf) if and only if err == nil.
-func (me *DocTemplateDB) ProvideFileInfoFor(auth model.Authorization, id, lang string, fm *file.Meta) (*file.IO, error) {
+func (me *DocTemplateDB) ProvideFileInfoFor(auth model.Auth, id, lang string, fm *file.Meta) (*file.IO, error) {
 	return me.getFileInfoFor(auth, id, lang, fm)
 }
 
-func (me *DocTemplateDB) PutVars(auth model.Authorization, id, lang string, vars []string) error {
+func (me *DocTemplateDB) PutVars(auth model.Auth, id, lang string, vars []string) error {
 	tx, err := me.db.Begin(true)
 	if err != nil {
 		return err
@@ -174,11 +175,11 @@ func (me *DocTemplateDB) PutVars(auth model.Authorization, id, lang string, vars
 	return tx.Commit()
 }
 
-func (me *DocTemplateDB) GetTemplate(auth model.Authorization, id, lang string) (*file.IO, error) {
+func (me *DocTemplateDB) GetTemplate(auth model.Auth, id, lang string) (*file.IO, error) {
 	return me.getFileInfoFor(auth, id, lang, nil)
 }
 
-func (me *DocTemplateDB) getFileInfoFor(auth model.Authorization, id, lang string, fm *file.Meta) (*file.IO, error) {
+func (me *DocTemplateDB) getFileInfoFor(auth model.Auth, id, lang string, fm *file.Meta) (*file.IO, error) {
 	if id == "" || lang == "" {
 		return nil, os.ErrInvalid
 	}
@@ -217,7 +218,7 @@ func (me *DocTemplateDB) getFileInfoFor(auth model.Authorization, id, lang strin
 	return nil, os.ErrNotExist
 }
 
-func (me *DocTemplateDB) DeleteTemplate(auth model.Authorization, id, lang string) error {
+func (me *DocTemplateDB) DeleteTemplate(auth model.Auth, id, lang string) error {
 	if auth == nil || id == "" || lang == "" {
 		return os.ErrInvalid
 	}
@@ -254,11 +255,11 @@ func (me *DocTemplateDB) DeleteTemplate(auth model.Authorization, id, lang strin
 	return os.ErrNotExist
 }
 
-func (me *DocTemplateDB) Put(auth model.Authorization, item *model.TemplateItem) error {
+func (me *DocTemplateDB) Put(auth model.Auth, item *model.TemplateItem) error {
 	return me.put(auth, item, true)
 }
 
-func (me *DocTemplateDB) put(auth model.Authorization, item *model.TemplateItem, updated bool) error {
+func (me *DocTemplateDB) put(auth model.Auth, item *model.TemplateItem, updated bool) error {
 	if auth == nil || item == nil {
 		return os.ErrInvalid
 	}
@@ -299,7 +300,7 @@ func (me *DocTemplateDB) put(auth model.Authorization, item *model.TemplateItem,
 	}
 }
 
-func (me *DocTemplateDB) Delete(auth model.Authorization, id string) error {
+func (me *DocTemplateDB) Delete(auth model.Auth, id string) error {
 	tx, err := me.db.Begin(true)
 	if err != nil {
 		return err
@@ -335,7 +336,7 @@ func (me *DocTemplateDB) Delete(auth model.Authorization, id string) error {
 	return tx.Commit()
 }
 
-func (me *DocTemplateDB) Vars(auth model.Authorization, contains string, options map[string]interface{}) ([]string, error) {
+func (me *DocTemplateDB) Vars(auth model.Auth, contains string, options map[string]interface{}) ([]string, error) {
 	contains = regexp.QuoteMeta(contains)
 	params := makeSimpleQuery(options)
 	tx, err := me.db.Begin(false)
@@ -346,46 +347,46 @@ func (me *DocTemplateDB) Vars(auth model.Authorization, contains string, options
 	return getVars(contains, params.limit, params.index, tx)
 }
 
-func (me *DocTemplateDB) Import(imex *Imex) error {
+func (me *DocTemplateDB) Import(imex storage.ImexIF) error {
 	err := me.init(imex)
 	if err != nil {
 		return err
 	}
 	for i := 0; true; i++ {
-		items, err := imex.db.Template.List(imex.auth, "", map[string]interface{}{"index": i, "limit": 1000, "metaOnly": false})
+		items, err := imex.DB().Template.List(imex.Auth(), "", map[string]interface{}{"index": i, "limit": 1000, "metaOnly": false})
 		if err == nil && len(items) > 0 {
 			for _, item := range items {
-				if imex.skipExistingOnImport {
-					_, err = imex.sysDB.Template.Get(imex.auth, item.ID)
+				if imex.SkipExistingOnImport() {
+					_, err = imex.SysDB().Template.Get(imex.Auth(), item.ID)
 					if err == nil {
 						continue
 					}
 				}
 
-				item.Permissions.UpdateUserID(imex.locatedSameUserWithDifferentID)
+				item.Permissions.UpdateUserID(imex.LocatedSameUserWithDifferentID())
 
-				err = imex.sysDB.Template.put(imex.auth, item, false)
+				err = imex.SysDB().Template.(*DocTemplateDB).put(imex.Auth(), item, false)
 				if err != nil {
-					imex.processedEntry(imexTemplate, item.ID, err)
+					imex.ProcessedEntry(imexTemplate, item.ID, err)
 					continue
 				}
 				var fi *file.IO
 				hadError := false
 				for lang, tmplItem := range item.Data {
-					fi, err = imex.sysDB.Template.GetTemplate(imex.auth, item.ID, lang)
+					fi, err = imex.SysDB().Template.GetTemplate(imex.Auth(), item.ID, lang)
 					if err != nil {
 						hadError = true
-						imex.processedEntry(imexTemplate, item.ID, err)
+						imex.ProcessedEntry(imexTemplate, item.ID, err)
 						continue
 					}
 					_, err = tmplItem.CpTo(fi)
 					if err != nil {
 						hadError = true
-						imex.processedEntry(imexTemplate, item.ID, err)
+						imex.ProcessedEntry(imexTemplate, item.ID, err)
 					}
 				}
 				if !hadError {
-					imex.processedEntry(imexTemplate, item.ID, nil)
+					imex.ProcessedEntry(imexTemplate, item.ID, nil)
 				}
 			}
 		} else {
@@ -397,30 +398,30 @@ func (me *DocTemplateDB) Import(imex *Imex) error {
 
 const imexTemplate = "Template"
 
-func (me *DocTemplateDB) init(imex *Imex) error {
+func (me *DocTemplateDB) init(imex storage.ImexIF) error {
 	var err error
-	if imex.db.Template == nil {
-		imex.db.Template, err = NewDocTemplateDB(imex.dir)
+	if imex.DB().Template == nil {
+		imex.DB().Template, err = NewDocTemplateDB(imex.Dir())
 	}
 	return err
 }
 
-func (me *DocTemplateDB) Export(imex *Imex, id ...string) error {
+func (me *DocTemplateDB) Export(imex storage.ImexIF, id ...string) error {
 	err := me.init(imex)
 	if err != nil {
 		return err
 	}
 	specificIds := len(id) > 0
 	if len(id) == 1 {
-		if imex.isProcessed(imexTemplate, id[0]) {
+		if imex.IsProcessed(imexTemplate, id[0]) {
 			return nil
 		}
 	}
 	var tx storm.Node
 	for i := 0; true; i++ {
-		items, err := imex.sysDB.Template.List(imex.auth, "", map[string]interface{}{"include": id, "index": i, "limit": 1000, "metaOnly": false})
+		items, err := imex.SysDB().Template.List(imex.Auth(), "", map[string]interface{}{"include": id, "index": i, "limit": 1000, "metaOnly": false})
 		if err == nil && len(items) > 0 {
-			tx, err = imex.db.Template.db.Begin(true)
+			tx, err = imex.DB().Template.(*DocTemplateDB).db.Begin(true)
 			if err != nil {
 				return err
 			}
@@ -431,7 +432,7 @@ func (me *DocTemplateDB) Export(imex *Imex, id ...string) error {
 				for _, item := range items {
 					var exportFile *os.File
 					for _, tmplItem := range item.Data {
-						exportFile, err = os.OpenFile(filepath.Join(imex.db.Template.baseFilePath, tmplItem.PathName()), os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0600)
+						exportFile, err = os.OpenFile(filepath.Join(imex.DB().Template.(*DocTemplateDB).baseFilePath, tmplItem.PathName()), os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0600)
 						if os.IsExist(err) {
 							err = nil
 						}
@@ -453,18 +454,18 @@ func (me *DocTemplateDB) Export(imex *Imex, id ...string) error {
 			}()
 
 			for _, item := range items {
-				if !imex.isProcessed(imexTemplate, item.ID) {
+				if !imex.IsProcessed(imexTemplate, item.ID) {
 					err = tx.Save(item)
 					if err != nil {
-						imex.processedEntry(imexTemplate, item.ID, err)
+						imex.ProcessedEntry(imexTemplate, item.ID, err)
 						continue
 					}
-					item.Permissions.UserIdsMap(imex.neededUsers)
+					item.Permissions.UserIdsMap(imex.NeededUsers())
 					if err != nil {
-						imex.processedEntry(imexTemplate, item.ID, err)
+						imex.ProcessedEntry(imexTemplate, item.ID, err)
 						continue
 					}
-					imex.processedEntry(imexTemplate, item.ID, nil)
+					imex.ProcessedEntry(imexTemplate, item.ID, nil)
 				}
 			}
 			err = tx.Commit()
@@ -474,7 +475,7 @@ func (me *DocTemplateDB) Export(imex *Imex, id ...string) error {
 			}
 			wg.Wait()
 			for k, v := range fileCopyErrs {
-				imex.processedEntry(imexTemplate, k, v)
+				imex.ProcessedEntry(imexTemplate, k, v)
 			}
 		} else {
 			break

@@ -10,11 +10,12 @@ import (
 	"strconv"
 	"sync"
 
+	"github.com/ProxeusApp/proxeus-core/storage"
+
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/labstack/echo"
 
 	"github.com/ProxeusApp/proxeus-core/sys"
-	"github.com/ProxeusApp/proxeus-core/sys/db/storm"
 	"github.com/ProxeusApp/proxeus-core/sys/eio"
 	"github.com/ProxeusApp/proxeus-core/sys/file"
 	"github.com/ProxeusApp/proxeus-core/sys/form"
@@ -40,7 +41,7 @@ type (
 		wfItem           *model.WorkflowItem            `json:"-"`
 		Started          bool
 		startedID        string
-		auth             model.Authorization
+		auth             model.Auth
 		SelectedDocLangs map[string]string
 		Confirmed        bool
 		unorderedData    map[string]interface{}
@@ -67,7 +68,7 @@ type (
 	}
 )
 
-func NewDocumentApp(usrData *model.UserDataItem, auth model.Authorization, system *sys.System, wfid, baseFilePath string) (*DocumentFlowInstance, error) {
+func NewDocumentApp(usrData *model.UserDataItem, auth model.Auth, system *sys.System, wfid, baseFilePath string) (*DocumentFlowInstance, error) {
 	if system == nil || wfid == "" {
 		return nil, os.ErrInvalid
 	}
@@ -92,7 +93,7 @@ func NewDocumentApp(usrData *model.UserDataItem, auth model.Authorization, syste
 	return nil, os.ErrNotExist
 }
 
-func (me *DocumentFlowInstance) Init(auth model.Authorization, system *sys.System) error {
+func (me *DocumentFlowInstance) Init(auth model.Auth, system *sys.System) error {
 	me.auth = auth
 	me.system = system
 	workflowItem, err := system.DB.Workflow.Get(auth, me.WFID)
@@ -322,7 +323,7 @@ func (me *DocumentFlowInstance) WF() *model.WorkflowItem {
 	return me.wfItem
 }
 
-func (me *DocumentFlowInstance) Confirm(currentAppLang string, tmpls map[string]interface{}, store *storm.UserDataDB) (map[string]interface{}, map[string]*file.IO, *Status, error) {
+func (me *DocumentFlowInstance) Confirm(currentAppLang string, tmpls map[string]interface{}, store storage.UserDataIF) (map[string]interface{}, map[string]*file.IO, *Status, error) {
 	if me.Confirmed {
 		return nil, nil, me.statusResult, nil
 	}

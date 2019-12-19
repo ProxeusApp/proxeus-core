@@ -7,7 +7,7 @@ import (
 	"github.com/ProxeusApp/proxeus-core/sys/workflow"
 )
 
-func GetAllFormFieldsWithRulesOf(wf *workflow.Workflow, a model.Authorization, s *sys.System) map[string]interface{} {
+func GetAllFormFieldsWithRulesOf(wf *workflow.Workflow, a model.Auth, s *sys.System) map[string]interface{} {
 	marshaledForms := marshaledFormsOf(wf, a, s)
 	fieldsAndRules := map[string]interface{}{}
 	//collect all form fields
@@ -20,7 +20,7 @@ func GetAllFormFieldsWithRulesOf(wf *workflow.Workflow, a model.Authorization, s
 	return fieldsAndRules
 }
 
-func marshaledFormsOf(wf *workflow.Workflow, a model.Authorization, s *sys.System) map[string]*model.FormItem {
+func marshaledFormsOf(wf *workflow.Workflow, a model.Auth, s *sys.System) map[string]*model.FormItem {
 	if wf == nil {
 		return nil
 	}

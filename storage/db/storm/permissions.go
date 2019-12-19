@@ -6,7 +6,7 @@ import (
 	"github.com/ProxeusApp/proxeus-core/sys/model"
 )
 
-func IsReadGrantedFor(auth model.Authorization, includeGrant bool) q.Matcher {
+func IsReadGrantedFor(auth model.Auth, includeGrant bool) q.Matcher {
 	if auth.AccessRights().IsGrantedFor(model.SUPERADMIN) {
 		return q.True()
 	}
@@ -42,7 +42,7 @@ func (me *PublicByIDMatcher) MatchField(v interface{}) (bool, error) {
 }
 
 type GrantMatcher struct {
-	Auth       model.Authorization
+	Auth       model.Auth
 	CheckWrite bool //false checks for read perm
 }
 
@@ -62,7 +62,7 @@ func (me *GrantMatcher) MatchField(v interface{}) (bool, error) {
 }
 
 type GroupAndOthersMatcher struct {
-	Auth       model.Authorization
+	Auth       model.Auth
 	CheckWrite bool //false checks for read perm
 }
 

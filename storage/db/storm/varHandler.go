@@ -22,7 +22,7 @@ func initVars(db *storm.DB) {
 	db.Init(&Var{})
 }
 
-func updateVarsOf(auth model.Authorization, id string, allNewVars []string, tx storm.Node) error {
+func updateVarsOf(auth model.Auth, id string, allNewVars []string, tx storm.Node) error {
 	var oldForm VarsMaintenance
 	err := tx.One("ID", id, &oldForm)
 	if err == storm.ErrNotFound {
@@ -70,7 +70,7 @@ func updateVarsOf(auth model.Authorization, id string, allNewVars []string, tx s
 	return tx.Save(&oldForm)
 }
 
-func remVars(auth model.Authorization, id string, tx storm.Node) error {
+func remVars(auth model.Auth, id string, tx storm.Node) error {
 	var oldForm VarsMaintenance
 	err := tx.One("ID", id, &oldForm)
 	if err != nil {

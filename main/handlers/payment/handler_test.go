@@ -11,6 +11,8 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/ProxeusApp/proxeus-core/storage"
+
 	"github.com/golang/mock/gomock"
 	"github.com/gorilla/sessions"
 	"github.com/labstack/echo"
@@ -19,9 +21,9 @@ import (
 	strm "github.com/asdine/storm"
 
 	"github.com/ProxeusApp/proxeus-core/main/www"
+	"github.com/ProxeusApp/proxeus-core/storage/db/storm"
+	sm "github.com/ProxeusApp/proxeus-core/storage/db/storm/mock"
 	"github.com/ProxeusApp/proxeus-core/sys"
-	"github.com/ProxeusApp/proxeus-core/sys/db/storm"
-	sm "github.com/ProxeusApp/proxeus-core/sys/db/storm/mock"
 	"github.com/ProxeusApp/proxeus-core/sys/model"
 
 	sysSess "github.com/ProxeusApp/proxeus-core/sys/session"
@@ -65,16 +67,16 @@ func TestCreateWorkflowPayment(t *testing.T) {
 
 	wwwContext, rec, user, _ := setupPaymentRequestTest(http.MethodPost, "/api/admin/payments", body)
 
-	userDBMock := sm.NewMockUserDBInterface(mockCtrl)
+	userDBMock := sm.NewMockUserIF(mockCtrl)
 	userDBMock.EXPECT().Get(gomock.Any(), gomock.Eq("1")).Return(user, nil).Times(1)
 
 	workflow := &model.WorkflowItem{Price: 2000000000000000000}
 	workflow.Owner = user.EthereumAddr
-	workflowDBMock := sm.NewMockWorkflowDBInterface(mockCtrl)
+	workflowDBMock := sm.NewMockWorkflowIF(mockCtrl)
 	workflowDBMock.EXPECT().Get(gomock.Any(), gomock.Any()).Return(workflow, nil)
 
 	system := &sys.System{}
-	system.DB = &storm.DBSet{WorkflowPaymentsDB: workflowPaymentsDB, User: userDBMock, Workflow: workflowDBMock}
+	system.DB = &storage.DBSet{WorkflowPayments: workflowPaymentsDB, User: userDBMock, Workflow: workflowDBMock}
 	www.SetSystem(system)
 
 	t.Run("ShouldCreatePaymentItem", func(t *testing.T) {
@@ -108,11 +110,11 @@ func TestGetWorkflowPaymentById(t *testing.T) {
 		wwwContext.SetParamNames("paymentId")
 		wwwContext.SetParamValues(paymentId)
 
-		userDBMock := sm.NewMockUserDBInterface(mockCtrl)
+		userDBMock := sm.NewMockUserIF(mockCtrl)
 		userDBMock.EXPECT().Get(gomock.Any(), gomock.Eq("1")).Return(user, nil).Times(1)
 
 		system := &sys.System{}
-		system.DB = &storm.DBSet{WorkflowPaymentsDB: workflowPaymentsDB, User: userDBMock}
+		system.DB = &storage.DBSet{WorkflowPayments: workflowPaymentsDB, User: userDBMock}
 		www.SetSystem(system)
 
 		err := workflowPaymentsDB.Save(&model.WorkflowPaymentItem{ID: paymentId, From: user.EthereumAddr})
@@ -145,11 +147,11 @@ func TestGetWorkflowPaymentById(t *testing.T) {
 		wwwContext.SetParamNames("paymentId")
 		wwwContext.SetParamValues(paymentId)
 
-		userDBMock := sm.NewMockUserDBInterface(mockCtrl)
+		userDBMock := sm.NewMockUserIF(mockCtrl)
 		userDBMock.EXPECT().Get(gomock.Any(), gomock.Eq("1")).Return(user, nil).Times(1)
 
 		system := &sys.System{}
-		system.DB = &storm.DBSet{WorkflowPaymentsDB: workflowPaymentsDB, User: userDBMock}
+		system.DB = &storage.DBSet{WorkflowPayments: workflowPaymentsDB, User: userDBMock}
 		www.SetSystem(system)
 
 		//here pass "userOwner" instead of "user"
@@ -512,7 +514,7 @@ func TestCheckIfWorkflowPaymentRequired(t *testing.T) {
 
 var errCleanupTestData = errors.New("db data has not been cleanup up after finishing tests")
 
-func up(t *testing.T) (*gomock.Controller, storm.WorkflowPaymentsDBInterface) {
+func up(t *testing.T) (*gomock.Controller, storage.WorkflowPaymentsIF) {
 	mockCtrl := gomock.NewController(t)
 
 	workflowPaymentsDB, err := storm.NewWorkflowPaymentDB(".test_data")
@@ -522,7 +524,7 @@ func up(t *testing.T) (*gomock.Controller, storm.WorkflowPaymentsDBInterface) {
 	return mockCtrl, workflowPaymentsDB
 }
 
-func down(mockCtrl *gomock.Controller, workflowPaymentsDB storm.WorkflowPaymentsDBInterface) {
+func down(mockCtrl *gomock.Controller, workflowPaymentsDB storage.WorkflowPaymentsIF) {
 
 	mockCtrl.Finish()
 

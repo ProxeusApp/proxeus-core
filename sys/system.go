@@ -14,6 +14,7 @@ import (
 	"github.com/ethereum/go-ethereum/accounts/abi"
 
 	"github.com/ProxeusApp/proxeus-core/main/handlers/blockchain"
+	"github.com/ProxeusApp/proxeus-core/storage"
 
 	"log"
 
@@ -22,7 +23,7 @@ import (
 	"github.com/ProxeusApp/proxeus-core/sys/email"
 	"github.com/ProxeusApp/proxeus-core/sys/validate"
 
-	"github.com/ProxeusApp/proxeus-core/sys/db/storm"
+	"github.com/ProxeusApp/proxeus-core/storage/db/storm"
 	"github.com/ProxeusApp/proxeus-core/sys/eio"
 	"github.com/ProxeusApp/proxeus-core/sys/model"
 	"github.com/ProxeusApp/proxeus-core/sys/session"
@@ -43,11 +44,11 @@ type (
 	System struct {
 		TestMode                    bool
 		SessionMgmnt                *session.Manager
-		DB                          *storm.DBSet
+		DB                          *storage.DBSet
 		DS                          *eio.DocumentServiceClient
 		EmailSender                 email.EmailSender
 		Cache                       *cache.UCache
-		settingsDB                  *storm.SettingsDB
+		settingsDB                  storage.SettingsIF
 		settingsInUse               model.Settings
 		fallbackSettings            *model.Settings
 		paymentListenerCancelFunc   context.CancelFunc
@@ -59,13 +60,12 @@ type (
 	}
 )
 
-func provideProxeusSettings() (*storm.SettingsDB, error) {
+func provideProxeusSettings() (storage.SettingsIF, error) {
 	u, err := user.Current()
 	if err != nil {
 		return nil, err
 	}
-	var stngsDB *storm.SettingsDB
-	stngsDB, err = storm.NewSettingsDB(filepath.Join(u.HomeDir, ".proxeus"))
+	stngsDB, err := storm.NewSettingsDB(filepath.Join(u.HomeDir, ".proxeus"))
 	if err != nil {
 		return nil, err
 	}
@@ -170,7 +170,7 @@ func (me *System) init(stngs *model.Settings) error {
 	xesAdapter := blockchain.NewAdapter(cfg.Config.XESContractAddress, XESABI)
 
 	bcListenerPayment := blockchain.NewPaymentListener(xesAdapter, cfg.Config.EthWebSocketURL,
-		cfg.Config.EthClientURL, me.DB.WorkflowPaymentsDB)
+		cfg.Config.EthClientURL, me.DB.WorkflowPayments)
 	ctxPay := context.Background()
 	ctxPay, cancelPay := context.WithCancel(ctxPay)
 	if me.paymentListenerCancelFunc != nil {
@@ -185,7 +185,7 @@ func (me *System) init(stngs *model.Settings) error {
 	}
 
 	bcListenerSignature := blockchain.NewSignatureListener(cfg.Config.EthWebSocketURL,
-		cfg.Config.EthClientURL, stngs.BlockchainContractAddress, me.DB.SignatureRequestsDB, me.DB.User, me.EmailSender, ProxeusFSABI, cfg.Config.PlatformDomain)
+		cfg.Config.EthClientURL, stngs.BlockchainContractAddress, me.DB.SignatureRequests, me.DB.User, me.EmailSender, ProxeusFSABI, cfg.Config.PlatformDomain)
 	ctxSig := context.Background()
 	ctxSig, cancelSig := context.WithCancel(ctxPay)
 	if me.signatureListenerCancelFunc != nil {
@@ -207,7 +207,7 @@ func (me *System) scheduledCleanup(tick *time.Ticker) {
 	for range tick.C {
 		beforeTime := time.Now().AddDate(0, 0, -14)
 		log.Println("[scheduler][workflowpaymentcleanup] Timing out abandoned payments from before ", beforeTime)
-		err := me.DB.WorkflowPaymentsDB.SetAbandonedToTimeoutBeforeTime(beforeTime)
+		err := me.DB.WorkflowPayments.SetAbandonedToTimeoutBeforeTime(beforeTime)
 		if err != nil {
 			log.Println("[scheduler][workflowpaymentcleanup] err: ", err.Error())
 			continue
@@ -274,8 +274,8 @@ func (me *sessionNotify) OnSessionRemoved(id string) {
 	log.Println("OnSessionRemoved", id)
 }
 
-func (me *System) GetImexIFFor(fields []string) []storm.ImexIF {
-	items := make([]storm.ImexIF, 0)
+func (me *System) GetImexIFFor(fields []string) []storage.ImporterExporter {
+	items := make([]storage.ImporterExporter, 0)
 	for _, name := range fields {
 		ex := me.DB.ImexIFByName(name)
 		if ex != nil {
@@ -285,7 +285,7 @@ func (me *System) GetImexIFFor(fields []string) []storm.ImexIF {
 	return items
 }
 
-func (me *System) Export(writer io.Writer, s *session.Session, imexIfs ...storm.ImexIF) (map[string]map[string]string, error) {
+func (me *System) Export(writer io.Writer, s *session.Session, imexIfs ...storage.ImporterExporter) (map[string]map[string]string, error) {
 	imex, err := storm.NewImex(s, me.DB, s.SessionDir())
 	if err != nil {
 		return nil, err
@@ -313,7 +313,7 @@ func (me *System) Export(writer io.Writer, s *session.Session, imexIfs ...storm.
 	return imex.Processed(), nil
 }
 
-func (me *System) ExportSingle(writer io.Writer, s *session.Session, imexIfs storm.ImexIF, id ...string) (map[string]map[string]string, error) {
+func (me *System) ExportSingle(writer io.Writer, s *session.Session, imexIfs storage.ImporterExporter, id ...string) (map[string]map[string]string, error) {
 	imex, err := storm.NewImex(s, me.DB, s.SessionDir())
 	if err != nil {
 		return nil, err
@@ -345,7 +345,7 @@ func (me *System) Import(reader io.Reader, s *session.Session, skipExisting bool
 		return nil, err
 	}
 	defer imex.Close()
-	imex.SkipExistingOnImport(skipExisting)
+	imex.SetSkipExistingOnImport(skipExisting)
 	err = imex.Extract(reader)
 	if err != nil {
 		return nil, err

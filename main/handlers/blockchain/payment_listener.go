@@ -7,12 +7,13 @@ import (
 	"math/big"
 	"time"
 
+	"github.com/ProxeusApp/proxeus-core/storage"
+
 	"github.com/ethereum/go-ethereum"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
 
 	"github.com/ProxeusApp/proxeus-core/main/ethglue"
-	"github.com/ProxeusApp/proxeus-core/sys/db/storm"
 
 	strm "github.com/asdine/storm"
 )
@@ -26,13 +27,13 @@ type listener struct {
 
 type PaymentListener struct {
 	listener
-	workflowPaymentsDB storm.WorkflowPaymentsDBInterface
+	workflowPaymentsDB storage.WorkflowPaymentsIF
 	xesAdapter         Adapter
 }
 
 var TestChannelPayment chan types.Log
 
-func NewPaymentListener(xesAdapter Adapter, ethWebSocketURL, ethURL string, workflowPaymentsDB storm.WorkflowPaymentsDBInterface) *PaymentListener {
+func NewPaymentListener(xesAdapter Adapter, ethWebSocketURL, ethURL string, workflowPaymentsDB storage.WorkflowPaymentsIF) *PaymentListener {
 	me := &PaymentListener{}
 	me.xesAdapter = xesAdapter
 	me.ethWebSocketURL = ethWebSocketURL
