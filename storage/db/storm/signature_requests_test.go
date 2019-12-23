@@ -5,8 +5,6 @@ import (
 	"testing"
 	"time"
 
-	"github.com/davecgh/go-spew/spew"
-
 	"github.com/ProxeusApp/proxeus-core/sys/model"
 )
 
@@ -38,50 +36,31 @@ func TestSigning(t *testing.T) {
 	sigreq3.Signatory = "signatory_2"
 	sigreq3.Requestor = "requestor"
 
-	var items *[]model.SignatureRequestItem
 	fmt.Println("Start")
-
-	fmt.Println("All")
-	items, err = sigdb.All()
-	if err != nil {
-		t.Error(err)
-	}
-	fmt.Println(len(*items))
-	//spew.Dump(items)
 
 	fmt.Println("Add 1")
 	err = sigdb.Add(sigreq)
 	if err != nil {
 		t.Error(err)
 	}
-	fmt.Println(len(*items))
+
 	fmt.Println("Add 2")
 	err = sigdb.Add(sigreq2)
 	if err != nil {
 		t.Error(err)
 	}
-	fmt.Println(len(*items))
+
 	fmt.Println("Add 3")
 	err = sigdb.Add(sigreq3)
 	if err != nil {
 		t.Error(err)
 	}
 
-	fmt.Println("All")
-	items, err = sigdb.All()
-	if err != nil {
-		t.Error(err)
-	}
-	fmt.Println(len(*items))
-	//spew.Dump(items)
-
 	fmt.Println("GetBySignatory")
-	items, err = sigdb.GetBySignatory("signatory_1")
+	_, err = sigdb.GetBySignatory("signatory_1")
 	if err != nil {
 		t.Error(err)
 	}
-	fmt.Println(len(*items))
-	spew.Dump(items)
 
 	fmt.Println("SetRejected")
 	err = sigdb.SetRejected(sigreq.DocId, sigreq.DocPath, sigreq.Signatory)
@@ -90,10 +69,8 @@ func TestSigning(t *testing.T) {
 	}
 
 	fmt.Println("GetByID")
-	items, err = sigdb.GetByID(sigreq.DocId, sigreq.DocPath)
+	_, err = sigdb.GetByID(sigreq.DocId, sigreq.DocPath)
 	if err != nil {
 		t.Error(err)
 	}
-	fmt.Println(len(*items))
-	//spew.Dump(items)
 }

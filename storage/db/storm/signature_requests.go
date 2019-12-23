@@ -60,13 +60,6 @@ func (me *SignatureRequestsDB) GetBySignatory(ethAddr string) (*[]model.Signatur
 	return &items, err
 }
 
-func (me *SignatureRequestsDB) All() (*[]model.SignatureRequestItem, error) {
-
-	var items []model.SignatureRequestItem
-	err := me.db.All(&items)
-	return &items, err
-}
-
 func (me *SignatureRequestsDB) GetByID(docid string, docpath string) (*[]model.SignatureRequestItem, error) {
 	var items []model.SignatureRequestItem
 	err := me.db.Select(q.And(
@@ -124,35 +117,6 @@ func (me *SignatureRequestsDB) SetRevoked(docid string, docpath string, signator
 	items[0].RevokedAt = time.Now()
 	err = me.db.Save(&items[0])
 	return err
-}
-
-func (me *SignatureRequestsDB) List(auth model.Auth, contains string, options map[string]interface{}) ([]*model.UserDataItem, error) {
-	params := makeSimpleQuery(options)
-	items := make([]*model.UserDataItem, 0)
-	tx, err := me.db.Begin(false)
-	if err != nil {
-		return nil, err
-	}
-	defer tx.Rollback()
-
-	matchers := defaultMatcher(auth, contains, params, true)
-
-	err = tx.Select(matchers...).
-		Limit(params.limit).
-		Skip(params.index).
-		OrderBy("Updated").
-		Reverse().
-		Find(&items)
-
-	if err != nil {
-		return nil, err
-	}
-	if !params.metaOnly {
-		for _, item := range items {
-			_ = tx.Get(usrdHeavyData, item.ID, &item.Data)
-		}
-	}
-	return items, nil
 }
 
 func (me *SignatureRequestsDB) Close() error {

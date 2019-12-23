@@ -124,19 +124,6 @@ func (me *I18nDB) Get(lang string, key string, args ...string) (string, error) {
 	return me.resolver.Resolve(i18nInt.Text, args...), nil
 }
 
-func (me *I18nDB) GetInsert(lang string, key string, args ...string) (string, error) {
-	var i18nInt i18nInternal
-	err := me.db.One("ID", lang+"_"+key, &i18nInt)
-	if err != nil {
-		if err == storm.ErrNotFound {
-			//insert so it is available for translation
-			_ = me.Put(lang, key, key)
-		}
-		return key, nil
-	}
-	return me.resolver.Resolve(i18nInt.Text, args...), nil
-}
-
 func (me *I18nDB) GetAll(lang string) (map[string]string, error) {
 	me.allCacheLock.RLock()
 	if m, ok := me.allCache[lang]; ok {
@@ -240,11 +227,6 @@ func (me *I18nDB) put(lang *string, key *string, text *string, tx storm.Node) er
 		Code: *key,
 		Text: *text,
 	})
-}
-
-func (me *I18nDB) Delete(keyContains string) error {
-	//this needs to be secured with rights
-	return fmt.Errorf("not yet implemented")
 }
 
 func (me *I18nDB) PutLang(lang string, enabled bool) error {

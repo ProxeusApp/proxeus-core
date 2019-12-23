@@ -19,7 +19,7 @@ func TestPutGetData(t *testing.T) {
 	}
 	defer func() {
 		db.Close()
-		db.Remove()
+		db.remove()
 	}()
 	u := &model.User{ID: "123", Role: model.ROOT}
 	usrData := &model.UserDataItem{Name: "some name", Detail: "detail..", Data: map[string]interface{}{"input": map[string]interface{}{"abcField": 123}, "123": "along input"}}
@@ -116,7 +116,7 @@ func TestPutGetDataFile(t *testing.T) {
 	}
 	defer func() {
 		db.Close()
-		db.Remove()
+		db.remove()
 	}()
 	u := &model.User{ID: "123", Role: model.ROOT}
 	usrData := &model.UserDataItem{Name: "some name", Detail: "detail..", Data: map[string]interface{}{"input": map[string]interface{}{"abcField": 123}, "123": "along input"}}

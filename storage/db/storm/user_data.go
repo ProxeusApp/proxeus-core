@@ -525,6 +525,6 @@ func (me *UserDataDB) Close() error {
 	return me.db.Close()
 }
 
-func (me *UserDataDB) Remove() error {
+func (me *UserDataDB) remove() error {
 	return os.RemoveAll(me.mainDir)
 }
