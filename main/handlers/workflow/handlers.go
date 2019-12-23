@@ -27,7 +27,7 @@ func ExportWorkflow(e echo.Context) error {
 	if c.QueryParam("id") != "" {
 		id = []string{c.QueryParam("id")}
 	} else if c.QueryParam("contains") != "" {
-		items, _ := c.System().DB.Workflow.List(sess, c.QueryParam("contains"), map[string]interface{}{"limit": 1000})
+		items, _ := c.System().DB.Workflow.List(sess, c.QueryParam("contains"), storage.Options{Limit: 1000})
 		if len(items) > 0 {
 			id = make([]string, len(items))
 			for i, item := range items {
@@ -183,7 +183,7 @@ func listHandler(c *www.Context, publishedOnly bool) error {
 		sess = s
 	}
 	contains := c.QueryParam("c")
-	settings := helpers.ReadReqSettings(c)
+	settings := helpers.RequestOptions(c)
 	var dat []*model.WorkflowItem
 	var err error
 

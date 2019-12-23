@@ -68,7 +68,7 @@ func NewUserDataDB(dir string) (*UserDataDB, error) {
 	return udb, nil
 }
 
-func (me *UserDataDB) List(auth model.Auth, contains string, options map[string]interface{}, includeReadGranted bool) ([]*model.UserDataItem, error) {
+func (me *UserDataDB) List(auth model.Auth, contains string, options storage.Options, includeReadGranted bool) ([]*model.UserDataItem, error) {
 	params := makeSimpleQuery(options)
 	items := make([]*model.UserDataItem, 0)
 	tx, err := me.db.Begin(false)
@@ -374,7 +374,7 @@ func (me *UserDataDB) Import(imex storage.ImexIF) error {
 	}
 
 	for i := 0; true; i++ {
-		items, err := imex.DB().UserData.List(imex.Auth(), "", map[string]interface{}{"index": i, "limit": 1000, "metaOnly": false}, true)
+		items, err := imex.DB().UserData.List(imex.Auth(), "", storage.IndexOptions(i), true)
 		if err == nil && len(items) > 0 {
 			for _, item := range items {
 				if imex.SkipExistingOnImport() {
@@ -439,7 +439,7 @@ func (me *UserDataDB) Export(imex storage.ImexIF, id ...string) error {
 
 	specificIds := len(id) > 0
 	for i := 0; true; i++ {
-		items, err := me.List(imex.Auth(), "", map[string]interface{}{"include": id, "index": i, "limit": 1000, "metaOnly": false}, true)
+		items, err := me.List(imex.Auth(), "", storage.IndexOptions(i).WithInclude(id), true)
 		if err == nil && len(items) > 0 {
 			var tx storm.Node
 			tx, err = imex.DB().UserData.(*UserDataDB).db.Begin(true)

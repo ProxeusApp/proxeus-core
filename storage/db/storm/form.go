@@ -77,7 +77,7 @@ func NewFormDB(dir string) (*FormDB, error) {
 	return udb, nil
 }
 
-func (me *FormDB) List(auth model.Auth, contains string, options map[string]interface{}) ([]*model.FormItem, error) {
+func (me *FormDB) List(auth model.Auth, contains string, options storage.Options) ([]*model.FormItem, error) {
 	params := makeSimpleQuery(options)
 	var items []*model.FormItem
 	tx, err := me.db.Begin(false)
@@ -312,7 +312,7 @@ func (me *formComponentSearchMatcher) MatchField(v interface{}) (bool, error) {
 	return len(me.re.FindIndex(bts)) > 0, nil
 }
 
-func (me *FormDB) ListComp(auth model.Auth, contains string, options map[string]interface{}) (map[string]*model.FormComponentItem, error) {
+func (me *FormDB) ListComp(auth model.Auth, contains string, options storage.Options) (map[string]*model.FormComponentItem, error) {
 	params := makeSimpleQuery(options)
 	items := make(map[string]*model.FormComponentItem)
 	tx, err := me.db.Begin(false)
@@ -365,7 +365,7 @@ func (me *FormDB) ListComp(auth model.Auth, contains string, options map[string]
 	return items, nil
 }
 
-func (me *FormDB) Vars(auth model.Auth, contains string, options map[string]interface{}) ([]string, error) {
+func (me *FormDB) Vars(auth model.Auth, contains string, options storage.Options) ([]string, error) {
 	contains = regexp.QuoteMeta(contains)
 	params := makeSimpleQuery(options)
 	tx, err := me.db.Begin(false)
@@ -382,7 +382,7 @@ func (me *FormDB) Import(imex storage.ImexIF) error {
 		return err
 	}
 	for i := 0; true; i++ {
-		items, err := imex.DB().Form.ListComp(imex.Auth(), "", map[string]interface{}{"index": i, "limit": 1000, "metaOnly": false})
+		items, err := imex.DB().Form.ListComp(imex.Auth(), "", storage.IndexOptions(i))
 		if err == nil && len(items) > 0 {
 			for _, item := range items {
 				if imex.SkipExistingOnImport() {
@@ -403,7 +403,7 @@ func (me *FormDB) Import(imex storage.ImexIF) error {
 		}
 	}
 	for i := 0; true; i++ {
-		items, err := imex.DB().Form.List(imex.Auth(), "", map[string]interface{}{"index": i, "limit": 1000, "metaOnly": false})
+		items, err := imex.DB().Form.List(imex.Auth(), "", storage.IndexOptions(i))
 		if err == nil && len(items) > 0 {
 			for _, item := range items {
 				if imex.SkipExistingOnImport() {
@@ -456,7 +456,7 @@ func (me *FormDB) Export(imex storage.ImexIF, id ...string) error {
 	formComps := make(map[string]bool)
 
 	for i := 0; true; i++ {
-		items, err := imex.SysDB().Form.List(imex.Auth(), "", map[string]interface{}{"include": id, "index": i, "limit": 1000, "metaOnly": false})
+		items, err := imex.SysDB().Form.List(imex.Auth(), "", storage.IndexOptions(i).WithInclude(id))
 		if err == nil && len(items) > 0 {
 			var tx storm.Node
 			tx, err = imex.DB().Form.(*FormDB).db.Begin(true)

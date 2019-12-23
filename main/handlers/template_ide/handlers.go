@@ -76,7 +76,7 @@ func ExportTemplate(e echo.Context) error {
 	if c.QueryParam("id") != "" {
 		id = []string{c.QueryParam("id")}
 	} else if c.QueryParam("contains") != "" {
-		items, _ := c.System().DB.Template.List(sess, c.QueryParam("contains"), map[string]interface{}{"limit": 1000})
+		items, _ := c.System().DB.Template.List(sess, c.QueryParam("contains"), storage.Options{Limit: 1000})
 		if len(items) > 0 {
 			id = make([]string, len(items))
 			for i, item := range items {
@@ -92,8 +92,8 @@ func IdeFormHandler(e echo.Context) error {
 	contains := c.QueryParam("c")
 	sess := c.Session(false)
 	if sess != nil {
-		settings := helpers.ReadReqSettings(c)
-		settings["metaOnly"] = false
+		settings := helpers.RequestOptions(c)
+		settings.MetaOnly = false
 		dat, err := c.System().DB.Form.List(sess, contains, settings)
 		if err == nil && dat != nil {
 			dc := formbuilder.GetDataManager(sess)
@@ -116,7 +116,7 @@ func ListHandler(e echo.Context) error {
 	if sess == nil {
 		return c.NoContent(http.StatusUnauthorized)
 	}
-	settings := helpers.ReadReqSettings(c)
+	settings := helpers.RequestOptions(c)
 	dat, err := c.System().DB.Template.List(sess, contains, settings)
 	if err != nil || dat == nil {
 		if err == model.ErrAuthorityMissing {
@@ -346,7 +346,7 @@ func VarsTemplateHandler(e echo.Context) error {
 	contains := c.QueryParam("c")
 	sess := c.Session(false)
 	if sess != nil {
-		settings := helpers.ReadReqSettings(c)
+		settings := helpers.RequestOptions(c)
 		dat, err := c.System().DB.Template.Vars(sess, contains, settings)
 		if err != nil || len(dat) == 0 {
 			return c.NoContent(http.StatusNotFound)

@@ -75,7 +75,7 @@ func NewI18nDB(dir string) (*I18nDB, error) {
 	return udb, nil
 }
 
-func (me *I18nDB) Find(keyContains string, valueContains string, options map[string]interface{}) (map[string]map[string]string, error) {
+func (me *I18nDB) Find(keyContains string, valueContains string, options storage.Options) (map[string]map[string]string, error) {
 	sQuery := makeSimpleQuery(options)
 	tx, err := me.db.Begin(false)
 	if err != nil {
