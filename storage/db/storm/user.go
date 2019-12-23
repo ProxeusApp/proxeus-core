@@ -224,7 +224,7 @@ func (me *UserDB) Count() (int, error) {
 	return me.db.Count(&model.User{})
 }
 
-func (me *UserDB) List(auth model.Auth, contains string, options map[string]interface{}) ([]*model.User, error) {
+func (me *UserDB) List(auth model.Auth, contains string, options storage.Options) ([]*model.User, error) {
 	contains = containsCaseInsensitiveReg(contains)
 	params := makeSimpleQuery(options)
 	items := make([]*model.User, 0)
@@ -536,7 +536,7 @@ func (me *UserDB) Import(imex storage.ImexIF) error {
 		return err
 	}
 	for i := 0; true; i++ {
-		items, err := imex.DB().User.List(imex.Auth(), "", map[string]interface{}{"index": i, "limit": 1000, "metaOnly": false})
+		items, err := imex.DB().User.List(imex.Auth(), "", storage.IndexOptions(i))
 		if err == nil && len(items) > 0 {
 			for _, item := range items {
 				var existingItem *model.User
@@ -657,7 +657,7 @@ func (me *UserDB) Export(imex storage.ImexIF, id ...string) error {
 	}
 	var tx storm.Node
 	for i := 0; true; i++ {
-		items, err := imex.SysDB().User.List(imex.Auth(), "", map[string]interface{}{"include": id, "index": i, "limit": 1000, "metaOnly": false})
+		items, err := imex.SysDB().User.List(imex.Auth(), "", storage.IndexOptions(i).WithInclude(id))
 		if err == nil && len(items) > 0 {
 			tx, err = me.GetDB().Begin(true)
 			if err != nil {

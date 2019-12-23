@@ -107,7 +107,7 @@ func NewDocTemplateDB(dir string) (*DocTemplateDB, error) {
 	return udb, nil
 }
 
-func (me *DocTemplateDB) List(auth model.Auth, contains string, options map[string]interface{}) ([]*model.TemplateItem, error) {
+func (me *DocTemplateDB) List(auth model.Auth, contains string, options storage.Options) ([]*model.TemplateItem, error) {
 	params := makeSimpleQuery(options)
 	items := make([]*model.TemplateItem, 0)
 	tx, err := me.db.Begin(false)
@@ -336,7 +336,7 @@ func (me *DocTemplateDB) Delete(auth model.Auth, id string) error {
 	return tx.Commit()
 }
 
-func (me *DocTemplateDB) Vars(auth model.Auth, contains string, options map[string]interface{}) ([]string, error) {
+func (me *DocTemplateDB) Vars(auth model.Auth, contains string, options storage.Options) ([]string, error) {
 	contains = regexp.QuoteMeta(contains)
 	params := makeSimpleQuery(options)
 	tx, err := me.db.Begin(false)
@@ -353,7 +353,7 @@ func (me *DocTemplateDB) Import(imex storage.ImexIF) error {
 		return err
 	}
 	for i := 0; true; i++ {
-		items, err := imex.DB().Template.List(imex.Auth(), "", map[string]interface{}{"index": i, "limit": 1000, "metaOnly": false})
+		items, err := imex.DB().Template.List(imex.Auth(), "", storage.IndexOptions(i))
 		if err == nil && len(items) > 0 {
 			for _, item := range items {
 				if imex.SkipExistingOnImport() {
@@ -419,7 +419,7 @@ func (me *DocTemplateDB) Export(imex storage.ImexIF, id ...string) error {
 	}
 	var tx storm.Node
 	for i := 0; true; i++ {
-		items, err := imex.SysDB().Template.List(imex.Auth(), "", map[string]interface{}{"include": id, "index": i, "limit": 1000, "metaOnly": false})
+		items, err := imex.SysDB().Template.List(imex.Auth(), "", storage.IndexOptions(i).WithInclude(id))
 		if err == nil && len(items) > 0 {
 			tx, err = imex.DB().Template.(*DocTemplateDB).db.Begin(true)
 			if err != nil {

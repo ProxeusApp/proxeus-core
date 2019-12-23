@@ -27,7 +27,7 @@ func ExportForms(e echo.Context) error {
 	if c.QueryParam("id") != "" {
 		id = []string{c.QueryParam("id")}
 	} else if c.QueryParam("contains") != "" {
-		items, _ := c.System().DB.Form.List(sess, c.QueryParam("contains"), map[string]interface{}{"limit": 1000})
+		items, _ := c.System().DB.Form.List(sess, c.QueryParam("contains"), storage.Options{Limit: 1000})
 		if len(items) > 0 {
 			id = make([]string, len(items))
 			for i, item := range items {
@@ -41,7 +41,7 @@ func ExportForms(e echo.Context) error {
 func ListHandler(e echo.Context) error {
 	c := e.(*www.Context)
 	contains := c.QueryParam("c")
-	settings := helpers.ReadReqSettings(c)
+	settings := helpers.RequestOptions(c)
 	sess := c.Session(false)
 	if sess != nil {
 		dat, err := c.System().DB.Form.List(sess, contains, settings)
@@ -101,7 +101,7 @@ func GetComponentsHandler(e echo.Context) error {
 		if id != "" {
 			dat, err = c.System().DB.Form.GetComp(sess, id)
 		} else {
-			settings := helpers.ReadReqSettings(c)
+			settings := helpers.RequestOptions(c)
 			dat, err = c.System().DB.Form.ListComp(sess, contains, settings)
 		}
 		if err != nil {
@@ -167,7 +167,7 @@ func VarsHandler(e echo.Context) error {
 	containing := c.QueryParam("c")
 	sess := c.Session(false)
 	if sess != nil {
-		resultVars, err := c.System().DB.Form.Vars(sess, containing, helpers.ReadReqSettings(c))
+		resultVars, err := c.System().DB.Form.Vars(sess, containing, helpers.RequestOptions(c))
 		if err != nil {
 			return err
 		}

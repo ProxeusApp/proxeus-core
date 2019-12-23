@@ -63,15 +63,15 @@ func (me *WorkflowDB) getDB() *storm.DB {
 	return me.db
 }
 
-func (me *WorkflowDB) ListPublished(auth model.Auth, contains string, options map[string]interface{}) ([]*model.WorkflowItem, error) {
+func (me *WorkflowDB) ListPublished(auth model.Auth, contains string, options storage.Options) ([]*model.WorkflowItem, error) {
 	return me.list(auth, contains, options, true)
 }
 
-func (me *WorkflowDB) List(auth model.Auth, contains string, options map[string]interface{}) ([]*model.WorkflowItem, error) {
+func (me *WorkflowDB) List(auth model.Auth, contains string, options storage.Options) ([]*model.WorkflowItem, error) {
 	return me.list(auth, contains, options, false)
 }
 
-func (me *WorkflowDB) list(auth model.Auth, contains string, options map[string]interface{}, publishedOnly bool) ([]*model.WorkflowItem, error) {
+func (me *WorkflowDB) list(auth model.Auth, contains string, options storage.Options, publishedOnly bool) ([]*model.WorkflowItem, error) {
 	params := makeSimpleQuery(options)
 	items := make([]*model.WorkflowItem, 0)
 	tx, err := me.db.Begin(false)
@@ -260,7 +260,7 @@ func (me *WorkflowDB) Import(imex storage.ImexIF) error {
 		return err
 	}
 	for i := 0; true; i++ {
-		items, err := imex.DB().Workflow.List(imex.Auth(), "", map[string]interface{}{"index": i, "limit": 1000, "metaOnly": false})
+		items, err := imex.DB().Workflow.List(imex.Auth(), "", storage.IndexOptions(i))
 		if err == nil && len(items) > 0 {
 			for _, item := range items {
 				if imex.SkipExistingOnImport() {
@@ -313,7 +313,7 @@ func (me *WorkflowDB) Export(imex storage.ImexIF, id ...string) error {
 	}
 	nodes := make(map[string]*NodesAfter)
 	for i := 0; true; i++ {
-		items, err := me.List(imex.Auth(), "", map[string]interface{}{"include": id, "index": i, "limit": 1000, "metaOnly": false})
+		items, err := me.List(imex.Auth(), "", storage.IndexOptions(i).WithInclude(id))
 		if err == nil && len(items) > 0 {
 			var tx storm.Node
 			tx, err = me.getDB().Begin(true)

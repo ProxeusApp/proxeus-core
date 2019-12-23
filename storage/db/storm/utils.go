@@ -5,6 +5,8 @@ import (
 	"regexp"
 	"strings"
 
+	"github.com/ProxeusApp/proxeus-core/storage"
+
 	"github.com/asdine/storm/q"
 
 	"github.com/ProxeusApp/proxeus-core/sys/model"
@@ -29,65 +31,29 @@ func containsCaseInsensitiveReg(contains string) string {
 	return "(?i)" + regexp.QuoteMeta(contains)
 }
 
-func makeSimpleQuery(more map[string]interface{}) *simpleQuery {
+func makeSimpleQuery(o storage.Options) *simpleQuery {
 	const Limit = 1000
-	sq := &simpleQuery{metaOnly: true, index: 0, limit: 20}
-	if len(more) > 0 {
-		if mo, ok := more["metaOnly"].(bool); ok {
-			sq.metaOnly = mo
-		}
-		if i, ok := more["index"].(int); ok {
-			sq.index = i
-		} else if i, ok := more["index"].(float64); ok {
-			sq.index = int(i)
-		}
-		if l, ok := more["limit"].(int); ok {
-			sq.limit = l
-			if sq.limit > Limit {
-				sq.limit = Limit
-			}
-		} else if l, ok := more["limit"].(float64); ok {
-			sq.limit = int(l)
-			if sq.limit > Limit {
-				sq.limit = Limit
-			}
-		}
-		if e, ok := more["exclude"].(map[string]interface{}); ok {
-			if l := len(e); l > 0 {
-				sq.exclude = make([]interface{}, l)
-				i := 0
-				for k := range e {
-					sq.exclude[i] = k
-					i++
-				}
-			}
-		} else if e, ok := more["exclude"].([]string); ok {
-			if l := len(e); l > 0 {
-				sq.exclude = make([]interface{}, l)
-				for i, k := range e {
-					sq.exclude[i] = k
-				}
-			}
-		}
-		if e, ok := more["include"].(map[string]interface{}); ok {
-			if l := len(e); l > 0 {
-				sq.include = make([]interface{}, l)
-				i := 0
-				for k := range e {
-					sq.include[i] = k
-					i++
-				}
-			}
-		} else if e, ok := more["include"].([]string); ok {
-			if l := len(e); l > 0 {
-				sq.include = make([]interface{}, l)
-				for i, k := range e {
-					sq.include[i] = k
-				}
-			}
+	sq := &simpleQuery{metaOnly: o.MetaOnly, index: o.Index, limit: o.Limit}
+
+	if l := len(o.Exclude); l > 0 {
+		sq.exclude = make([]interface{}, l)
+		i := 0
+		for k := range o.Exclude {
+			sq.exclude[i] = k
+			i++
 		}
 	}
-	if sq.limit == 0 {
+
+	if l := len(o.Include); l > 0 {
+		sq.include = make([]interface{}, l)
+		i := 0
+		for k := range o.Include {
+			sq.include[i] = k
+			i++
+		}
+	}
+
+	if sq.limit == 0 || sq.limit > Limit {
 		sq.limit = Limit
 	}
 	sq.rawIndex = sq.index
