@@ -19,11 +19,6 @@ const (
 )
 
 type (
-	//Structure interface helps us to keep track of the inner structure of a struct between persisted and memory data
-	Structure interface {
-		GetVersion() int
-	}
-
 	FormItem struct {
 		Permissions
 		ID     string `json:"id" storm:"id"`

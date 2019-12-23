@@ -39,11 +39,9 @@ type I18nIF interface {
 	ImporterExporter
 	Find(keyContains string, valueContains string, options map[string]interface{}) (map[string]map[string]string, error)
 	Get(lang string, key string, args ...string) (string, error)
-	GetInsert(lang string, key string, args ...string) (string, error)
 	GetAll(lang string) (map[string]string, error)
 	PutAll(lang string, translations map[string]string) error
 	Put(lang string, key string, text string) error
-	Delete(keyContains string) error
 	PutLang(lang string, enabled bool) error
 	GetLangs(enabled bool) ([]*model.Lang, error)
 	HasLang(lang string) bool
@@ -127,18 +125,15 @@ type UserDataIF interface {
 	GetDataFile(auth model.Auth, id, dataPath string) (*file.IO, error)
 	Put(auth model.Auth, item *model.UserDataItem) error
 	Close() error
-	Remove() error
 }
 
 type SignatureRequestsIF interface {
 	GetBySignatory(ethAddr string) (*[]model.SignatureRequestItem, error)
-	All() (*[]model.SignatureRequestItem, error)
 	GetByID(docid string, docpath string) (*[]model.SignatureRequestItem, error)
 	GetByHashAndSigner(hash string, signatory string) (*[]model.SignatureRequestItem, error)
 	Add(item *model.SignatureRequestItem) error
 	SetRejected(docid string, docpath string, signatory string) error
 	SetRevoked(docid string, docpath string, signatory string) error
-	List(auth model.Auth, contains string, options map[string]interface{}) ([]*model.UserDataItem, error)
 	Close() error
 }
 
