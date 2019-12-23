@@ -7,6 +7,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/ProxeusApp/proxeus-core/storage"
+
 	"sort"
 	"strconv"
 
@@ -21,11 +23,11 @@ var (
 )
 
 type WebI18n struct {
-	i18nStore model.I18nStoreIF
+	i18nStore storage.I18nIF
 	Lang      string
 }
 
-func NewI18n(i18nStore model.I18nStoreIF, c echo.Context) *WebI18n {
+func NewI18n(i18nStore storage.I18nIF, c echo.Context) *WebI18n {
 	wi18n := WebI18n{i18nStore, ""}
 	wi18n.Lang = c.Param(cookieName)
 	//write cookie only when reading from Accept-Language

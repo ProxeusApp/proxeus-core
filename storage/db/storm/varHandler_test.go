@@ -15,7 +15,7 @@ func TestVars(t *testing.T) {
 	}
 	defer func() {
 		db.Close()
-		db.Remove()
+		db.remove()
 	}()
 	initVars(db.db)
 	pVars(db.db, "123", []string{"var1", "var2", "var3", "var4"})

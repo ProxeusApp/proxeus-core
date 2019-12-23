@@ -206,26 +206,6 @@ func (mr *MockI18nIFMockRecorder) Get(lang, key interface{}, args ...interface{}
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Get", reflect.TypeOf((*MockI18nIF)(nil).Get), varargs...)
 }
 
-// GetInsert mocks base method
-func (m *MockI18nIF) GetInsert(lang, key string, args ...string) (string, error) {
-	m.ctrl.T.Helper()
-	varargs := []interface{}{lang, key}
-	for _, a := range args {
-		varargs = append(varargs, a)
-	}
-	ret := m.ctrl.Call(m, "GetInsert", varargs...)
-	ret0, _ := ret[0].(string)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// GetInsert indicates an expected call of GetInsert
-func (mr *MockI18nIFMockRecorder) GetInsert(lang, key interface{}, args ...interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	varargs := append([]interface{}{lang, key}, args...)
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetInsert", reflect.TypeOf((*MockI18nIF)(nil).GetInsert), varargs...)
-}
-
 // GetAll mocks base method
 func (m *MockI18nIF) GetAll(lang string) (map[string]string, error) {
 	m.ctrl.T.Helper()
@@ -267,20 +247,6 @@ func (m *MockI18nIF) Put(lang, key, text string) error {
 func (mr *MockI18nIFMockRecorder) Put(lang, key, text interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Put", reflect.TypeOf((*MockI18nIF)(nil).Put), lang, key, text)
-}
-
-// Delete mocks base method
-func (m *MockI18nIF) Delete(keyContains string) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Delete", keyContains)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// Delete indicates an expected call of Delete
-func (mr *MockI18nIFMockRecorder) Delete(keyContains interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Delete", reflect.TypeOf((*MockI18nIF)(nil).Delete), keyContains)
 }
 
 // PutLang mocks base method
@@ -1481,20 +1447,6 @@ func (mr *MockUserDataIFMockRecorder) Close() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Close", reflect.TypeOf((*MockUserDataIF)(nil).Close))
 }
 
-// Remove mocks base method
-func (m *MockUserDataIF) Remove() error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Remove")
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// Remove indicates an expected call of Remove
-func (mr *MockUserDataIFMockRecorder) Remove() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Remove", reflect.TypeOf((*MockUserDataIF)(nil).Remove))
-}
-
 // MockSignatureRequestsIF is a mock of SignatureRequestsIF interface
 type MockSignatureRequestsIF struct {
 	ctrl     *gomock.Controller
@@ -1531,21 +1483,6 @@ func (m *MockSignatureRequestsIF) GetBySignatory(ethAddr string) (*[]model.Signa
 func (mr *MockSignatureRequestsIFMockRecorder) GetBySignatory(ethAddr interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetBySignatory", reflect.TypeOf((*MockSignatureRequestsIF)(nil).GetBySignatory), ethAddr)
-}
-
-// All mocks base method
-func (m *MockSignatureRequestsIF) All() (*[]model.SignatureRequestItem, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "All")
-	ret0, _ := ret[0].(*[]model.SignatureRequestItem)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// All indicates an expected call of All
-func (mr *MockSignatureRequestsIFMockRecorder) All() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "All", reflect.TypeOf((*MockSignatureRequestsIF)(nil).All))
 }
 
 // GetByID mocks base method
@@ -1618,21 +1555,6 @@ func (m *MockSignatureRequestsIF) SetRevoked(docid, docpath, signatory string) e
 func (mr *MockSignatureRequestsIFMockRecorder) SetRevoked(docid, docpath, signatory interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetRevoked", reflect.TypeOf((*MockSignatureRequestsIF)(nil).SetRevoked), docid, docpath, signatory)
-}
-
-// List mocks base method
-func (m *MockSignatureRequestsIF) List(auth model.Auth, contains string, options map[string]interface{}) ([]*model.UserDataItem, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "List", auth, contains, options)
-	ret0, _ := ret[0].([]*model.UserDataItem)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// List indicates an expected call of List
-func (mr *MockSignatureRequestsIFMockRecorder) List(auth, contains, options interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "List", reflect.TypeOf((*MockSignatureRequestsIF)(nil).List), auth, contains, options)
 }
 
 // Close mocks base method
