@@ -69,7 +69,7 @@ func FindHandler(e echo.Context) error {
 	c := e.(*www.Context)
 	key := c.QueryParam("k")
 	value := c.QueryParam("v")
-	settings := helpers.ReadReqSettings(c)
+	settings := helpers.RequestOptions(c)
 	da, err := c.System().DB.I18n.Find(key, value, settings)
 	if err != nil {
 		return c.NoContent(http.StatusNotFound)
@@ -80,7 +80,7 @@ func FindHandler(e echo.Context) error {
 func FormBuilderI18nSearchHandler(e echo.Context) error {
 	c := e.(*www.Context)
 	containing := c.QueryParam("c")
-	settings := helpers.ReadReqSettings(c)
+	settings := helpers.RequestOptions(c)
 	da, err := c.System().DB.I18n.Find(containing, containing, settings)
 	if err != nil {
 		return err

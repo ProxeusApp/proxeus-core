@@ -28,6 +28,29 @@ type DBSet struct {
 	reflCacheLock sync.Mutex
 }
 
+type Options struct {
+	Limit    int                    `json:"limit"`
+	Index    int                    `json:"index"`
+	Include  map[string]interface{} `json:"include"`
+	Exclude  map[string]interface{} `json:"exclude"`
+	MetaOnly bool                   `json:"metaOnly"`
+}
+
+func IndexOptions(i int) Options {
+	return Options{
+		Index: i,
+		Limit: 1000,
+	}
+}
+
+func (o Options) WithInclude(in []string) Options {
+	o.Include = map[string]interface{}{}
+	for i, v := range in {
+		o.Include[v] = i
+	}
+	return o
+}
+
 type SettingsIF interface {
 	ImporterExporter
 	Put(stngs *model.Settings) error
@@ -37,7 +60,7 @@ type SettingsIF interface {
 
 type I18nIF interface {
 	ImporterExporter
-	Find(keyContains string, valueContains string, options map[string]interface{}) (map[string]map[string]string, error)
+	Find(keyContains string, valueContains string, options Options) (map[string]map[string]string, error)
 	Get(lang string, key string, args ...string) (string, error)
 	GetAll(lang string) (map[string]string, error)
 	PutAll(lang string, translations map[string]string) error
@@ -53,22 +76,22 @@ type I18nIF interface {
 
 type FormIF interface {
 	ImporterExporter
-	List(auth model.Auth, contains string, options map[string]interface{}) ([]*model.FormItem, error)
+	List(auth model.Auth, contains string, options Options) ([]*model.FormItem, error)
 	Get(auth model.Auth, id string) (*model.FormItem, error)
 	Put(auth model.Auth, item *model.FormItem) error
 	Delete(auth model.Auth, id string) error
 	DelComp(auth model.Auth, id string) error
 	PutComp(auth model.Auth, comp *model.FormComponentItem) error
 	GetComp(auth model.Auth, id string) (*model.FormComponentItem, error)
-	ListComp(auth model.Auth, contains string, options map[string]interface{}) (map[string]*model.FormComponentItem, error)
-	Vars(auth model.Auth, contains string, options map[string]interface{}) ([]string, error)
+	ListComp(auth model.Auth, contains string, options Options) (map[string]*model.FormComponentItem, error)
+	Vars(auth model.Auth, contains string, options Options) ([]string, error)
 	Close() error
 }
 
 type WorkflowIF interface {
 	ImporterExporter
-	ListPublished(auth model.Auth, contains string, options map[string]interface{}) ([]*model.WorkflowItem, error)
-	List(auth model.Auth, contains string, options map[string]interface{}) ([]*model.WorkflowItem, error)
+	ListPublished(auth model.Auth, contains string, options Options) ([]*model.WorkflowItem, error)
+	List(auth model.Auth, contains string, options Options) ([]*model.WorkflowItem, error)
 	GetPublished(auth model.Auth, id string) (*model.WorkflowItem, error)
 	Get(auth model.Auth, id string) (*model.WorkflowItem, error)
 	GetList(auth model.Auth, id []string) ([]*model.WorkflowItem, error)
@@ -79,7 +102,7 @@ type WorkflowIF interface {
 
 type TemplateIF interface {
 	ImporterExporter
-	List(auth model.Auth, contains string, options map[string]interface{}) ([]*model.TemplateItem, error)
+	List(auth model.Auth, contains string, options Options) ([]*model.TemplateItem, error)
 	Get(auth model.Auth, id string) (*model.TemplateItem, error)
 	ProvideFileInfoFor(auth model.Auth, id, lang string, fm *file.Meta) (*file.IO, error)
 	PutVars(auth model.Auth, id, lang string, vars []string) error
@@ -87,7 +110,7 @@ type TemplateIF interface {
 	DeleteTemplate(auth model.Auth, id, lang string) error
 	Put(auth model.Auth, item *model.TemplateItem) error
 	Delete(auth model.Auth, id string) error
-	Vars(auth model.Auth, contains string, options map[string]interface{}) ([]string, error)
+	Vars(auth model.Auth, contains string, options Options) ([]string, error)
 	Close() error
 }
 
@@ -96,7 +119,7 @@ type UserIF interface {
 	GetBaseFilePath() string
 	Login(name, pw string) (*model.User, error)
 	Count() (int, error)
-	List(auth model.Auth, contains string, options map[string]interface{}) ([]*model.User, error)
+	List(auth model.Auth, contains string, options Options) ([]*model.User, error)
 	Get(auth model.Auth, id string) (*model.User, error)
 	GetByBCAddress(bcAddress string) (*model.User, error)
 	GetByEmail(email string) (*model.User, error)
@@ -113,7 +136,7 @@ type UserIF interface {
 
 type UserDataIF interface {
 	ImporterExporter
-	List(auth model.Auth, contains string, options map[string]interface{}, includeReadGranted bool) ([]*model.UserDataItem, error)
+	List(auth model.Auth, contains string, options Options, includeReadGranted bool) ([]*model.UserDataItem, error)
 	Delete(auth model.Auth, id string) error
 	Get(auth model.Auth, id string) (*model.UserDataItem, error)
 	GetAllFileInfosOf(ud *model.UserDataItem) []*file.IO

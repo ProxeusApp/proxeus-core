@@ -198,22 +198,3 @@ func TestPutGetDataFile(t *testing.T) {
 	//os.RemoveAll(dir)
 	//log.Println("err", usrData)
 }
-
-func TestGetAssignedUsers(t *testing.T) {
-	//m := make(map[string]*model.User)
-	//m["111"] = &model.User{ID: "111"}
-
-	hello("123", "asfd")
-}
-
-func hello(id ...string) {
-	specificIds := len(id) > 0
-	log.Println(specificIds)
-	s := makeSimpleQuery(map[string]interface{}{"include": id})
-	//testMethod(m)
-	log.Println(s.include)
-}
-
-func testMethod(m map[string]*model.User) {
-	m["123"] = &model.User{ID: "123"}
-}

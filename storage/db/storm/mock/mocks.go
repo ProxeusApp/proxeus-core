@@ -172,7 +172,7 @@ func (mr *MockI18nIFMockRecorder) Import(imex interface{}) *gomock.Call {
 }
 
 // Find mocks base method
-func (m *MockI18nIF) Find(keyContains, valueContains string, options map[string]interface{}) (map[string]map[string]string, error) {
+func (m *MockI18nIF) Find(keyContains, valueContains string, options storage.Options) (map[string]map[string]string, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Find", keyContains, valueContains, options)
 	ret0, _ := ret[0].(map[string]map[string]string)
@@ -407,7 +407,7 @@ func (mr *MockFormIFMockRecorder) Import(imex interface{}) *gomock.Call {
 }
 
 // List mocks base method
-func (m *MockFormIF) List(auth model.Auth, contains string, options map[string]interface{}) ([]*model.FormItem, error) {
+func (m *MockFormIF) List(auth model.Auth, contains string, options storage.Options) ([]*model.FormItem, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "List", auth, contains, options)
 	ret0, _ := ret[0].([]*model.FormItem)
@@ -508,7 +508,7 @@ func (mr *MockFormIFMockRecorder) GetComp(auth, id interface{}) *gomock.Call {
 }
 
 // ListComp mocks base method
-func (m *MockFormIF) ListComp(auth model.Auth, contains string, options map[string]interface{}) (map[string]*model.FormComponentItem, error) {
+func (m *MockFormIF) ListComp(auth model.Auth, contains string, options storage.Options) (map[string]*model.FormComponentItem, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ListComp", auth, contains, options)
 	ret0, _ := ret[0].(map[string]*model.FormComponentItem)
@@ -523,7 +523,7 @@ func (mr *MockFormIFMockRecorder) ListComp(auth, contains, options interface{}) 
 }
 
 // Vars mocks base method
-func (m *MockFormIF) Vars(auth model.Auth, contains string, options map[string]interface{}) ([]string, error) {
+func (m *MockFormIF) Vars(auth model.Auth, contains string, options storage.Options) ([]string, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Vars", auth, contains, options)
 	ret0, _ := ret[0].([]string)
@@ -608,7 +608,7 @@ func (mr *MockWorkflowIFMockRecorder) Import(imex interface{}) *gomock.Call {
 }
 
 // ListPublished mocks base method
-func (m *MockWorkflowIF) ListPublished(auth model.Auth, contains string, options map[string]interface{}) ([]*model.WorkflowItem, error) {
+func (m *MockWorkflowIF) ListPublished(auth model.Auth, contains string, options storage.Options) ([]*model.WorkflowItem, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ListPublished", auth, contains, options)
 	ret0, _ := ret[0].([]*model.WorkflowItem)
@@ -623,7 +623,7 @@ func (mr *MockWorkflowIFMockRecorder) ListPublished(auth, contains, options inte
 }
 
 // List mocks base method
-func (m *MockWorkflowIF) List(auth model.Auth, contains string, options map[string]interface{}) ([]*model.WorkflowItem, error) {
+func (m *MockWorkflowIF) List(auth model.Auth, contains string, options storage.Options) ([]*model.WorkflowItem, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "List", auth, contains, options)
 	ret0, _ := ret[0].([]*model.WorkflowItem)
@@ -781,7 +781,7 @@ func (mr *MockTemplateIFMockRecorder) Import(imex interface{}) *gomock.Call {
 }
 
 // List mocks base method
-func (m *MockTemplateIF) List(auth model.Auth, contains string, options map[string]interface{}) ([]*model.TemplateItem, error) {
+func (m *MockTemplateIF) List(auth model.Auth, contains string, options storage.Options) ([]*model.TemplateItem, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "List", auth, contains, options)
 	ret0, _ := ret[0].([]*model.TemplateItem)
@@ -897,7 +897,7 @@ func (mr *MockTemplateIFMockRecorder) Delete(auth, id interface{}) *gomock.Call 
 }
 
 // Vars mocks base method
-func (m *MockTemplateIF) Vars(auth model.Auth, contains string, options map[string]interface{}) ([]string, error) {
+func (m *MockTemplateIF) Vars(auth model.Auth, contains string, options storage.Options) ([]string, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Vars", auth, contains, options)
 	ret0, _ := ret[0].([]string)
@@ -1026,7 +1026,7 @@ func (mr *MockUserIFMockRecorder) Count() *gomock.Call {
 }
 
 // List mocks base method
-func (m *MockUserIF) List(auth model.Auth, contains string, options map[string]interface{}) ([]*model.User, error) {
+func (m *MockUserIF) List(auth model.Auth, contains string, options storage.Options) ([]*model.User, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "List", auth, contains, options)
 	ret0, _ := ret[0].([]*model.User)
@@ -1272,7 +1272,7 @@ func (mr *MockUserDataIFMockRecorder) Import(imex interface{}) *gomock.Call {
 }
 
 // List mocks base method
-func (m *MockUserDataIF) List(auth model.Auth, contains string, options map[string]interface{}, includeReadGranted bool) ([]*model.UserDataItem, error) {
+func (m *MockUserDataIF) List(auth model.Auth, contains string, options storage.Options, includeReadGranted bool) ([]*model.UserDataItem, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "List", auth, contains, options, includeReadGranted)
 	ret0, _ := ret[0].([]*model.UserDataItem)

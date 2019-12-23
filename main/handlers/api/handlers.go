@@ -132,7 +132,7 @@ func ExportUserData(e echo.Context) error {
 	if c.QueryParam("id") != "" {
 		id = []string{c.QueryParam("id")}
 	} else if c.QueryParam("contains") != "" {
-		items, _ := c.System().DB.UserData.List(sess, c.QueryParam("contains"), map[string]interface{}{"limit": 1000}, false)
+		items, _ := c.System().DB.UserData.List(sess, c.QueryParam("contains"), storage.Options{Limit: 1000}, false)
 		if len(items) > 0 {
 			id = make([]string, len(items))
 			for i, item := range items {
@@ -162,7 +162,7 @@ func ExportUser(e echo.Context) error {
 	if c.QueryParam("id") != "" {
 		id = []string{c.QueryParam("id")}
 	} else if c.QueryParam("contains") != "" {
-		items, _ := c.System().DB.User.List(sess, c.QueryParam("contains"), map[string]interface{}{"limit": 1000})
+		items, _ := c.System().DB.User.List(sess, c.QueryParam("contains"), storage.Options{Limit: 1000})
 		if len(items) > 0 {
 			id = make([]string, len(items))
 			for i, item := range items {
@@ -1375,7 +1375,7 @@ func UserDocumentListHandler(e echo.Context) error {
 		return c.NoContent(http.StatusUnauthorized)
 	}
 	contains := c.QueryParam("c")
-	settings := helpers.ReadReqSettings(c)
+	settings := helpers.RequestOptions(c)
 	items, err := c.System().DB.UserData.List(sess, contains, settings, false)
 	if err == nil && items != nil {
 		return c.JSON(http.StatusOK, items)
@@ -1485,7 +1485,7 @@ func UserDeleteHandler(e echo.Context) error {
 
 	//remove documents / workflow instances of user
 	userDataDB := c.System().DB.UserData
-	workflowInstances, err := userDataDB.List(sess, "", map[string]interface{}{}, false)
+	workflowInstances, err := userDataDB.List(sess, "", storage.Options{}, false)
 	if err != nil && err.Error() != "not found" {
 		return c.NoContent(http.StatusInternalServerError)
 	}
@@ -1498,7 +1498,7 @@ func UserDeleteHandler(e echo.Context) error {
 
 	//set workflow templates to deactivated
 	workflowDB := c.System().DB.Workflow
-	workflows, err := workflowDB.List(sess, "", map[string]interface{}{})
+	workflows, err := workflowDB.List(sess, "", storage.Options{})
 	if err != nil && err.Error() != "not found" {
 		return c.NoContent(http.StatusInternalServerError)
 	}
@@ -1925,7 +1925,7 @@ func AdminUserListHandler(e echo.Context) error {
 		return c.NoContent(http.StatusUnauthorized)
 	}
 	contains := c.QueryParam("c")
-	settings := helpers.ReadReqSettings(c)
+	settings := helpers.RequestOptions(c)
 	dat, err := c.System().DB.User.List(sess, contains, settings)
 	if err != nil || dat == nil {
 		if err == model.ErrAuthorityMissing {

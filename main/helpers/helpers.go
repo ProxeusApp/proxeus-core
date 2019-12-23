@@ -8,6 +8,8 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/ProxeusApp/proxeus-core/storage"
+
 	"github.com/labstack/echo"
 )
 
@@ -15,13 +17,14 @@ func AbsoluteURL(c echo.Context, uri ...string) string {
 	return c.Scheme() + "://" + path.Join(c.Request().Host, path.Join(uri...))
 }
 
-func ReadReqSettings(c echo.Context) map[string]interface{} {
+func RequestOptions(c echo.Context) storage.Options {
 	if strings.ToLower(c.Request().Method) == "get" {
 		metaOnly := c.QueryParam("m")
 		limit := c.QueryParam("l")
 		excludes := c.QueryParam("e")
 		include := c.QueryParam("in")
 		index := c.QueryParam("i")
+
 		ilimit := 20
 		if limit != "" {
 			i, err := strconv.Atoi(limit)
@@ -36,52 +39,36 @@ func ReadReqSettings(c echo.Context) map[string]interface{} {
 				iindex = i
 			}
 		}
-		settings := map[string]interface{}{
-			"limit": ilimit,
-			"index": iindex,
+		settings := storage.Options{
+			Limit: ilimit,
+			Index: iindex,
 		}
 		if include != "" {
 			var includeMap map[string]interface{}
 			json.Unmarshal([]byte(include), &includeMap)
-			settings["include"] = includeMap
+			settings.Include = includeMap
 		}
 		if excludes != "" {
 			var excludesMap map[string]interface{}
 			json.Unmarshal([]byte(excludes), &excludesMap)
-			settings["exclude"] = excludesMap
+			settings.Exclude = excludesMap
 		}
 		if metaOnly != "" {
 			metaOnlyBool, err := strconv.ParseBool(metaOnly)
 			if err == nil {
-				settings["metaOnly"] = metaOnlyBool
+				settings.MetaOnly = metaOnlyBool
 			}
+		} else {
+			// default is meta only
+			settings.MetaOnly = true
 		}
 		return settings
-	} else {
-		settngs := &struct {
-			MetaOnly bool                   `json:"metaOnly"`
-			Index    int                    `json:"index"`
-			Limit    int                    `json:"limit"`
-			Exclude  map[string]interface{} `json:"exclude"`
-			Include  map[string]interface{} `json:"include"`
-		}{}
-		bts, err := ioutil.ReadAll(c.Request().Body)
-		if err != nil {
-			return nil
-		}
-		err = json.Unmarshal(bts, &settngs)
-		if err != nil {
-			return nil
-		}
-		return map[string]interface{}{
-			"limit":    settngs.Limit,
-			"index":    settngs.Index,
-			"exclude":  settngs.Exclude,
-			"include":  settngs.Include,
-			"metaOnly": settngs.MetaOnly,
-		}
 	}
-	return nil
+
+	var settings storage.Options
+	bts, _ := ioutil.ReadAll(c.Request().Body)
+	json.Unmarshal(bts, &settings)
+	return settings
 }
 
 func ParseDataFromReq(c echo.Context) (map[string]interface{}, error) {
