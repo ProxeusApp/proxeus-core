@@ -5,6 +5,8 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/ProxeusApp/proxeus-core/storage/portable"
+
 	"github.com/labstack/echo"
 
 	"github.com/ProxeusApp/proxeus-core/main/handlers/api"
@@ -35,7 +37,7 @@ func ExportForms(e echo.Context) error {
 			}
 		}
 	}
-	return api.Export(sess, []storage.ImporterExporter{c.System().DB.Form}, c, id...)
+	return api.Export(sess, []portable.EntityType{portable.Form}, c, id...)
 }
 
 func ListHandler(e echo.Context) error {

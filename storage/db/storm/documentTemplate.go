@@ -5,7 +5,6 @@ import (
 	"os"
 	"path/filepath"
 	"regexp"
-	"sync"
 	"time"
 
 	"github.com/asdine/storm"
@@ -105,6 +104,10 @@ func NewDocTemplateDB(dir string) (*DocTemplateDB, error) {
 	}
 
 	return udb, nil
+}
+
+func (me *DocTemplateDB) AssetsKey() string {
+	return me.baseFilePath
 }
 
 func (me *DocTemplateDB) List(auth model.Auth, contains string, options storage.Options) ([]*model.TemplateItem, error) {
@@ -345,146 +348,6 @@ func (me *DocTemplateDB) Vars(auth model.Auth, contains string, options storage.
 	}
 	defer tx.Rollback()
 	return getVars(contains, params.limit, params.index, tx)
-}
-
-func (me *DocTemplateDB) Import(imex storage.ImexIF) error {
-	err := me.init(imex)
-	if err != nil {
-		return err
-	}
-	for i := 0; true; i++ {
-		items, err := imex.DB().Template.List(imex.Auth(), "", storage.IndexOptions(i))
-		if err == nil && len(items) > 0 {
-			for _, item := range items {
-				if imex.SkipExistingOnImport() {
-					_, err = imex.SysDB().Template.Get(imex.Auth(), item.ID)
-					if err == nil {
-						continue
-					}
-				}
-
-				item.Permissions.UpdateUserID(imex.LocatedSameUserWithDifferentID())
-
-				err = imex.SysDB().Template.(*DocTemplateDB).put(imex.Auth(), item, false)
-				if err != nil {
-					imex.ProcessedEntry(imexTemplate, item.ID, err)
-					continue
-				}
-				var fi *file.IO
-				hadError := false
-				for lang, tmplItem := range item.Data {
-					fi, err = imex.SysDB().Template.GetTemplate(imex.Auth(), item.ID, lang)
-					if err != nil {
-						hadError = true
-						imex.ProcessedEntry(imexTemplate, item.ID, err)
-						continue
-					}
-					_, err = tmplItem.CpTo(fi)
-					if err != nil {
-						hadError = true
-						imex.ProcessedEntry(imexTemplate, item.ID, err)
-					}
-				}
-				if !hadError {
-					imex.ProcessedEntry(imexTemplate, item.ID, nil)
-				}
-			}
-		} else {
-			break
-		}
-	}
-	return nil
-}
-
-const imexTemplate = "Template"
-
-func (me *DocTemplateDB) init(imex storage.ImexIF) error {
-	var err error
-	if imex.DB().Template == nil {
-		imex.DB().Template, err = NewDocTemplateDB(imex.Dir())
-	}
-	return err
-}
-
-func (me *DocTemplateDB) Export(imex storage.ImexIF, id ...string) error {
-	err := me.init(imex)
-	if err != nil {
-		return err
-	}
-	specificIds := len(id) > 0
-	if len(id) == 1 {
-		if imex.IsProcessed(imexTemplate, id[0]) {
-			return nil
-		}
-	}
-	var tx storm.Node
-	for i := 0; true; i++ {
-		items, err := imex.SysDB().Template.List(imex.Auth(), "", storage.IndexOptions(i).WithInclude(id))
-		if err == nil && len(items) > 0 {
-			tx, err = imex.DB().Template.(*DocTemplateDB).db.Begin(true)
-			if err != nil {
-				return err
-			}
-			wg := &sync.WaitGroup{}
-			wg.Add(1)
-			fileCopyErrs := map[string]error{}
-			go func() {
-				for _, item := range items {
-					var exportFile *os.File
-					for _, tmplItem := range item.Data {
-						exportFile, err = os.OpenFile(filepath.Join(imex.DB().Template.(*DocTemplateDB).baseFilePath, tmplItem.PathName()), os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0600)
-						if os.IsExist(err) {
-							err = nil
-						}
-						if err != nil {
-							if exportFile != nil {
-								_ = exportFile.Close()
-							}
-							fileCopyErrs[item.ID] = err
-							continue
-						}
-						_, err = tmplItem.Read(exportFile)
-						if err != nil {
-							fileCopyErrs[item.ID] = err
-						}
-
-					}
-				}
-				wg.Done()
-			}()
-
-			for _, item := range items {
-				if !imex.IsProcessed(imexTemplate, item.ID) {
-					err = tx.Save(item)
-					if err != nil {
-						imex.ProcessedEntry(imexTemplate, item.ID, err)
-						continue
-					}
-					item.Permissions.UserIdsMap(imex.NeededUsers())
-					if err != nil {
-						imex.ProcessedEntry(imexTemplate, item.ID, err)
-						continue
-					}
-					imex.ProcessedEntry(imexTemplate, item.ID, nil)
-				}
-			}
-			err = tx.Commit()
-			if err != nil {
-				_ = tx.Rollback()
-				return err
-			}
-			wg.Wait()
-			for k, v := range fileCopyErrs {
-				imex.ProcessedEntry(imexTemplate, k, v)
-			}
-		} else {
-			break
-		}
-		if specificIds {
-			break
-		}
-	}
-	return nil
 }
 
 func (me *DocTemplateDB) Close() error {

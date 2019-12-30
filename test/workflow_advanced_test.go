@@ -37,7 +37,8 @@ func TestWorkflowAdvanced(t *testing.T) {
 	updateWorkflow(s, w2)
 
 	exported := exportWorkflow(s, w2)
-	importWorkflowNewUser(t, exported, w2)
+	deleteWorkflow(s, w2.ID, false)
+	importWorkflow(s, exported, w2)
 
 	documentID := executeWorkflow(s, w2)
 

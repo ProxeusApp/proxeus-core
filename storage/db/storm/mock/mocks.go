@@ -6,7 +6,6 @@ package mock
 
 import (
 	io "io"
-	os "os"
 	reflect "reflect"
 	time "time"
 
@@ -37,39 +36,6 @@ func NewMockSettingsIF(ctrl *gomock.Controller) *MockSettingsIF {
 // EXPECT returns an object that allows the caller to indicate expected use
 func (m *MockSettingsIF) EXPECT() *MockSettingsIFMockRecorder {
 	return m.recorder
-}
-
-// Export mocks base method
-func (m *MockSettingsIF) Export(imex storage.ImexIF, id ...string) error {
-	m.ctrl.T.Helper()
-	varargs := []interface{}{imex}
-	for _, a := range id {
-		varargs = append(varargs, a)
-	}
-	ret := m.ctrl.Call(m, "Export", varargs...)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// Export indicates an expected call of Export
-func (mr *MockSettingsIFMockRecorder) Export(imex interface{}, id ...interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	varargs := append([]interface{}{imex}, id...)
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Export", reflect.TypeOf((*MockSettingsIF)(nil).Export), varargs...)
-}
-
-// Import mocks base method
-func (m *MockSettingsIF) Import(imex storage.ImexIF) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Import", imex)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// Import indicates an expected call of Import
-func (mr *MockSettingsIFMockRecorder) Import(imex interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Import", reflect.TypeOf((*MockSettingsIF)(nil).Import), imex)
 }
 
 // Put mocks base method
@@ -136,39 +102,6 @@ func NewMockI18nIF(ctrl *gomock.Controller) *MockI18nIF {
 // EXPECT returns an object that allows the caller to indicate expected use
 func (m *MockI18nIF) EXPECT() *MockI18nIFMockRecorder {
 	return m.recorder
-}
-
-// Export mocks base method
-func (m *MockI18nIF) Export(imex storage.ImexIF, id ...string) error {
-	m.ctrl.T.Helper()
-	varargs := []interface{}{imex}
-	for _, a := range id {
-		varargs = append(varargs, a)
-	}
-	ret := m.ctrl.Call(m, "Export", varargs...)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// Export indicates an expected call of Export
-func (mr *MockI18nIFMockRecorder) Export(imex interface{}, id ...interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	varargs := append([]interface{}{imex}, id...)
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Export", reflect.TypeOf((*MockI18nIF)(nil).Export), varargs...)
-}
-
-// Import mocks base method
-func (m *MockI18nIF) Import(imex storage.ImexIF) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Import", imex)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// Import indicates an expected call of Import
-func (mr *MockI18nIFMockRecorder) Import(imex interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Import", reflect.TypeOf((*MockI18nIF)(nil).Import), imex)
 }
 
 // Find mocks base method
@@ -373,39 +306,6 @@ func (m *MockFormIF) EXPECT() *MockFormIFMockRecorder {
 	return m.recorder
 }
 
-// Export mocks base method
-func (m *MockFormIF) Export(imex storage.ImexIF, id ...string) error {
-	m.ctrl.T.Helper()
-	varargs := []interface{}{imex}
-	for _, a := range id {
-		varargs = append(varargs, a)
-	}
-	ret := m.ctrl.Call(m, "Export", varargs...)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// Export indicates an expected call of Export
-func (mr *MockFormIFMockRecorder) Export(imex interface{}, id ...interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	varargs := append([]interface{}{imex}, id...)
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Export", reflect.TypeOf((*MockFormIF)(nil).Export), varargs...)
-}
-
-// Import mocks base method
-func (m *MockFormIF) Import(imex storage.ImexIF) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Import", imex)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// Import indicates an expected call of Import
-func (mr *MockFormIFMockRecorder) Import(imex interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Import", reflect.TypeOf((*MockFormIF)(nil).Import), imex)
-}
-
 // List mocks base method
 func (m *MockFormIF) List(auth model.Auth, contains string, options storage.Options) ([]*model.FormItem, error) {
 	m.ctrl.T.Helper()
@@ -537,6 +437,20 @@ func (mr *MockFormIFMockRecorder) Vars(auth, contains, options interface{}) *gom
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Vars", reflect.TypeOf((*MockFormIF)(nil).Vars), auth, contains, options)
 }
 
+// AssetsKey mocks base method
+func (m *MockFormIF) AssetsKey() string {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "AssetsKey")
+	ret0, _ := ret[0].(string)
+	return ret0
+}
+
+// AssetsKey indicates an expected call of AssetsKey
+func (mr *MockFormIFMockRecorder) AssetsKey() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AssetsKey", reflect.TypeOf((*MockFormIF)(nil).AssetsKey))
+}
+
 // Close mocks base method
 func (m *MockFormIF) Close() error {
 	m.ctrl.T.Helper()
@@ -572,39 +486,6 @@ func NewMockWorkflowIF(ctrl *gomock.Controller) *MockWorkflowIF {
 // EXPECT returns an object that allows the caller to indicate expected use
 func (m *MockWorkflowIF) EXPECT() *MockWorkflowIFMockRecorder {
 	return m.recorder
-}
-
-// Export mocks base method
-func (m *MockWorkflowIF) Export(imex storage.ImexIF, id ...string) error {
-	m.ctrl.T.Helper()
-	varargs := []interface{}{imex}
-	for _, a := range id {
-		varargs = append(varargs, a)
-	}
-	ret := m.ctrl.Call(m, "Export", varargs...)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// Export indicates an expected call of Export
-func (mr *MockWorkflowIFMockRecorder) Export(imex interface{}, id ...interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	varargs := append([]interface{}{imex}, id...)
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Export", reflect.TypeOf((*MockWorkflowIF)(nil).Export), varargs...)
-}
-
-// Import mocks base method
-func (m *MockWorkflowIF) Import(imex storage.ImexIF) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Import", imex)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// Import indicates an expected call of Import
-func (mr *MockWorkflowIFMockRecorder) Import(imex interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Import", reflect.TypeOf((*MockWorkflowIF)(nil).Import), imex)
 }
 
 // ListPublished mocks base method
@@ -710,6 +591,20 @@ func (mr *MockWorkflowIFMockRecorder) Delete(auth, id interface{}) *gomock.Call 
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Delete", reflect.TypeOf((*MockWorkflowIF)(nil).Delete), auth, id)
 }
 
+// AssetsKey mocks base method
+func (m *MockWorkflowIF) AssetsKey() string {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "AssetsKey")
+	ret0, _ := ret[0].(string)
+	return ret0
+}
+
+// AssetsKey indicates an expected call of AssetsKey
+func (mr *MockWorkflowIFMockRecorder) AssetsKey() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AssetsKey", reflect.TypeOf((*MockWorkflowIF)(nil).AssetsKey))
+}
+
 // Close mocks base method
 func (m *MockWorkflowIF) Close() error {
 	m.ctrl.T.Helper()
@@ -745,39 +640,6 @@ func NewMockTemplateIF(ctrl *gomock.Controller) *MockTemplateIF {
 // EXPECT returns an object that allows the caller to indicate expected use
 func (m *MockTemplateIF) EXPECT() *MockTemplateIFMockRecorder {
 	return m.recorder
-}
-
-// Export mocks base method
-func (m *MockTemplateIF) Export(imex storage.ImexIF, id ...string) error {
-	m.ctrl.T.Helper()
-	varargs := []interface{}{imex}
-	for _, a := range id {
-		varargs = append(varargs, a)
-	}
-	ret := m.ctrl.Call(m, "Export", varargs...)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// Export indicates an expected call of Export
-func (mr *MockTemplateIFMockRecorder) Export(imex interface{}, id ...interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	varargs := append([]interface{}{imex}, id...)
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Export", reflect.TypeOf((*MockTemplateIF)(nil).Export), varargs...)
-}
-
-// Import mocks base method
-func (m *MockTemplateIF) Import(imex storage.ImexIF) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Import", imex)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// Import indicates an expected call of Import
-func (mr *MockTemplateIFMockRecorder) Import(imex interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Import", reflect.TypeOf((*MockTemplateIF)(nil).Import), imex)
 }
 
 // List mocks base method
@@ -911,6 +773,20 @@ func (mr *MockTemplateIFMockRecorder) Vars(auth, contains, options interface{}) 
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Vars", reflect.TypeOf((*MockTemplateIF)(nil).Vars), auth, contains, options)
 }
 
+// AssetsKey mocks base method
+func (m *MockTemplateIF) AssetsKey() string {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "AssetsKey")
+	ret0, _ := ret[0].(string)
+	return ret0
+}
+
+// AssetsKey indicates an expected call of AssetsKey
+func (mr *MockTemplateIFMockRecorder) AssetsKey() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AssetsKey", reflect.TypeOf((*MockTemplateIF)(nil).AssetsKey))
+}
+
 // Close mocks base method
 func (m *MockTemplateIF) Close() error {
 	m.ctrl.T.Helper()
@@ -946,39 +822,6 @@ func NewMockUserIF(ctrl *gomock.Controller) *MockUserIF {
 // EXPECT returns an object that allows the caller to indicate expected use
 func (m *MockUserIF) EXPECT() *MockUserIFMockRecorder {
 	return m.recorder
-}
-
-// Export mocks base method
-func (m *MockUserIF) Export(imex storage.ImexIF, id ...string) error {
-	m.ctrl.T.Helper()
-	varargs := []interface{}{imex}
-	for _, a := range id {
-		varargs = append(varargs, a)
-	}
-	ret := m.ctrl.Call(m, "Export", varargs...)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// Export indicates an expected call of Export
-func (mr *MockUserIFMockRecorder) Export(imex interface{}, id ...interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	varargs := append([]interface{}{imex}, id...)
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Export", reflect.TypeOf((*MockUserIF)(nil).Export), varargs...)
-}
-
-// Import mocks base method
-func (m *MockUserIF) Import(imex storage.ImexIF) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Import", imex)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// Import indicates an expected call of Import
-func (mr *MockUserIFMockRecorder) Import(imex interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Import", reflect.TypeOf((*MockUserIF)(nil).Import), imex)
 }
 
 // GetBaseFilePath mocks base method
@@ -1201,6 +1044,20 @@ func (mr *MockUserIFMockRecorder) DeleteApiKey(auth, userId, hiddenApiKey interf
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteApiKey", reflect.TypeOf((*MockUserIF)(nil).DeleteApiKey), auth, userId, hiddenApiKey)
 }
 
+// AssetsKey mocks base method
+func (m *MockUserIF) AssetsKey() string {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "AssetsKey")
+	ret0, _ := ret[0].(string)
+	return ret0
+}
+
+// AssetsKey indicates an expected call of AssetsKey
+func (mr *MockUserIFMockRecorder) AssetsKey() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AssetsKey", reflect.TypeOf((*MockUserIF)(nil).AssetsKey))
+}
+
 // Close mocks base method
 func (m *MockUserIF) Close() error {
 	m.ctrl.T.Helper()
@@ -1236,39 +1093,6 @@ func NewMockUserDataIF(ctrl *gomock.Controller) *MockUserDataIF {
 // EXPECT returns an object that allows the caller to indicate expected use
 func (m *MockUserDataIF) EXPECT() *MockUserDataIFMockRecorder {
 	return m.recorder
-}
-
-// Export mocks base method
-func (m *MockUserDataIF) Export(imex storage.ImexIF, id ...string) error {
-	m.ctrl.T.Helper()
-	varargs := []interface{}{imex}
-	for _, a := range id {
-		varargs = append(varargs, a)
-	}
-	ret := m.ctrl.Call(m, "Export", varargs...)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// Export indicates an expected call of Export
-func (mr *MockUserDataIFMockRecorder) Export(imex interface{}, id ...interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	varargs := append([]interface{}{imex}, id...)
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Export", reflect.TypeOf((*MockUserDataIF)(nil).Export), varargs...)
-}
-
-// Import mocks base method
-func (m *MockUserDataIF) Import(imex storage.ImexIF) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Import", imex)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// Import indicates an expected call of Import
-func (mr *MockUserDataIFMockRecorder) Import(imex interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Import", reflect.TypeOf((*MockUserDataIF)(nil).Import), imex)
 }
 
 // List mocks base method
@@ -1431,6 +1255,20 @@ func (m *MockUserDataIF) Put(auth model.Auth, item *model.UserDataItem) error {
 func (mr *MockUserDataIFMockRecorder) Put(auth, item interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Put", reflect.TypeOf((*MockUserDataIF)(nil).Put), auth, item)
+}
+
+// AssetsKey mocks base method
+func (m *MockUserDataIF) AssetsKey() string {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "AssetsKey")
+	ret0, _ := ret[0].(string)
+	return ret0
+}
+
+// AssetsKey indicates an expected call of AssetsKey
+func (mr *MockUserDataIFMockRecorder) AssetsKey() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AssetsKey", reflect.TypeOf((*MockUserDataIF)(nil).AssetsKey))
 }
 
 // Close mocks base method
@@ -1778,288 +1616,4 @@ func (m *MockWorkflowPaymentsIF) Close() error {
 func (mr *MockWorkflowPaymentsIFMockRecorder) Close() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Close", reflect.TypeOf((*MockWorkflowPaymentsIF)(nil).Close))
-}
-
-// MockImexIF is a mock of ImexIF interface
-type MockImexIF struct {
-	ctrl     *gomock.Controller
-	recorder *MockImexIFMockRecorder
-}
-
-// MockImexIFMockRecorder is the mock recorder for MockImexIF
-type MockImexIFMockRecorder struct {
-	mock *MockImexIF
-}
-
-// NewMockImexIF creates a new mock instance
-func NewMockImexIF(ctrl *gomock.Controller) *MockImexIF {
-	mock := &MockImexIF{ctrl: ctrl}
-	mock.recorder = &MockImexIFMockRecorder{mock}
-	return mock
-}
-
-// EXPECT returns an object that allows the caller to indicate expected use
-func (m *MockImexIF) EXPECT() *MockImexIFMockRecorder {
-	return m.recorder
-}
-
-// Auth mocks base method
-func (m *MockImexIF) Auth() model.Auth {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Auth")
-	ret0, _ := ret[0].(model.Auth)
-	return ret0
-}
-
-// Auth indicates an expected call of Auth
-func (mr *MockImexIFMockRecorder) Auth() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Auth", reflect.TypeOf((*MockImexIF)(nil).Auth))
-}
-
-// SetSkipExistingOnImport mocks base method
-func (m *MockImexIF) SetSkipExistingOnImport(yes bool) {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "SetSkipExistingOnImport", yes)
-}
-
-// SetSkipExistingOnImport indicates an expected call of SetSkipExistingOnImport
-func (mr *MockImexIFMockRecorder) SetSkipExistingOnImport(yes interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetSkipExistingOnImport", reflect.TypeOf((*MockImexIF)(nil).SetSkipExistingOnImport), yes)
-}
-
-// SkipExistingOnImport mocks base method
-func (m *MockImexIF) SkipExistingOnImport() bool {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SkipExistingOnImport")
-	ret0, _ := ret[0].(bool)
-	return ret0
-}
-
-// SkipExistingOnImport indicates an expected call of SkipExistingOnImport
-func (mr *MockImexIFMockRecorder) SkipExistingOnImport() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SkipExistingOnImport", reflect.TypeOf((*MockImexIF)(nil).SkipExistingOnImport))
-}
-
-// Pack mocks base method
-func (m *MockImexIF) Pack() (*os.File, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Pack")
-	ret0, _ := ret[0].(*os.File)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// Pack indicates an expected call of Pack
-func (mr *MockImexIFMockRecorder) Pack() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Pack", reflect.TypeOf((*MockImexIF)(nil).Pack))
-}
-
-// ProcessedEntry mocks base method
-func (m *MockImexIF) ProcessedEntry(kind, id string, err error) {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "ProcessedEntry", kind, id, err)
-}
-
-// ProcessedEntry indicates an expected call of ProcessedEntry
-func (mr *MockImexIFMockRecorder) ProcessedEntry(kind, id, err interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ProcessedEntry", reflect.TypeOf((*MockImexIF)(nil).ProcessedEntry), kind, id, err)
-}
-
-// Processed mocks base method
-func (m *MockImexIF) Processed() map[string]map[string]string {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Processed")
-	ret0, _ := ret[0].(map[string]map[string]string)
-	return ret0
-}
-
-// Processed indicates an expected call of Processed
-func (mr *MockImexIFMockRecorder) Processed() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Processed", reflect.TypeOf((*MockImexIF)(nil).Processed))
-}
-
-// IsProcessed mocks base method
-func (m *MockImexIF) IsProcessed(kind, id string) bool {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "IsProcessed", kind, id)
-	ret0, _ := ret[0].(bool)
-	return ret0
-}
-
-// IsProcessed indicates an expected call of IsProcessed
-func (mr *MockImexIFMockRecorder) IsProcessed(kind, id interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "IsProcessed", reflect.TypeOf((*MockImexIF)(nil).IsProcessed), kind, id)
-}
-
-// LocatedSameUserWithDifferentID mocks base method
-func (m *MockImexIF) LocatedSameUserWithDifferentID() map[string]string {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "LocatedSameUserWithDifferentID")
-	ret0, _ := ret[0].(map[string]string)
-	return ret0
-}
-
-// LocatedSameUserWithDifferentID indicates an expected call of LocatedSameUserWithDifferentID
-func (mr *MockImexIFMockRecorder) LocatedSameUserWithDifferentID() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "LocatedSameUserWithDifferentID", reflect.TypeOf((*MockImexIF)(nil).LocatedSameUserWithDifferentID))
-}
-
-// NeededUsers mocks base method
-func (m *MockImexIF) NeededUsers() map[string]bool {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "NeededUsers")
-	ret0, _ := ret[0].(map[string]bool)
-	return ret0
-}
-
-// NeededUsers indicates an expected call of NeededUsers
-func (mr *MockImexIFMockRecorder) NeededUsers() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "NeededUsers", reflect.TypeOf((*MockImexIF)(nil).NeededUsers))
-}
-
-// SetExportingAllUsersAnyway mocks base method
-func (m *MockImexIF) SetExportingAllUsersAnyway(b bool) {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "SetExportingAllUsersAnyway", b)
-}
-
-// SetExportingAllUsersAnyway indicates an expected call of SetExportingAllUsersAnyway
-func (mr *MockImexIFMockRecorder) SetExportingAllUsersAnyway(b interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetExportingAllUsersAnyway", reflect.TypeOf((*MockImexIF)(nil).SetExportingAllUsersAnyway), b)
-}
-
-// Extract mocks base method
-func (m *MockImexIF) Extract(reader io.Reader) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Extract", reader)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// Extract indicates an expected call of Extract
-func (mr *MockImexIFMockRecorder) Extract(reader interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Extract", reflect.TypeOf((*MockImexIF)(nil).Extract), reader)
-}
-
-// Dir mocks base method
-func (m *MockImexIF) Dir() string {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Dir")
-	ret0, _ := ret[0].(string)
-	return ret0
-}
-
-// Dir indicates an expected call of Dir
-func (mr *MockImexIFMockRecorder) Dir() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Dir", reflect.TypeOf((*MockImexIF)(nil).Dir))
-}
-
-// DB mocks base method
-func (m *MockImexIF) DB() *storage.DBSet {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DB")
-	ret0, _ := ret[0].(*storage.DBSet)
-	return ret0
-}
-
-// DB indicates an expected call of DB
-func (mr *MockImexIFMockRecorder) DB() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DB", reflect.TypeOf((*MockImexIF)(nil).DB))
-}
-
-// SysDB mocks base method
-func (m *MockImexIF) SysDB() *storage.DBSet {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SysDB")
-	ret0, _ := ret[0].(*storage.DBSet)
-	return ret0
-}
-
-// SysDB indicates an expected call of SysDB
-func (mr *MockImexIFMockRecorder) SysDB() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SysDB", reflect.TypeOf((*MockImexIF)(nil).SysDB))
-}
-
-// Close mocks base method
-func (m *MockImexIF) Close() error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Close")
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// Close indicates an expected call of Close
-func (mr *MockImexIFMockRecorder) Close() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Close", reflect.TypeOf((*MockImexIF)(nil).Close))
-}
-
-// MockImporterExporter is a mock of ImporterExporter interface
-type MockImporterExporter struct {
-	ctrl     *gomock.Controller
-	recorder *MockImporterExporterMockRecorder
-}
-
-// MockImporterExporterMockRecorder is the mock recorder for MockImporterExporter
-type MockImporterExporterMockRecorder struct {
-	mock *MockImporterExporter
-}
-
-// NewMockImporterExporter creates a new mock instance
-func NewMockImporterExporter(ctrl *gomock.Controller) *MockImporterExporter {
-	mock := &MockImporterExporter{ctrl: ctrl}
-	mock.recorder = &MockImporterExporterMockRecorder{mock}
-	return mock
-}
-
-// EXPECT returns an object that allows the caller to indicate expected use
-func (m *MockImporterExporter) EXPECT() *MockImporterExporterMockRecorder {
-	return m.recorder
-}
-
-// Export mocks base method
-func (m *MockImporterExporter) Export(imex storage.ImexIF, id ...string) error {
-	m.ctrl.T.Helper()
-	varargs := []interface{}{imex}
-	for _, a := range id {
-		varargs = append(varargs, a)
-	}
-	ret := m.ctrl.Call(m, "Export", varargs...)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// Export indicates an expected call of Export
-func (mr *MockImporterExporterMockRecorder) Export(imex interface{}, id ...interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	varargs := append([]interface{}{imex}, id...)
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Export", reflect.TypeOf((*MockImporterExporter)(nil).Export), varargs...)
-}
-
-// Import mocks base method
-func (m *MockImporterExporter) Import(imex storage.ImexIF) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Import", imex)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// Import indicates an expected call of Import
-func (mr *MockImporterExporterMockRecorder) Import(imex interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Import", reflect.TypeOf((*MockImporterExporter)(nil).Import), imex)
 }
