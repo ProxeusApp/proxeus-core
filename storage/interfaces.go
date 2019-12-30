@@ -2,10 +2,6 @@ package storage
 
 import (
 	"io"
-	"os"
-	"reflect"
-	"strings"
-	"sync"
 	"time"
 
 	"github.com/ProxeusApp/proxeus-core/sys/file"
@@ -22,10 +18,6 @@ type DBSet struct {
 	UserData          UserDataIF
 	SignatureRequests SignatureRequestsIF
 	WorkflowPayments  WorkflowPaymentsIF
-
-	//TODO(mmal): remove
-	reflCache     map[string]ImporterExporter
-	reflCacheLock sync.Mutex
 }
 
 type Options struct {
@@ -52,14 +44,12 @@ func (o Options) WithInclude(in []string) Options {
 }
 
 type SettingsIF interface {
-	ImporterExporter
 	Put(stngs *model.Settings) error
 	Get() (*model.Settings, error)
 	Close() error
 }
 
 type I18nIF interface {
-	ImporterExporter
 	Find(keyContains string, valueContains string, options Options) (map[string]map[string]string, error)
 	Get(lang string, key string, args ...string) (string, error)
 	GetAll(lang string) (map[string]string, error)
@@ -75,7 +65,6 @@ type I18nIF interface {
 }
 
 type FormIF interface {
-	ImporterExporter
 	List(auth model.Auth, contains string, options Options) ([]*model.FormItem, error)
 	Get(auth model.Auth, id string) (*model.FormItem, error)
 	Put(auth model.Auth, item *model.FormItem) error
@@ -85,11 +74,11 @@ type FormIF interface {
 	GetComp(auth model.Auth, id string) (*model.FormComponentItem, error)
 	ListComp(auth model.Auth, contains string, options Options) (map[string]*model.FormComponentItem, error)
 	Vars(auth model.Auth, contains string, options Options) ([]string, error)
+	AssetsKey() string
 	Close() error
 }
 
 type WorkflowIF interface {
-	ImporterExporter
 	ListPublished(auth model.Auth, contains string, options Options) ([]*model.WorkflowItem, error)
 	List(auth model.Auth, contains string, options Options) ([]*model.WorkflowItem, error)
 	GetPublished(auth model.Auth, id string) (*model.WorkflowItem, error)
@@ -97,11 +86,11 @@ type WorkflowIF interface {
 	GetList(auth model.Auth, id []string) ([]*model.WorkflowItem, error)
 	Put(auth model.Auth, item *model.WorkflowItem) error
 	Delete(auth model.Auth, id string) error
+	AssetsKey() string
 	Close() error
 }
 
 type TemplateIF interface {
-	ImporterExporter
 	List(auth model.Auth, contains string, options Options) ([]*model.TemplateItem, error)
 	Get(auth model.Auth, id string) (*model.TemplateItem, error)
 	ProvideFileInfoFor(auth model.Auth, id, lang string, fm *file.Meta) (*file.IO, error)
@@ -111,11 +100,11 @@ type TemplateIF interface {
 	Put(auth model.Auth, item *model.TemplateItem) error
 	Delete(auth model.Auth, id string) error
 	Vars(auth model.Auth, contains string, options Options) ([]string, error)
+	AssetsKey() string
 	Close() error
 }
 
 type UserIF interface {
-	ImporterExporter
 	GetBaseFilePath() string
 	Login(name, pw string) (*model.User, error)
 	Count() (int, error)
@@ -131,11 +120,11 @@ type UserIF interface {
 	APIKey(key string) (*model.User, error)
 	CreateApiKey(auth model.Auth, userId, apiKeyName string) (string, error)
 	DeleteApiKey(auth model.Auth, userId, hiddenApiKey string) error
+	AssetsKey() string
 	Close() error
 }
 
 type UserDataIF interface {
-	ImporterExporter
 	List(auth model.Auth, contains string, options Options, includeReadGranted bool) ([]*model.UserDataItem, error)
 	Delete(auth model.Auth, id string) error
 	Get(auth model.Auth, id string) (*model.UserDataItem, error)
@@ -147,6 +136,7 @@ type UserDataIF interface {
 	NewFile(auth model.Auth, meta file.Meta) *file.IO
 	GetDataFile(auth model.Auth, id, dataPath string) (*file.IO, error)
 	Put(auth model.Auth, item *model.UserDataItem) error
+	AssetsKey() string
 	Close() error
 }
 
@@ -176,33 +166,6 @@ type WorkflowPaymentsIF interface {
 	Close() error
 }
 
-type ImexIF interface {
-	Auth() model.Auth
-	SetSkipExistingOnImport(yes bool)
-	SkipExistingOnImport() bool
-	Pack() (*os.File, error)
-	ProcessedEntry(kind, id string, err error)
-	Processed() map[string]map[string]string
-	IsProcessed(kind, id string) bool
-	LocatedSameUserWithDifferentID() map[string]string
-	NeededUsers() map[string]bool
-	SetExportingAllUsersAnyway(b bool)
-	Extract(reader io.Reader) error
-	Dir() string
-	DB() *DBSet
-	SysDB() *DBSet
-	Close() error
-}
-
-type ImporterExporter interface {
-	Export(imex ImexIF, id ...string) error
-	Import(imex ImexIF) error
-}
-
-type ImexMeta struct {
-	Version int
-}
-
 func (db *DBSet) Close() error {
 	cs := []io.Closer{
 		db.Settings,
@@ -224,34 +187,5 @@ func (db *DBSet) Close() error {
 			return err
 		}
 	}
-	return nil
-}
-
-func (me *DBSet) ImexIFByName(name string) ImporterExporter {
-	name = strings.ToLower(name)
-	me.reflCacheLock.Lock()
-	defer me.reflCacheLock.Unlock()
-	if me.reflCache == nil {
-		me.reflCache = map[string]ImporterExporter{}
-	}
-	if im, ok := me.reflCache[name]; ok {
-		return im
-	}
-	v := reflect.Indirect(reflect.ValueOf(me))
-	strType := v.Type()
-	size := v.NumField()
-	for i := 0; i < size; i++ {
-		tf := strType.Field(i)
-		if strings.ToLower(tf.Name) == name {
-			fv := v.Field(i)
-			if fv.IsValid() && fv.CanInterface() {
-				if imexIf, ok := fv.Interface().(ImporterExporter); ok {
-					me.reflCache[name] = imexIf
-					return imexIf
-				}
-			}
-		}
-	}
-	me.reflCache[name] = nil
 	return nil
 }

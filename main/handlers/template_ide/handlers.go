@@ -12,6 +12,8 @@ import (
 	"os"
 	"strings"
 
+	"github.com/ProxeusApp/proxeus-core/storage/portable"
+
 	"github.com/labstack/echo"
 
 	"github.com/ProxeusApp/proxeus-core/main/handlers/api"
@@ -84,7 +86,7 @@ func ExportTemplate(e echo.Context) error {
 			}
 		}
 	}
-	return api.Export(sess, []storage.ImporterExporter{c.System().DB.Template}, c, id...)
+	return api.Export(sess, []portable.EntityType{portable.Template}, c, id...)
 }
 
 func IdeFormHandler(e echo.Context) error {

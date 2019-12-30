@@ -3,10 +3,11 @@ package i18n
 import (
 	"net/http"
 
+	"github.com/ProxeusApp/proxeus-core/storage/portable"
+
 	"github.com/labstack/echo"
 
 	"github.com/ProxeusApp/proxeus-core/main/handlers/api"
-	"github.com/ProxeusApp/proxeus-core/storage"
 
 	"encoding/json"
 	"fmt"
@@ -56,7 +57,7 @@ func ExportI18n(e echo.Context) error {
 	} else if key != "" || value != "" {
 		//TODO specific translations could be added
 	}
-	return api.Export(sess, []storage.ImporterExporter{c.System().DB.I18n}, c, id...)
+	return api.Export(sess, []portable.EntityType{portable.I18n}, c, id...)
 }
 
 func AllHandler(e echo.Context) error {
