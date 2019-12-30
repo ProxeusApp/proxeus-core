@@ -4,6 +4,8 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/ProxeusApp/proxeus-core/storage/portable"
+
 	"github.com/ProxeusApp/proxeus-core/storage"
 	"github.com/ProxeusApp/proxeus-core/sys/workflow"
 
@@ -35,7 +37,7 @@ func ExportWorkflow(e echo.Context) error {
 			}
 		}
 	}
-	return api.Export(sess, []storage.ImporterExporter{c.System().DB.Workflow}, c, id...)
+	return api.Export(sess, []portable.EntityType{portable.Workflow}, c, id...)
 }
 
 func GetHandler(e echo.Context) error {

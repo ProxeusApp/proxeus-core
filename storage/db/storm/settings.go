@@ -1,11 +1,8 @@
 package storm
 
 import (
-	"fmt"
 	"os"
 	"path/filepath"
-
-	"github.com/ProxeusApp/proxeus-core/storage"
 
 	"github.com/ProxeusApp/proxeus-core/storage/db"
 
@@ -57,61 +54,6 @@ func (me *SettingsDB) Get() (*model.Settings, error) {
 		return nil, err
 	}
 	return &stngs, nil
-}
-
-func (me *SettingsDB) Import(imex storage.ImexIF) error {
-	var err error
-	imex.DB().Settings, err = NewSettingsDB(imex.Dir())
-	if err != nil {
-		imex.ProcessedEntry(imexSettings, imexSettings, err)
-		return nil
-	}
-	var s *model.Settings
-	s, err = imex.DB().Settings.Get()
-	if err != nil { //does not exist
-		return nil
-	}
-	if !imex.Auth().AccessRights().IsGrantedFor(model.ROOT) {
-		imex.ProcessedEntry(imexSettings, imexSettings, fmt.Errorf("no authority to import"))
-		//return nil to not break the export, just ignore the call
-		return nil
-	}
-	err = imex.SysDB().Settings.Put(s)
-	if err != nil {
-		imex.ProcessedEntry(imexSettings, imexSettings, err)
-		return nil
-	}
-	imex.ProcessedEntry(imexSettings, imexSettings, nil)
-	return nil
-}
-
-const imexSettings = "Settings"
-
-func (me *SettingsDB) Export(imex storage.ImexIF, id ...string) error {
-	if !imex.Auth().AccessRights().IsGrantedFor(model.ROOT) {
-		imex.ProcessedEntry(imexSettings, imexSettings, fmt.Errorf("no authority to export"))
-		//return nil to not break the export, just ignore the call
-		return nil
-	}
-	settings, err := me.Get()
-	if err != nil {
-		imex.ProcessedEntry(imexSettings, imexSettings, err)
-		return nil
-	}
-	var sdb *SettingsDB
-	sdb, err = NewSettingsDB(imex.Dir())
-	if err != nil {
-		imex.ProcessedEntry(imexSettings, imexSettings, err)
-		return nil
-	}
-	err = sdb.Put(settings)
-	if err != nil {
-		imex.ProcessedEntry(imexSettings, imexSettings, err)
-		return nil
-	}
-	sdb.Close()
-	imex.ProcessedEntry(imexSettings, imexSettings, nil)
-	return nil
 }
 
 func (me *SettingsDB) Close() error {

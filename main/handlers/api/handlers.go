@@ -17,6 +17,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/ProxeusApp/proxeus-core/storage/portable"
+
 	"github.com/ProxeusApp/proxeus-core/main/app"
 	cfg "github.com/ProxeusApp/proxeus-core/main/config"
 	"github.com/ProxeusApp/proxeus-core/main/handlers/blockchain"
@@ -71,10 +73,10 @@ func AdminIndexHandler(c echo.Context) error {
 	return html(c, "app.html")
 }
 
-type ImexResult struct {
-	Filename  string                       `json:"filename"`
-	Timestamp time.Time                    `json:"timestamp"`
-	Results   map[string]map[string]string `json:"results"`
+type ImportExportResult struct {
+	Filename  string                    `json:"filename"`
+	Timestamp time.Time                 `json:"timestamp"`
+	Results   portable.ProcessedResults `json:"results"`
 }
 
 func GetExport(e echo.Context) error {
@@ -83,23 +85,22 @@ func GetExport(e echo.Context) error {
 	if sess == nil {
 		return c.NoContent(http.StatusUnauthorized)
 	}
-	var exportFields []string
+	var exportEntities []portable.EntityType
 	if strings.ToLower(c.Request().Method) == "get" {
-		exportFields = make([]string, 0)
 		spl := strings.Split(c.QueryParam("include"), ",")
 		for _, s := range spl {
 			s = strings.TrimSpace(s)
-			if s != "" {
-				exportFields = append(exportFields, s)
+			entity := portable.StringToEntityType(s)
+			if entity != "" {
+				exportEntities = append(exportEntities, entity)
 			}
 		}
 	} else {
-		_ = c.Bind(&exportFields)
+		_ = c.Bind(&exportEntities)
 	}
-	if len(exportFields) == 0 {
+	if len(exportEntities) == 0 {
 		return c.NoContent(http.StatusBadRequest)
 	}
-	exportEntities := c.System().GetImexIFFor(exportFields)
 	return Export(sess, exportEntities, c)
 }
 
@@ -117,7 +118,7 @@ func PostImport(e echo.Context) error {
 	if err != nil {
 		return c.String(http.StatusUnprocessableEntity, err.Error())
 	}
-	sess.Put("lastImport", &ImexResult{Filename: fileName, Timestamp: time.Now(), Results: results})
+	sess.Put("lastImport", &ImportExportResult{Filename: fileName, Timestamp: time.Now(), Results: results})
 	return c.NoContent(http.StatusOK)
 
 }
@@ -140,7 +141,7 @@ func ExportUserData(e echo.Context) error {
 			}
 		}
 	}
-	return Export(sess, []storage.ImporterExporter{c.System().DB.UserData}, c, id...)
+	return Export(sess, []portable.EntityType{portable.UserData}, c, id...)
 }
 
 func ExportSettings(e echo.Context) error {
@@ -149,7 +150,7 @@ func ExportSettings(e echo.Context) error {
 	if sess == nil {
 		return c.NoContent(http.StatusUnauthorized)
 	}
-	return Export(sess, []storage.ImporterExporter{c.System().DB.Settings}, c, "Settings")
+	return Export(sess, []portable.EntityType{portable.Settings}, c, "Settings")
 }
 
 func ExportUser(e echo.Context) error {
@@ -170,10 +171,10 @@ func ExportUser(e echo.Context) error {
 			}
 		}
 	}
-	return Export(sess, []storage.ImporterExporter{c.System().DB.User}, c, id...)
+	return Export(sess, []portable.EntityType{portable.User}, c, id...)
 }
 
-func Export(sess *session.Session, exportEntities []storage.ImporterExporter, e echo.Context, id ...string) error {
+func Export(sess *session.Session, exportEntities []portable.EntityType, e echo.Context, id ...string) error {
 	c := e.(*www.Context)
 	if len(exportEntities) == 0 {
 		return c.NoContent(http.StatusBadRequest)
@@ -182,18 +183,18 @@ func Export(sess *session.Session, exportEntities []storage.ImporterExporter, e 
 	resp.Header().Set("Content-Disposition", fmt.Sprintf(`%s; filename="proxeus.db"`, "attachment"))
 	resp.Committed = true //prevents from-> http: multiple response.WriteHeader calls
 	var (
-		results map[string]map[string]string
+		results portable.ProcessedResults
 		err     error
 	)
 	if len(id) > 0 && len(exportEntities) == 1 {
 		results, err = c.System().ExportSingle(resp.Writer, sess, exportEntities[0], id...)
 	} else {
-		results, err = c.System().Export(resp.Writer, sess, exportEntities...)
+		results, err = c.System().Export(resp.Writer, sess, exportEntities)
 	}
 	if err != nil {
 		return c.String(http.StatusUnprocessableEntity, err.Error())
 	}
-	sess.Put("lastExport", &ImexResult{Timestamp: time.Now(), Results: results})
+	sess.Put("lastExport", &ImportExportResult{Timestamp: time.Now(), Results: results})
 	return c.NoContent(http.StatusOK)
 }
 
@@ -221,15 +222,15 @@ func results(key string, sess *session.Session, c echo.Context) error {
 		if del == "" {
 			sess.Delete(key)
 		} else {
-			var imexResults *ImexResult
+			var imexResults *ImportExportResult
 			_ = sess.Get(key, &imexResults)
 			if imexResults != nil && imexResults.Results != nil {
-				delete(imexResults.Results, del)
+				delete(imexResults.Results, portable.EntityType(del))
 				sess.Put(key, imexResults)
 			}
 		}
 	}
-	var imexResults *ImexResult
+	var imexResults *ImportExportResult
 	_ = sess.Get(key, &imexResults)
 	return c.JSON(http.StatusOK, imexResults)
 }

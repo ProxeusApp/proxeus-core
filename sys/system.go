@@ -11,6 +11,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/ProxeusApp/proxeus-core/storage/portable"
+
 	"github.com/ethereum/go-ethereum/accounts/abi"
 
 	"github.com/ProxeusApp/proxeus-core/main/handlers/blockchain"
@@ -91,6 +93,7 @@ func NewWithSettings(settings model.Settings) (*System, error) {
 }
 
 func (me *System) init(stngs *model.Settings) error {
+	stngs.DataDir, _ = filepath.Abs(stngs.DataDir)
 	log.Printf("Init with settings: %#v\n", stngs)
 
 	expiry, err := time.ParseDuration(stngs.SessionExpiry)
@@ -274,31 +277,20 @@ func (me *sessionNotify) OnSessionRemoved(id string) {
 	log.Println("OnSessionRemoved", id)
 }
 
-func (me *System) GetImexIFFor(fields []string) []storage.ImporterExporter {
-	items := make([]storage.ImporterExporter, 0)
-	for _, name := range fields {
-		ex := me.DB.ImexIFByName(name)
-		if ex != nil {
-			items = append(items, ex)
-		}
-	}
-	return items
-}
-
-func (me *System) Export(writer io.Writer, s *session.Session, imexIfs ...storage.ImporterExporter) (map[string]map[string]string, error) {
-	imex, err := storm.NewImex(s, me.DB, s.SessionDir())
+func (me *System) Export(writer io.Writer, s *session.Session, entities []portable.EntityType) (portable.ProcessedResults, error) {
+	ie, err := portable.NewImportExport(s, me.DB, s.SessionDir())
 	if err != nil {
 		return nil, err
 	}
-	defer imex.Close()
-	for _, ex := range imexIfs {
-		err = ex.Export(imex)
+	defer ie.Close()
+	for _, entity := range entities {
+		err = ie.Export(entity)
 		if err != nil {
 			return nil, err
 		}
 	}
 	var f *os.File
-	f, err = imex.Pack()
+	f, err = ie.Pack()
 	if err != nil {
 		return nil, err
 	}
@@ -310,21 +302,21 @@ func (me *System) Export(writer io.Writer, s *session.Session, imexIfs ...storag
 	if err != nil {
 		return nil, err
 	}
-	return imex.Processed(), nil
+	return ie.Processed(), nil
 }
 
-func (me *System) ExportSingle(writer io.Writer, s *session.Session, imexIfs storage.ImporterExporter, id ...string) (map[string]map[string]string, error) {
-	imex, err := storm.NewImex(s, me.DB, s.SessionDir())
+func (me *System) ExportSingle(writer io.Writer, s *session.Session, entity portable.EntityType, id ...string) (portable.ProcessedResults, error) {
+	ie, err := portable.NewImportExport(s, me.DB, s.SessionDir())
 	if err != nil {
 		return nil, err
 	}
-	defer imex.Close()
-	err = imexIfs.Export(imex, id...)
+	defer ie.Close()
+	err = ie.Export(entity, id...)
 	if err != nil {
 		return nil, err
 	}
 	var f *os.File
-	f, err = imex.Pack()
+	f, err = ie.Pack()
 	if err != nil {
 		return nil, err
 	}
@@ -336,51 +328,36 @@ func (me *System) ExportSingle(writer io.Writer, s *session.Session, imexIfs sto
 	if err != nil {
 		return nil, err
 	}
-	return imex.Processed(), nil
+	return ie.Processed(), nil
 }
 
-func (me *System) Import(reader io.Reader, s *session.Session, skipExisting bool) (map[string]map[string]string, error) {
-	imex, err := storm.NewImex(s, me.DB, s.SessionDir())
+func (me *System) Import(reader io.Reader, s *session.Session, skipExisting bool) (portable.ProcessedResults, error) {
+	ie, err := portable.NewImportExport(s, me.DB, s.SessionDir())
 	if err != nil {
 		return nil, err
 	}
-	defer imex.Close()
-	imex.SetSkipExistingOnImport(skipExisting)
-	err = imex.Extract(reader)
+	defer ie.Close()
+	ie.SetSkipExistingOnImport(skipExisting)
+	err = ie.Extract(reader)
 	if err != nil {
 		return nil, err
 	}
-	err = me.DB.Settings.Import(imex)
-	if err != nil {
-		return nil, err
+	toImport := []portable.EntityType{
+		portable.Settings,
+		portable.User, //User must be imported before entities with permissions
+		portable.I18n,
+		portable.Template,
+		portable.Form,
+		portable.Workflow,
+		portable.UserData,
 	}
-	//User must be imported before entities with permissions
-	err = me.DB.User.Import(imex)
-	if err != nil {
-		return nil, err
+	for _, entityType := range toImport {
+		err = ie.Import(entityType)
+		if err != nil {
+			return nil, err
+		}
 	}
-	err = me.DB.I18n.Import(imex)
-	if err != nil {
-		return nil, err
-	}
-
-	err = me.DB.Template.Import(imex)
-	if err != nil {
-		return nil, err
-	}
-	err = me.DB.Form.Import(imex)
-	if err != nil {
-		return nil, err
-	}
-	err = me.DB.Workflow.Import(imex)
-	if err != nil {
-		return nil, err
-	}
-	err = me.DB.UserData.Import(imex)
-	if err != nil {
-		return nil, err
-	}
-	return imex.Processed(), nil
+	return ie.Processed(), nil
 }
 
 func (me *System) closeDBs() {

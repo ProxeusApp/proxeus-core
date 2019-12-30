@@ -59,6 +59,10 @@ func NewWorkflowDB(dir string) (*WorkflowDB, error) {
 	return udb, nil
 }
 
+func (me *WorkflowDB) AssetsKey() string {
+	return me.baseFilePath
+}
+
 func (me *WorkflowDB) getDB() *storm.DB {
 	return me.db
 }
@@ -252,115 +256,6 @@ func (me *WorkflowDB) saveOnly(item *model.WorkflowItem, tx storm.Node) error {
 	cp := *item
 	cp.Data = nil
 	return tx.Save(&cp)
-}
-
-func (me *WorkflowDB) Import(imex storage.ImexIF) error {
-	err := me.init(imex)
-	if err != nil {
-		return err
-	}
-	for i := 0; true; i++ {
-		items, err := imex.DB().Workflow.List(imex.Auth(), "", storage.IndexOptions(i))
-		if err == nil && len(items) > 0 {
-			for _, item := range items {
-				if imex.SkipExistingOnImport() {
-					_, err = imex.SysDB().Workflow.Get(imex.Auth(), item.ID)
-					if err == nil {
-						continue
-					}
-				}
-				item.Permissions.UpdateUserID(imex.LocatedSameUserWithDifferentID())
-
-				err = me.put(imex.Auth(), item, false)
-				if err != nil {
-					imex.ProcessedEntry(imexWorkflow, item.ID, err)
-					continue
-				}
-				imex.ProcessedEntry(imexWorkflow, item.ID, nil)
-			}
-		} else {
-			break
-		}
-	}
-	return nil
-}
-
-const imexWorkflow = "Workflow"
-
-func (me *WorkflowDB) init(imex storage.ImexIF) error {
-	var err error
-	if imex.DB().Workflow == nil {
-		imex.DB().Workflow, err = NewWorkflowDB(imex.Dir())
-	}
-	return err
-}
-
-func (me *WorkflowDB) Export(imex storage.ImexIF, id ...string) error {
-	var err error
-	err = me.init(imex)
-	if err != nil {
-		return err
-	}
-	specificIds := len(id) > 0
-	if len(id) == 1 {
-		if imex.IsProcessed(imexWorkflow, id[0]) {
-			return nil
-		}
-	}
-	type NodesAfter struct {
-		id    string
-		store storage.ImporterExporter
-	}
-	nodes := make(map[string]*NodesAfter)
-	for i := 0; true; i++ {
-		items, err := me.List(imex.Auth(), "", storage.IndexOptions(i).WithInclude(id))
-		if err == nil && len(items) > 0 {
-			var tx storm.Node
-			tx, err = me.getDB().Begin(true)
-			if err != nil {
-				return err
-			}
-			for _, item := range items {
-				if !imex.IsProcessed(imexWorkflow, item.ID) {
-					err = me.saveOnly(item, tx)
-					if err != nil {
-						imex.ProcessedEntry(imexWorkflow, item.ID, err)
-						continue
-					}
-					if item.Data != nil && item.Data.Flow != nil {
-						for _, v := range item.Data.Flow.Nodes {
-							if im := imex.SysDB().ImexIFByName(v.Type); im != nil {
-								nodes[v.ID] = &NodesAfter{id: item.ID, store: im}
-							}
-						}
-					}
-					item.Permissions.UserIdsMap(imex.NeededUsers())
-					if err != nil {
-						imex.ProcessedEntry(imexWorkflow, item.ID, err)
-						continue
-					}
-					imex.ProcessedEntry(imexWorkflow, item.ID, nil)
-				}
-			}
-			err = tx.Commit()
-			if err != nil {
-				_ = tx.Rollback()
-				return err
-			}
-		} else {
-			break
-		}
-		if specificIds {
-			break
-		}
-	}
-	for k, v := range nodes {
-		err = v.store.Export(imex, k)
-		if err != nil {
-			imex.ProcessedEntry(imexWorkflow, v.id, err)
-		}
-	}
-	return nil
 }
 
 func (me *WorkflowDB) Close() error {
