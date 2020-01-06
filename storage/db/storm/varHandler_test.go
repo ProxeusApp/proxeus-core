@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/asdine/storm"
+	"github.com/ProxeusApp/proxeus-core/storage/database"
 )
 
 func TestVars(t *testing.T) {
@@ -43,7 +43,7 @@ func TestVars(t *testing.T) {
 	}
 }
 
-func pVars(db *storm.DB, id string, vars []string) error {
+func pVars(db database.Shim, id string, vars []string) error {
 	tx, err := db.Begin(true)
 	if err != nil {
 		return err
@@ -59,7 +59,7 @@ func pVars(db *storm.DB, id string, vars []string) error {
 	return err
 }
 
-func rVars(db *storm.DB, id string) error {
+func rVars(db database.Shim, id string) error {
 	tx, err := db.Begin(true)
 	if err != nil {
 		return err

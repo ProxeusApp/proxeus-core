@@ -4,15 +4,14 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/asdine/storm"
-	"github.com/asdine/storm/codec/msgpack"
 	"github.com/asdine/storm/q"
 
+	"github.com/ProxeusApp/proxeus-core/storage/database"
 	"github.com/ProxeusApp/proxeus-core/sys/model"
 )
 
 type SignatureRequestsDB struct {
-	db *storm.DB
+	db database.Shim
 }
 
 const signatureVersion = "sig_vers"
@@ -21,17 +20,17 @@ const signatureDB = "signaturerequestsdb"
 
 func NewSignatureDB(dir string) (*SignatureRequestsDB, error) {
 	var err error
-	var msgpackDb *storm.DB
+
 	baseDir := filepath.Join(dir, signatureDBDir)
 	err = ensureDir(baseDir)
 	if err != nil {
 		return nil, err
 	}
-	msgpackDb, err = storm.Open(filepath.Join(baseDir, signatureDB), storm.Codec(msgpack.Codec))
+	db, err := database.OpenStorm(filepath.Join(baseDir, signatureDB))
 	if err != nil {
 		return nil, err
 	}
-	udb := &SignatureRequestsDB{db: msgpackDb}
+	udb := &SignatureRequestsDB{db: db}
 
 	example := &model.SignatureRequestItem{}
 	err = udb.db.Init(example)
@@ -42,7 +41,6 @@ func NewSignatureDB(dir string) (*SignatureRequestsDB, error) {
 	if err != nil {
 		return nil, err
 	}
-
 	var fVersion int
 	verr := udb.db.Get(signatureVersion, signatureVersion, &fVersion)
 	if verr == nil && fVersion != example.GetVersion() {
