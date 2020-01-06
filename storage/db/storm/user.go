@@ -7,6 +7,7 @@ import (
 
 	"github.com/ProxeusApp/proxeus-core/storage"
 
+	"github.com/ProxeusApp/proxeus-core/storage/database"
 	"github.com/ProxeusApp/proxeus-core/storage/db"
 
 	//"encoding/json"
@@ -20,7 +21,6 @@ import (
 	"time"
 
 	"github.com/asdine/storm"
-	"github.com/asdine/storm/codec/msgpack"
 	"github.com/asdine/storm/q"
 	"github.com/disintegration/imaging"
 	uuid "github.com/satori/go.uuid"
@@ -30,7 +30,7 @@ import (
 )
 
 type UserDB struct {
-	db           *storm.DB
+	db           database.Shim
 	baseFilePath string
 }
 
@@ -49,7 +49,7 @@ const passwordBucket = "pw_bucket"
 
 func NewUserDB(dir string) (*UserDB, error) {
 	var err error
-	var msgpackDb *storm.DB
+
 	baseDir := filepath.Join(dir, "user")
 	err = ensureDir(baseDir)
 	if err != nil {
@@ -60,11 +60,11 @@ func NewUserDB(dir string) (*UserDB, error) {
 	if err != nil {
 		return nil, err
 	}
-	msgpackDb, err = storm.Open(filepath.Join(baseDir, "users"), storm.Codec(msgpack.Codec))
+	db, err := database.OpenStorm(filepath.Join(baseDir, "users"))
 	if err != nil {
 		return nil, err
 	}
-	udb := &UserDB{db: msgpackDb}
+	udb := &UserDB{db: db}
 	udb.baseFilePath = assetDir
 
 	example := &model.User{}
@@ -80,10 +80,6 @@ func NewUserDB(dir string) (*UserDB, error) {
 		return nil, err
 	}
 	return udb, nil
-}
-
-func (me *UserDB) GetDB() *storm.DB {
-	return me.db
 }
 
 func (me *UserDB) GetBaseFilePath() string {
@@ -340,7 +336,22 @@ func (me *UserDB) GetByEmail(email string) (*model.User, error) {
 }
 
 func (me *UserDB) UpdateEmail(id, email string) error {
-	return me.db.UpdateField(&model.User{ID: id}, "Email", email)
+	tx, err := me.db.Begin(true)
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+	var u model.User
+	err = tx.Select(q.Eq("ID", id)).First(&u)
+	if err != nil {
+		return err
+	}
+	u.Email = email
+	err = tx.Update(&u)
+	if err != nil {
+		return err
+	}
+	return tx.Commit()
 }
 
 func (me *UserDB) PutPw(id, pass string) error {
@@ -404,7 +415,7 @@ func (me *UserDB) put(auth model.Auth, item *model.User, updated bool) error {
 	}
 }
 
-func (me *UserDB) save(u *model.User, tx storm.Node) error {
+func (me *UserDB) save(u *model.User, tx database.Shim) error {
 	err := me.updateApiKeys(u, tx)
 	if err != nil {
 		return err
@@ -416,7 +427,7 @@ func (me *UserDB) save(u *model.User, tx storm.Node) error {
 	return tx.Commit()
 }
 
-func (me *UserDB) updateApiKeys(u *model.User, tx storm.Node) error {
+func (me *UserDB) updateApiKeys(u *model.User, tx database.Shim) error {
 	newKeys := make([]model.ApiKey, 0)
 	for _, a := range u.ApiKeys {
 		if a.IsNew() {

@@ -1,6 +1,7 @@
 package storm
 
 import (
+	"github.com/ProxeusApp/proxeus-core/storage/database"
 	"github.com/asdine/storm"
 	"github.com/asdine/storm/q"
 
@@ -17,12 +18,12 @@ type Var struct {
 	VarRefs map[string]bool //ids that contain this var
 }
 
-func initVars(db *storm.DB) {
+func initVars(db database.Shim) {
 	db.Init(&VarsMaintenance{})
 	db.Init(&Var{})
 }
 
-func updateVarsOf(auth model.Auth, id string, allNewVars []string, tx storm.Node) error {
+func updateVarsOf(auth model.Auth, id string, allNewVars []string, tx database.Shim) error {
 	var oldForm VarsMaintenance
 	err := tx.One("ID", id, &oldForm)
 	if err == storm.ErrNotFound {
@@ -70,7 +71,7 @@ func updateVarsOf(auth model.Auth, id string, allNewVars []string, tx storm.Node
 	return tx.Save(&oldForm)
 }
 
-func remVars(auth model.Auth, id string, tx storm.Node) error {
+func remVars(auth model.Auth, id string, tx database.Shim) error {
 	var oldForm VarsMaintenance
 	err := tx.One("ID", id, &oldForm)
 	if err != nil {
@@ -86,7 +87,7 @@ func remVars(auth model.Auth, id string, tx storm.Node) error {
 	return tx.DeleteStruct(oldFormRef)
 }
 
-func putVar(id, strVar string, tx storm.Node) error {
+func putVar(id, strVar string, tx database.Shim) error {
 	var svar Var
 	err := tx.One("ID", strVar, &svar)
 	svarRef := &svar
@@ -105,7 +106,7 @@ func putVar(id, strVar string, tx storm.Node) error {
 	return nil
 }
 
-func remVar(id, strVar string, tx storm.Node) error {
+func remVar(id, strVar string, tx database.Shim) error {
 	var svar Var
 	err := tx.One("ID", strVar, &svar)
 	svarRef := &svar
@@ -122,7 +123,7 @@ func remVar(id, strVar string, tx storm.Node) error {
 	}
 }
 
-func getVars(contains string, limit, index int, tx storm.Node) ([]string, error) {
+func getVars(contains string, limit, index int, tx database.Shim) ([]string, error) {
 	items := make([]string, 0)
 	err := tx.Select(
 		q.Re("ID", contains)).

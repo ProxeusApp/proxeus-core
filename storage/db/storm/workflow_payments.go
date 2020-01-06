@@ -8,14 +8,14 @@ import (
 	"time"
 
 	"github.com/asdine/storm"
-	"github.com/asdine/storm/codec/msgpack"
 	"github.com/asdine/storm/q"
 
+	"github.com/ProxeusApp/proxeus-core/storage/database"
 	"github.com/ProxeusApp/proxeus-core/sys/model"
 )
 
 type WorkflowPaymentsDB struct {
-	db *storm.DB
+	db database.Shim
 }
 
 const workflowPaymentVersion = "payment_vers"
@@ -24,17 +24,17 @@ const WorkflowPaymentDB = "workflowpaymentsdb"
 
 func NewWorkflowPaymentDB(dir string) (*WorkflowPaymentsDB, error) {
 	var err error
-	var msgpackDb *storm.DB
+
 	baseDir := filepath.Join(dir, WorkflowPaymentDBDir)
 	err = ensureDir(baseDir)
 	if err != nil {
 		return nil, err
 	}
-	msgpackDb, err = storm.Open(filepath.Join(baseDir, WorkflowPaymentDB), storm.Codec(msgpack.Codec))
+	db, err := database.OpenStorm(filepath.Join(baseDir, WorkflowPaymentDB))
 	if err != nil {
 		return nil, err
 	}
-	udb := &WorkflowPaymentsDB{db: msgpackDb}
+	udb := &WorkflowPaymentsDB{db: db}
 
 	example := &model.WorkflowPaymentItem{}
 	err = udb.db.Init(example)
@@ -95,7 +95,7 @@ func (me *WorkflowPaymentsDB) GetByWorkflowIdAndFromEthAddress(workflowID, fromE
 
 	var (
 		item  model.WorkflowPaymentItem
-		query storm.Query
+		query database.QueryShim
 	)
 
 	if len(statuses) == 0 {
