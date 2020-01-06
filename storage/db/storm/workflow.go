@@ -7,9 +7,9 @@ import (
 	"time"
 
 	"github.com/ProxeusApp/proxeus-core/storage"
+	"github.com/ProxeusApp/proxeus-core/storage/database"
 
 	"github.com/asdine/storm"
-	"github.com/asdine/storm/codec/msgpack"
 	"github.com/asdine/storm/q"
 	uuid "github.com/satori/go.uuid"
 
@@ -17,7 +17,7 @@ import (
 )
 
 type WorkflowDB struct {
-	db           *storm.DB
+	db           database.Shim
 	baseFilePath string
 }
 
@@ -26,7 +26,7 @@ const workflowVersion = "wf_vers"
 
 func NewWorkflowDB(dir string) (*WorkflowDB, error) {
 	var err error
-	var msgpackDb *storm.DB
+
 	baseDir := filepath.Join(dir, "workflow")
 	err = ensureDir(baseDir)
 	if err != nil {
@@ -37,11 +37,11 @@ func NewWorkflowDB(dir string) (*WorkflowDB, error) {
 	if err != nil {
 		return nil, err
 	}
-	msgpackDb, err = storm.Open(filepath.Join(baseDir, "workflows"), storm.Codec(msgpack.Codec))
+	db, err := database.OpenStorm(filepath.Join(baseDir, "workflows"))
 	if err != nil {
 		return nil, err
 	}
-	udb := &WorkflowDB{db: msgpackDb}
+	udb := &WorkflowDB{db: db}
 	udb.baseFilePath = assetDir
 
 	example := &model.WorkflowItem{}
@@ -61,10 +61,6 @@ func NewWorkflowDB(dir string) (*WorkflowDB, error) {
 
 func (me *WorkflowDB) AssetsKey() string {
 	return me.baseFilePath
-}
-
-func (me *WorkflowDB) getDB() *storm.DB {
-	return me.db
 }
 
 func (me *WorkflowDB) ListPublished(auth model.Auth, contains string, options storage.Options) ([]*model.WorkflowItem, error) {
@@ -213,7 +209,7 @@ func (me *WorkflowDB) put(auth model.Auth, item *model.WorkflowItem, updated boo
 	}
 }
 
-func (me *WorkflowDB) updateWF(auth model.Auth, item *model.WorkflowItem, tx storm.Node) error {
+func (me *WorkflowDB) updateWF(auth model.Auth, item *model.WorkflowItem, tx database.Shim) error {
 	err := me.saveOnly(item, tx)
 	if err != nil {
 		return err
@@ -246,7 +242,7 @@ func (me *WorkflowDB) Delete(auth model.Auth, id string) error {
 	return tx.Commit()
 }
 
-func (me *WorkflowDB) saveOnly(item *model.WorkflowItem, tx storm.Node) error {
+func (me *WorkflowDB) saveOnly(item *model.WorkflowItem, tx database.Shim) error {
 	if item.Data != nil {
 		err := tx.Set(workflowHeavyData, item.ID, item.Data)
 		if err != nil {

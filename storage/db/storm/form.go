@@ -10,8 +10,9 @@ import (
 	"regexp"
 	"time"
 
+	"github.com/ProxeusApp/proxeus-core/storage/database"
+
 	"github.com/asdine/storm"
-	"github.com/asdine/storm/codec/msgpack"
 	"github.com/asdine/storm/q"
 	uuid "github.com/satori/go.uuid"
 
@@ -21,7 +22,7 @@ import (
 )
 
 type FormDB struct {
-	db           *storm.DB
+	db           database.Shim
 	baseFilePath string
 }
 
@@ -35,7 +36,7 @@ const formCompVersion = "formComp_version"
 
 func NewFormDB(dir string) (*FormDB, error) {
 	var err error
-	var msgpackDb *storm.DB
+
 	baseDir := filepath.Join(dir, "form")
 	err = ensureDir(baseDir)
 	if err != nil {
@@ -46,11 +47,11 @@ func NewFormDB(dir string) (*FormDB, error) {
 	if err != nil {
 		return nil, err
 	}
-	msgpackDb, err = storm.Open(filepath.Join(baseDir, "forms"), storm.Codec(msgpack.Codec))
+	db, err := database.OpenStorm(filepath.Join(baseDir, "forms"))
 	if err != nil {
 		return nil, err
 	}
-	udb := &FormDB{db: msgpackDb}
+	udb := &FormDB{db: db}
 	udb.baseFilePath = assetDir
 
 	example := &model.FormItem{}
@@ -206,7 +207,7 @@ func (me *FormDB) Delete(auth model.Auth, id string) error {
 	return tx.Commit()
 }
 
-func (me *FormDB) updateForm(auth model.Auth, item *model.FormItem, tx storm.Node) error {
+func (me *FormDB) updateForm(auth model.Auth, item *model.FormItem, tx database.Shim) error {
 	err := me.updateVars(auth, item, tx)
 	if err != nil {
 		return err
@@ -226,7 +227,7 @@ func (me *FormDB) updateForm(auth model.Auth, item *model.FormItem, tx storm.Nod
 	return tx.Commit()
 }
 
-func (me *FormDB) updateVars(auth model.Auth, item *model.FormItem, tx storm.Node) error {
+func (me *FormDB) updateVars(auth model.Auth, item *model.FormItem, tx database.Shim) error {
 	formVars := form.Vars(item.Data)
 	if len(formVars) > 0 {
 		err := updateVarsOf(auth, item.ID, formVars, tx)

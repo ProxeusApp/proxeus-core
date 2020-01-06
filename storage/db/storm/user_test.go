@@ -6,9 +6,9 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/asdine/storm"
 	"github.com/asdine/storm/q"
 
+	"github.com/ProxeusApp/proxeus-core/storage/database"
 	"github.com/ProxeusApp/proxeus-core/sys/model"
 
 	//"reflect"
@@ -117,7 +117,7 @@ func insert(udb *UserDB, err error, orgID, orgEmail string, u model.User) {
 	i := 0
 	max := 10000
 
-	var tx storm.Node
+	var tx database.Shim
 
 	txSet := false
 	defer func() {

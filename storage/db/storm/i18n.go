@@ -14,17 +14,17 @@ import (
 	"sync"
 
 	"github.com/asdine/storm"
-	"github.com/asdine/storm/codec/msgpack"
 	"github.com/asdine/storm/q"
 
 	"github.com/ProxeusApp/proxeus-core/storage"
+	"github.com/ProxeusApp/proxeus-core/storage/database"
 	"github.com/ProxeusApp/proxeus-core/sys/i18n"
 	"github.com/ProxeusApp/proxeus-core/sys/model"
 )
 
 //
 type I18nDB struct {
-	db           *storm.DB
+	db           database.Shim
 	resolver     *i18n.I18nResolver
 	langReg      *regexp.Regexp
 	allCache     map[string]map[string]string
@@ -43,16 +43,21 @@ type i18nInternal struct {
 
 func NewI18nDB(dir string) (*I18nDB, error) {
 	var err error
-	var msgpackDb *storm.DB
+
 	err = ensureDir(dir)
 	if err != nil {
 		return nil, err
 	}
-	msgpackDb, err = storm.Open(filepath.Join(dir, "i18n"), storm.Codec(msgpack.Codec))
+	db, err := database.OpenStorm(filepath.Join(dir, "i18n"))
 	if err != nil {
 		return nil, err
 	}
-	udb := &I18nDB{langs: map[string]*model.Lang{}, resolver: &i18n.I18nResolver{}, allCache: map[string]map[string]string{}, db: msgpackDb, langReg: regexp.MustCompile(`^[A-Za-z_]{2,6}$`)}
+	udb := &I18nDB{
+		langs:    map[string]*model.Lang{},
+		resolver: &i18n.I18nResolver{},
+		allCache: map[string]map[string]string{},
+		db:       db,
+		langReg:  regexp.MustCompile(`^[A-Za-z_]{2,6}$`)}
 	example := &i18nInternal{}
 	err = udb.db.Init(example)
 	if err != nil {
@@ -82,7 +87,7 @@ func (me *I18nDB) Find(keyContains string, valueContains string, options storage
 		return nil, err
 	}
 	defer tx.Rollback()
-	var query storm.Query
+	var query database.QueryShim
 	m := make(map[string]map[string]string)
 	if keyContains != "" {
 		keyContains = containsCaseInsensitiveReg(keyContains)
@@ -204,7 +209,7 @@ func (me *I18nDB) Put(lang string, key string, text string) error {
 	return tx.Commit()
 }
 
-func (me *I18nDB) put(lang *string, key *string, text *string, tx storm.Node) error {
+func (me *I18nDB) put(lang *string, key *string, text *string, tx database.Shim) error {
 	if lang == nil || key == nil || text == nil || len(*key) == 0 {
 		return fmt.Errorf("invalid arguments: lang and key must be provided")
 	}

@@ -7,17 +7,17 @@ import (
 	"time"
 
 	"github.com/asdine/storm"
-	"github.com/asdine/storm/codec/msgpack"
 	"github.com/asdine/storm/q"
 	uuid "github.com/satori/go.uuid"
 
 	"github.com/ProxeusApp/proxeus-core/storage"
+	"github.com/ProxeusApp/proxeus-core/storage/database"
 	"github.com/ProxeusApp/proxeus-core/sys/file"
 	"github.com/ProxeusApp/proxeus-core/sys/model"
 )
 
 type UserDataDB struct {
-	db           *storm.DB
+	db           database.Shim
 	baseFilePath string
 	mainDir      string
 }
@@ -28,7 +28,7 @@ const usrdMainDir = "userdata"
 
 func NewUserDataDB(dir string) (*UserDataDB, error) {
 	var err error
-	var msgpackDb *storm.DB
+
 	baseDir := filepath.Join(dir, usrdMainDir)
 	err = ensureDir(baseDir)
 	if err != nil {
@@ -39,11 +39,11 @@ func NewUserDataDB(dir string) (*UserDataDB, error) {
 	if err != nil {
 		return nil, err
 	}
-	msgpackDb, err = storm.Open(filepath.Join(baseDir, "usrdb"), storm.Codec(msgpack.Codec))
+	db, err := database.OpenStorm(filepath.Join(baseDir, "usrdb"))
 	if err != nil {
 		return nil, err
 	}
-	udb := &UserDataDB{db: msgpackDb, mainDir: baseDir}
+	udb := &UserDataDB{db: db, mainDir: baseDir}
 	udb.baseFilePath = assetDir
 
 	example := &model.UserDataItem{}
@@ -346,7 +346,7 @@ func (me *UserDataDB) put(auth model.Auth, item *model.UserDataItem, updated boo
 	}
 }
 
-func (me *UserDataDB) updateItem(auth model.Auth, item *model.UserDataItem, tx storm.Node) error {
+func (me *UserDataDB) updateItem(auth model.Auth, item *model.UserDataItem, tx database.Shim) error {
 	err := me.saveOnly(item, tx)
 	if err != nil {
 		return err
@@ -354,7 +354,7 @@ func (me *UserDataDB) updateItem(auth model.Auth, item *model.UserDataItem, tx s
 	return tx.Commit()
 }
 
-func (me *UserDataDB) saveOnly(item *model.UserDataItem, tx storm.Node) error {
+func (me *UserDataDB) saveOnly(item *model.UserDataItem, tx database.Shim) error {
 	if item.Data != nil {
 		err := tx.Set(usrdHeavyData, item.ID, item.Data)
 		if err != nil {

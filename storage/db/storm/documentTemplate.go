@@ -7,8 +7,9 @@ import (
 	"regexp"
 	"time"
 
+	"github.com/ProxeusApp/proxeus-core/storage/database"
+
 	"github.com/asdine/storm"
-	"github.com/asdine/storm/codec/msgpack"
 	uuid "github.com/satori/go.uuid"
 
 	"github.com/ProxeusApp/proxeus-core/storage"
@@ -17,7 +18,7 @@ import (
 )
 
 type DocTemplateDB struct {
-	db           *storm.DB
+	db           database.Shim
 	baseFilePath string
 }
 
@@ -25,7 +26,7 @@ const docTemplVersion = "doctmpl_vers"
 
 func NewDocTemplateDB(dir string) (*DocTemplateDB, error) {
 	var err error
-	var msgpackDb *storm.DB
+
 	baseDir := filepath.Join(dir, "document_template")
 	err = ensureDir(baseDir)
 	if err != nil {
@@ -36,11 +37,11 @@ func NewDocTemplateDB(dir string) (*DocTemplateDB, error) {
 	if err != nil {
 		return nil, err
 	}
-	msgpackDb, err = storm.Open(filepath.Join(baseDir, "document_templates"), storm.Codec(msgpack.Codec))
+	db, err := database.OpenStorm(filepath.Join(baseDir, "document_templates"))
 	if err != nil {
 		return nil, err
 	}
-	udb := &DocTemplateDB{db: msgpackDb}
+	udb := &DocTemplateDB{db: db}
 	udb.baseFilePath = assetDir
 
 	example := &model.TemplateItem{}
