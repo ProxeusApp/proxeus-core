@@ -72,7 +72,7 @@ func getSessionWithUser(c *Context, create bool, usr *model.User) (currentSessio
 				SameSite: http.SameSiteStrictMode,
 			}
 			settings := c.System().GetSettings()
-			if strings.ToLower(settings.TestMode) == "true" {
+			if strings.ToLower(settings.TestMode) != "true" {
 				options.Secure = true
 			}
 			sess.Options = &options
