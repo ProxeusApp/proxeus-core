@@ -50,5 +50,5 @@ func importWorkflow(s *session, exportedW []byte, expectedW *workflow) {
 	stats.Path("$.Workflow").Object().Keys().Length().Equal(2)
 
 	s.e.GET("/api/admin/workflow/{id}").WithPath("id", expectedW.ID).Expect().Status(http.StatusOK).
-		JSON().Object().ContainsMap(removeUpdatedField(toMap(expectedW)))
+		JSON().Object().ContainsMap(removeTimeFields(toMap(expectedW)))
 }

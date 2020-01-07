@@ -77,9 +77,11 @@ func createTemplate(s *session, u *user, name string) *template {
 
 func formLookupForTemplate(s *session, f *form) {
 	f.Data["data"] = nil
-	s.e.GET("/api/admin/template/ide/form").Expect().JSON().Array().Contains(f)
-	s.e.GET("/api/admin/template/ide/form").WithQuery("c", f.Name[2:]).Expect().
-		JSON().Array().Contains(f)
+	array := s.e.GET("/api/admin/template/ide/form").Expect().JSON().Array()
+	arrayContainsMap(s.t, array, f)
+	array = s.e.GET("/api/admin/template/ide/form").WithQuery("c", f.Name[2:]).
+		Expect().JSON().Array()
+	arrayContainsMap(s.t, array, f)
 
 	s.e.GET("api/admin/form/component").WithQueryString("l=1000").Expect().
 		JSON().Object().ContainsKey("HC1")

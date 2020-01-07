@@ -95,9 +95,10 @@ func simpleFormData(fieldName string) map[string]interface{} {
 func updateForm(s *session, f *form) *form {
 	s.e.POST("/api/admin/form/update").WithQuery("id", f.ID).WithJSON(f).Expect().Status(http.StatusOK)
 
-	expected := removeUpdatedField(toMap(f))
-	updated := s.e.GET("/api/admin/form/{id}").WithPath("id", f.ID).Expect().Status(http.StatusOK).
-		JSON().Object().ContainsMap(expected).Path("$.updated").String().Raw()
+	expected := removeTimeFields(toMap(f))
+	obj := s.e.GET("/api/admin/form/{id}").WithPath("id", f.ID).Expect().Status(http.StatusOK).JSON().Object()
+	updated := obj.Path("$.updated").String().Raw()
+	obj.ContainsMap(expected)
 
 	ti, err := time.Parse(time.RFC3339Nano, updated)
 	if err != nil {
