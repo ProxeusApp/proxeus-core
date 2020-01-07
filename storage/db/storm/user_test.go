@@ -117,7 +117,7 @@ func insert(udb *UserDB, err error, orgID, orgEmail string, u model.User) {
 	i := 0
 	max := 10000
 
-	var tx database.Shim
+	var tx database.DB
 
 	txSet := false
 	defer func() {

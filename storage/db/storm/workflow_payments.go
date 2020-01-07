@@ -15,7 +15,7 @@ import (
 )
 
 type WorkflowPaymentsDB struct {
-	db database.Shim
+	db database.DB
 }
 
 const workflowPaymentVersion = "payment_vers"
@@ -95,7 +95,7 @@ func (me *WorkflowPaymentsDB) GetByWorkflowIdAndFromEthAddress(workflowID, fromE
 
 	var (
 		item  model.WorkflowPaymentItem
-		query database.QueryShim
+		query database.Query
 	)
 
 	if len(statuses) == 0 {

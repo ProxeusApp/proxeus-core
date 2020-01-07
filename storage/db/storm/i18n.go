@@ -24,7 +24,7 @@ import (
 
 //
 type I18nDB struct {
-	db           database.Shim
+	db           database.DB
 	resolver     *i18n.I18nResolver
 	langReg      *regexp.Regexp
 	allCache     map[string]map[string]string
@@ -87,7 +87,7 @@ func (me *I18nDB) Find(keyContains string, valueContains string, options storage
 		return nil, err
 	}
 	defer tx.Rollback()
-	var query database.QueryShim
+	var query database.Query
 	m := make(map[string]map[string]string)
 	if keyContains != "" {
 		keyContains = containsCaseInsensitiveReg(keyContains)
@@ -209,7 +209,7 @@ func (me *I18nDB) Put(lang string, key string, text string) error {
 	return tx.Commit()
 }
 
-func (me *I18nDB) put(lang *string, key *string, text *string, tx database.Shim) error {
+func (me *I18nDB) put(lang *string, key *string, text *string, tx database.DB) error {
 	if lang == nil || key == nil || text == nil || len(*key) == 0 {
 		return fmt.Errorf("invalid arguments: lang and key must be provided")
 	}

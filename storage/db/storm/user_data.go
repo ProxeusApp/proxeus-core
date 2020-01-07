@@ -17,7 +17,7 @@ import (
 )
 
 type UserDataDB struct {
-	db           database.Shim
+	db           database.DB
 	baseFilePath string
 	mainDir      string
 }
@@ -346,7 +346,7 @@ func (me *UserDataDB) put(auth model.Auth, item *model.UserDataItem, updated boo
 	}
 }
 
-func (me *UserDataDB) updateItem(auth model.Auth, item *model.UserDataItem, tx database.Shim) error {
+func (me *UserDataDB) updateItem(auth model.Auth, item *model.UserDataItem, tx database.DB) error {
 	err := me.saveOnly(item, tx)
 	if err != nil {
 		return err
@@ -354,7 +354,7 @@ func (me *UserDataDB) updateItem(auth model.Auth, item *model.UserDataItem, tx d
 	return tx.Commit()
 }
 
-func (me *UserDataDB) saveOnly(item *model.UserDataItem, tx database.Shim) error {
+func (me *UserDataDB) saveOnly(item *model.UserDataItem, tx database.DB) error {
 	if item.Data != nil {
 		err := tx.Set(usrdHeavyData, item.ID, item.Data)
 		if err != nil {

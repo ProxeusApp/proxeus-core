@@ -43,7 +43,7 @@ func TestVars(t *testing.T) {
 	}
 }
 
-func pVars(db database.Shim, id string, vars []string) error {
+func pVars(db database.DB, id string, vars []string) error {
 	tx, err := db.Begin(true)
 	if err != nil {
 		return err
@@ -59,7 +59,7 @@ func pVars(db database.Shim, id string, vars []string) error {
 	return err
 }
 
-func rVars(db database.Shim, id string) error {
+func rVars(db database.DB, id string) error {
 	tx, err := db.Begin(true)
 	if err != nil {
 		return err

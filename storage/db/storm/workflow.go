@@ -17,7 +17,7 @@ import (
 )
 
 type WorkflowDB struct {
-	db           database.Shim
+	db           database.DB
 	baseFilePath string
 }
 
@@ -209,7 +209,7 @@ func (me *WorkflowDB) put(auth model.Auth, item *model.WorkflowItem, updated boo
 	}
 }
 
-func (me *WorkflowDB) updateWF(auth model.Auth, item *model.WorkflowItem, tx database.Shim) error {
+func (me *WorkflowDB) updateWF(auth model.Auth, item *model.WorkflowItem, tx database.DB) error {
 	err := me.saveOnly(item, tx)
 	if err != nil {
 		return err
@@ -242,7 +242,7 @@ func (me *WorkflowDB) Delete(auth model.Auth, id string) error {
 	return tx.Commit()
 }
 
-func (me *WorkflowDB) saveOnly(item *model.WorkflowItem, tx database.Shim) error {
+func (me *WorkflowDB) saveOnly(item *model.WorkflowItem, tx database.DB) error {
 	if item.Data != nil {
 		err := tx.Set(workflowHeavyData, item.ID, item.Data)
 		if err != nil {

@@ -11,7 +11,7 @@ import (
 )
 
 type SignatureRequestsDB struct {
-	db database.Shim
+	db database.DB
 }
 
 const signatureVersion = "sig_vers"

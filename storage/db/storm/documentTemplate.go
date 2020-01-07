@@ -18,7 +18,7 @@ import (
 )
 
 type DocTemplateDB struct {
-	db           database.Shim
+	db           database.DB
 	baseFilePath string
 }
 
