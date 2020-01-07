@@ -72,9 +72,10 @@ func paymentInStatus(s *session, p *model.WorkflowPaymentItem, expectedStatus st
 	}
 	s.e.String(status).Equal(expectedStatus)
 	p.Status = "confirmed"
+	expected := removeTimeFields(toMap(p))
 	s.e.GET("/api/admin/payments").WithQuery("txHash", p.TxHash).
 		WithQuery("status", "confirmed").Expect().Status(http.StatusOK).
-		JSON().Object().ContainsMap(p)
+		JSON().Object().ContainsMap(expected)
 }
 
 func canStartWorkflow(s *session, w *workflow) {

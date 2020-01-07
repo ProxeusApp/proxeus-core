@@ -134,7 +134,7 @@ func updateWorkflow(s *session, f *workflow) *workflow {
 		WithQuery("id", f.ID).WithQuery("publish", true).WithJSON(f).
 		Expect().Status(http.StatusOK)
 
-	expected := removeUpdatedField(toMap(f))
+	expected := removeTimeFields(toMap(f))
 	s.e.GET("/api/admin/workflow/{id}").WithPath("id", f.ID).Expect().Status(http.StatusOK).
 		JSON().Object().ContainsMap(expected)
 
