@@ -32,13 +32,13 @@ func (s *StormShim) Delete(bucketName string, key interface{}) error {
 }
 
 // Begin starts a new transaction
-func (s *StormShim) Begin(writable bool) (Shim, error) {
+func (s *StormShim) Begin(writable bool) (DB, error) {
 	tx, err := s.db.Begin(writable)
 	s.tx = tx
 	return s, err
 }
 
-func (s *StormShim) WithBatch(enabled bool) Shim {
+func (s *StormShim) WithBatch(enabled bool) DB {
 	s.tx = s.tx.WithBatch(enabled)
 	return s
 }
@@ -56,7 +56,7 @@ func (s *StormShim) Commit() error {
 }
 
 // Select a list of records that match a list of matchers. Doesn't use indexes.
-func (s *StormShim) Select(matchers ...q.Matcher) QueryShim {
+func (s *StormShim) Select(matchers ...q.Matcher) Query {
 	return StormQueryShim{q: s.tx.Select(matchers...)}
 }
 
@@ -108,28 +108,28 @@ type StormQueryShim struct {
 	q storm.Query
 }
 
-func (s StormQueryShim) wrap(q storm.Query) QueryShim {
+func (s StormQueryShim) wrap(q storm.Query) Query {
 	s.q = q
 	return s
 }
 
 // Skip matching records by the given number
-func (s StormQueryShim) Skip(i int) QueryShim {
+func (s StormQueryShim) Skip(i int) Query {
 	return s.wrap(s.q.Skip(i))
 }
 
 // Limit the results by the given number
-func (s StormQueryShim) Limit(i int) QueryShim {
+func (s StormQueryShim) Limit(i int) Query {
 	return s.wrap(s.q.Limit(i))
 }
 
 // Order by the given fields, in descending precedence, left-to-right
-func (s StormQueryShim) OrderBy(str ...string) QueryShim {
+func (s StormQueryShim) OrderBy(str ...string) Query {
 	return s.wrap(s.q.OrderBy(str...))
 }
 
 // Reverse the order of the results
-func (s StormQueryShim) Reverse() QueryShim {
+func (s StormQueryShim) Reverse() Query {
 	return s.wrap(s.q.Reverse())
 }
 
