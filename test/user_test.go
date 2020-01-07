@@ -40,7 +40,15 @@ func new(t *testing.T, serverURL string) *session {
 	return &session{
 		id: uuid.NewV4().String(),
 		t:  t,
-		e:  httpexpect.New(t, serverURL),
+		e: httpexpect.WithConfig(httpexpect.Config{
+			BaseURL:  serverURL,
+			Reporter: httpexpect.NewAssertReporter(t),
+			Printers: []httpexpect.Printer{
+				//httpexpect.NewDebugPrinter(t, true),
+				httpexpect.NewCompactPrinter(t),
+				//httpexpect.NewCurlPrinter(t),
+			},
+		}),
 	}
 }
 
