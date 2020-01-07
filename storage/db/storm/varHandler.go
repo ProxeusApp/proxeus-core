@@ -18,12 +18,12 @@ type Var struct {
 	VarRefs map[string]bool //ids that contain this var
 }
 
-func initVars(db database.Shim) {
+func initVars(db database.DB) {
 	db.Init(&VarsMaintenance{})
 	db.Init(&Var{})
 }
 
-func updateVarsOf(auth model.Auth, id string, allNewVars []string, tx database.Shim) error {
+func updateVarsOf(auth model.Auth, id string, allNewVars []string, tx database.DB) error {
 	var oldForm VarsMaintenance
 	err := tx.One("ID", id, &oldForm)
 	if err == storm.ErrNotFound {
@@ -71,7 +71,7 @@ func updateVarsOf(auth model.Auth, id string, allNewVars []string, tx database.S
 	return tx.Save(&oldForm)
 }
 
-func remVars(auth model.Auth, id string, tx database.Shim) error {
+func remVars(auth model.Auth, id string, tx database.DB) error {
 	var oldForm VarsMaintenance
 	err := tx.One("ID", id, &oldForm)
 	if err != nil {
@@ -87,7 +87,7 @@ func remVars(auth model.Auth, id string, tx database.Shim) error {
 	return tx.DeleteStruct(oldFormRef)
 }
 
-func putVar(id, strVar string, tx database.Shim) error {
+func putVar(id, strVar string, tx database.DB) error {
 	var svar Var
 	err := tx.One("ID", strVar, &svar)
 	svarRef := &svar
@@ -106,7 +106,7 @@ func putVar(id, strVar string, tx database.Shim) error {
 	return nil
 }
 
-func remVar(id, strVar string, tx database.Shim) error {
+func remVar(id, strVar string, tx database.DB) error {
 	var svar Var
 	err := tx.One("ID", strVar, &svar)
 	svarRef := &svar
@@ -123,7 +123,7 @@ func remVar(id, strVar string, tx database.Shim) error {
 	}
 }
 
-func getVars(contains string, limit, index int, tx database.Shim) ([]string, error) {
+func getVars(contains string, limit, index int, tx database.DB) ([]string, error) {
 	items := make([]string, 0)
 	err := tx.Select(
 		q.Re("ID", contains)).

@@ -30,7 +30,7 @@ import (
 )
 
 type UserDB struct {
-	db           database.Shim
+	db           database.DB
 	baseFilePath string
 }
 
@@ -415,7 +415,7 @@ func (me *UserDB) put(auth model.Auth, item *model.User, updated bool) error {
 	}
 }
 
-func (me *UserDB) save(u *model.User, tx database.Shim) error {
+func (me *UserDB) save(u *model.User, tx database.DB) error {
 	err := me.updateApiKeys(u, tx)
 	if err != nil {
 		return err
@@ -427,7 +427,7 @@ func (me *UserDB) save(u *model.User, tx database.Shim) error {
 	return tx.Commit()
 }
 
-func (me *UserDB) updateApiKeys(u *model.User, tx database.Shim) error {
+func (me *UserDB) updateApiKeys(u *model.User, tx database.DB) error {
 	newKeys := make([]model.ApiKey, 0)
 	for _, a := range u.ApiKeys {
 		if a.IsNew() {

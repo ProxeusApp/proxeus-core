@@ -4,8 +4,8 @@ import (
 	"github.com/asdine/storm/q"
 )
 
-// Shim represents common set of the database API.
-type Shim interface {
+// DB represents common set of the database API.
+type DB interface {
 	// Get a value from a bucket
 	Get(bucketName string, key interface{}, to interface{}) error
 	// Set a key/value pair into a bucket
@@ -14,13 +14,13 @@ type Shim interface {
 	Delete(bucketName string, key interface{}) error
 
 	// Begin starts a new transaction
-	Begin(writable bool) (Shim, error)
-	WithBatch(enabled bool) Shim
+	Begin(writable bool) (DB, error)
+	WithBatch(enabled bool) DB
 	Rollback() error
 	Commit() error
 
-	// Select a list of records that match a list of matchers. Doesn't use indexes.
-	Select(matchers ...q.Matcher) QueryShim
+	// Select a list of records that match a list of matchers.
+	Select(matchers ...q.Matcher) Query
 
 	// Init creates the indexes and buckets for a given structure
 	Init(data interface{}) error
@@ -43,16 +43,16 @@ type Shim interface {
 	Close() error
 }
 
-// QueryShim allows to operate searches.
-type QueryShim interface {
+// Query allows to operate searches.
+type Query interface {
 	// Skip matching records by the given number
-	Skip(int) QueryShim
+	Skip(int) Query
 	// Limit the results by the given number
-	Limit(int) QueryShim
+	Limit(int) Query
 	// Order by the given fields, in descending precedence, left-to-right
-	OrderBy(str ...string) QueryShim
+	OrderBy(str ...string) Query
 	// Reverse the order of the results
-	Reverse() QueryShim
+	Reverse() Query
 	// Find a list of matching records
 	Find(to interface{}) error
 	// First gets the first matching record

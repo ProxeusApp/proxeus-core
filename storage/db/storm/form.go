@@ -22,7 +22,7 @@ import (
 )
 
 type FormDB struct {
-	db           database.Shim
+	db           database.DB
 	baseFilePath string
 }
 
@@ -207,7 +207,7 @@ func (me *FormDB) Delete(auth model.Auth, id string) error {
 	return tx.Commit()
 }
 
-func (me *FormDB) updateForm(auth model.Auth, item *model.FormItem, tx database.Shim) error {
+func (me *FormDB) updateForm(auth model.Auth, item *model.FormItem, tx database.DB) error {
 	err := me.updateVars(auth, item, tx)
 	if err != nil {
 		return err
@@ -227,7 +227,7 @@ func (me *FormDB) updateForm(auth model.Auth, item *model.FormItem, tx database.
 	return tx.Commit()
 }
 
-func (me *FormDB) updateVars(auth model.Auth, item *model.FormItem, tx database.Shim) error {
+func (me *FormDB) updateVars(auth model.Auth, item *model.FormItem, tx database.DB) error {
 	formVars := form.Vars(item.Data)
 	if len(formVars) > 0 {
 		err := updateVarsOf(auth, item.ID, formVars, tx)
