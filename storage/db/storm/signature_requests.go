@@ -18,15 +18,15 @@ const signatureVersion = "sig_vers"
 const signatureDBDir = "signaturerequests"
 const signatureDB = "signaturerequestsdb"
 
-func NewSignatureDB(dir string) (*SignatureRequestsDB, error) {
+func NewSignatureDB(c DBConfig) (*SignatureRequestsDB, error) {
 	var err error
 
-	baseDir := filepath.Join(dir, signatureDBDir)
+	baseDir := filepath.Join(c.Dir, signatureDBDir)
 	err = ensureDir(baseDir)
 	if err != nil {
 		return nil, err
 	}
-	db, err := database.OpenStorm(filepath.Join(baseDir, signatureDB))
+	db, err := database.OpenDatabase(c.Engine, c.URI, filepath.Join(baseDir, signatureDB))
 	if err != nil {
 		return nil, err
 	}

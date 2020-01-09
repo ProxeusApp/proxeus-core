@@ -12,7 +12,6 @@ import (
 
 	"github.com/ProxeusApp/proxeus-core/storage/database"
 
-	"github.com/asdine/storm"
 	"github.com/asdine/storm/q"
 	uuid "github.com/satori/go.uuid"
 
@@ -34,10 +33,10 @@ const formVersion = "form_version"
 
 const formCompVersion = "formComp_version"
 
-func NewFormDB(dir string) (*FormDB, error) {
+func NewFormDB(c DBConfig) (*FormDB, error) {
 	var err error
 
-	baseDir := filepath.Join(dir, "form")
+	baseDir := filepath.Join(c.Dir, "form")
 	err = ensureDir(baseDir)
 	if err != nil {
 		return nil, err
@@ -47,12 +46,14 @@ func NewFormDB(dir string) (*FormDB, error) {
 	if err != nil {
 		return nil, err
 	}
-	db, err := database.OpenStorm(filepath.Join(baseDir, "forms"))
+	db, err := database.OpenDatabase(c.Engine, c.URI, filepath.Join(baseDir, "forms"))
 	if err != nil {
 		return nil, err
 	}
 	udb := &FormDB{db: db}
 	udb.baseFilePath = assetDir
+
+	udb.db.Init(formHeavyData)
 
 	example := &model.FormItem{}
 	exampleComp := &model.FormComponentItem{}
@@ -114,9 +115,8 @@ func (me *FormDB) Get(auth model.Auth, id string) (*model.FormItem, error) {
 	if !itemRef.IsPublishedOrReadGrantedFor(auth) {
 		return nil, model.ErrAuthorityMissing
 	}
-	//error handling not important
-	_ = me.db.Get(formHeavyData, itemRef.ID, &itemRef.Data)
-	return itemRef, nil
+	me.db.Get(formHeavyData, itemRef.ID, &itemRef.Data)
+	return itemRef, err
 }
 
 func (me *FormDB) Put(auth model.Auth, item *model.FormItem) error {
@@ -150,7 +150,7 @@ func (me *FormDB) put(auth model.Auth, item *model.FormItem, updated bool) error
 		defer tx.Rollback()
 		var existing model.FormItem
 		err = tx.One("ID", item.ID, &existing)
-		if err == storm.ErrNotFound {
+		if database.NotFound(err) {
 			err = nil
 			if !auth.AccessRights().AllowedToCreateEntities() {
 				return model.ErrAuthorityMissing

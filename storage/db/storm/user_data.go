@@ -6,7 +6,6 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/asdine/storm"
 	"github.com/asdine/storm/q"
 	uuid "github.com/satori/go.uuid"
 
@@ -26,10 +25,10 @@ const usrdHeavyData = "usrd_data"
 const usrdVersion = "usrd_vers"
 const usrdMainDir = "userdata"
 
-func NewUserDataDB(dir string) (*UserDataDB, error) {
+func NewUserDataDB(c DBConfig) (*UserDataDB, error) {
 	var err error
 
-	baseDir := filepath.Join(dir, usrdMainDir)
+	baseDir := filepath.Join(c.Dir, usrdMainDir)
 	err = ensureDir(baseDir)
 	if err != nil {
 		return nil, err
@@ -39,12 +38,14 @@ func NewUserDataDB(dir string) (*UserDataDB, error) {
 	if err != nil {
 		return nil, err
 	}
-	db, err := database.OpenStorm(filepath.Join(baseDir, "usrdb"))
+	db, err := database.OpenDatabase(c.Engine, c.URI, filepath.Join(baseDir, "usrdb"))
 	if err != nil {
 		return nil, err
 	}
 	udb := &UserDataDB{db: db, mainDir: baseDir}
 	udb.baseFilePath = assetDir
+
+	udb.db.Init(usrdHeavyData)
 
 	example := &model.UserDataItem{}
 	err = udb.db.Init(example)
@@ -241,7 +242,7 @@ func (me *UserDataDB) PutData(auth model.Auth, id string, dataObj map[string]int
 		return model.ErrAuthorityMissing
 	}
 	err = tx.Get(usrdHeavyData, item.ID, &item.Data)
-	if err != nil && err != storm.ErrNotFound {
+	if err != nil && !database.NotFound(err) {
 		return err
 	}
 	if item.Data == nil {
@@ -321,7 +322,7 @@ func (me *UserDataDB) put(auth model.Auth, item *model.UserDataItem, updated boo
 		defer tx.Rollback()
 		var existing model.UserDataItem
 		err = tx.One("ID", item.ID, &existing)
-		if err == storm.ErrNotFound {
+		if database.NotFound(err) {
 			if !auth.AccessRights().AllowedToCreateUserData() {
 				return model.ErrAuthorityMissing
 			}

@@ -2,7 +2,6 @@ package storm
 
 import (
 	"github.com/ProxeusApp/proxeus-core/storage/database"
-	"github.com/asdine/storm"
 	"github.com/asdine/storm/q"
 
 	"github.com/ProxeusApp/proxeus-core/sys/model"
@@ -26,7 +25,7 @@ func initVars(db database.DB) {
 func updateVarsOf(auth model.Auth, id string, allNewVars []string, tx database.DB) error {
 	var oldForm VarsMaintenance
 	err := tx.One("ID", id, &oldForm)
-	if err == storm.ErrNotFound {
+	if database.NotFound(err) {
 		//add vars
 		err = nil
 		oldForm = VarsMaintenance{}
@@ -75,7 +74,7 @@ func remVars(auth model.Auth, id string, tx database.DB) error {
 	var oldForm VarsMaintenance
 	err := tx.One("ID", id, &oldForm)
 	if err != nil {
-		if err == storm.ErrNotFound {
+		if database.NotFound(err) {
 			return nil
 		}
 		return err
@@ -91,7 +90,7 @@ func putVar(id, strVar string, tx database.DB) error {
 	var svar Var
 	err := tx.One("ID", strVar, &svar)
 	svarRef := &svar
-	if err == storm.ErrNotFound {
+	if database.NotFound(err) {
 		err = tx.Save(&Var{ID: strVar, VarRefs: map[string]bool{id: true}})
 		if err != nil {
 			return err
@@ -110,7 +109,7 @@ func remVar(id, strVar string, tx database.DB) error {
 	var svar Var
 	err := tx.One("ID", strVar, &svar)
 	svarRef := &svar
-	if err == storm.ErrNotFound {
+	if database.NotFound(err) {
 		return nil
 	} else {
 		delete(svarRef.VarRefs, id)

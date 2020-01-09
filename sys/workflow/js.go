@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"fmt"
 
+	"github.com/ProxeusApp/proxeus-core/sys/model/compatability"
+
 	"github.com/robertkrimen/otto"
 )
 
@@ -19,7 +21,7 @@ func NewJSParser() *JS {
 
 func (js *JS) SetGlobal(data interface{}) error {
 	if data != nil {
-		if dataMap, ok := data.(map[string]interface{}); ok {
+		if dataMap, ok := compatability.ToMapStringIF(data); ok {
 			for name, v := range dataMap {
 				if v != nil {
 					b, err := json.Marshal(v)

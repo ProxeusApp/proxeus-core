@@ -17,6 +17,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/ProxeusApp/proxeus-core/storage/database"
+
 	"github.com/ProxeusApp/proxeus-core/storage/portable"
 
 	"github.com/ProxeusApp/proxeus-core/main/app"
@@ -37,7 +39,6 @@ import (
 	"github.com/ProxeusApp/proxeus-core/sys/validate"
 	workflow2 "github.com/ProxeusApp/proxeus-core/sys/workflow"
 
-	strm "github.com/asdine/storm"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/crypto"
@@ -452,7 +453,7 @@ func LoginWithWallet(c *www.Context, challenge, signature string) (bool, *model.
 	}
 	var usr *model.User
 	usr, err = c.System().DB.User.GetByBCAddress(address)
-	if err == db.ErrNotFound || (err != nil && err.Error() == strm.ErrNotFound.Error()) {
+	if err == db.ErrNotFound || database.NotFound(err) {
 		stngs := c.System().GetSettings()
 		it := &model.User{
 			EthereumAddr: address,
@@ -996,7 +997,7 @@ func CheckForWorkflowPayment(e echo.Context) error {
 	if paymentRequired {
 		_, err := c.System().DB.WorkflowPayments.GetByWorkflowIdAndFromEthAddress(workflowId, user.EthereumAddr, []string{model.PaymentStatusConfirmed})
 		if err != nil {
-			if err == strm.ErrNotFound {
+			if database.NotFound(err) {
 				return c.NoContent(http.StatusNotFound)
 			}
 			return c.NoContent(http.StatusBadRequest)
@@ -1047,7 +1048,7 @@ func DocumentHandler(e echo.Context) error {
 
 		usrDataItem, _, err := c.System().DB.UserData.GetByWorkflow(sess, wf, false)
 		if err != nil {
-			if err != strm.ErrNotFound {
+			if !database.NotFound(err) {
 				return c.String(http.StatusNotFound, err.Error())
 			}
 
@@ -1253,6 +1254,8 @@ func DocumentDataHandler(e echo.Context) error {
 				return c.JSON(http.StatusUnprocessableEntity, map[string]interface{}{"errors": verrs})
 			} else if err == nil {
 				return c.NoContent(http.StatusOK)
+			} else {
+				return c.String(http.StatusBadRequest, err.Error())
 			}
 		}
 	}
@@ -1437,7 +1440,7 @@ func UserDocumentSignatureRequestGetCurrentUserHandler(e echo.Context) error {
 	for _, sigreq := range *signatureRequests {
 		var requesterName string
 		requester, err := c.System().DB.User.GetByBCAddress(sigreq.Requestor)
-		if err != nil && err.Error() != "not found" {
+		if err != nil && !database.NotFound(err) {
 			return c.NoContent(http.StatusInternalServerError)
 		}
 		if requester != nil {
@@ -1487,7 +1490,7 @@ func UserDeleteHandler(e echo.Context) error {
 	//remove documents / workflow instances of user
 	userDataDB := c.System().DB.UserData
 	workflowInstances, err := userDataDB.List(sess, "", storage.Options{}, false)
-	if err != nil && err.Error() != "not found" {
+	if err != nil && !database.NotFound(err) {
 		return c.NoContent(http.StatusInternalServerError)
 	}
 	for _, workflowInstance := range workflowInstances {
@@ -1500,7 +1503,7 @@ func UserDeleteHandler(e echo.Context) error {
 	//set workflow templates to deactivated
 	workflowDB := c.System().DB.Workflow
 	workflows, err := workflowDB.List(sess, "", storage.Options{})
-	if err != nil && err.Error() != "not found" {
+	if err != nil && !database.NotFound(err) {
 		return c.NoContent(http.StatusInternalServerError)
 	}
 	for _, workflow := range workflows {
@@ -1653,6 +1656,7 @@ func UserDocumentSignatureRequestAddHandler(e echo.Context) error {
 	requestorAddr := requestor.EthereumAddr
 
 	requestItem := model.SignatureRequestItem{
+		ID:          uuid.NewV4().String(),
 		DocId:       id,
 		DocPath:     docId,
 		Hash:        docHash,
@@ -1716,6 +1720,9 @@ func UserDocumentSignatureRequestRejectHandler(e echo.Context) error {
 	}
 	signatoryAddr := item.EthereumAddr
 	signatureRequests, err := c.System().DB.SignatureRequests.GetByID(id, docId)
+	if err != nil {
+		return c.String(http.StatusNotFound, err.Error())
+	}
 	signatureRequest := (*signatureRequests)[0]
 	req := signatureRequest.Requestor
 

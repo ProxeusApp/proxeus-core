@@ -8,7 +8,7 @@ import (
 )
 
 func TestVars(t *testing.T) {
-	db, err := NewUserDataDB("./")
+	db, err := NewUserDataDB(DBConfig{Dir: "./"})
 	if err != nil {
 		t.Error(err)
 		return

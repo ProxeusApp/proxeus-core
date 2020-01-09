@@ -64,7 +64,9 @@ func GetOneFormHandler(e echo.Context) error {
 	sess := c.Session(true)
 	if sess != nil {
 		item, err := c.System().DB.Form.Get(sess, formID)
-		if err == nil {
+		if err != nil {
+			return c.String(http.StatusNotFound, err.Error())
+		} else {
 			return c.JSON(http.StatusOK, item)
 		}
 	}
@@ -75,11 +77,12 @@ func UpdateFormHandler(e echo.Context) error {
 	c := e.(*www.Context)
 	ID := c.QueryParam("id")
 	sess := c.Session(false)
+	var err error
 	if sess != nil {
 		if strings.Contains(c.Request().Header.Get("Content-Type"), "application/json") {
 			body, _ := ioutil.ReadAll(c.Request().Body)
 			item := model.FormItem{}
-			err := json.Unmarshal(body, &item)
+			err = json.Unmarshal(body, &item)
 			if err == nil {
 				item.ID = ID
 				err = c.System().DB.Form.Put(sess, &item)
@@ -89,7 +92,7 @@ func UpdateFormHandler(e echo.Context) error {
 			}
 		}
 	}
-	return c.NoContent(http.StatusBadRequest)
+	return c.String(http.StatusBadRequest, err.Error())
 }
 
 func GetComponentsHandler(e echo.Context) error {

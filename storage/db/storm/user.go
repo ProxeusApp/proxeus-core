@@ -20,7 +20,6 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/asdine/storm"
 	"github.com/asdine/storm/q"
 	"github.com/disintegration/imaging"
 	uuid "github.com/satori/go.uuid"
@@ -47,10 +46,10 @@ const userVersion = "user_version"
 //it is only needed for login and password reset
 const passwordBucket = "pw_bucket"
 
-func NewUserDB(dir string) (*UserDB, error) {
+func NewUserDB(c DBConfig) (*UserDB, error) {
 	var err error
 
-	baseDir := filepath.Join(dir, "user")
+	baseDir := filepath.Join(c.Dir, "user")
 	err = ensureDir(baseDir)
 	if err != nil {
 		return nil, err
@@ -60,7 +59,7 @@ func NewUserDB(dir string) (*UserDB, error) {
 	if err != nil {
 		return nil, err
 	}
-	db, err := database.OpenStorm(filepath.Join(baseDir, "users"))
+	db, err := database.OpenDatabase(c.Engine, c.URI, filepath.Join(baseDir, "users"))
 	if err != nil {
 		return nil, err
 	}
@@ -69,8 +68,13 @@ func NewUserDB(dir string) (*UserDB, error) {
 
 	example := &model.User{}
 	udb.db.Init(example)
-	var version int
 
+	udb.db.Init(userHeavyDataBucket)
+	udb.db.Init(userApiKeyBucket)
+	udb.db.Init(userApiKeysBucket)
+	udb.db.Init(passwordBucket)
+
+	var version int
 	verr := udb.db.Get(userVersion, userVersion, &version)
 	if verr == nil && version != example.GetVersion() {
 		log.Println("upgrade db", version, "mem", example.GetVersion())
@@ -393,7 +397,7 @@ func (me *UserDB) put(auth model.Auth, item *model.User, updated bool) error {
 		return me.save(item, tx)
 	} else {
 		existing, err := me.Get(auth, item.ID)
-		if err == storm.ErrNotFound {
+		if database.NotFound(err) {
 			err = nil
 			if !auth.AccessRights().IsGrantedFor(item.Role) {
 				return model.ErrAuthorityMissing
