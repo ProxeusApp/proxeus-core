@@ -1,0 +1,10 @@
+version: "3"
+services:
+  mongo1:
+    hostname: mongo1-single
+    container_name: localmongo1-single
+    image: mongo:latest
+    ports:
+      - 27017:27017
+    restart: unless-stopped
+    entrypoint: [ "/usr/bin/mongod"]

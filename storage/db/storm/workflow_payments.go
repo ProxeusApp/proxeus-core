@@ -7,7 +7,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/asdine/storm"
 	"github.com/asdine/storm/q"
 
 	"github.com/ProxeusApp/proxeus-core/storage/database"
@@ -22,15 +21,15 @@ const workflowPaymentVersion = "payment_vers"
 const WorkflowPaymentDBDir = "workflowpayments"
 const WorkflowPaymentDB = "workflowpaymentsdb"
 
-func NewWorkflowPaymentDB(dir string) (*WorkflowPaymentsDB, error) {
+func NewWorkflowPaymentDB(c DBConfig) (*WorkflowPaymentsDB, error) {
 	var err error
 
-	baseDir := filepath.Join(dir, WorkflowPaymentDBDir)
+	baseDir := filepath.Join(c.Dir, WorkflowPaymentDBDir)
 	err = ensureDir(baseDir)
 	if err != nil {
 		return nil, err
 	}
-	db, err := database.OpenStorm(filepath.Join(baseDir, WorkflowPaymentDB))
+	db, err := database.OpenDatabase(c.Engine, c.URI, filepath.Join(baseDir, WorkflowPaymentDB))
 	if err != nil {
 		return nil, err
 	}
@@ -148,11 +147,7 @@ func (me *WorkflowPaymentsDB) ConfirmPayment(txHash, from, to string, xes uint64
 	if err != nil {
 		return err
 	}
-	defer func() {
-		if err := tx.Rollback(); err != nil && err != storm.ErrNotInTransaction {
-			log.Println("[WorkflowPayments] Rollback error: ", err.Error())
-		}
-	}()
+	defer tx.Rollback()
 
 	var item model.WorkflowPaymentItem
 
@@ -167,7 +162,7 @@ func (me *WorkflowPaymentsDB) ConfirmPayment(txHash, from, to string, xes uint64
 
 	err = query.First(&item)
 	if err != nil {
-		if err != storm.ErrNotFound {
+		if !database.NotFound(err) {
 			return err
 		}
 
@@ -181,7 +176,7 @@ func (me *WorkflowPaymentsDB) ConfirmPayment(txHash, from, to string, xes uint64
 
 		err = query.First(&item)
 		if err != nil {
-			if err != storm.ErrNotFound {
+			if !database.NotFound(err) {
 				return err
 			}
 
@@ -218,11 +213,7 @@ func (me *WorkflowPaymentsDB) Redeem(workflowId, from string) error {
 	if err != nil {
 		return err
 	}
-	defer func() {
-		if err := tx.Rollback(); err != nil && err != storm.ErrNotInTransaction {
-			log.Println("[WorkflowPayments] Rollback error: ", err.Error())
-		}
-	}()
+	defer tx.Rollback()
 
 	var item model.WorkflowPaymentItem
 
@@ -251,11 +242,7 @@ func (me *WorkflowPaymentsDB) Cancel(paymentId, from string) error {
 	if err != nil {
 		return err
 	}
-	defer func() {
-		if err := tx.Rollback(); err != nil && err != storm.ErrNotInTransaction {
-			log.Println("[WorkflowPayments] Rollback error: ", err.Error())
-		}
-	}()
+	defer tx.Rollback()
 	var item model.WorkflowPaymentItem
 
 	query := tx.Select(
@@ -283,11 +270,7 @@ func (me *WorkflowPaymentsDB) Delete(paymentId string) error {
 	if err != nil {
 		return err
 	}
-	defer func() {
-		if err := tx.Rollback(); err != nil && err != storm.ErrNotInTransaction {
-			log.Println("[WorkflowPayments] Rollback error: ", err.Error())
-		}
-	}()
+	defer tx.Rollback()
 	var item model.WorkflowPaymentItem
 
 	err = tx.One("ID", paymentId, &item)
@@ -315,11 +298,7 @@ func (me *WorkflowPaymentsDB) Update(paymentId, status, txHash, from string) err
 	if err != nil {
 		return err
 	}
-	defer func() {
-		if err := tx.Rollback(); err != nil && err != storm.ErrNotInTransaction {
-			log.Println("[WorkflowPayments] Rollback error: ", err.Error())
-		}
-	}()
+	defer tx.Rollback()
 	var item model.WorkflowPaymentItem
 	query := tx.Select(
 		q.Eq("ID", paymentId),

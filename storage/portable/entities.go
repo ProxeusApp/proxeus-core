@@ -93,7 +93,7 @@ func (ie *ImportExport) Import(t EntityType) error {
 func (ie *ImportExport) exportTemplate(id ...string) error {
 	if ie.db.Template == nil {
 		var err error
-		ie.db.Template, err = storm.NewDocTemplateDB(ie.dir)
+		ie.db.Template, err = storm.NewDocTemplateDB(ie.dbConfig)
 		if err != nil {
 			return err
 		}
@@ -162,7 +162,7 @@ func (ie *ImportExport) exportTemplate(id ...string) error {
 func (ie *ImportExport) importTemplate() error {
 	if ie.db.Template == nil {
 		var err error
-		ie.db.Template, err = storm.NewDocTemplateDB(ie.dir)
+		ie.db.Template, err = storm.NewDocTemplateDB(ie.dbConfig)
 		if err != nil {
 			return err
 		}
@@ -245,7 +245,7 @@ const allKeysMarker = "_all"
 func (ie *ImportExport) exportI18n(id ...string) error {
 	if ie.db.I18n == nil {
 		var err error
-		ie.db.I18n, err = storm.NewI18nDB(ie.dir)
+		ie.db.I18n, err = storm.NewI18nDB(ie.dbConfig)
 		if err != nil {
 			return err
 		}
@@ -299,7 +299,7 @@ func (ie *ImportExport) exportI18n(id ...string) error {
 func (ie *ImportExport) exportForm(id ...string) error {
 	if ie.db.Form == nil {
 		var err error
-		ie.db.Form, err = storm.NewFormDB(ie.dir)
+		ie.db.Form, err = storm.NewFormDB(ie.dbConfig)
 		if err != nil {
 			return err
 		}
@@ -361,7 +361,7 @@ func (ie *ImportExport) exportForm(id ...string) error {
 func (ie *ImportExport) exportWorkflow(id ...string) error {
 	if ie.db.Workflow == nil {
 		var err error
-		ie.db.Workflow, err = storm.NewWorkflowDB(ie.dir)
+		ie.db.Workflow, err = storm.NewWorkflowDB(ie.dbConfig)
 		if err != nil {
 			return err
 		}
@@ -462,7 +462,7 @@ func cpProfilePhoto(from storage.UserIF, to storage.UserIF, item *model.User) (e
 func (ie *ImportExport) exportUser(id ...string) error {
 	if ie.db.User == nil {
 		var err error
-		ie.db.User, err = storm.NewUserDB(ie.dir)
+		ie.db.User, err = storm.NewUserDB(ie.dbConfig)
 		if err != nil {
 			return err
 		}
@@ -502,7 +502,7 @@ func (ie *ImportExport) exportUser(id ...string) error {
 func (ie *ImportExport) exportUserData(id ...string) error {
 	if ie.db.UserData == nil {
 		var err error
-		ie.db.UserData, err = storm.NewUserDataDB(ie.dir)
+		ie.db.UserData, err = storm.NewUserDataDB(ie.dbConfig)
 		if err != nil {
 			return err
 		}
@@ -611,7 +611,7 @@ func (ie *ImportExport) importSettings() error {
 func (ie *ImportExport) importI18n() error {
 	if ie.db.I18n == nil {
 		var err error
-		ie.db.I18n, err = storm.NewI18nDB(ie.dir)
+		ie.db.I18n, err = storm.NewI18nDB(ie.dbConfig)
 		if err != nil {
 			return err
 		}
@@ -669,7 +669,7 @@ func (ie *ImportExport) importI18n() error {
 func (ie *ImportExport) importForm() error {
 	if ie.db.Form == nil {
 		var err error
-		ie.db.Form, err = storm.NewFormDB(ie.dir)
+		ie.db.Form, err = storm.NewFormDB(ie.dbConfig)
 		if err != nil {
 			return err
 		}
@@ -726,7 +726,7 @@ func (ie *ImportExport) importForm() error {
 func (ie *ImportExport) importWorkflow() error {
 	if ie.db.Workflow == nil {
 		var err error
-		ie.db.Workflow, err = storm.NewWorkflowDB(ie.dir)
+		ie.db.Workflow, err = storm.NewWorkflowDB(ie.dbConfig)
 		if err != nil {
 			return err
 		}
@@ -760,7 +760,7 @@ func (ie *ImportExport) importWorkflow() error {
 func (ie *ImportExport) importUser() error {
 	if ie.db.User == nil {
 		var err error
-		ie.db.User, err = storm.NewUserDB(ie.dir)
+		ie.db.User, err = storm.NewUserDB(ie.dbConfig)
 		if err != nil {
 			return err
 		}
@@ -860,7 +860,7 @@ func updateEmptyFields(of, by *model.User) {
 func (ie *ImportExport) importUserData() error {
 	if ie.db.UserData == nil {
 		var err error
-		ie.db.UserData, err = storm.NewUserDataDB(ie.dir)
+		ie.db.UserData, err = storm.NewUserDataDB(ie.dbConfig)
 		if err != nil {
 			return err
 		}

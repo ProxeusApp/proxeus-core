@@ -181,10 +181,9 @@ func PostFileIdFieldName(e echo.Context) error {
 }
 
 func GetDataManager(sess *session.Session) form.DataManager {
-	var dc form.DataManager
-	sess.Get("testDC", &dc)
-	if dc == nil {
-		dc = form.NewDataManager(sess.SessionDir())
+	dc := form.NewDataManager(sess.SessionDir())
+	err := sess.Get("testDC", &dc)
+	if err != nil {
 		sess.Put("testDC", dc)
 	}
 	return dc

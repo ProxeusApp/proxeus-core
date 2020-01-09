@@ -7,6 +7,8 @@ import (
 	"io"
 	r "reflect"
 
+	"github.com/ProxeusApp/proxeus-core/sys/model/compatability"
+
 	"github.com/ProxeusApp/proxeus-core/sys/validate"
 )
 
@@ -115,7 +117,7 @@ func RulesOf(formSrc interface{}, fieldName string) (vRules validate.Rules) {
 }
 
 func toMapStringInterface(d interface{}) (map[string]interface{}, error) {
-	m, ok := d.(map[string]interface{})
+	m, ok := compatability.ToMapStringIF(d)
 	if !ok {
 		sSpec, ok := d.(string)
 		if ok {
@@ -132,7 +134,7 @@ func toMapStringInterface(d interface{}) (map[string]interface{}, error) {
 
 func GetFormSrc(formSrc interface{}) map[string]interface{} {
 	if formSrc != nil {
-		formSrcMap, ok := formSrc.(map[string]interface{})
+		formSrcMap, ok := compatability.ToMapStringIF(formSrc)
 		if ok {
 			if formSrcInner, ok := formSrcMap["formSrc"]; ok {
 				formSrcInnerMap, ok := formSrcInner.(map[string]interface{})
@@ -148,7 +150,7 @@ func GetFormSrc(formSrc interface{}) map[string]interface{} {
 
 func LoopComponents(formSrc interface{}, looper func(compId, compInstId string, compMain interface{}, comp map[string]interface{}) bool) {
 	if formSrc != nil {
-		formSrcMap, ok := formSrc.(map[string]interface{})
+		formSrcMap, ok := compatability.ToMapStringIF(formSrc)
 		if !ok {
 			return
 		}

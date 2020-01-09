@@ -2,14 +2,13 @@ package app
 
 import (
 	"archive/zip"
+	"errors"
 	"fmt"
 	"io"
 	"io/ioutil"
 	"net/http"
 	"os"
 	"path/filepath"
-
-	"github.com/asdine/storm"
 
 	"github.com/ProxeusApp/proxeus-core/main/www"
 	"github.com/ProxeusApp/proxeus-core/sys/eio"
@@ -169,7 +168,7 @@ func (me *EAOFormNodeImpl) getDataFor(formItem *model.FormItem, id string) (map[
 		}
 		return formData, nil
 	}
-	return nil, storm.ErrNotFound
+	return nil, errors.New("not found")
 }
 
 func (me *EAOFormNodeImpl) Execute(n *workflow.Node) (proceed bool, err error) {
@@ -226,7 +225,7 @@ func (me *EAODocTmplNodeImpl) Execute(n *workflow.Node) (proceed bool, err error
 			return false, err
 		}
 	} else {
-		return false, storm.ErrNotFound
+		return false, errors.New("not found")
 	}
 	return true, nil
 }

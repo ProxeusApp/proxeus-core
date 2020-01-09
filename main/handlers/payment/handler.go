@@ -11,9 +11,9 @@ import (
 	"github.com/ProxeusApp/proxeus-core/main/handlers/blockchain"
 	"github.com/ProxeusApp/proxeus-core/main/www"
 	"github.com/ProxeusApp/proxeus-core/storage"
+	"github.com/ProxeusApp/proxeus-core/storage/database"
 	"github.com/ProxeusApp/proxeus-core/sys/model"
 
-	strm "github.com/asdine/storm"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/labstack/echo"
@@ -52,10 +52,8 @@ func CreateWorkflowPayment(e echo.Context) error {
 		return c.String(http.StatusBadRequest, err.Error())
 	}
 
-	id := uuid.NewV4().String()
-
 	payment := &model.WorkflowPaymentItem{
-		ID:         id,
+		ID:         uuid.NewV4().String(),
 		Xes:        workflow.Price,
 		From:       user.EthereumAddr,
 		To:         workflow.OwnerEthAddress,
@@ -110,7 +108,7 @@ func GetWorkflowPayment(e echo.Context) error {
 
 	payment, err := getWorkflowPayment(c.System().DB.WorkflowPayments, txHash, user.EthereumAddr, status)
 	if err != nil {
-		if err == strm.ErrNotFound {
+		if database.NotFound(err) {
 			return c.NoContent(http.StatusNotFound)
 		}
 		log.Println("[GetWorkflowPayment] GetByTxHashAndStatusAndFromEthAddress err: ", err.Error())
@@ -229,7 +227,7 @@ func CheckIfWorkflowPaymentRequired(c *www.Context, workflowId string) (bool, er
 
 	_, alreadyStarted, err := c.System().DB.UserData.GetByWorkflow(sess, workflow, false)
 	if err != nil {
-		if err != strm.ErrNotFound {
+		if !database.NotFound(err) {
 			return true, nil
 		}
 		//if workflow not found (strm.ErrNotFound ) still check with isPaymentRequired

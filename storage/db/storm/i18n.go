@@ -1,11 +1,6 @@
 package storm
 
 import (
-	//"fmt"
-	//"github.com/ProxeusApp/proxeus-core/sys/model"
-	//"github.com/asdine/storm/codec/msgpack"
-	//"github.com/asdine/storm/q"
-	//"path/filepath"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -13,8 +8,8 @@ import (
 	"sort"
 	"sync"
 
-	"github.com/asdine/storm"
 	"github.com/asdine/storm/q"
+	uuid "github.com/satori/go.uuid"
 
 	"github.com/ProxeusApp/proxeus-core/storage"
 	"github.com/ProxeusApp/proxeus-core/storage/database"
@@ -41,14 +36,14 @@ type i18nInternal struct {
 	Text string //the Text of the Code 'max.exceeded' with the Lang 'en' could be 'max length exceeded'
 }
 
-func NewI18nDB(dir string) (*I18nDB, error) {
+func NewI18nDB(c DBConfig) (*I18nDB, error) {
 	var err error
 
-	err = ensureDir(dir)
+	err = ensureDir(c.Dir)
 	if err != nil {
 		return nil, err
 	}
-	db, err := database.OpenStorm(filepath.Join(dir, "i18n"))
+	db, err := database.OpenDatabase(c.Engine, c.URI, filepath.Join(c.Dir, "i18n"))
 	if err != nil {
 		return nil, err
 	}
@@ -64,7 +59,7 @@ func NewI18nDB(dir string) (*I18nDB, error) {
 		return nil, err
 	}
 	udb.langSlice, err = udb.GetAllLangs()
-	if err == storm.ErrNotFound {
+	if database.NotFound(err) {
 		err = nil
 	}
 	if err != nil {
@@ -239,7 +234,7 @@ func (me *I18nDB) PutLang(lang string, enabled bool) error {
 		return os.ErrInvalid
 	}
 	me.allCacheLock.Lock()
-	l := &model.Lang{Code: lang, Enabled: enabled}
+	l := &model.Lang{ID: uuid.NewV4().String(), Code: lang, Enabled: enabled}
 	me.langs[lang] = l
 	me.langSlice = make([]*model.Lang, len(me.langs))
 	i := 0
@@ -272,6 +267,11 @@ func (me *I18nDB) PutLang(lang string, enabled bool) error {
 		if err != nil {
 			return err
 		}
+	}
+	var ll model.Lang
+	me.db.One("Code", l.Code, &ll)
+	if ll.ID != "" {
+		l.ID = ll.ID
 	}
 	return me.db.Save(l)
 }

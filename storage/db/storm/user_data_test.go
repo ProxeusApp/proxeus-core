@@ -13,7 +13,7 @@ import (
 )
 
 func TestPutGetData(t *testing.T) {
-	db, err := NewUserDataDB("./")
+	db, err := NewUserDataDB(DBConfig{Dir: "./"})
 	if err != nil {
 		t.Error(err)
 	}
@@ -110,7 +110,8 @@ func TestPutGetData(t *testing.T) {
 
 func TestPutGetDataFile(t *testing.T) {
 	dir := "./testDir"
-	db, err := NewUserDataDB(dir)
+	db, err := NewUserDataDB(DBConfig{Dir: dir})
+	defer func() { os.RemoveAll(dir) }()
 	if err != nil {
 		t.Error(err)
 	}
@@ -195,6 +196,4 @@ func TestPutGetDataFile(t *testing.T) {
 	log.Println("DATA", usrItem.Data)
 
 	db.Close()
-	//os.RemoveAll(dir)
-	//log.Println("err", usrData)
 }

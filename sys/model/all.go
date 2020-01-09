@@ -4,6 +4,8 @@ import (
 	"os"
 	"time"
 
+	"github.com/ProxeusApp/proxeus-core/sys/model/compatability"
+
 	"github.com/ProxeusApp/proxeus-core/sys/file"
 	"github.com/ProxeusApp/proxeus-core/sys/workflow"
 )
@@ -29,7 +31,7 @@ type (
 		Created time.Time `json:"created" storm:"index"`
 
 		//Data contains the form source
-		Data map[string]interface{} `json:"data"`
+		Data compatability.CarriedStringMap `json:"data"`
 	}
 
 	UserDataItem struct {
@@ -43,7 +45,7 @@ type (
 		Updated    time.Time `json:"updated" storm:"index"`
 		Created    time.Time `json:"created" storm:"index"`
 
-		Data map[string]interface{} `json:"data"`
+		Data compatability.CarriedStringMap `json:"data"`
 	}
 
 	FormComponentItem struct {
@@ -56,8 +58,8 @@ type (
 		Created time.Time `json:"created" storm:"index"`
 
 		//Settings and Template are just passing through
-		Settings interface{} `json:"settings"`
-		Template interface{} `json:"template"`
+		Settings compatability.CarriedJsonRaw `json:"settings"`
+		Template string                       `json:"template"`
 	}
 
 	WorkflowItem struct {
@@ -88,7 +90,7 @@ type (
 	}
 
 	SignatureRequestItem struct {
-		ID int `storm:"id,increment"`
+		ID string `storm:"id"`
 		// DocumentID, ie. 8b5e1460-e456-4aea-91dd-efd7f6ff9b40
 		DocId string `json:"docid" storm:"index"`
 		// DataPath, ie. docs[0]

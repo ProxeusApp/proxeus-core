@@ -147,7 +147,3 @@ func (s StormQueryShim) First(to interface{}) error {
 func (s StormQueryShim) Each(kind interface{}, fn func(interface{}) error) error {
 	return s.q.Each(kind, fn)
 }
-
-func NotFound(err error) bool {
-	return err == storm.ErrNotFound
-}
