@@ -8,19 +8,15 @@ import (
 	"testing"
 	"time"
 
+	"github.com/ProxeusApp/proxeus-core/main/handlers/blockchain/mock"
 	"github.com/ProxeusApp/proxeus-core/storage"
+	"github.com/ProxeusApp/proxeus-core/storage/database"
+	"github.com/ProxeusApp/proxeus-core/storage/db/storm"
+	"github.com/ProxeusApp/proxeus-core/sys/model"
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/golang/mock/gomock"
-
-	strm "github.com/asdine/storm"
-
-	"github.com/ProxeusApp/proxeus-core/sys/model"
-
-	"github.com/ProxeusApp/proxeus-core/storage/db/storm"
-
-	"github.com/ProxeusApp/proxeus-core/main/handlers/blockchain/mock"
 )
 
 var errCleanupTestData = errors.New("db data has not been cleanup up after finishing tests")
@@ -40,7 +36,7 @@ func TestPaymentEventHandling(t *testing.T) {
 	mockCtrl := gomock.NewController(t)
 	defer mockCtrl.Finish()
 
-	workflowPaymentsDB, err := storm.NewWorkflowPaymentDB(".test_data")
+	workflowPaymentsDB, err := storm.NewWorkflowPaymentDB(storm.DBConfig{Dir: ".test_data"})
 	if err != nil {
 		panic(err)
 	}
@@ -155,11 +151,8 @@ func TestPaymentEventHandling(t *testing.T) {
 		err = runTest(mockCtrl, workflowPaymentsDB, xesAmount, eventTxHash, paymentID,
 			paymentTxHash, from, to, model.PaymentStatusRedeemed, xesAmount)
 
-		if err != strm.ErrNotFound {
-			if err != nil {
-				t.Errorf("Expected to have %s but got: %s", strm.ErrNotFound, err.Error())
-			}
-			t.Errorf("Expected to have %s but got: nil", strm.ErrNotFound)
+		if !database.NotFound(err) {
+			t.Errorf("Expected to have not found but got: %v", err)
 		}
 
 		persistedPaymentItem, err = workflowPaymentsDB.Get(paymentID)
@@ -189,11 +182,8 @@ func TestPaymentEventHandling(t *testing.T) {
 
 		err = runTest(mockCtrl, workflowPaymentsDB, xesAmountEvent, eventTxHash, paymentID, paymentTxHash, from,
 			to, model.PaymentStatusCreated, xesAmount)
-		if err != strm.ErrNotFound {
-			if err != nil {
-				t.Errorf("Expected to have %s but got: %s", strm.ErrNotFound, err.Error())
-			}
-			t.Errorf("Expected to have %s but got: nil", strm.ErrNotFound)
+		if !database.NotFound(err) {
+			t.Errorf("Expected to have not found but got: %v", err)
 		}
 
 		persistedPaymentItem, err := workflowPaymentsDB.Get(paymentID)

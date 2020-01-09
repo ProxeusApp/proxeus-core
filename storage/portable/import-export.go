@@ -10,6 +10,7 @@ import (
 	"path/filepath"
 
 	"github.com/ProxeusApp/proxeus-core/storage"
+	"github.com/ProxeusApp/proxeus-core/storage/db/storm"
 	"github.com/ProxeusApp/proxeus-core/sys/model"
 	"github.com/ProxeusApp/proxeus-core/sys/tar"
 
@@ -26,6 +27,7 @@ type ImportExport struct {
 	auth                    model.Auth
 	sysDB                   *storage.DBSet
 	db                      *storage.DBSet
+	dbConfig                storm.DBConfig
 	skipExistingOnImport    bool
 	processed               ProcessedResults
 	neededUsers             map[string]bool
@@ -58,6 +60,7 @@ func NewImportExport(auth model.Auth, dbSet *storage.DBSet, dir string) (*Import
 	if err != nil {
 		return nil, err
 	}
+	ie.dbConfig = storm.DBConfig{Engine: "storm", Dir: ie.dir}
 	ie.auth = auth
 	return ie, nil
 }

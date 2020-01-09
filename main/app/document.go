@@ -11,17 +11,17 @@ import (
 	"sync"
 
 	"github.com/ProxeusApp/proxeus-core/storage"
-
-	"github.com/ethereum/go-ethereum/crypto"
-	"github.com/labstack/echo"
-
 	"github.com/ProxeusApp/proxeus-core/sys"
 	"github.com/ProxeusApp/proxeus-core/sys/eio"
 	"github.com/ProxeusApp/proxeus-core/sys/file"
 	"github.com/ProxeusApp/proxeus-core/sys/form"
 	"github.com/ProxeusApp/proxeus-core/sys/model"
+	"github.com/ProxeusApp/proxeus-core/sys/model/compatability"
 	"github.com/ProxeusApp/proxeus-core/sys/validate"
 	"github.com/ProxeusApp/proxeus-core/sys/workflow"
+
+	"github.com/ethereum/go-ethereum/crypto"
+	"github.com/labstack/echo"
 )
 
 //TODO replace DataCluster with file.MapIO. DataCluster was meant to be used for guest users only to prevent from storing data that will be never used again after the session is expired
@@ -628,7 +628,7 @@ func (me *FormNodeImpl) Execute(n *workflow.Node) (proceed bool, err error) {
 	//formData, err := me.ctx.getDataFor(n.ID)
 	formDataIf, _ := me.ctx.getDataByPath("input")
 	var formData map[string]interface{}
-	if v, ok := formDataIf.(map[string]interface{}); ok {
+	if v, ok := compatability.ToMapStringIF(formDataIf); ok {
 		formData = v
 	}
 	me.ctx.statusResult.CurrentType = n.Type

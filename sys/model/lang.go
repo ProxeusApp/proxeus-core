@@ -5,7 +5,8 @@ import (
 )
 
 type Lang struct {
-	Code    string `storm:"id"`
+	ID      string
+	Code    string
 	Enabled bool
 }
 

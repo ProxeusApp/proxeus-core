@@ -16,6 +16,8 @@ import (
 	"strings"
 	"sync"
 
+	"go.mongodb.org/mongo-driver/bson"
+
 	"github.com/asdine/storm/codec/msgpack"
 	uuid "github.com/satori/go.uuid"
 )
@@ -40,7 +42,7 @@ type (
 	IO struct {
 		ref         string
 		path        string
-		meta        *Meta
+		meta        Meta
 		baseFileDir string
 		lock        sync.RWMutex
 		Hash        string
@@ -68,7 +70,7 @@ func New(baseDir string, meta Meta) *IO {
 	return &IO{
 		baseFileDir: baseDir,
 		path:        RndUUID(),
-		meta:        &meta,
+		meta:        meta,
 	}
 }
 
@@ -114,7 +116,7 @@ func (me *IO) SetBaseDir(baseDir string) {
 func (me *IO) Meta() Meta {
 	me.lock.RLock()
 	defer me.lock.RUnlock()
-	return *me.meta
+	return me.meta
 }
 
 func (me *IO) Update(name, contentType string) {
@@ -339,12 +341,31 @@ func (me *IO) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
+func (me *IO) MarshalBSON() ([]byte, error) {
+	d := diskIO{
+		Ref:         me.ref,
+		Path:        me.path,
+		Name:        me.meta.Name,
+		ContentType: me.meta.ContentType,
+		Size:        me.meta.Size,
+		Hash:        me.Hash,
+	}
+	return bson.Marshal(&d)
+}
+
+func (me *IO) UnmarshalBSON(raw []byte) error {
+	obj := new(diskIO)
+	err := bson.Unmarshal(raw, &obj)
+	if err != nil {
+		return err
+	}
+	fromDiskIO(me, obj)
+	return nil
+}
+
 func fromDiskIO(me *IO, obj *diskIO) {
 	if obj.Path != "" {
 		me.path = filepath.Base(obj.Path)
-	}
-	if me.meta == nil {
-		me.meta = &Meta{}
 	}
 	me.ref = obj.Ref
 	me.meta.Name = obj.Name
@@ -354,9 +375,6 @@ func fromDiskIO(me *IO, obj *diskIO) {
 
 func fromMap(me *IO, jsonObj map[string]interface{}) {
 	if len(jsonObj) > 0 {
-		if me.meta == nil {
-			me.meta = &Meta{}
-		}
 		if iname, ok := jsonObj["path"]; ok {
 			me.path, ok = iname.(string)
 			if me.path != "" {

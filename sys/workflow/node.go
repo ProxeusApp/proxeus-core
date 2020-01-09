@@ -2,6 +2,8 @@ package workflow
 
 import (
 	"fmt"
+
+	"github.com/ProxeusApp/proxeus-core/sys/model/compatability"
 )
 
 type (
@@ -21,19 +23,19 @@ type (
 	InitImplFunc func(n *Node) (NodeIF, error)
 
 	Node struct {
-		ID           string                 `json:"id"`
-		Name         string                 `json:"name"`
-		Type         string                 `json:"type"`
-		Detail       string                 `json:"detail,omitempty"`
-		Data         map[string]interface{} `json:"data,omitempty"`
-		Cases        []*Case                `json:"cases,omitempty"`
-		Connections  []*Connection          `json:"conns,omitempty"`
-		Position     Position               `json:"p"`
-		context      *context               `json:"-"`
-		internalNode bool                   `json:"-"`
-		err          error                  `json:"-"`
-		impl         NodeIF                 `json:"-"`
-		background   bool                   `json:"-"`
+		ID           string                         `json:"id"`
+		Name         string                         `json:"name"`
+		Type         string                         `json:"type"`
+		Detail       string                         `json:"detail,omitempty"`
+		Data         compatability.CarriedStringMap `json:"data,omitempty"`
+		Cases        []*Case                        `json:"cases,omitempty"`
+		Connections  []*Connection                  `json:"conns,omitempty"`
+		Position     Position                       `json:"p"`
+		context      *context                       `json:"-"`
+		internalNode bool                           `json:"-"`
+		err          error                          `json:"-"`
+		impl         NodeIF                         `json:"-"`
+		background   bool                           `json:"-"`
 		new          InitImplFunc
 	}
 )

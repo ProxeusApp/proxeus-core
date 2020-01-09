@@ -19,6 +19,8 @@ type Settings struct {
 	AirdropEnabled            string `json:"airdropEnabled" validate:"required=true" default:"false" usage:"Enables/Disables the XES & Ether airdrop feature on ropsten."`
 	AirdropAmountXES          string `json:"airdropAmountXES" default:"0" usage:"Amount of XES to airdrop to newly registered users."`
 	AirdropAmountEther        string `json:"airdropAmountEther" default:"0" usage:"Amount of Ether to airdrop to newly registered users."`
+	DatabaseEngine            string `json:"databaseEngine" default:"storm" usage:"Selects database engine, supported values: storm, mongo."`
+	DatabaseURI               string `json:"DatabaseURI" default:"" usage:"Sets database connection string, not required for embedded databases."`
 	TestMode                  string `json:"testMode" default:"false" usage:"Run the server in test mode (NOT FOR PRODUCTION)."`
 }
 

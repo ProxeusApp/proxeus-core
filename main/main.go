@@ -68,11 +68,10 @@ func main() {
 		allTrans, _ := system.DB.I18n.GetAll(lang)
 		for k, v := range trans {
 			if _, exists := allTrans[k]; !exists {
-				fmt.Println("inserting initial translation:", k, "::::", v)
 				_ = system.DB.I18n.Put(lang, k, v)
 			}
 		}
-		err = system.DB.I18n.PutLang("en", true)
+		err := system.DB.I18n.PutLang("en", true)
 		if err != nil {
 			fmt.Println("Error activating fallback lang: ", err)
 		}

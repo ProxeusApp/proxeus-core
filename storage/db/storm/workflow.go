@@ -9,7 +9,6 @@ import (
 	"github.com/ProxeusApp/proxeus-core/storage"
 	"github.com/ProxeusApp/proxeus-core/storage/database"
 
-	"github.com/asdine/storm"
 	"github.com/asdine/storm/q"
 	uuid "github.com/satori/go.uuid"
 
@@ -24,10 +23,10 @@ type WorkflowDB struct {
 const workflowHeavyData = "wh_data"
 const workflowVersion = "wf_vers"
 
-func NewWorkflowDB(dir string) (*WorkflowDB, error) {
+func NewWorkflowDB(c DBConfig) (*WorkflowDB, error) {
 	var err error
 
-	baseDir := filepath.Join(dir, "workflow")
+	baseDir := filepath.Join(c.Dir, "workflow")
 	err = ensureDir(baseDir)
 	if err != nil {
 		return nil, err
@@ -37,12 +36,14 @@ func NewWorkflowDB(dir string) (*WorkflowDB, error) {
 	if err != nil {
 		return nil, err
 	}
-	db, err := database.OpenStorm(filepath.Join(baseDir, "workflows"))
+	db, err := database.OpenDatabase(c.Engine, c.URI, filepath.Join(baseDir, "workflows"))
 	if err != nil {
 		return nil, err
 	}
 	udb := &WorkflowDB{db: db}
 	udb.baseFilePath = assetDir
+
+	udb.db.Init(workflowHeavyData)
 
 	example := &model.WorkflowItem{}
 	udb.db.Init(example)
@@ -144,6 +145,9 @@ func (me *WorkflowDB) Get(auth model.Auth, id string) (*model.WorkflowItem, erro
 func (me *WorkflowDB) GetList(auth model.Auth, ids []string) ([]*model.WorkflowItem, error) {
 	var workflows []*model.WorkflowItem
 	for _, id := range ids {
+		if id == "" {
+			continue
+		}
 		workflow, err := me.Get(auth, id)
 		if err != nil {
 			return nil, err
@@ -184,7 +188,7 @@ func (me *WorkflowDB) put(auth model.Auth, item *model.WorkflowItem, updated boo
 		defer tx.Rollback()
 		var existing model.WorkflowItem
 		err = tx.One("ID", item.ID, &existing)
-		if err == storm.ErrNotFound {
+		if database.NotFound(err) {
 			if !auth.AccessRights().AllowedToCreateEntities() {
 				return model.ErrAuthorityMissing
 			}

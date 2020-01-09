@@ -11,22 +11,18 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/ProxeusApp/proxeus-core/storage"
-
-	"github.com/golang/mock/gomock"
-	"github.com/gorilla/sessions"
-	"github.com/labstack/echo"
-	"github.com/stretchr/testify/assert"
-
-	strm "github.com/asdine/storm"
-
 	"github.com/ProxeusApp/proxeus-core/main/www"
+	"github.com/ProxeusApp/proxeus-core/storage"
+	"github.com/ProxeusApp/proxeus-core/storage/database"
 	"github.com/ProxeusApp/proxeus-core/storage/db/storm"
 	sm "github.com/ProxeusApp/proxeus-core/storage/db/storm/mock"
 	"github.com/ProxeusApp/proxeus-core/sys"
 	"github.com/ProxeusApp/proxeus-core/sys/model"
-
 	sysSess "github.com/ProxeusApp/proxeus-core/sys/session"
+	"github.com/golang/mock/gomock"
+	"github.com/gorilla/sessions"
+	"github.com/labstack/echo"
+	"github.com/stretchr/testify/assert"
 )
 
 func setupPaymentRequestTest(httpMethod, targetUrl, body string) (*www.Context, *httptest.ResponseRecorder, *model.User, *model.User) {
@@ -209,7 +205,9 @@ func TestGetWorkflowPayment(t *testing.T) {
 
 		payment, err := getWorkflowPayment(workflowPaymentsDB, txHash, from, status)
 
-		assert.Equal(t, strm.ErrNotFound, err)
+		if !database.NotFound(err) {
+			t.Errorf("Expected to have not found but got: %v", err)
+		}
 		assert.Nil(t, payment)
 
 		err = workflowPaymentsDB.Remove(&model.WorkflowPaymentItem{ID: paymentId})
@@ -260,7 +258,10 @@ func TestUpdateWorkflowPaymentPending(t *testing.T) {
 			panic(err)
 		}
 
-		assert.Equal(t, strm.ErrNotFound, updateWorkflowPaymentPending(workflowPaymentsDB, paymentId, txHash, "0x6"))
+		err = updateWorkflowPaymentPending(workflowPaymentsDB, paymentId, txHash, "0x6")
+		if !database.NotFound(err) {
+			t.Error("expected not found err, got", err)
+		}
 
 		payment, err := workflowPaymentsDB.Get(paymentId)
 		if err != nil {
@@ -517,7 +518,7 @@ var errCleanupTestData = errors.New("db data has not been cleanup up after finis
 func up(t *testing.T) (*gomock.Controller, storage.WorkflowPaymentsIF) {
 	mockCtrl := gomock.NewController(t)
 
-	workflowPaymentsDB, err := storm.NewWorkflowPaymentDB(".test_data")
+	workflowPaymentsDB, err := storm.NewWorkflowPaymentDB(storm.DBConfig{Dir: ".test_data"})
 	if err != nil {
 		panic(err)
 	}
