@@ -1,7 +1,6 @@
 package storm
 
 import (
-	"os"
 	"path/filepath"
 
 	"github.com/ProxeusApp/proxeus-core/storage/db"
@@ -11,7 +10,7 @@ import (
 )
 
 type SettingsDB struct {
-	jfdb *db.JSONFileDB
+	jf db.JSONFile
 }
 
 func NewSettingsDB(baseDir string) (*SettingsDB, error) {
@@ -20,42 +19,23 @@ func NewSettingsDB(baseDir string) (*SettingsDB, error) {
 	if err != nil {
 		return nil, err
 	}
-	jfdb, err := db.NewJSONFileDB(baseDir, "", ".json", true)
-	if err != nil {
-		return nil, err
-	}
-	jfdb.Beautify = true
-	return &SettingsDB{jfdb: jfdb}, nil
+	return &SettingsDB{
+		jf: db.JSONFile{FilePath: filepath.Join(baseDir, "main.json")},
+	}, nil
 }
 
-func (me *SettingsDB) Put(stngs *model.Settings) error {
-	err := validate.Struct(stngs)
+func (se *SettingsDB) Put(s *model.Settings) error {
+	err := validate.Struct(s)
 	if err != nil {
 		return err
 	}
-	err = me.jfdb.Put("main", stngs)
-	if err != nil {
-		return err
-	}
-	return nil
+	return se.jf.Put(s)
 }
 
-func (me *SettingsDB) Get() (*model.Settings, error) {
-	var stngs model.Settings
-	err := me.jfdb.Get("main", &stngs)
-	if os.IsNotExist(err) {
-		err = ensureDir(me.jfdb.ReadDir)
-		if err != nil {
-			return nil, err
-		}
-		err = me.jfdb.Get("main", &stngs)
-	}
-	if err != nil {
-		return nil, err
-	}
-	return &stngs, nil
+func (se *SettingsDB) Get() (*model.Settings, error) {
+	var s model.Settings
+	err := se.jf.Get(&s)
+	return &s, err
 }
 
-func (me *SettingsDB) Close() error {
-	return me.jfdb.Close()
-}
+func (se *SettingsDB) Close() error { return nil }

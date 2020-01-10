@@ -29,7 +29,6 @@ import (
 	"github.com/ProxeusApp/proxeus-core/main/helpers"
 	"github.com/ProxeusApp/proxeus-core/main/www"
 	"github.com/ProxeusApp/proxeus-core/storage"
-	"github.com/ProxeusApp/proxeus-core/storage/db"
 	"github.com/ProxeusApp/proxeus-core/sys"
 	"github.com/ProxeusApp/proxeus-core/sys/eio"
 	"github.com/ProxeusApp/proxeus-core/sys/email"
@@ -454,7 +453,7 @@ func LoginWithWallet(c *www.Context, challenge, signature string) (bool, *model.
 	}
 	var usr *model.User
 	usr, err = c.System().DB.User.GetByBCAddress(address)
-	if err == db.ErrNotFound || database.NotFound(err) {
+	if database.NotFound(err) {
 		stngs := c.System().GetSettings()
 		it := &model.User{
 			EthereumAddr: address,

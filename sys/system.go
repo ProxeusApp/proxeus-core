@@ -250,11 +250,7 @@ func (me *System) GetSettings() *model.Settings {
 }
 
 func (me *System) PutSettings(stngs *model.Settings) error {
-	err := validate.Struct(stngs)
-	if err != nil {
-		return err
-	}
-	err = me.settingsDB.Put(stngs)
+	err := me.settingsDB.Put(stngs)
 	if err != nil {
 		return err
 	}
