@@ -3,6 +3,7 @@ package storm
 import (
 	"bytes"
 	"encoding/base64"
+	"errors"
 	"image/jpeg"
 	"image/png"
 	"io"
@@ -14,7 +15,6 @@ import (
 
 	"github.com/ProxeusApp/proxeus-core/storage"
 	"github.com/ProxeusApp/proxeus-core/storage/database"
-	"github.com/ProxeusApp/proxeus-core/storage/db"
 	"github.com/ProxeusApp/proxeus-core/sys/model"
 
 	"github.com/asdine/storm/q"
@@ -164,7 +164,7 @@ func (me *UserDB) DeleteApiKey(auth model.Auth, userId, hiddenApiKey string) err
 		}
 	}
 	if targetIndex == -1 {
-		return db.ErrNotFound
+		return errors.New("api key not found")
 	}
 	// replace the target element with the last one
 	userItem.ApiKeys[targetIndex] = userItem.ApiKeys[len(userItem.ApiKeys)-1]
@@ -189,7 +189,7 @@ func (me *UserDB) DeleteApiKey(auth model.Auth, userId, hiddenApiKey string) err
 	}
 
 	if len(existingApiKeys) == 0 {
-		return db.ErrNotFound
+		return errors.New("existing api key not found")
 	}
 	var apiKey string
 	targetIndex = -1

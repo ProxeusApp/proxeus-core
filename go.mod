@@ -25,6 +25,7 @@ require (
 	github.com/go-sourcemap/sourcemap v2.1.2+incompatible // indirect
 	github.com/golang/mock v1.3.2-0.20191127180039-112dfb85f71e
 	github.com/google/go-querystring v1.0.0 // indirect
+	github.com/google/renameio v0.1.0
 	github.com/google/uuid v1.1.1 // indirect
 	github.com/gorilla/sessions v1.1.3
 	github.com/gorilla/websocket v1.4.1 // indirect
