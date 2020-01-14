@@ -3,18 +3,16 @@ package handlers
 import (
 	"strings"
 
-	"github.com/ProxeusApp/proxeus-core/main/handlers/payment"
-
 	"github.com/ProxeusApp/proxeus-core/main/handlers/api"
-
-	"github.com/labstack/echo"
-
 	"github.com/ProxeusApp/proxeus-core/main/handlers/formbuilder"
 	"github.com/ProxeusApp/proxeus-core/main/handlers/i18n"
+	"github.com/ProxeusApp/proxeus-core/main/handlers/payment"
 	"github.com/ProxeusApp/proxeus-core/main/handlers/template_ide"
 	"github.com/ProxeusApp/proxeus-core/main/handlers/workflow"
 	"github.com/ProxeusApp/proxeus-core/main/www"
 	"github.com/ProxeusApp/proxeus-core/sys/model"
+
+	"github.com/labstack/echo"
 )
 
 func MainHostedAPI(e *echo.Echo, s *www.Security, version string) {

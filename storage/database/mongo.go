@@ -110,13 +110,9 @@ func (s *MongoShim) Set(bucketName string, key interface{}, value interface{}) e
 // Delete deletes a key from a bucket
 func (s *MongoShim) Delete(bucketName string, key interface{}) error {
 	c := s.nameToCollection(bucketName)
-	d, err := c.DeleteOne(s.ctx(), bson.M{"K": key})
+	_, err := c.DeleteOne(s.ctx(), bson.M{"K": key})
 	if err != nil {
 		return err
-	}
-	// compatibility quirk
-	if d.DeletedCount == 0 {
-		return mongo.ErrNoDocuments
 	}
 	return nil
 }

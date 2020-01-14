@@ -29,7 +29,11 @@ func NewDBSet(sDB storage.SettingsIF, folderPath string) (me *storage.DBSet, err
 	if err != nil {
 		return nil, err
 	}
-	me.User, err = NewUserDB(conf)
+	me.Files, err = NewFileDB(conf)
+	if err != nil {
+		return nil, err
+	}
+	me.User, err = NewUserDB(conf, me.Files)
 	if err != nil {
 		return nil, err
 	}

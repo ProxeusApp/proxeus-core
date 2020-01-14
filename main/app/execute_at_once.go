@@ -2,44 +2,44 @@ package app
 
 import (
 	"archive/zip"
+	"bytes"
 	"errors"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"net/http"
 	"os"
 	"path/filepath"
 
 	"github.com/ProxeusApp/proxeus-core/main/www"
 	"github.com/ProxeusApp/proxeus-core/sys/eio"
+	"github.com/ProxeusApp/proxeus-core/sys/file"
 	"github.com/ProxeusApp/proxeus-core/sys/form"
 	"github.com/ProxeusApp/proxeus-core/sys/model"
 	"github.com/ProxeusApp/proxeus-core/sys/workflow"
+
+	uuid "github.com/satori/go.uuid"
 )
 
 type ExecuteAtOnceContext struct {
-	data       map[string]interface{}
-	c          *www.Context
-	a          model.Auth
-	tmpDirPath string
-	lang       string
+	data      map[string]interface{}
+	c         *www.Context
+	a         model.Auth
+	filePaths []string
+	lang      string
 }
 
 func ExecuteWorkflowAtOnce(c *www.Context, a model.Auth, wfi *model.WorkflowItem, inputData map[string]interface{}) error {
-	tmpDirPath, err := ioutil.TempDir(os.TempDir(), "wfAtOnce")
-	if err != nil {
-		return err
+	eaoc := &ExecuteAtOnceContext{
+		data: inputData,
+		a:    a,
+		c:    c,
+		lang: c.Lang(),
 	}
 	defer func() {
-		_ = os.RemoveAll(tmpDirPath)
+		for _, path := range eaoc.filePaths {
+			c.System().DB.Files.Delete(path)
+		}
 	}()
-	eaoc := &ExecuteAtOnceContext{
-		data:       inputData,
-		a:          a,
-		c:          c,
-		lang:       c.Lang(),
-		tmpDirPath: tmpDirPath,
-	}
 	conf := workflow.Config{
 		GetWorkflow: func(id string) (*workflow.Workflow, error) {
 			item, err := c.System().DB.Workflow.Get(a, id)
@@ -71,11 +71,7 @@ func ExecuteWorkflowAtOnce(c *www.Context, a model.Auth, wfi *model.WorkflowItem
 	if err != nil {
 		return err
 	}
-	filePaths, err := listFiles(eaoc.tmpDirPath)
-	if err != nil {
-		return err
-	}
-	fileCount := len(filePaths)
+	fileCount := len(eaoc.filePaths)
 	if fileCount == 0 {
 		return nil
 	}
@@ -83,21 +79,18 @@ func ExecuteWorkflowAtOnce(c *www.Context, a model.Auth, wfi *model.WorkflowItem
 		c.Response().Header().Set("Content-Disposition", "attachment;filename=\"docs.zip\"")
 		c.Response().Header().Set("Content-Type", "application/zip")
 		c.Response().Committed = true
-		return eaoc.WriteZIP(filePaths, c.Response().Writer)
+		return eaoc.WriteZIP(eaoc.filePaths, c.Response().Writer)
 	}
-	renderedTmpl, err := os.Open(filePaths[0])
+	var buf bytes.Buffer
+	err = c.System().DB.Files.Read(eaoc.filePaths[0], &buf)
 	if err != nil {
 		return err
 	}
-	fstat, err := renderedTmpl.Stat()
-	if err != nil {
-		return err
-	}
-	c.Response().Header().Set("Content-Disposition", fmt.Sprintf("attachment;filename=\"%s\"", filepath.Base(filePaths[0])))
+	c.Response().Header().Set("Content-Disposition", fmt.Sprintf("attachment;filename=\"%s\"", filepath.Base(eaoc.filePaths[0])))
 	c.Response().Header().Set("Content-Type", "application/pdf")
-	c.Response().Header().Set("Content-Length", fmt.Sprintf("%d", fstat.Size()))
+	c.Response().Header().Set("Content-Length", fmt.Sprintf("%d", buf.Len()))
 	c.Response().Committed = true
-	_, err = io.Copy(c.Response().Writer, renderedTmpl)
+	_, err = io.Copy(c.Response().Writer, &buf)
 	return err
 }
 
@@ -109,21 +102,15 @@ func (me *ExecuteAtOnceContext) WriteZIP(filePaths []string, writer io.Writer) e
 		}
 	}()
 	zipFile := func(p string) error {
-		renderedTmpl, err := os.Open(p)
+		var buf bytes.Buffer
+		err := me.c.System().DB.Files.Read(p, &buf)
 		if err != nil {
 			return err
 		}
-		defer renderedTmpl.Close()
-		fstat, err := renderedTmpl.Stat()
+		header, err := zip.FileInfoHeader(file.InMemoryFileInfo{Path: filepath.Base(p), Len: buf.Len()})
 		if err != nil {
 			return err
 		}
-		header, err := zip.FileInfoHeader(fstat)
-		if err != nil {
-			return err
-		}
-		header.Name = filepath.Base(p)
-
 		// Change to deflate to gain better compression
 		// see http://golang.org/pkg/archive/zip/#pkg-constants
 		header.Method = zip.Deflate
@@ -131,7 +118,7 @@ func (me *ExecuteAtOnceContext) WriteZIP(filePaths []string, writer io.Writer) e
 		if err != nil {
 			return err
 		}
-		_, err = io.CopyN(odtZipWriter, renderedTmpl, fstat.Size())
+		_, err = io.Copy(odtZipWriter, &buf)
 		if err != nil {
 			return err
 		}
@@ -203,27 +190,21 @@ func (me *EAODocTmplNodeImpl) Execute(n *workflow.Node) (proceed bool, err error
 	}
 	if tmpl, ok := tmplItem.Data[me.ctx.lang]; ok {
 		var dsResp *http.Response
-		dsResp, err = me.ctx.c.System().DS.Compile(eio.Template{
-			Data:         me.ctx.getData(),
-			TemplatePath: tmpl.Path(),
-			EmbedError:   false,
-		})
+		dsResp, err = me.ctx.c.System().DS.Compile(me.ctx.c.System().DB.Files,
+			eio.Template{
+				Data:         me.ctx.getData(),
+				TemplatePath: tmpl.Path(),
+				EmbedError:   false,
+			})
 		if err != nil {
 			return false, err
 		}
-		me.renderedPathName = filepath.Join(me.ctx.tmpDirPath, tmpl.NameWithExt("pdf"))
-		f, err := os.OpenFile(me.renderedPathName, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0600)
+		me.renderedPathName = filepath.Join("wfAtOnce", uuid.NewV4().String(), tmpl.NameWithExt("pdf"))
+		err = me.ctx.c.System().DB.Files.Write(me.renderedPathName, dsResp.Body)
 		if err != nil {
 			return false, err
 		}
-		_, err = io.Copy(f, dsResp.Body)
-		if err != nil {
-			return false, err
-		}
-		err = f.Close()
-		if err != nil {
-			return false, err
-		}
+		me.ctx.filePaths = append(me.ctx.filePaths, me.renderedPathName)
 	} else {
 		return false, errors.New("not found")
 	}
@@ -233,40 +214,16 @@ func (me *EAODocTmplNodeImpl) Execute(n *workflow.Node) (proceed bool, err error
 func (me *EAODocTmplNodeImpl) Remove(n *workflow.Node) {
 	//remove the template from the app collection as it is not part of the path anymore
 	if me.renderedPathName != "" {
-		_ = os.Remove(me.renderedPathName)
+		me.ctx.c.System().DB.Files.Delete(me.renderedPathName)
+		i := 0
+		for _, p := range me.ctx.filePaths {
+			if me.renderedPathName != p {
+				me.ctx.filePaths[i] = p
+				i++
+			}
+		}
+		me.ctx.filePaths = me.ctx.filePaths[:i]
 	}
 }
 
 func (me *EAODocTmplNodeImpl) Close() {}
-
-func listFiles(dirPath string) ([]string, error) {
-	serializedFiles := make([]string, 0)
-	err := rec(&serializedFiles, dirPath)
-	if err != nil {
-		return nil, err
-	}
-	return serializedFiles, nil
-}
-
-func rec(i *[]string, name string) error {
-	fi, err := os.Stat(name)
-	if err != nil {
-		return err
-	}
-	switch mode := fi.Mode(); {
-	case mode.IsDir():
-		files, err := ioutil.ReadDir(name)
-		if err != nil {
-			return err
-		}
-		for _, f := range files {
-			err = rec(i, filepath.Join(name, f.Name()))
-			if err != nil {
-				return err
-			}
-		}
-	case mode.IsRegular():
-		*i = append(*i, name)
-	}
-	return nil
-}

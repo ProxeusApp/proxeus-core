@@ -221,7 +221,7 @@ func (me *DocTemplateDB) getFileInfoFor(auth model.Auth, id, lang string, fm *fi
 	return nil, os.ErrNotExist
 }
 
-func (me *DocTemplateDB) DeleteTemplate(auth model.Auth, id, lang string) error {
+func (me *DocTemplateDB) DeleteTemplate(auth model.Auth, files storage.FilesIF, id, lang string) error {
 	if auth == nil || id == "" || lang == "" {
 		return os.ErrInvalid
 	}
@@ -251,7 +251,7 @@ func (me *DocTemplateDB) DeleteTemplate(auth model.Auth, id, lang string) error 
 				if err != nil {
 					return err
 				}
-				return os.Remove(p)
+				return files.Delete(p)
 			}
 		}
 	}
@@ -303,7 +303,7 @@ func (me *DocTemplateDB) put(auth model.Auth, item *model.TemplateItem, updated 
 	}
 }
 
-func (me *DocTemplateDB) Delete(auth model.Auth, id string) error {
+func (me *DocTemplateDB) Delete(auth model.Auth, files storage.FilesIF, id string) error {
 	tx, err := me.db.Begin(true)
 	if err != nil {
 		return err
@@ -327,7 +327,7 @@ func (me *DocTemplateDB) Delete(auth model.Auth, id string) error {
 			p := tmpl.Path()
 			if p != "" {
 				_ = remVars(auth, id+lang, tx)
-				_ = os.Remove(p)
+				files.Delete(p)
 			}
 		}
 	}

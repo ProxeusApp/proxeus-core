@@ -97,7 +97,7 @@ func (me *UserDataDB) List(auth model.Auth, contains string, options storage.Opt
 	return items, nil
 }
 
-func (me *UserDataDB) Delete(auth model.Auth, id string) error {
+func (me *UserDataDB) Delete(auth model.Auth, filesDB storage.FilesIF, id string) error {
 	tx, err := me.db.Begin(true)
 	if err != nil {
 		return err
@@ -117,7 +117,7 @@ func (me *UserDataDB) Delete(auth model.Auth, id string) error {
 	if len(uitem.Data) > 0 {
 		_, files := file.MapIO(uitem.Data).GetAllDataAndFiles(me.baseFilePath)
 		for _, v := range files {
-			err = os.Remove(v)
+			err = filesDB.Delete(v)
 			if err != nil {
 				return err
 			}
@@ -373,8 +373,4 @@ func (me *UserDataDB) AssetsKey() string {
 
 func (me *UserDataDB) Close() error {
 	return me.db.Close()
-}
-
-func (me *UserDataDB) remove() error {
-	return os.RemoveAll(me.mainDir)
 }

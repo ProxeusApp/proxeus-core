@@ -37,7 +37,7 @@ func TestDocumentServiceClient_Compile(t *testing.T) {
 }
 
 func call(ds *DocumentServiceClient) {
-	_, err := ds.Compile(Template{
+	_, err := ds.Compile(nil, Template{
 		TemplatePath: "/home/ave/Downloads/Subworkflow2.odt",
 	})
 	if err != nil {

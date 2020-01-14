@@ -1,7 +1,6 @@
 package storm
 
 import (
-	"bytes"
 	"io/ioutil"
 	"log"
 	"os"
@@ -13,14 +12,10 @@ import (
 )
 
 func TestPutGetData(t *testing.T) {
-	db, err := NewUserDataDB(DBConfig{Dir: "./"})
-	if err != nil {
-		t.Error(err)
-	}
-	defer func() {
-		db.Close()
-		db.remove()
-	}()
+	dir := "./testDir"
+	db, err := NewUserDataDB(DBConfig{Dir: dir})
+	defer os.RemoveAll(dir)
+	defer db.Close()
 	u := &model.User{ID: "123", Role: model.ROOT}
 	usrData := &model.UserDataItem{Name: "some name", Detail: "detail..", Data: map[string]interface{}{"input": map[string]interface{}{"abcField": 123}, "123": "along input"}}
 	err = db.Put(u, usrData)
@@ -111,14 +106,8 @@ func TestPutGetData(t *testing.T) {
 func TestPutGetDataFile(t *testing.T) {
 	dir := "./testDir"
 	db, err := NewUserDataDB(DBConfig{Dir: dir})
-	defer func() { os.RemoveAll(dir) }()
-	if err != nil {
-		t.Error(err)
-	}
-	defer func() {
-		db.Close()
-		db.remove()
-	}()
+	defer os.RemoveAll(dir)
+	defer db.Close()
 	u := &model.User{ID: "123", Role: model.ROOT}
 	usrData := &model.UserDataItem{Name: "some name", Detail: "detail..", Data: map[string]interface{}{"input": map[string]interface{}{"abcField": 123}, "123": "along input"}}
 	err = db.Put(u, usrData)
@@ -133,43 +122,19 @@ func TestPutGetDataFile(t *testing.T) {
 		return
 	}
 	fi := db.NewFile(u, file.Meta{Name: "MyFile"})
-	f, err := os.Open(filepath.Join(db.baseFilePath, "abc"))
+	err = db.PutData(u, usrData.ID, map[string]interface{}{"file": fi})
 	if err != nil {
 		t.Error(err)
 		return
 	}
-	n, err := fi.Write(f)
+	_, err = db.GetDataFile(u, usrData.ID, "file")
 	if err != nil {
-		t.Error(n, err)
+		t.Error(err)
 		return
-	}
-	err = db.PutData(u, usrData.ID, map[string]interface{}{"file": fi})
-	if err != nil {
-		t.Error(n, err)
-		return
-	}
-	shouldBeSameFi, err := db.GetDataFile(u, usrData.ID, "file")
-	if err != nil {
-		t.Error(n, err)
-		return
-	}
-	buf := &bytes.Buffer{}
-	n, err = shouldBeSameFi.Read(buf)
-	if err != nil {
-		t.Error(n, err)
-		return
-	}
-	if buf.String() != fileData {
-		t.Error(n, err)
 	}
 
 	//put another file
 	fi = db.NewFile(u, file.Meta{Name: "MyFile2"})
-	n, err = fi.Write(f)
-	if err != nil {
-		t.Error(n, err)
-		return
-	}
 	err = db.PutData(u, usrData.ID, map[string]interface{}{"file2": fi})
 	if err != nil {
 		t.Error(err)
@@ -179,14 +144,6 @@ func TestPutGetDataFile(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 		return
-	}
-	n, err = fi.Read(buf)
-	if err != nil {
-		t.Error(n, err)
-		return
-	}
-	if buf.String() != fileData {
-		t.Error(n, err)
 	}
 
 	usrItem, err := db.Get(u, usrData.ID)

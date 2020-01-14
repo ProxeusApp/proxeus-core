@@ -9,6 +9,7 @@ import (
 	"os"
 	"testing"
 
+	"github.com/ProxeusApp/proxeus-core/storage"
 	"github.com/ProxeusApp/proxeus-core/sys/file"
 )
 
@@ -148,8 +149,8 @@ func (m *mockDataManager) PutDataWithoutMerge(formID string, dat map[string]inte
 	return nil
 }
 
-func (m *mockDataManager) PutDataFile(formID, name string, f file.Meta, reader io.Reader) (written int64, err error) {
-	return 0, nil
+func (m *mockDataManager) PutDataFile(db storage.FilesIF, formID, name string, f file.Meta, reader io.Reader) error {
+	return nil
 }
 
 func (m *mockDataManager) Close() (err error) {

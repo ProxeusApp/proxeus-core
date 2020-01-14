@@ -3,34 +3,30 @@ package storm
 import (
 	"bytes"
 	"encoding/base64"
-	"regexp"
-
-	"github.com/ProxeusApp/proxeus-core/storage"
-
-	"github.com/ProxeusApp/proxeus-core/storage/database"
-	"github.com/ProxeusApp/proxeus-core/storage/db"
-
-	//"encoding/json"
-	"image"
 	"image/jpeg"
 	"image/png"
 	"io"
 	"log"
 	"os"
 	"path/filepath"
+	"regexp"
 	"time"
+
+	"github.com/ProxeusApp/proxeus-core/storage"
+	"github.com/ProxeusApp/proxeus-core/storage/database"
+	"github.com/ProxeusApp/proxeus-core/storage/db"
+	"github.com/ProxeusApp/proxeus-core/sys/model"
 
 	"github.com/asdine/storm/q"
 	"github.com/disintegration/imaging"
 	uuid "github.com/satori/go.uuid"
 	"golang.org/x/crypto/bcrypt"
-
-	"github.com/ProxeusApp/proxeus-core/sys/model"
 )
 
 type UserDB struct {
 	db           database.DB
 	baseFilePath string
+	fileDB       storage.FilesIF
 }
 
 //userHeavyDataBucket helps us to load the data of the model.User entity when it is requested by metaOnly = false
@@ -46,9 +42,8 @@ const userVersion = "user_version"
 //it is only needed for login and password reset
 const passwordBucket = "pw_bucket"
 
-func NewUserDB(c DBConfig) (*UserDB, error) {
+func NewUserDB(c DBConfig, fileDB storage.FilesIF) (*UserDB, error) {
 	var err error
-
 	baseDir := filepath.Join(c.Dir, "user")
 	err = ensureDir(baseDir)
 	if err != nil {
@@ -65,6 +60,7 @@ func NewUserDB(c DBConfig) (*UserDB, error) {
 	}
 	udb := &UserDB{db: db}
 	udb.baseFilePath = assetDir
+	udb.fileDB = fileDB
 
 	example := &model.User{}
 	udb.db.Init(example)
@@ -458,70 +454,53 @@ func (me *UserDB) updateApiKeys(u *model.User, tx database.DB) error {
 }
 
 func (me *UserDB) setTinyUserIconBase64(item *model.User) error {
-	f, err := me.readPhoto(item)
-	if err == nil {
-		item.Photo, err = me.tinyUserIconBase64(f)
-	}
-	return err
-}
-
-func (me *UserDB) tinyUserIconBase64(reader *os.File) (string, error) {
-	var (
-		orgImg image.Image
-		err    error
-	)
-	prefix := "data:image/jpeg;base64,"
-	orgImg, err = jpeg.Decode(reader)
+	var buf bytes.Buffer
+	err := me.fileDB.Read(me.fullPhotoPath(item), &buf)
 	if err != nil {
-		reader.Seek(0, 0)
-		orgImg, err = png.Decode(reader)
+		return err
+	}
+	b := buf.Bytes()
+
+	prefix := "data:image/jpeg;base64,"
+	orgImg, err := jpeg.Decode(&buf)
+	if err != nil {
+		orgImg, err = png.Decode(bytes.NewBuffer(b))
 		prefix = "data:image/png;base64,"
 	}
 	if err != nil {
-		return "", err
+		return err
 	}
 	newImage := imaging.Resize(orgImg, 44, 0, imaging.Cosine)
 	w := &bytes.Buffer{}
-	//// Encode uses a Writer, use a Buffer if you need the raw []byte
 	err = jpeg.Encode(w, newImage, nil)
-	return prefix + base64.StdEncoding.EncodeToString(w.Bytes()), nil
+	data := prefix + base64.StdEncoding.EncodeToString(w.Bytes())
+	item.Photo = data
+	return err
 }
 
-func (me *UserDB) GetProfilePhoto(auth model.Auth, id string, writer io.Writer) (n int64, err error) {
+func (me *UserDB) GetProfilePhoto(auth model.Auth, id string, writer io.Writer) error {
 	u, err := me.Get(auth, id)
 	if err != nil {
-		return 0, os.ErrNotExist
+		return os.ErrNotExist
 	}
 	u.CheckIfAuthIsAllowedToReadPersonalData(auth)
-	var tmplFile *os.File
-	tmplFile, err = me.readPhoto(u)
-	if err != nil {
-		if tmplFile != nil {
-			tmplFile.Close()
-		}
-		return 0, os.ErrNotExist
-	}
-	defer tmplFile.Close()
-	return io.Copy(writer, tmplFile)
+	return me.fileDB.Read(me.fullPhotoPath(u), writer)
 }
 
-func (me *UserDB) readPhoto(u *model.User) (*os.File, error) {
-	if u.PhotoPath == "" {
-		return nil, os.ErrNotExist
-	}
-	return os.OpenFile(filepath.Join(me.GetBaseFilePath(), u.PhotoPath), os.O_RDONLY, 0600)
+func (me *UserDB) fullPhotoPath(u *model.User) string {
+	return filepath.Join(me.GetBaseFilePath(), u.PhotoPath)
 }
 
-func (me *UserDB) PutProfilePhoto(auth model.Auth, id string, reader io.Reader) (written int64, err error) {
+func (me *UserDB) PutProfilePhoto(auth model.Auth, id string, reader io.Reader) error {
 	if id == "" {
-		return 0, os.ErrInvalid
+		return os.ErrInvalid
 	}
 	u, err := me.Get(auth, id)
 	if err != nil {
-		return 0, err
+		return err
 	}
 	if u.ID != auth.UserID() && !auth.AccessRights().IsGrantedForUserModifications() {
-		return 0, model.ErrAuthorityMissing
+		return model.ErrAuthorityMissing
 	}
 	u.Updated = time.Now()
 	if u.PhotoPath == "" {
@@ -529,22 +508,10 @@ func (me *UserDB) PutProfilePhoto(auth model.Auth, id string, reader io.Reader) 
 		u.PhotoPath = u2.String()
 		err = me.db.Save(u)
 		if err != nil {
-			return 0, err
+			return err
 		}
 	}
-	var tmplFile *os.File
-	tmplFile, err = os.OpenFile(filepath.Join(me.GetBaseFilePath(), u.PhotoPath), os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0600)
-	if os.IsExist(err) {
-		err = nil
-	}
-	if err != nil {
-		if tmplFile != nil {
-			tmplFile.Close()
-		}
-		return 0, err
-	}
-	defer tmplFile.Close()
-	return io.Copy(tmplFile, reader)
+	return me.fileDB.Write(me.fullPhotoPath(u), reader)
 }
 
 func (me *UserDB) Close() error {

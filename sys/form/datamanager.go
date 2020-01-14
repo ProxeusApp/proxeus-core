@@ -5,6 +5,8 @@ import (
 	"os"
 	"sync"
 
+	"github.com/ProxeusApp/proxeus-core/storage"
+
 	"github.com/ProxeusApp/proxeus-core/sys/file"
 )
 
@@ -18,7 +20,7 @@ type DataManager interface {
 	GetAllDataFilePathNameOnly() (dat map[string]interface{}, files []string)
 	PutData(formID string, dat map[string]interface{}) error
 	PutDataWithoutMerge(formID string, dat map[string]interface{}) error
-	PutDataFile(formID, name string, f file.Meta, reader io.Reader) (written int64, err error)
+	PutDataFile(db storage.FilesIF, formID, name string, f file.Meta, reader io.Reader) error
 	Close() (err error)
 }
 
@@ -151,7 +153,7 @@ func (me *dataManager) GetAllDataFilePathNameOnly() (dat map[string]interface{},
 				if maybeFile != nil {
 					if fileInfo, ok := maybeFile.(*file.IO); ok {
 						files = append(files, fileInfo.Path())
-						dat[name] = fileInfo.ToMap(true)
+						dat[name] = fileInfo.ToMap()
 						continue
 					}
 				}
@@ -188,9 +190,8 @@ func (me *dataManager) PutDataWithoutMerge(formID string, dat map[string]interfa
 	return os.ErrInvalid
 }
 
-func (me *dataManager) PutDataFile(formID, name string, f file.Meta, reader io.Reader) (written int64, err error) {
-	var existingFileInfo *file.IO
-	existingFileInfo, err = me.GetDataFile(formID, name)
+func (me *dataManager) PutDataFile(db storage.FilesIF, formID, name string, f file.Meta, reader io.Reader) error {
+	existingFileInfo, err := me.GetDataFile(formID, name)
 	me.Lock()
 
 	var formDataMap map[string]interface{}
@@ -201,15 +202,16 @@ func (me *dataManager) PutDataFile(formID, name string, f file.Meta, reader io.R
 	}
 	if os.IsNotExist(err) || existingFileInfo == nil {
 		existingFileInfo = file.New(me.BaseFilePath, f)
-		written, err = existingFileInfo.Write(reader)
+		err = db.Write(existingFileInfo.Path(), reader)
 		formDataMap[name] = existingFileInfo
 		me.Unlock()
 	} else {
 		me.Unlock()
 		existingFileInfo.Update(f.Name, f.ContentType)
-		written, err = existingFileInfo.Write(reader)
+		err = db.Write(existingFileInfo.Path(), reader)
 	}
-	return
+	existingFileInfo.SetSize(storage.FileSize(db, existingFileInfo.Path()))
+	return err
 }
 
 func (me *dataManager) mkFileInfos() {
