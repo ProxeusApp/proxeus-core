@@ -1,6 +1,7 @@
 package api
 
 import (
+	"bytes"
 	"encoding/base64"
 	"encoding/json"
 	"errors"
@@ -945,7 +946,7 @@ func PutProfilePhotoHandler(e echo.Context) error {
 	if sess == nil {
 		return c.NoContent(http.StatusBadRequest)
 	}
-	_, err := c.System().DB.User.PutProfilePhoto(sess, sess.UserID(), c.Request().Body)
+	err := c.System().DB.User.PutProfilePhoto(sess, sess.UserID(), c.Request().Body)
 	if err != nil {
 		return c.NoContent(http.StatusBadRequest)
 	}
@@ -962,7 +963,7 @@ func GetProfilePhotoHandler(e echo.Context) error {
 	if id == "" {
 		id = sess.UserID()
 	}
-	_, err := c.System().DB.User.GetProfilePhoto(sess, id, c.Response().Writer)
+	err := c.System().DB.User.GetProfilePhoto(sess, id, c.Response().Writer)
 	if err != nil {
 		return c.NoContent(http.StatusNotFound)
 	}
@@ -1094,7 +1095,7 @@ func DocumentDeleteHandler(e echo.Context) error {
 			return c.String(http.StatusBadRequest, err.Error())
 		}
 		sess.Delete("docApp_" + userDataItem.WorkflowID)
-		err = c.System().DB.UserData.Delete(sess, ID)
+		err = c.System().DB.UserData.Delete(sess, c.System().DB.Files, ID)
 		if err != nil {
 			return c.String(http.StatusBadRequest, err.Error())
 		}
@@ -1273,7 +1274,7 @@ func DocumentFileGetHandler(e echo.Context) error {
 			if err == nil && finfo != nil {
 				c.Response().Header().Set("Content-Type", finfo.ContentType())
 				c.Response().Committed = true //prevents from-> http: multiple response.WriteHeader calls
-				_, err = finfo.Read(c.Response().Writer)
+				err = c.System().DB.Files.Read(finfo.Path(), c.Response().Writer)
 				if err == nil {
 					return c.NoContent(http.StatusOK)
 				}
@@ -1284,7 +1285,7 @@ func DocumentFileGetHandler(e echo.Context) error {
 				if err == nil {
 					c.Response().Header().Set("Content-Type", f.ContentType())
 					c.Response().Committed = true //prevents from-> http: multiple response.WriteHeader calls
-					_, err = f.Read(c.Response().Writer)
+					err = c.System().DB.Files.Read(f.Path(), c.Response().Writer)
 					if err == nil {
 						return c.NoContent(http.StatusOK)
 					}
@@ -1494,7 +1495,7 @@ func UserDeleteHandler(e echo.Context) error {
 		return c.NoContent(http.StatusInternalServerError)
 	}
 	for _, workflowInstance := range workflowInstances {
-		err = userDataDB.Delete(sess, workflowInstance.ID)
+		err = userDataDB.Delete(sess, c.System().DB.Files, workflowInstance.ID)
 		if err != nil {
 			return c.NoContent(http.StatusInternalServerError)
 		}
@@ -1619,12 +1620,12 @@ func UserDocumentSignatureRequestAddHandler(e echo.Context) error {
 		return c.NoContent(http.StatusNotFound)
 	}
 
-	var documentBytes []byte
-	documentBytes, err = fileInfo.ReadAll()
+	var documentBytes bytes.Buffer
+	err = c.System().DB.Files.Read(fileInfo.Path(), &documentBytes)
 	if err != nil {
 		return c.NoContent(http.StatusNotFound)
 	}
-	docHash := crypto.Keccak256Hash(documentBytes).String()
+	docHash := crypto.Keccak256Hash(documentBytes.Bytes()).String()
 
 	signatoryObj, err := c.System().DB.User.GetByBCAddress(signatory)
 	if err != nil {
@@ -1848,7 +1849,7 @@ func UserDocumentFileHandler(e echo.Context) error {
 		resp.Header().Set("Content-Disposition", contentDisposition)
 		resp.Header().Set("Content-Length", strconv.FormatInt(fileInfo.Size(), 10))
 		resp.Committed = true //prevents from-> http: multiple response.WriteHeader calls
-		_, err = fileInfo.Read(resp.Writer)
+		err = c.System().DB.Files.Read(fileInfo.Path(), c.Response().Writer)
 		if err != nil {
 			return c.NoContent(http.StatusNotFound)
 		}
@@ -1856,12 +1857,13 @@ func UserDocumentFileHandler(e echo.Context) error {
 		//template with format
 		dat, files, _ := c.System().DB.UserData.GetDataAndFiles(sess, id, "input")
 		formt := eio.Format(format)
-		dsResp, err := c.System().DS.Compile(eio.Template{
-			Format:       formt,
-			Data:         map[string]interface{}{"input": dat},
-			TemplatePath: fileInfo.Path(),
-			Assets:       files,
-		})
+		dsResp, err := c.System().DS.Compile(c.System().DB.Files,
+			eio.Template{
+				Format:       formt,
+				Data:         map[string]interface{}{"input": dat},
+				TemplatePath: fileInfo.Path(),
+				Assets:       files,
+			})
 		if err != nil {
 			return c.String(http.StatusNotFound, err.Error())
 		}

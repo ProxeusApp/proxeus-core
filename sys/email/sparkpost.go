@@ -1,9 +1,7 @@
 package email
 
 import (
-	"encoding/base64"
 	"errors"
-	"fmt"
 	"strings"
 	"unicode"
 
@@ -49,27 +47,12 @@ func (me *sparkPostEmailSender) Send(e *Email) error {
 		content.Text = e.Body
 	}
 
-	for _, f := range e.Attachments {
-		attBytes, err := f.ReadAll()
-		if err != nil {
-			fmt.Println(err)
-			return err
-		}
-		attach := sp.Attachment{
-			MIMEType: f.ContentType(),
-			Filename: f.Name(),
-			B64Data:  base64.StdEncoding.EncodeToString(attBytes),
-		}
-		content.Attachments = append(content.Attachments, attach)
-	}
-
 	tx := &sp.Transmission{
 		Recipients: e.To,
 		Content:    content,
 	}
 	_, _, err := me.client.Send(tx)
 	if err != nil {
-		fmt.Println(err)
 		return err
 	}
 	return err

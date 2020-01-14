@@ -286,7 +286,7 @@ func (me *DocumentFlowInstance) UpdateFile(name string, fm file.Meta, reader io.
 		}
 	}()
 	if len(verrs) == 0 {
-		_, err = me.DataCluster.PutDataFile(n.ID, name, fm, tmpFile)
+		err = me.DataCluster.PutDataFile(me.system.DB.Files, n.ID, name, fm, tmpFile)
 		if err != nil {
 			return
 		}
@@ -304,13 +304,12 @@ func (me *DocumentFlowInstance) UpdateFile(name string, fm file.Meta, reader io.
 		if err != nil {
 			return
 		}
-		var of *os.File
-		of, err = os.Open(f.Path())
+		var n int64
+		n, err = storage.CopyFile(me.system.DB.Files, dbF.Path(), f.Path())
 		if err != nil {
 			return
 		}
-		defer of.Close()
-		_, err = dbF.Write(of)
+		dbF.SetSize(n)
 	}
 	return
 }
@@ -364,12 +363,13 @@ func (me *DocumentFlowInstance) Confirm(currentAppLang string, tmpls map[string]
 				}
 				if tmpl, ok := tmplItem.Data[tlang]; ok {
 					var dsResp *http.Response
-					dsResp, err = me.system.DS.Compile(eio.Template{
-						Data:         dat,
-						TemplatePath: tmpl.Path(),
-						Assets:       files,
-						EmbedError:   false,
-					})
+					dsResp, err = me.system.DS.Compile(me.system.DB.Files,
+						eio.Template{
+							Data:         dat,
+							TemplatePath: tmpl.Path(),
+							Assets:       files,
+							EmbedError:   false,
+						})
 					if err != nil {
 						return nil, nil, me.statusResult, err
 					}
@@ -395,15 +395,15 @@ func (me *DocumentFlowInstance) Confirm(currentAppLang string, tmpls map[string]
 							Size:        i64,
 						},
 					)
+
 					tmplRef := store.NewFile(me.auth, tmpl.Meta())
-					var tfr *os.File
-					tfr, err = os.Open(tmpl.Path())
+					n, err := storage.CopyFile(me.system.DB.Files, tmplRef.Path(), tmpl.Path())
 					if err != nil {
 						return nil, nil, nil, err
 					}
-					_, err = tmplRef.Write(tfr)
-					tfr.Close()
-					_, err = finalDoc.Write(dsResp.Body)
+					tmplRef.SetSize(n)
+
+					err = me.system.DB.Files.Write(finalDoc.Path(), dsResp.Body)
 					dsResp.Body.Close()
 					finalDoc.Hash = documentHex
 					finalDocRefs = append(finalDocRefs, tmplRef)
@@ -578,12 +578,13 @@ func (me *DocumentFlowInstance) Preview(id, lang, strFormat string, resp *echo.R
 	format := eio.Format(strFormat)
 	resp.Header().Set("Content-Disposition", fmt.Sprintf("%s;filename=\"%s\"", "attachment", tmpl.NameWithExt(format.String())))
 	dataMap, files := me.getDataWithFiles()
-	dsResp, err := me.system.DS.Compile(eio.Template{
-		TemplatePath: tmpl.Path(),
-		Data:         dataMap,
-		Format:       format,
-		Assets:       files,
-	})
+	dsResp, err := me.system.DS.Compile(me.system.DB.Files,
+		eio.Template{
+			TemplatePath: tmpl.Path(),
+			Data:         dataMap,
+			Format:       format,
+			Assets:       files,
+		})
 	if err != nil {
 		return err
 	}

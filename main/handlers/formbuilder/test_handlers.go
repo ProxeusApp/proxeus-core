@@ -123,7 +123,7 @@ func GetFileIdFieldName(e echo.Context) error {
 		fi, err := dc.GetDataFile(id, fieldname)
 		if err == nil {
 			c.Response().Committed = true //prevents from-> http: multiple response.WriteHeader calls
-			_, err = fi.Read(c.Response().Writer)
+			err = c.System().DB.Files.Read(fi.Path(), c.Response().Writer)
 			if err == nil {
 				return c.NoContent(http.StatusOK)
 			}
@@ -164,7 +164,7 @@ func PostFileIdFieldName(e echo.Context) error {
 			}
 			defer tmpFile.Close()
 			//TODO improve efficienty of file move
-			_, err = dc.PutDataFile(id, fieldname,
+			err = dc.PutDataFile(c.System().DB.Files, id, fieldname,
 				file.Meta{
 					Name:        fileName,
 					ContentType: c.Request().Header.Get("Content-Type"),

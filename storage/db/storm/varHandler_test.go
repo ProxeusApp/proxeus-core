@@ -2,21 +2,18 @@ package storm
 
 import (
 	"fmt"
+	"os"
 	"testing"
 
 	"github.com/ProxeusApp/proxeus-core/storage/database"
 )
 
 func TestVars(t *testing.T) {
-	db, err := NewUserDataDB(DBConfig{Dir: "./"})
-	if err != nil {
-		t.Error(err)
-		return
-	}
-	defer func() {
-		db.Close()
-		db.remove()
-	}()
+	dir := "./testDir"
+	db, err := NewUserDataDB(DBConfig{Dir: dir})
+	defer os.RemoveAll(dir)
+	defer db.Close()
+
 	initVars(db.db)
 	pVars(db.db, "123", []string{"var1", "var2", "var3", "var4"})
 	pVars(db.db, "123", []string{"var1", "var2", "var5"})
