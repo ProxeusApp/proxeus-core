@@ -2,8 +2,6 @@ package portable
 
 import (
 	"fmt"
-	"io"
-	"os"
 	"path/filepath"
 	"strings"
 	"sync"
@@ -112,24 +110,12 @@ func (ie *ImportExport) exportTemplate(id ...string) error {
 			fileCopyErrs := map[string]error{}
 			go func() {
 				for _, item := range items {
-					var exportFile *os.File
 					for _, tmplItem := range item.Data {
-						exportFile, err = os.OpenFile(filepath.Join(ie.db.Template.AssetsKey(), tmplItem.PathName()), os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0600)
-						if os.IsExist(err) {
-							err = nil
-						}
-						if err != nil {
-							if exportFile != nil {
-								_ = exportFile.Close()
-							}
-							fileCopyErrs[item.ID] = err
-							continue
-						}
-						_, err = tmplItem.Read(exportFile)
+						path := filepath.Join(ie.db.Template.AssetsKey(), tmplItem.PathName())
+						_, err = storage.CopyFileAcross(ie.db.Files, ie.sysDB.Files, path, tmplItem.Path())
 						if err != nil {
 							fileCopyErrs[item.ID] = err
 						}
-
 					}
 				}
 				wg.Done()
@@ -194,7 +180,8 @@ func (ie *ImportExport) importTemplate() error {
 						ie.processedEntry(Template, item.ID, err)
 						continue
 					}
-					_, err = tmplItem.CpTo(fi)
+					n, err := storage.CopyFileAcross(ie.sysDB.Files, ie.db.Files, fi.Path(), tmplItem.Path())
+					fi.SetSize(n)
 					if err != nil {
 						hadError = true
 						ie.processedEntry(Template, item.ID, err)
@@ -422,47 +409,17 @@ func (ie *ImportExport) exportWorkflow(id ...string) error {
 	return nil
 }
 
-func cpProfilePhoto(from storage.UserIF, to storage.UserIF, item *model.User) (err error) {
-	var readFile *os.File
-	readFile, err = os.Open(filepath.Join(from.GetBaseFilePath(), item.PhotoPath))
-	if os.IsExist(err) {
-		err = nil
-	}
-	if err != nil {
-		if readFile != nil {
-			_ = readFile.Close()
-		}
-		return err
-	}
-	var exportFile *os.File
-	exportFile, err = os.OpenFile(filepath.Join(to.GetBaseFilePath(), item.PhotoPath), os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0600)
-	if os.IsExist(err) {
-		err = nil
-	}
-	if err != nil {
-		if exportFile != nil {
-			_ = exportFile.Close()
-		}
-		if readFile != nil {
-			_ = readFile.Close()
-		}
-		return err
-	}
-	_, err = io.Copy(exportFile, readFile)
-	if err != nil {
-		_ = readFile.Close()
-		_ = exportFile.Close()
-		return err
-	}
-	_ = readFile.Close()
-	_ = exportFile.Close()
+func cpProfilePhoto(from *storage.DBSet, to *storage.DBSet, item *model.User) error {
+	fromPath := filepath.Join(from.User.GetBaseFilePath(), item.PhotoPath)
+	toPath := filepath.Join(to.User.GetBaseFilePath(), item.PhotoPath)
+	_, err := storage.CopyFileAcross(to.Files, from.Files, toPath, fromPath)
 	return err
 }
 
 func (ie *ImportExport) exportUser(id ...string) error {
 	if ie.db.User == nil {
 		var err error
-		ie.db.User, err = storm.NewUserDB(ie.dbConfig)
+		ie.db.User, err = storm.NewUserDB(ie.dbConfig, ie.db.Files)
 		if err != nil {
 			return err
 		}
@@ -484,7 +441,7 @@ func (ie *ImportExport) exportUser(id ...string) error {
 					item.Photo = ""
 					err := ie.db.User.Put(ie.auth, item)
 					if item.PhotoPath != "" {
-						err = cpProfilePhoto(ie.sysDB.User, ie.db.User, item)
+						err = cpProfilePhoto(ie.sysDB, ie.db, item)
 					}
 					ie.processedEntry(User, item.ID, err)
 				}
@@ -519,16 +476,8 @@ func (ie *ImportExport) exportUserData(id ...string) error {
 				for _, item := range items {
 					fios := ie.sysDB.UserData.GetAllFileInfosOf(item)
 					for _, fio := range fios {
-						f, err := os.OpenFile(filepath.Join(ie.db.UserData.AssetsKey(), fio.PathName()), os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0600)
-						if err != nil {
-							fileCopyErrs[item.ID] = err
-							continue
-						}
-						_, err = fio.Read(f)
-						if err != nil {
-							fileCopyErrs[item.ID] = err
-						}
-						err = f.Close()
+						path := filepath.Join(ie.db.UserData.AssetsKey(), fio.PathName())
+						_, err = storage.CopyFileAcross(ie.db.Files, ie.sysDB.Files, path, fio.Path())
 						if err != nil {
 							fileCopyErrs[item.ID] = err
 						}
@@ -760,7 +709,7 @@ func (ie *ImportExport) importWorkflow() error {
 func (ie *ImportExport) importUser() error {
 	if ie.db.User == nil {
 		var err error
-		ie.db.User, err = storm.NewUserDB(ie.dbConfig)
+		ie.db.User, err = storm.NewUserDB(ie.dbConfig, ie.db.Files)
 		if err != nil {
 			return err
 		}
@@ -815,11 +764,11 @@ func (ie *ImportExport) importUser() error {
 
 				if existingItem != nil && existingItem.PhotoPath != "" && existingItem.PhotoPath != item.PhotoPath {
 					//remove old photo of existingItem before the reference is lost
-					_ = os.Remove(filepath.Join(ie.sysDB.User.GetBaseFilePath(), existingItem.PhotoPath))
+					ie.sysDB.Files.Delete(filepath.Join(ie.sysDB.User.GetBaseFilePath(), existingItem.PhotoPath))
 				}
 
 				if item.PhotoPath != "" {
-					err = cpProfilePhoto(ie.db.User, ie.sysDB.User, item)
+					err = cpProfilePhoto(ie.db, ie.sysDB, item)
 					if err != nil {
 						continue
 					}
@@ -885,18 +834,8 @@ func (ie *ImportExport) importUserData() error {
 				hadError := false
 				fios := ie.db.UserData.GetAllFileInfosOf(item)
 				for _, fio := range fios {
-					f, err := os.OpenFile(filepath.Join(ie.sysDB.UserData.AssetsKey(), fio.PathName()), os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0600)
-					if err != nil {
-						hadError = true
-						ie.processedEntry(UserData, item.ID, err)
-						continue
-					}
-					_, err = fio.Read(f)
-					if err != nil {
-						hadError = true
-						ie.processedEntry(UserData, item.ID, err)
-					}
-					err = f.Close()
+					path := filepath.Join(ie.sysDB.UserData.AssetsKey(), fio.PathName())
+					_, err = storage.CopyFileAcross(ie.sysDB.Files, ie.db.Files, path, fio.Path())
 					if err != nil {
 						hadError = true
 						ie.processedEntry(UserData, item.ID, err)

@@ -1,17 +1,12 @@
 package validate
 
 import (
-	"io/ioutil"
-	"os"
+	"bytes"
 	"testing"
 )
 
 func TestStream(t *testing.T) {
-	rf, err := ioutil.TempFile("", "validate_test")
-	if err != nil {
-		panic(err)
-	}
-	_, err = rf.Write([]byte(`
+	rf := bytes.NewBuffer([]byte(`
 	Content...................................
 .................................................
 ........................................................
@@ -24,17 +19,6 @@ func TestStream(t *testing.T) {
 ...............................................................
 ...............................................................
 `))
-	if err != nil {
-		panic(err)
-	}
-	err = rf.Close()
-	if err != nil {
-		panic(err)
-	}
-	rf, err = os.Open(rf.Name())
-	if err != nil {
-		panic(err)
-	}
 	rules := Rules{
 		"file": Rules{
 			"exact": true,
@@ -43,7 +27,7 @@ func TestStream(t *testing.T) {
 		//"min": "220kb",
 		//"max": "300kb",
 	}
-	_, err = File(rf, rules)
+	_, err := File(rf, rules)
 	if err == nil {
 		t.Error("expected wrong file type")
 	}

@@ -2,6 +2,7 @@ package eio
 
 import (
 	"archive/zip"
+	"bytes"
 	"compress/gzip"
 	"encoding/json"
 	"errors"
@@ -12,6 +13,9 @@ import (
 	"os"
 	"path"
 	"time"
+
+	"github.com/ProxeusApp/proxeus-core/storage"
+	"github.com/ProxeusApp/proxeus-core/sys/file"
 )
 
 type (
@@ -42,15 +46,10 @@ type Template struct {
 
 //Compile packs the provided files into a ZIP and sends it to the document-service to be compiled as the format you have provided.
 //if format is empty, it will take the default one which is PDF.
-func (ds *DocumentServiceClient) Compile(template Template) (resp *http.Response, err error) {
-	var odtTmplFile *os.File
-	odtTmplFile, err = os.Open(template.TemplatePath)
+func (ds *DocumentServiceClient) Compile(db storage.FilesIF, template Template) (resp *http.Response, err error) {
+	var templateBuf bytes.Buffer
+	err = db.Read(template.TemplatePath, &templateBuf)
 	if err != nil {
-		return
-	}
-	fstat, er := odtTmplFile.Stat()
-	if er != nil {
-		err = er
 		return
 	}
 	requestReader, requestWriter := io.Pipe()
@@ -61,18 +60,15 @@ func (ds *DocumentServiceClient) Compile(template Template) (resp *http.Response
 				requestWriter.Close()
 				return
 			}
-			if odtTmplFile != nil {
-				odtTmplFile.Close()
-			}
 			if requestWriter != nil {
 				requestWriter.Close()
 			}
 		}()
-		header, err := zip.FileInfoHeader(fstat)
+		header, err := zip.FileInfoHeader(
+			file.InMemoryFileInfo{Path: "tmpl.odt", Len: templateBuf.Len()})
 		if err != nil {
 			return
 		}
-		header.Name = "tmpl.odt"
 
 		// Change to deflate to gain better compression
 		// see http://golang.org/pkg/archive/zip/#pkg-constants
@@ -81,7 +77,7 @@ func (ds *DocumentServiceClient) Compile(template Template) (resp *http.Response
 		if err != nil {
 			return
 		}
-		_, err = io.CopyN(odtZipWriter, odtTmplFile, fstat.Size())
+		_, err = io.Copy(odtZipWriter, &templateBuf)
 		if err != nil {
 			return
 		}
@@ -108,17 +104,16 @@ func (ds *DocumentServiceClient) Compile(template Template) (resp *http.Response
 		//insert assets
 		if len(template.Assets) > 0 {
 			assetToZIPWriter := func(assetPath string, zipWriter *zip.Writer) {
-				assetFile, err := os.Open(assetPath)
-				if err != nil {
-					return
-				}
-				defer assetFile.Close()
-				assetStat, err := assetFile.Stat()
+				var asssetBuf bytes.Buffer
+				err := db.Read(assetPath, &asssetBuf)
 				if err != nil {
 					return
 				}
 
-				assetHeader, err := zip.FileInfoHeader(assetStat)
+				assetHeader, err := zip.FileInfoHeader(file.InMemoryFileInfo{
+					Path: assetPath,
+					Len:  asssetBuf.Len(),
+				})
 				if err != nil {
 					return
 				}
@@ -130,7 +125,7 @@ func (ds *DocumentServiceClient) Compile(template Template) (resp *http.Response
 				if err != nil {
 					return
 				}
-				_, err = io.CopyN(assetWriter, assetFile, assetStat.Size())
+				_, err = io.Copy(assetWriter, &asssetBuf)
 				if err != nil {
 					return
 				}
@@ -162,7 +157,7 @@ func (ds *DocumentServiceClient) Compile(template Template) (resp *http.Response
 	req.Header.Set("Content-Type", "application/zip")
 
 	client := &http.Client{}
-	client.Timeout = time.Duration(time.Second * 20)
+	client.Timeout = time.Second * 20
 	resp, err = client.Do(req)
 	if err != nil {
 		return
@@ -185,47 +180,25 @@ func (ds *DocumentServiceClient) Compile(template Template) (resp *http.Response
 
 //Vars returns a list of the vars contained in the provided template.
 //You can filter them with the prefix if needed.
-func (ds *DocumentServiceClient) Vars(tmplPath, prefix string) ([]string, error) {
-	odtTmplFile, err := os.Open(tmplPath)
-	if err != nil {
-		return nil, err
-	}
-	fstat, err := odtTmplFile.Stat()
-	if err != nil {
-		return nil, err
-	}
+func (ds *DocumentServiceClient) Vars(templateBuf *bytes.Buffer) ([]string, error) {
 	requestReader, requestWriter := io.Pipe()
 	go func() {
-		defer func() {
-			if odtTmplFile != nil {
-				_ = odtTmplFile.Close()
-			}
-			if requestWriter != nil {
-				_ = requestWriter.Close()
-			}
-		}()
-		_, err = io.CopyN(requestWriter, odtTmplFile, fstat.Size())
-		if err != nil {
-			return
-		}
+		io.Copy(requestWriter, templateBuf)
+		requestWriter.Close()
+		requestReader.Close()
 	}()
 	req, er := http.NewRequest("POST", ds.makeUrl("vars"), requestReader)
 	if er != nil {
 		return nil, er
-	}
-	if prefix != "" {
-		q := req.URL.Query()
-		q.Add("prefix", prefix)
-		req.URL.RawQuery = q.Encode()
 	}
 	req.Header.Set("Connection", "Keep-Alive")
 	req.Header.Set("Cache-Control", "no-cache")
 	req.Header.Set("Content-Type", "application/zip")
 
 	client := &http.Client{}
-	client.Timeout = time.Duration(time.Second * 20)
-	resp, er := client.Do(req)
-	if er != nil {
+	client.Timeout = time.Second * 20
+	resp, err := client.Do(req)
+	if err != nil {
 		return nil, er
 	}
 	err = checkGzip(resp)
@@ -268,7 +241,7 @@ func (ds *DocumentServiceClient) DownloadExtension(arch string) (resp *http.Resp
 	req.URL.RawQuery = q.Encode()
 
 	client := &http.Client{}
-	client.Timeout = time.Duration(time.Second * 10)
+	client.Timeout = time.Second * 10
 	resp, err = client.Do(req)
 	if err != nil {
 		return

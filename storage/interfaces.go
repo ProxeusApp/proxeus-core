@@ -1,6 +1,7 @@
 package storage
 
 import (
+	"bytes"
 	"io"
 	"time"
 
@@ -18,6 +19,7 @@ type DBSet struct {
 	UserData          UserDataIF
 	SignatureRequests SignatureRequestsIF
 	WorkflowPayments  WorkflowPaymentsIF
+	Files             FilesIF
 }
 
 type Options struct {
@@ -96,9 +98,9 @@ type TemplateIF interface {
 	ProvideFileInfoFor(auth model.Auth, id, lang string, fm *file.Meta) (*file.IO, error)
 	PutVars(auth model.Auth, id, lang string, vars []string) error
 	GetTemplate(auth model.Auth, id, lang string) (*file.IO, error)
-	DeleteTemplate(auth model.Auth, id, lang string) error
+	DeleteTemplate(auth model.Auth, files FilesIF, id, lang string) error
 	Put(auth model.Auth, item *model.TemplateItem) error
-	Delete(auth model.Auth, id string) error
+	Delete(auth model.Auth, files FilesIF, id string) error
 	Vars(auth model.Auth, contains string, options Options) ([]string, error)
 	AssetsKey() string
 	Close() error
@@ -115,8 +117,8 @@ type UserIF interface {
 	UpdateEmail(id, email string) error
 	Put(auth model.Auth, item *model.User) error
 	PutPw(id, pass string) error
-	GetProfilePhoto(auth model.Auth, id string, writer io.Writer) (n int64, err error)
-	PutProfilePhoto(auth model.Auth, id string, reader io.Reader) (written int64, err error)
+	GetProfilePhoto(auth model.Auth, id string, writer io.Writer) error
+	PutProfilePhoto(auth model.Auth, id string, reader io.Reader) error
 	APIKey(key string) (*model.User, error)
 	CreateApiKey(auth model.Auth, userId, apiKeyName string) (string, error)
 	DeleteApiKey(auth model.Auth, userId, hiddenApiKey string) error
@@ -126,7 +128,7 @@ type UserIF interface {
 
 type UserDataIF interface {
 	List(auth model.Auth, contains string, options Options, includeReadGranted bool) ([]*model.UserDataItem, error)
-	Delete(auth model.Auth, id string) error
+	Delete(auth model.Auth, files FilesIF, id string) error
 	Get(auth model.Auth, id string) (*model.UserDataItem, error)
 	GetAllFileInfosOf(ud *model.UserDataItem) []*file.IO
 	GetByWorkflow(auth model.Auth, wf *model.WorkflowItem, finished bool) (*model.UserDataItem, bool, error)
@@ -166,6 +168,14 @@ type WorkflowPaymentsIF interface {
 	Close() error
 }
 
+type FilesIF interface {
+	Read(path string, w io.Writer) error
+	Write(path string, r io.Reader) error
+	Exists(path string) (bool, error)
+	Delete(path string) error
+	Close() error
+}
+
 func (db *DBSet) Close() error {
 	cs := []io.Closer{
 		db.Settings,
@@ -177,6 +187,7 @@ func (db *DBSet) Close() error {
 		db.UserData,
 		db.SignatureRequests,
 		db.WorkflowPayments,
+		db.Files,
 	}
 	for _, c := range cs {
 		if c == nil {
@@ -188,4 +199,24 @@ func (db *DBSet) Close() error {
 		}
 	}
 	return nil
+}
+
+func CopyFileAcross(dstDb, srcDb FilesIF, dstPath, srcPath string) (int64, error) {
+	var buf bytes.Buffer
+	err := srcDb.Read(srcPath, &buf)
+	if err != nil {
+		return 0, err
+	}
+	l := buf.Len()
+	return int64(l), dstDb.Write(dstPath, &buf)
+}
+
+func CopyFile(db FilesIF, dstPath, srcPath string) (int64, error) {
+	return CopyFileAcross(db, db, dstPath, srcPath)
+}
+
+func FileSize(db FilesIF, path string) int64 {
+	var buf bytes.Buffer
+	db.Read(path, &buf)
+	return int64(buf.Len())
 }

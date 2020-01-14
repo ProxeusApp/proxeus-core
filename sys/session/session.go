@@ -5,10 +5,9 @@ import (
 	"fmt"
 	"io"
 	"log"
-	"os"
 	"path/filepath"
-	"strconv"
-	"time"
+
+	"github.com/ProxeusApp/proxeus-core/storage"
 
 	"github.com/ProxeusApp/proxeus-core/sys/cache"
 	"github.com/ProxeusApp/proxeus-core/sys/model"
@@ -87,68 +86,19 @@ func (me *Session) SessionDir() string {
 	return me.sessionDir
 }
 
-//ReadFile from the sessions directory with filename and writer
-func (me *Session) ReadFile(filename string, writer io.Writer) (n int64, err error) {
-	var f *os.File
-	f, err = os.OpenFile(filepath.Join(me.sessionDir, filename), os.O_RDONLY, 0600)
-	if err != nil {
-		return
-	}
-	defer f.Close()
-	var fstat os.FileInfo
-	fstat, err = f.Stat()
-	if err != nil {
-		return
-	}
-	n, err = io.CopyN(writer, f, fstat.Size())
-	return
-}
-
 //FilePath concats the sessions directory with filename
-func (me *Session) FilePath(filename string) (fpath string, exists bool) {
-	fpath = filepath.Join(me.sessionDir, filename)
-	_, err := os.Stat(fpath)
-	if os.IsNotExist(err) {
-		exists = false
-		return
-	}
-	exists = true
-	return
+func (me *Session) FilePath(filename string) (fpath string) {
+	return filepath.Join(me.sessionDir, filename)
 }
 
 //WriteFile to the sessions directory with filename and reader
-func (me *Session) WriteFile(filename string, reader io.Reader) (written int64, err error) {
-	tmpFilename := filename + "_" + strconv.Itoa(time.Now().Nanosecond())
-	tmpPath := filepath.Join(me.sessionDir, tmpFilename)
-	defer func() {
-		//cleanup if not successfully written and moved
-		os.Remove(tmpPath)
-	}()
-	err = me.ensureSessionDir()
-	if err != nil {
-		return
-	}
-	var f *os.File
-	f, err = os.OpenFile(tmpPath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0600)
-	if err != nil {
-		return
-	}
-	written, err = io.Copy(f, reader)
-	f.Close()
-	if err != nil {
-		return
-	}
-	err = me.MoveFile(tmpFilename, filepath.Join(me.sessionDir, filename))
-	return
-}
-
-func (me *Session) MoveFile(filename, newFullPath string) error {
-	return os.Rename(filepath.Join(me.sessionDir, filename), newFullPath)
+func (me *Session) WriteFile(db *storage.DBSet, filename string, reader io.Reader) error {
+	return db.Files.Write(me.FilePath(filename), reader)
 }
 
 //DeleteFile from sessions directory with filename
-func (me *Session) DeleteFile(filename string) error {
-	return os.RemoveAll(filepath.Join(me.sessionDir, filename))
+func (me *Session) DeleteFile(db *storage.DBSet, filename string) error {
+	return db.Files.Delete(me.FilePath(filename))
 }
 
 func (me *Session) ensureSessionDir() error {
@@ -197,7 +147,10 @@ func (me *Session) Delete(key string) {
 //Put data for memory only
 func (me *Session) Put(key string, val interface{}) {
 	if me.store != nil {
-		me.store.Put(key, val)
+		err := me.store.Put(key, val)
+		if err != nil {
+			log.Print("session.put.err", err)
+		}
 	}
 }
 

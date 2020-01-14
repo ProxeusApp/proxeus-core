@@ -60,9 +60,10 @@ func NewImportExport(auth model.Auth, dbSet *storage.DBSet, dir string) (*Import
 	if err != nil {
 		return nil, err
 	}
-	ie.dbConfig = storm.DBConfig{Engine: "storm", Dir: ie.dir}
 	ie.auth = auth
-	return ie, nil
+	ie.dbConfig = storm.DBConfig{Engine: "storm", Dir: ie.dir}
+	ie.db.Files, err = storm.NewFileDB(ie.dbConfig)
+	return ie, err
 }
 
 func ensureDir(dir string) error {

@@ -1,11 +1,11 @@
 package template_ide
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"io"
 	"io/ioutil"
-	"log"
 	"net"
 	"net/http"
 	"net/url"
@@ -48,7 +48,7 @@ var rendererHelper = func(e echo.Context, tmplPath, fileName string) error {
 	format := eio.Format(c.QueryParam("format"))
 	resp := c.Response()
 	resp.Header().Set("Content-Disposition", fmt.Sprintf("%s;filename=\"%s\"", inlineOrAttachment, file.NameWithExt(fileName, format.String())))
-	dsResp, err := c.System().DS.Compile(
+	dsResp, err := c.System().DS.Compile(c.System().DB.Files,
 		eio.Template{
 			Format:       format,
 			Data:         dataMap,
@@ -180,7 +180,7 @@ func DownloadTemplateHandler(e echo.Context) error {
 		if _, ok := c.QueryParams()["raw"]; ok {
 			c.Response().Header().Set("Content-Disposition", fmt.Sprintf("%s;filename=\"%s\"", "attachment", fi.Name()))
 			c.Response().Committed = true //prevents from-> http: multiple response.WriteHeader calls
-			_, err = fi.Read(c.Response().Writer)
+			err = c.System().DB.Files.Read(fi.Path(), c.Response().Writer)
 			if err == nil {
 				return c.NoContent(http.StatusOK)
 			}
@@ -217,7 +217,7 @@ func DeleteHandler(e echo.Context) error {
 	ID := c.Param("ID")
 	sess := c.Session(false)
 	if sess != nil {
-		err := c.System().DB.Template.Delete(sess, ID)
+		err := c.System().DB.Template.Delete(sess, c.System().DB.Files, ID)
 		if err != nil {
 			return c.String(http.StatusBadRequest, err.Error())
 		}
@@ -244,7 +244,11 @@ func IdeGetDownloadHandler(e echo.Context) error {
 		}
 		//the file wasn't deleted, don't provide it without the name
 		if tmplName != "" {
-			tmplPath, exists = sess.FilePath(id + lang)
+			var err error
+			exists, err = c.System().DB.Files.Exists(sess.FilePath(id + lang))
+			if err != nil {
+				return c.String(http.StatusInternalServerError, err.Error())
+			}
 		}
 		if !exists {
 			//load it from the persistent store
@@ -258,7 +262,7 @@ func IdeGetDownloadHandler(e echo.Context) error {
 		if _, ok := c.QueryParams()["raw"]; ok { //if confirm var exists
 			if tmplPath != "" {
 				c.Response().Header().Set("Content-Disposition", fmt.Sprintf("%s;filename=\"%s\"", "attachment", tmplName))
-				return c.File(tmplPath)
+				return c.System().DB.Files.Read(tmplPath, c.Response().Writer)
 			}
 		} else {
 			err := rendererHelper(c, tmplPath, tmplName)
@@ -280,7 +284,7 @@ func IdeGetDeleteHandler(e echo.Context) error {
 	if sess != nil {
 		id := c.Param("id")
 		lang := c.Param("lang")
-		err := ideDelete(id, lang, sess)
+		err := ideDelete(c, id, lang, sess)
 		if err != nil {
 			return c.String(http.StatusBadRequest, err.Error())
 		}
@@ -289,9 +293,9 @@ func IdeGetDeleteHandler(e echo.Context) error {
 	return c.NoContent(http.StatusBadRequest)
 }
 
-func ideDelete(id, lang string, sess *session.Session) error {
+func ideDelete(c *www.Context, id, lang string, sess *session.Session) error {
 	sess.Delete(id + lang)
-	return sess.DeleteFile(id + lang)
+	return sess.DeleteFile(c.System().DB, id+lang)
 }
 
 func IdePostUploadHandler(e echo.Context) error {
@@ -305,7 +309,7 @@ func IdePostUploadHandler(e echo.Context) error {
 			fileName = "unknown"
 		}
 		sess.Put(id+lang, fileName)
-		_, err := sess.WriteFile(id+lang, c.Request().Body)
+		err := sess.WriteFile(c.System().DB, id+lang, c.Request().Body)
 		c.Request().Body.Close()
 		if err != nil {
 			return c.String(http.StatusBadRequest, err.Error())
@@ -322,7 +326,7 @@ func DeleteTemplateHandler(e echo.Context) error {
 	if sess != nil {
 		id := c.Param("id")
 		lang := c.Param("lang")
-		err := c.System().DB.Template.DeleteTemplate(sess, id, lang)
+		err := c.System().DB.Template.DeleteTemplate(sess, c.System().DB.Files, id, lang)
 		if err != nil {
 			return c.String(http.StatusBadRequest, err.Error())
 		}
@@ -376,20 +380,20 @@ func UploadTemplateHandler(e echo.Context) error {
 		if err != nil {
 			return c.String(http.StatusBadRequest, err.Error())
 		}
-		_, err = fi.Write(c.Request().Body)
+		buf, err := ioutil.ReadAll(c.Request().Body)
+		err = c.System().DB.Files.Write(fi.Path(), bytes.NewBuffer(buf))
 		c.Request().Body.Close()
 		if err != nil {
 			return c.String(http.StatusBadRequest, err.Error())
 		}
 		var vars []string
-		vars, err = c.System().DS.Vars("input.", fi.Path())
-		log.Println(vars, err)
+		vars, err = c.System().DS.Vars(bytes.NewBuffer(buf))
 		if err == nil {
 			//error handling not important here as keeping track of vars is not crucial
 			c.System().DB.Template.PutVars(sess, id, lang, vars)
 		}
 		//remove pending file from the session
-		err = ideDelete(id, lang, sess)
+		err = ideDelete(c, id, lang, sess)
 		if err != nil {
 			return c.NoContent(http.StatusBadRequest)
 		}

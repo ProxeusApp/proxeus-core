@@ -717,17 +717,17 @@ func (mr *MockTemplateIFMockRecorder) GetTemplate(auth, id, lang interface{}) *g
 }
 
 // DeleteTemplate mocks base method
-func (m *MockTemplateIF) DeleteTemplate(auth model.Auth, id, lang string) error {
+func (m *MockTemplateIF) DeleteTemplate(auth model.Auth, files storage.FilesIF, id, lang string) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DeleteTemplate", auth, id, lang)
+	ret := m.ctrl.Call(m, "DeleteTemplate", auth, files, id, lang)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // DeleteTemplate indicates an expected call of DeleteTemplate
-func (mr *MockTemplateIFMockRecorder) DeleteTemplate(auth, id, lang interface{}) *gomock.Call {
+func (mr *MockTemplateIFMockRecorder) DeleteTemplate(auth, files, id, lang interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteTemplate", reflect.TypeOf((*MockTemplateIF)(nil).DeleteTemplate), auth, id, lang)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteTemplate", reflect.TypeOf((*MockTemplateIF)(nil).DeleteTemplate), auth, files, id, lang)
 }
 
 // Put mocks base method
@@ -745,17 +745,17 @@ func (mr *MockTemplateIFMockRecorder) Put(auth, item interface{}) *gomock.Call {
 }
 
 // Delete mocks base method
-func (m *MockTemplateIF) Delete(auth model.Auth, id string) error {
+func (m *MockTemplateIF) Delete(auth model.Auth, files storage.FilesIF, id string) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Delete", auth, id)
+	ret := m.ctrl.Call(m, "Delete", auth, files, id)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // Delete indicates an expected call of Delete
-func (mr *MockTemplateIFMockRecorder) Delete(auth, id interface{}) *gomock.Call {
+func (mr *MockTemplateIFMockRecorder) Delete(auth, files, id interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Delete", reflect.TypeOf((*MockTemplateIF)(nil).Delete), auth, id)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Delete", reflect.TypeOf((*MockTemplateIF)(nil).Delete), auth, files, id)
 }
 
 // Vars mocks base method
@@ -971,12 +971,11 @@ func (mr *MockUserIFMockRecorder) PutPw(id, pass interface{}) *gomock.Call {
 }
 
 // GetProfilePhoto mocks base method
-func (m *MockUserIF) GetProfilePhoto(auth model.Auth, id string, writer io.Writer) (int64, error) {
+func (m *MockUserIF) GetProfilePhoto(auth model.Auth, id string, writer io.Writer) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetProfilePhoto", auth, id, writer)
-	ret0, _ := ret[0].(int64)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
+	ret0, _ := ret[0].(error)
+	return ret0
 }
 
 // GetProfilePhoto indicates an expected call of GetProfilePhoto
@@ -986,12 +985,11 @@ func (mr *MockUserIFMockRecorder) GetProfilePhoto(auth, id, writer interface{}) 
 }
 
 // PutProfilePhoto mocks base method
-func (m *MockUserIF) PutProfilePhoto(auth model.Auth, id string, reader io.Reader) (int64, error) {
+func (m *MockUserIF) PutProfilePhoto(auth model.Auth, id string, reader io.Reader) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "PutProfilePhoto", auth, id, reader)
-	ret0, _ := ret[0].(int64)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
+	ret0, _ := ret[0].(error)
+	return ret0
 }
 
 // PutProfilePhoto indicates an expected call of PutProfilePhoto
@@ -1111,17 +1109,17 @@ func (mr *MockUserDataIFMockRecorder) List(auth, contains, options, includeReadG
 }
 
 // Delete mocks base method
-func (m *MockUserDataIF) Delete(auth model.Auth, id string) error {
+func (m *MockUserDataIF) Delete(auth model.Auth, files storage.FilesIF, id string) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Delete", auth, id)
+	ret := m.ctrl.Call(m, "Delete", auth, files, id)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // Delete indicates an expected call of Delete
-func (mr *MockUserDataIFMockRecorder) Delete(auth, id interface{}) *gomock.Call {
+func (mr *MockUserDataIFMockRecorder) Delete(auth, files, id interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Delete", reflect.TypeOf((*MockUserDataIF)(nil).Delete), auth, id)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Delete", reflect.TypeOf((*MockUserDataIF)(nil).Delete), auth, files, id)
 }
 
 // Get mocks base method
@@ -1616,4 +1614,98 @@ func (m *MockWorkflowPaymentsIF) Close() error {
 func (mr *MockWorkflowPaymentsIFMockRecorder) Close() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Close", reflect.TypeOf((*MockWorkflowPaymentsIF)(nil).Close))
+}
+
+// MockFilesIF is a mock of FilesIF interface
+type MockFilesIF struct {
+	ctrl     *gomock.Controller
+	recorder *MockFilesIFMockRecorder
+}
+
+// MockFilesIFMockRecorder is the mock recorder for MockFilesIF
+type MockFilesIFMockRecorder struct {
+	mock *MockFilesIF
+}
+
+// NewMockFilesIF creates a new mock instance
+func NewMockFilesIF(ctrl *gomock.Controller) *MockFilesIF {
+	mock := &MockFilesIF{ctrl: ctrl}
+	mock.recorder = &MockFilesIFMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use
+func (m *MockFilesIF) EXPECT() *MockFilesIFMockRecorder {
+	return m.recorder
+}
+
+// Read mocks base method
+func (m *MockFilesIF) Read(path string, w io.Writer) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Read", path, w)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// Read indicates an expected call of Read
+func (mr *MockFilesIFMockRecorder) Read(path, w interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Read", reflect.TypeOf((*MockFilesIF)(nil).Read), path, w)
+}
+
+// Write mocks base method
+func (m *MockFilesIF) Write(path string, r io.Reader) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Write", path, r)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// Write indicates an expected call of Write
+func (mr *MockFilesIFMockRecorder) Write(path, r interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Write", reflect.TypeOf((*MockFilesIF)(nil).Write), path, r)
+}
+
+// Exists mocks base method
+func (m *MockFilesIF) Exists(path string) (bool, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Exists", path)
+	ret0, _ := ret[0].(bool)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// Exists indicates an expected call of Exists
+func (mr *MockFilesIFMockRecorder) Exists(path interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Exists", reflect.TypeOf((*MockFilesIF)(nil).Exists), path)
+}
+
+// Delete mocks base method
+func (m *MockFilesIF) Delete(path string) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Delete", path)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// Delete indicates an expected call of Delete
+func (mr *MockFilesIFMockRecorder) Delete(path interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Delete", reflect.TypeOf((*MockFilesIF)(nil).Delete), path)
+}
+
+// Close mocks base method
+func (m *MockFilesIF) Close() error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Close")
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// Close indicates an expected call of Close
+func (mr *MockFilesIFMockRecorder) Close() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Close", reflect.TypeOf((*MockFilesIF)(nil).Close))
 }

@@ -6,15 +6,14 @@ When using Input the path will be the relative file system path my/relative/file
 package file
 
 import (
-	"bytes"
 	"encoding/json"
-	"io"
 	"os"
 	"path/filepath"
 	"reflect"
 	"regexp"
 	"strings"
 	"sync"
+	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
 
@@ -51,15 +50,6 @@ type (
 
 var int64Type = reflect.TypeOf(int64(0))
 
-func FromJSONBytes(baseFilePath string, bts []byte) (*IO, error) {
-	f := &IO{baseFileDir: baseFilePath}
-	err := f.UnmarshalJSON(bts)
-	if err != nil {
-		return nil, err
-	}
-	return f, nil
-}
-
 func FromMap(baseFilePath string, m map[string]interface{}) *IO {
 	f := &IO{baseFileDir: baseFilePath}
 	fromMap(f, m)
@@ -69,7 +59,7 @@ func FromMap(baseFilePath string, m map[string]interface{}) *IO {
 func New(baseDir string, meta Meta) *IO {
 	return &IO{
 		baseFileDir: baseDir,
-		path:        RndUUID(),
+		path:        uuid.NewV4().String(),
 		meta:        meta,
 	}
 }
@@ -93,12 +83,6 @@ func (me *IO) Name() string {
 	me.lock.RLock()
 	defer me.lock.RUnlock()
 	return me.meta.Name
-}
-
-func (me *IO) Ref() string {
-	me.lock.RLock()
-	defer me.lock.RUnlock()
-	return me.ref
 }
 
 func (me *IO) SetRef(ref string) {
@@ -143,33 +127,21 @@ func (me *IO) Size() int64 {
 	return me.meta.Size
 }
 
-func (me *IO) Stat() (os.FileInfo, error) {
-	p := me.Path()
-	if p != "" {
-		return os.Stat(p)
-	}
-	return nil, os.ErrNotExist
+func (me *IO) SetSize(s int64) {
+	me.lock.Lock()
+	defer me.lock.Unlock()
+	me.meta.Size = s
 }
 
-func (me *IO) ToMap(pathNameOnly bool) map[string]interface{} {
+func (me *IO) ToMap() map[string]interface{} {
 	me.lock.RLock()
 	defer me.lock.RUnlock()
-	if pathNameOnly {
-		return map[string]interface{}{
-			"ref":         me.ref,
-			"contentType": me.meta.ContentType,
-			"name":        me.meta.Name,
-			"size":        me.meta.Size,
-			"path":        me.path,
-			"hash":        me.Hash,
-		}
-	}
 	return map[string]interface{}{
 		"ref":         me.ref,
 		"contentType": me.meta.ContentType,
 		"name":        me.meta.Name,
 		"size":        me.meta.Size,
-		"path":        filepath.Join(me.baseFileDir, me.path),
+		"path":        me.path,
 		"hash":        me.Hash,
 	}
 }
@@ -177,101 +149,6 @@ func (me *IO) ContentType() string {
 	me.lock.RLock()
 	defer me.lock.RUnlock()
 	return me.meta.ContentType
-}
-
-func (me *IO) Move(oldPath string) error {
-	me.lock.Lock()
-	defer me.lock.Unlock()
-	p := me.Path()
-	if p == "" || oldPath == "" {
-		return os.ErrInvalid
-	}
-	f, err := os.Stat(oldPath)
-	if err == nil {
-		me.meta.Size = f.Size()
-	}
-	return os.Rename(oldPath, p)
-}
-
-func (me *IO) Write(reader io.Reader) (int64, error) {
-	me.lock.Lock()
-	defer me.lock.Unlock()
-	var f *os.File
-	f, err := os.OpenFile(me.Path(), os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0600)
-	if os.IsExist(err) {
-		err = nil
-	}
-	if err != nil {
-		return 0, err
-	}
-	defer f.Close()
-	me.meta.Size, err = io.Copy(f, reader)
-	return me.meta.Size, err
-}
-
-func (me *IO) CpTo(to *IO) (int64, error) {
-	var f *os.File
-	var f2 *os.File
-	me.lock.RLock()
-	defer func() {
-		if f != nil {
-			f.Close()
-		}
-		if f2 != nil {
-			f2.Close()
-		}
-		me.lock.RUnlock()
-	}()
-
-	f, err := os.OpenFile(me.Path(), os.O_RDONLY, 0600)
-	if err != nil {
-		return 0, err
-	}
-	var fstat os.FileInfo
-	fstat, err = f.Stat()
-	if err != nil {
-		return 0, err
-	}
-	me.meta.Size = fstat.Size()
-
-	f2, err = os.OpenFile(to.Path(), os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0600)
-	if os.IsExist(err) {
-		err = nil
-	}
-	return io.CopyN(f2, f, me.meta.Size)
-
-}
-
-func (me *IO) Read(writer io.Writer) (int64, error) {
-	var f *os.File
-	me.lock.RLock()
-	defer func() {
-		if f != nil {
-			f.Close()
-		}
-		me.lock.RUnlock()
-	}()
-
-	f, err := os.OpenFile(me.Path(), os.O_RDONLY, 0600)
-	if err != nil {
-		return 0, err
-	}
-	var fstat os.FileInfo
-	fstat, err = f.Stat()
-	if err != nil {
-		return 0, err
-	}
-	me.meta.Size = fstat.Size()
-	return io.CopyN(writer, f, me.meta.Size)
-}
-
-func (me *IO) ReadAll() ([]byte, error) {
-	bt := &bytes.Buffer{}
-	_, err := me.Read(bt)
-	if err != nil {
-		return nil, err
-	}
-	return bt.Bytes(), nil
 }
 
 func (me *IO) NameWithExt(ext string) string {
@@ -401,7 +278,14 @@ func fromMap(me *IO, jsonObj map[string]interface{}) {
 	}
 }
 
-func RndUUID() string {
-	u2 := uuid.NewV4()
-	return u2.String()
+type InMemoryFileInfo struct {
+	Path string
+	Len  int
 }
+
+func (fi InMemoryFileInfo) Name() string       { return fi.Path }
+func (fi InMemoryFileInfo) Size() int64        { return int64(fi.Len) }
+func (fi InMemoryFileInfo) Mode() os.FileMode  { return 0777 }
+func (fi InMemoryFileInfo) ModTime() time.Time { return time.Now() }
+func (fi InMemoryFileInfo) IsDir() bool        { return false }
+func (fi InMemoryFileInfo) Sys() interface{}   { return nil }

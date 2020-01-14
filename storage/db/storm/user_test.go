@@ -96,7 +96,7 @@ import (
 //}
 
 func TestUserDB_List(t *testing.T) {
-	udb, err := NewUserDB(DBConfig{Dir: ""})
+	udb, err := NewUserDB(DBConfig{Dir: ""}, nil)
 	if err != nil {
 		log.Println(err)
 	}
@@ -164,7 +164,7 @@ func insert(udb *UserDB, err error, orgID, orgEmail string, u model.User) {
 }
 
 func TestUserDB_List1(t *testing.T) {
-	udb, err := NewUserDB(DBConfig{Dir: ""})
+	udb, err := NewUserDB(DBConfig{Dir: ""}, nil)
 	if err != nil {
 		log.Println(err)
 	}
@@ -194,7 +194,7 @@ func TestNewUserDB(t *testing.T) {
 }
 
 func TestUserDB_List2(t *testing.T) {
-	udb, err := NewUserDB(DBConfig{Dir: ""})
+	udb, err := NewUserDB(DBConfig{Dir: ""}, nil)
 	if err != nil {
 		log.Println(err)
 	}
