@@ -1,0 +1,14 @@
+{
+    "id": "HC9",
+    "settings": {
+        "Placeholder": "Placeholder",
+        "help": "help text",
+        "label": "Date",
+        "name": "",
+        "validate": {
+            "datePattern": "dd.MM.yyyy HH:mm:ss",
+            "required": true
+        }
+    },
+    "template": "\n      <div class=\"form-group\">\n        <div class=\"col-md-12\">\n          <label class=\"control-label\" for=\"dfId{{id}}\">{{label}}</label>\n          <div class=\"field-parent\">\n            <div class=\"input-group date-field\">\n                <input placeholder=\"{{escapeForAttr Placeholder}}\"vtype=\"text\" class=\"text-field simple-date-field\" name=\"{{name}}\" id=\"dfId{{id}}\" size=\"0\" aria-invalid=\"false\">\n                <span class=\"input-group-addon\">\n                    <span class=\"fa fa-calendar\"></span>\n                </span>\n                <script type=\"text/javascript\">\n                    $(function(){\n                        var dateInputField = $(\"#dfId{{id}}\");\n                        FTG.createDatepicker(dateInputField, {\n                            clickEventElement:dateInputField.parent().find(\".input-group-addon\"),\n                            datePattern:'{{validate.datePattern}}'});\n                    });\n                </script>\n            </div>\n            <span class=\"help-block\">{{help}}</span> \n          </div>\n        </div>\n        <div class=\"clearfix\"></div>\n      </div>\n        "
+}

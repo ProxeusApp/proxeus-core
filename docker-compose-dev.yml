@@ -10,13 +10,16 @@ services:
     build:
       context: .
     container_name: xes-platform
-    networks: ['xes-platform-network']
+    depends_on:
+      - document-service
+    networks:
+      - xes-platform-network
     restart: unless-stopped
     environment:
       TZ: Europe/Zurich
       DataDir: "/data/hosted"
       PlatformDomain: "http://xes-platform:1323"
-      DocumentServiceUrl: "http://document-service:2115/"
+      DocumentServiceUrl: "http://document-service:${DOCUMENT_SERVICE_PORT:-2115}/"
       BlockchainContractAddress: "${PROXEUS_CONTRACT_ADDRESS}"
       InfuraApiKey: "${PROXEUS_INFURA_KEY}"
       SparkpostApiKey: "${PROXEUS_SPARKPOST_KEY}"
@@ -27,7 +30,7 @@ services:
       DatabaseEngine: "${PROXEUS_DATABASE_ENGINE:-storm}"
       DatabaseURI: "${PROXEUS_DATABASE_URI:-mongodb://root:root@mongo:27017}"
     ports:
-      - "1323:1323"
+      - "${PROXEUS_PORT:-1323}:1323"
     volumes:
       - ${PROXEUS_DATA_DIR:-./data}/proxeus-platform/data:/data/hosted
       - ${PROXEUS_DATA_DIR:-./data}/proxeus-platform/settings:/root/.proxeus/settings
@@ -35,12 +38,13 @@ services:
   document-service:
     image: proxeus/document-service:latest
     container_name: xes_document_service
-    networks: ['xes-platform-network']
+    networks:
+      - xes-platform-network
     restart: unless-stopped
     environment:
       TZ: Europe/Zurich
     ports:
-      - "2115:2115"
+      - "${DOCUMENT_SERVICE_PORT:-2115}:2115"
     volumes:
       - ${PROXEUS_DATA_DIR:-./data}/document-service/logs:/document-service/logs
       - ${PROXEUS_DATA_DIR:-./data}/document-service/fonts:/document-service/fonts

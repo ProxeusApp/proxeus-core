@@ -5,7 +5,7 @@ import (
 )
 
 func testSigning(s *session, u *user, documentID string) {
-	s2 := new(s.t, serverURL)
+	s2 := newSession(s.t, s.base)
 	u2 := registerTestUser(s2)
 	login(s2, u2)
 

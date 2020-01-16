@@ -120,21 +120,27 @@ func GetComponentsHandler(e echo.Context) error {
 func SetComponentHandler(e echo.Context) error {
 	c := e.(*www.Context)
 	sess := c.Session(false)
-	if sess != nil {
-		if strings.Contains(c.Request().Header.Get("Content-Type"), "application/json") {
-			body, _ := ioutil.ReadAll(c.Request().Body)
-			var comp model.FormComponentItem
-			err := json.Unmarshal(body, &comp)
-			if err == nil {
-				err = c.System().DB.Form.PutComp(sess, &comp)
-				if err != nil {
-					return c.NoContent(http.StatusInternalServerError)
-				}
-				return c.JSON(http.StatusOK, comp.ID)
-			}
-		}
+
+	if sess == nil {
+		return c.NoContent(http.StatusBadRequest)
 	}
-	return c.NoContent(http.StatusBadRequest)
+
+	if !strings.Contains(c.Request().Header.Get("Content-Type"), "application/json") {
+		return c.NoContent(http.StatusBadRequest)
+	}
+
+	body, _ := ioutil.ReadAll(c.Request().Body)
+	var comp model.FormComponentItem
+	err := json.Unmarshal(body, &comp)
+	if err != nil {
+		return c.NoContent(http.StatusBadRequest)
+	}
+
+	err = c.System().DB.Form.PutComp(sess, &comp)
+	if err != nil {
+		return c.NoContent(http.StatusInternalServerError)
+	}
+	return c.JSON(http.StatusOK, comp.ID)
 }
 
 func DeleteHandler(e echo.Context) error {

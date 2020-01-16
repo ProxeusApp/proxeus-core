@@ -65,9 +65,24 @@ test: generate
 	go test  ./main/... ./sys/... ./storage/...
 
 .PHONY: test-api
-test-api: generate
-	go clean -testcache && go test ./test/...
-
+test-api: server #server-docker
+	$(eval test-api-data-dir := $(shell mktemp -d /tmp/proxeus-test-api.XXXXX ))
+	mkdir -p $(test-api-data-dir)
+	docker-compose -f docker-compose-dev.yml up -d document-service
+	artifacts/server \
+		-SettingsFile=$(test-api-data-dir)/settings/main.json \
+		-DataDir=$(test-api-data-dir)/data \
+		-DocumentServiceUrl=http://localhost:2115 \
+		-BlockchainContractAddress=$(PROXEUS_CONTRACT_ADDRESS) \
+		-InfuraApiKey=$(PROXEUS_INFURA_KEY) \
+		-SparkpostApiKey=$(PROXEUS_SPARKPOST_KEY) \
+		-EmailFrom=${PROXEUS_EMAIL_FROM} \
+		-PlatformDomain=http://localhost:1323 \
+		-TestMode=true &
+	go clean -testcache && PROXEUS_URL=http://localhost:1323  go test ./test
+	pkill -f artifacts/server
+	docker-compose -f docker-compose-dev.yml down
+	rm -fr $(test-api-data-dir) 
 
 .PHONY: coverage
 comma:=,
@@ -99,8 +114,8 @@ main/handlers/assets/bindata.go: $(wildcard ./ui/core/dist/**)
 	go-bindata ${BINDATA_OPTS} -pkg assets -o ./main/handlers/assets/bindata.go -prefix ./ui/core/dist ./ui/core/dist/...
 	goimports -w $@
 
-test/bindata.go: $(wildcard ./test/assets/**)
-	go-bindata ${BINDATA_OPTS} -pkg test -o ./test/bindata.go ./test/assets
+test/bindata.go: $(shell find ./test/assets/) 
+	go-bindata ${BINDATA_OPTS} -pkg test -o ./test/bindata.go ./test/assets/...
 	goimports -w $@
 
 .SECONDEXPANSION: # See https://www.gnu.org/software/make/manual/make.html#Secondary-Expansion

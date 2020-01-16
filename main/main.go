@@ -15,6 +15,7 @@ import (
 	"github.com/ProxeusApp/proxeus-core/main/handlers"
 	"github.com/ProxeusApp/proxeus-core/main/handlers/assets"
 	"github.com/ProxeusApp/proxeus-core/main/www"
+	"github.com/ProxeusApp/proxeus-core/storage"
 	"github.com/ProxeusApp/proxeus-core/sys"
 	"github.com/ProxeusApp/proxeus-core/sys/i18n"
 	"github.com/ProxeusApp/proxeus-core/sys/validate"
@@ -26,6 +27,7 @@ var ServerVersion = "build-unknown"
 var embedded *www.Embedded
 
 func main() {
+	cfg.Init()
 	system, err := sys.NewWithSettings(cfg.Config.SettingsFile, &cfg.Config.Settings)
 	if err != nil {
 		panic(err)
@@ -39,7 +41,8 @@ func main() {
 
 	fmt.Println()
 	fmt.Println("#######################################################")
-	fmt.Printf("# Configuration: %#v\n", cfg.Config)
+	fmt.Printf("Configuration: %#v\n", cfg.Config)
+	fmt.Printf("system settings: %#v\n", system.GetSettings())
 	fmt.Println("#######################################################")
 
 	www.SetSystem(system)
@@ -49,38 +52,10 @@ func main() {
 		return embedded.Asset(path)
 	}
 
-	go func() { //parse i18n from the UI assets to provide them under the translation section
-		i18nUIParser := i18n.NewUIParser()
-		dir := "static/assets/js"
-		list, _ := assets.AssetDir(dir)
-		for _, p := range list {
-			bts, _ := assets.Asset(dir + "/" + p)
-			i18nUIParser.Parse(bts)
-		}
-		trans := i18nUIParser.Translations()
-		langs, _ := system.DB.I18n.GetAllLangs()
-		//include the lang codes as keys as well to translate the lang label
-		for _, l := range langs {
-			trans[l.Code] = l.Code
-		}
-
-		//include the validation messages
-		for _, msg := range validate.AllMessages() {
-			trans[msg] = msg
-		}
-
-		lang, _ := system.DB.I18n.GetFallback()
-		allTrans, _ := system.DB.I18n.GetAll(lang)
-		for k, v := range trans {
-			if _, exists := allTrans[k]; !exists {
-				_ = system.DB.I18n.Put(lang, k, v)
-			}
-		}
-		err := system.DB.I18n.PutLang("en", true)
-		if err != nil {
-			fmt.Println("Error activating fallback lang: ", err)
-		}
-	}()
+	err = initI18n(system.DB.I18n)
+	if err != nil {
+		fmt.Printf("Error while initialising i18n: %s\n", err)
+	}
 
 	e := www.Setup(ServerVersion)
 
@@ -101,6 +76,42 @@ func main() {
 
 	www.StartServer(e, cfg.Config.ServiceAddress, false)
 	system.Shutdown()
+}
+
+func initI18n(db storage.I18nIF) error {
+	i18nUIParser := i18n.NewUIParser()
+	dir := "static/assets/js"
+	list, _ := assets.AssetDir(dir)
+
+	for _, p := range list {
+		bts, _ := assets.Asset(dir + "/" + p)
+		i18nUIParser.Parse(bts)
+	}
+	trans := i18nUIParser.Translations()
+	langs, _ := db.GetAllLangs()
+	//include the lang codes as keys as well to translate the lang label
+	for _, l := range langs {
+		trans[l.Code] = l.Code
+	}
+
+	//include the validation messages
+	for _, msg := range validate.AllMessages() {
+		trans[msg] = msg
+	}
+
+	lang, _ := db.GetFallback()
+	allTrans, _ := db.GetAll(lang)
+	for k, v := range trans {
+		if _, exists := allTrans[k]; !exists {
+			_ = db.Put(lang, k, v)
+		}
+	}
+	err := db.PutLang("en", true)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 // StaticHandler servers static files from bindata assets

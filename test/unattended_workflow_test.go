@@ -4,11 +4,9 @@ import (
 	"bytes"
 	"fmt"
 	"net/http"
-	"testing"
 )
 
-func TestUnattendedWorkflow(t *testing.T) {
-	s := new(t, serverURL)
+func testUnattendedWorkflow(s *session) {
 	u := registerTestUser(s)
 
 	login(s, u)
@@ -33,13 +31,13 @@ func TestUnattendedWorkflow(t *testing.T) {
 
 	r := executeAllAtOnce(s, token, id, data, false)
 
-	expected, err := Asset("test/assets/test_expected.pdf")
+	expected, err := Asset("test/assets/templates/test_expected.pdf")
 	if err != nil {
 		s.t.Errorf("Cannot upload asset %s", err)
 	}
 
 	if bytes.Compare(cleanPDF(r), cleanPDF(expected)) != 0 {
-		t.Errorf("Wrong pdf result")
+		s.t.Errorf("Wrong pdf result")
 	}
 
 	login(s, u)
@@ -71,8 +69,7 @@ func executeAllAtOnce(s *session, token, id string, data map[string]interface{},
 	return []byte(r.Body().Raw())
 }
 
-func TestUnattendedWorkflowAdvanced(t *testing.T) {
-	s := new(t, serverURL)
+func testUnattendedWorkflowAdvanced(s *session) {
 	u := registerTestUser(s)
 	login(s, u)
 	apiKey, summary := createApiKey(s, u, "test-"+s.id)
@@ -92,7 +89,7 @@ func TestUnattendedWorkflowAdvanced(t *testing.T) {
 
 	r := executeAllAtOnce(s, token, id, data, true)
 	if len(r) < 1000 {
-		t.Error("got zip too small")
+		s.t.Error("got zip too small")
 	}
 
 	deleteWorkflow(s, w2.ID, false)

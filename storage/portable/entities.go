@@ -200,15 +200,10 @@ func (ie *ImportExport) importTemplate() error {
 }
 
 func (ie *ImportExport) exportSettings(id ...string) error {
-	if ie.db.Settings == nil {
-		var err error
-		settingsFile := filepath.Join(ie.dir, "settings/main.json")
-		ie.db.Settings, err = database.NewSettingsDB(settingsFile, nil)
-		if err != nil {
-			ie.processedEntry(Settings, string(Settings), err)
-			return err
-		}
+	if err := ie.initSettingsDB(); err != nil {
+		return err
 	}
+
 	if !ie.auth.AccessRights().IsGrantedFor(model.ROOT) {
 		ie.processedEntry(Settings, string(Settings), fmt.Errorf("no authority to export"))
 		//return nil to not break the export, just ignore the call
@@ -540,19 +535,29 @@ func exists(name string) bool {
 	return true
 }
 
-func (ie *ImportExport) importSettings() error {
+func (ie *ImportExport) initSettingsDB() error {
 	if ie.db.Settings == nil {
-		settingsFile := filepath.Join(ie.dir, "settings/main.json")
-		if !exists(settingsFile) {
-			// do not import anything
-			return nil
-		}
-		var err error
-		ie.db.Settings, err = database.NewSettingsDB(settingsFile, nil)
+		ieSettings, err := ie.sysDB.Settings.Get()
 		if err != nil {
 			ie.processedEntry(Settings, string(Settings), err)
 			return err
 		}
+		ie.db.Settings, err = database.NewSettingsDB(ie.settingsFile, ieSettings)
+		if err != nil {
+			ie.processedEntry(Settings, string(Settings), err)
+			return err
+		}
+	}
+	return nil
+}
+
+func (ie *ImportExport) importSettings() error {
+	if !exists(ie.settingsFile) {
+		// do not import anything
+		return nil
+	}
+	if err := ie.initSettingsDB(); err != nil {
+		return err
 	}
 
 	s, err := ie.db.Settings.Get()

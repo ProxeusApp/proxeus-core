@@ -1,0 +1,24 @@
+{
+    "id": "HC8",
+    "settings": {
+        "defaultValue": "",
+        "help": "help text",
+        "label": "Drop-down list",
+        "name": "",
+        "placeholder": "",
+        "validate": {
+            "required": true
+        },
+        "values": [
+            {
+                "label": "Select",
+                "value": "val1"
+            },
+            {
+                "label": "Value 2",
+                "value": "val2"
+            }
+        ]
+    },
+    "template": "\n        <div class=\"form-group\">\n            <div class=\"col-md-12\">\n                <label class=\"control-label\" for=\"{{id}}\">{{label}}</label>\n                <div class=\"field-parent\">\n                    <select id=\"{{id}}\" name=\"{{name}}\" class=\"form-control\" aria-invalid=\"false\">\n                      {{#if placeholder}}<option value=\"\" selected>{{placeholder}}</option>{{/if}}\n                      {{#each this.values}}\n                      <option value=\"{{value}}\" {{#ifEq @root.defaultValue value}}selected{{/ifEq}}>{{label}}</option>\n                      {{/each}}\n                    </select>\n                    <span class=\"help-block\">{{help}}</span> \n                </div>\n            </div>\n            <div class=\"clearfix\"></div>\n        </div>\n        "
+}

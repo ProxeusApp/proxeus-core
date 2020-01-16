@@ -1,0 +1,20 @@
+{
+    "id": "HC3",
+    "settings": {
+        "defaultValue": "",
+        "help": "help text",
+        "label": "Radio buttons",
+        "name": "",
+        "validate": {
+            "required": true
+        },
+        "values": [
+            {
+                "help": "",
+                "label": "...",
+                "value": "val"
+            }
+        ]
+    },
+    "template": "\n     <div class=\"form-group\">\n    \t   <div class=\"col-md-12 field-parent\">\n    \t       <label class=\"control-label\" >{{label}}</label>\n    \t\t       {{#each values}}\n    \t\t       <div class=\"fancy-radio\">\n                        <input type=\"radio\" id=\"{{@root.id}}{{@index}}\" name=\"{{@root.name}}\" value=\"{{value}}\" {{#ifEq @root.defaultValue value}}checked=\"checked\"{{/ifEq}}/>\n                        <label for=\"{{@root.id}}{{@index}}\"><span><i></i></span>{{label}}</label>\n                    </div>\n                     {{#if help}}\n                    <div class=\"row\">\n                        <div class=\"col-sm-12 col-md-12 col-lg-12\">\n        \t                <span style=\"margin-left:34px;\" class=\"help-block\">{{help}}</span>\n        \t            </div>\n                     </div>\n    \t         {{/if}}\n    \t\t       {{/each}}\n    \t\t       <span class=\"help-block\">{{help}}</span>\n    \t   </div>\n    \t   <div class=\"clearfix\"></div>\n       </div>\n        "
+}
