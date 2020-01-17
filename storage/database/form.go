@@ -370,10 +370,6 @@ func (me *FormDB) Vars(auth model.Auth, contains string, options storage.Options
 	return getVars(contains, params.limit, params.index, tx)
 }
 
-func (me *FormDB) AssetsKey() string {
-	return me.baseFilePath
-}
-
 func (me *FormDB) Close() error {
 	return me.db.Close()
 }

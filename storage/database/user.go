@@ -292,10 +292,6 @@ func (me *UserDB) List(auth model.Auth, contains string, options storage.Options
 	return items, nil
 }
 
-func (me *UserDB) AssetsKey() string {
-	return me.baseFilePath
-}
-
 func (me *UserDB) Get(auth model.Auth, id string) (*model.User, error) {
 	var err error
 	var user model.User
