@@ -7,11 +7,12 @@ import (
 	"strings"
 	"time"
 
+	"github.com/ProxeusApp/proxeus-core/storage/database"
+
 	cfg "github.com/ProxeusApp/proxeus-core/main/config"
 	"github.com/ProxeusApp/proxeus-core/main/handlers/blockchain"
 	"github.com/ProxeusApp/proxeus-core/main/www"
 	"github.com/ProxeusApp/proxeus-core/storage"
-	"github.com/ProxeusApp/proxeus-core/storage/database"
 	"github.com/ProxeusApp/proxeus-core/sys/model"
 
 	"github.com/ethereum/go-ethereum/common"

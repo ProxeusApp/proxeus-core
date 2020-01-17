@@ -1,4 +1,4 @@
-package storm
+package database
 
 import (
 	"path/filepath"
@@ -6,12 +6,12 @@ import (
 
 	"github.com/asdine/storm/q"
 
-	"github.com/ProxeusApp/proxeus-core/storage/database"
+	"github.com/ProxeusApp/proxeus-core/storage/database/db"
 	"github.com/ProxeusApp/proxeus-core/sys/model"
 )
 
 type SignatureRequestsDB struct {
-	db database.DB
+	db db.DB
 }
 
 const signatureVersion = "sig_vers"
@@ -26,7 +26,7 @@ func NewSignatureDB(c DBConfig) (*SignatureRequestsDB, error) {
 	if err != nil {
 		return nil, err
 	}
-	db, err := database.OpenDatabase(c.Engine, c.URI, filepath.Join(baseDir, signatureDB))
+	db, err := OpenDatabase(c.Engine, c.URI, filepath.Join(baseDir, signatureDB))
 	if err != nil {
 		return nil, err
 	}

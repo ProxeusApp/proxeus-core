@@ -11,6 +11,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/ProxeusApp/proxeus-core/storage/database"
+
 	"github.com/ProxeusApp/proxeus-core/storage/portable"
 
 	"github.com/ethereum/go-ethereum/accounts/abi"
@@ -25,7 +27,6 @@ import (
 	"github.com/ProxeusApp/proxeus-core/sys/email"
 	"github.com/ProxeusApp/proxeus-core/sys/validate"
 
-	"github.com/ProxeusApp/proxeus-core/storage/db/storm"
 	"github.com/ProxeusApp/proxeus-core/sys/eio"
 	"github.com/ProxeusApp/proxeus-core/sys/model"
 	"github.com/ProxeusApp/proxeus-core/sys/session"
@@ -67,7 +68,7 @@ func provideProxeusSettings() (storage.SettingsIF, error) {
 	if err != nil {
 		return nil, err
 	}
-	stngsDB, err := storm.NewSettingsDB(filepath.Join(u.HomeDir, ".proxeus"))
+	stngsDB, err := database.NewSettingsDB(filepath.Join(u.HomeDir, ".proxeus"))
 	if err != nil {
 		return nil, err
 	}
@@ -151,7 +152,7 @@ func (me *System) init(stngs *model.Settings) error {
 		return err
 	}
 
-	me.DB, err = storm.NewDBSet(me.settingsDB, stngs.DataDir)
+	me.DB, err = database.NewDBSet(me.settingsDB, stngs.DataDir)
 	if err != nil {
 		return err
 	}

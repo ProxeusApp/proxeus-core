@@ -3,19 +3,21 @@ package database
 import (
 	"fmt"
 
+	"github.com/ProxeusApp/proxeus-core/storage/database/db"
+
 	"go.mongodb.org/mongo-driver/mongo"
 
 	"github.com/asdine/storm"
 )
 
-func OpenDatabase(engine, uri, name string) (DB, error) {
+func OpenDatabase(engine, uri, name string) (db.DB, error) {
 	switch engine {
 	case "mongo":
-		return OpenMongo(uri, name)
+		return db.OpenMongo(uri, name)
 	case "storm", "":
-		return OpenStorm(name)
+		return db.OpenStorm(name)
 	}
-	return nil, fmt.Errorf("unknown database engine '%s'", engine)
+	return nil, fmt.Errorf("unknown db engine '%s'", engine)
 }
 
 func NotFound(err error) bool {

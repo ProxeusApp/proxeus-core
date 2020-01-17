@@ -1,4 +1,4 @@
-package storm
+package database
 
 import "github.com/ProxeusApp/proxeus-core/storage"
 

@@ -8,10 +8,10 @@ import (
 	"testing"
 	"time"
 
+	"github.com/ProxeusApp/proxeus-core/storage/database"
+
 	"github.com/ProxeusApp/proxeus-core/main/handlers/blockchain/mock"
 	"github.com/ProxeusApp/proxeus-core/storage"
-	"github.com/ProxeusApp/proxeus-core/storage/database"
-	"github.com/ProxeusApp/proxeus-core/storage/db/storm"
 	"github.com/ProxeusApp/proxeus-core/sys/model"
 
 	"github.com/ethereum/go-ethereum/common"
@@ -36,7 +36,7 @@ func TestPaymentEventHandling(t *testing.T) {
 	mockCtrl := gomock.NewController(t)
 	defer mockCtrl.Finish()
 
-	workflowPaymentsDB, err := storm.NewWorkflowPaymentDB(storm.DBConfig{Dir: ".test_data"})
+	workflowPaymentsDB, err := database.NewWorkflowPaymentDB(database.DBConfig{Dir: ".test_data"})
 	if err != nil {
 		panic(err)
 	}
@@ -50,11 +50,11 @@ func TestPaymentEventHandling(t *testing.T) {
 			panic(errCleanupTestData)
 		}
 
-		err = os.Remove(filepath.Join(".test_data", storm.WorkflowPaymentDBDir, storm.WorkflowPaymentDB))
+		err = os.Remove(filepath.Join(".test_data", database.WorkflowPaymentDBDir, database.WorkflowPaymentDB))
 		if err != nil {
 			panic(err.Error())
 		}
-		err = os.Remove(filepath.Join(".test_data", storm.WorkflowPaymentDBDir))
+		err = os.Remove(filepath.Join(".test_data", database.WorkflowPaymentDBDir))
 		if err != nil {
 			panic(err.Error())
 		}
@@ -263,7 +263,7 @@ func TestPaymentEventHandling(t *testing.T) {
 
 }
 
-func runTest(mockCtrl *gomock.Controller, workflowPaymentsDB *storm.WorkflowPaymentsDB,
+func runTest(mockCtrl *gomock.Controller, workflowPaymentsDB *database.WorkflowPaymentsDB,
 	eventXesAmount *big.Int, eventTxHash, paymentID, paymentTxHash, from, to, status string, xesAmount *big.Int) error {
 
 	adapterMock := mock.NewMockAdapter(mockCtrl)

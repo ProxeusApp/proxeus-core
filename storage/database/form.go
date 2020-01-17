@@ -1,4 +1,4 @@
-package storm
+package database
 
 import (
 	"encoding/json"
@@ -10,18 +10,19 @@ import (
 	"regexp"
 	"time"
 
-	"github.com/ProxeusApp/proxeus-core/storage/database"
+	"github.com/ProxeusApp/proxeus-core/storage"
+
+	"github.com/ProxeusApp/proxeus-core/storage/database/db"
 
 	"github.com/asdine/storm/q"
 	uuid "github.com/satori/go.uuid"
 
-	"github.com/ProxeusApp/proxeus-core/storage"
 	"github.com/ProxeusApp/proxeus-core/sys/form"
 	"github.com/ProxeusApp/proxeus-core/sys/model"
 )
 
 type FormDB struct {
-	db           database.DB
+	db           db.DB
 	baseFilePath string
 }
 
@@ -46,7 +47,7 @@ func NewFormDB(c DBConfig) (*FormDB, error) {
 	if err != nil {
 		return nil, err
 	}
-	db, err := database.OpenDatabase(c.Engine, c.URI, filepath.Join(baseDir, "forms"))
+	db, err := OpenDatabase(c.Engine, c.URI, filepath.Join(baseDir, "forms"))
 	if err != nil {
 		return nil, err
 	}
@@ -150,7 +151,7 @@ func (me *FormDB) put(auth model.Auth, item *model.FormItem, updated bool) error
 		defer tx.Rollback()
 		var existing model.FormItem
 		err = tx.One("ID", item.ID, &existing)
-		if database.NotFound(err) {
+		if NotFound(err) {
 			err = nil
 			if !auth.AccessRights().AllowedToCreateEntities() {
 				return model.ErrAuthorityMissing
@@ -207,7 +208,7 @@ func (me *FormDB) Delete(auth model.Auth, id string) error {
 	return tx.Commit()
 }
 
-func (me *FormDB) updateForm(auth model.Auth, item *model.FormItem, tx database.DB) error {
+func (me *FormDB) updateForm(auth model.Auth, item *model.FormItem, tx db.DB) error {
 	err := me.updateVars(auth, item, tx)
 	if err != nil {
 		return err
@@ -227,7 +228,7 @@ func (me *FormDB) updateForm(auth model.Auth, item *model.FormItem, tx database.
 	return tx.Commit()
 }
 
-func (me *FormDB) updateVars(auth model.Auth, item *model.FormItem, tx database.DB) error {
+func (me *FormDB) updateVars(auth model.Auth, item *model.FormItem, tx db.DB) error {
 	formVars := form.Vars(item.Data)
 	if len(formVars) > 0 {
 		err := updateVarsOf(auth, item.ID, formVars, tx)

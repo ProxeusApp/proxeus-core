@@ -1,10 +1,10 @@
-package database
+package db
 
 import (
 	"github.com/asdine/storm/q"
 )
 
-// DB represents common set of the database API.
+// DB represents common set of the db API.
 type DB interface {
 	// Get a value from a bucket
 	Get(bucketName string, key interface{}, to interface{}) error
