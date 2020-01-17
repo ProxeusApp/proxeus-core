@@ -7,7 +7,6 @@ import (
 	"image/jpeg"
 	"image/png"
 	"io"
-	"log"
 	"os"
 	"path/filepath"
 	"regexp"
@@ -71,11 +70,6 @@ func NewUserDB(c DBConfig, fileDB storage.FilesIF) (*UserDB, error) {
 	udb.db.Init(userApiKeysBucket)
 	udb.db.Init(passwordBucket)
 
-	var version int
-	verr := udb.db.Get(userVersion, userVersion, &version)
-	if verr == nil && version != example.GetVersion() {
-		log.Println("upgrade db", version, "mem", example.GetVersion())
-	}
 	err = udb.db.Set(userVersion, userVersion, example.GetVersion())
 	if err != nil {
 		return nil, err

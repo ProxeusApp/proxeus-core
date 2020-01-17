@@ -1,7 +1,6 @@
 package database
 
 import (
-	"log"
 	"os"
 	"path/filepath"
 	"regexp"
@@ -48,62 +47,10 @@ func NewDocTemplateDB(c DBConfig) (*DocTemplateDB, error) {
 
 	udb.db.Init(example)
 	initVars(udb.db)
-	//udb.db.ReIndex(example)
-	var fVersion int
-	verr := udb.db.Get(docTemplVersion, docTemplVersion, &fVersion)
-	if verr == nil && fVersion == 0 {
-		//do the checks... and upgrade
-		log.Println("upgrade document template structure", fVersion, "->", example.GetVersion())
-		//udb.db.ReIndex(example)
-		type Template struct {
-			Lang        string `json:"lang,omitempty"`
-			Filename    string `json:"name,omitempty"`
-			Size        int64  `json:"size,omitempty"`
-			ContentType string `json:"contentType,omitempty"`
-			Path        string `json:"path,omitempty"`
-		}
-		type TemplateItem struct {
-			model.Permissions
-			ID     string `json:"id" storm:"id"`
-			Name   string `json:"name" storm:"index"`
-			Detail string `json:"detail"`
-			//Permissions Permissions `json:"permissions"`
-			Updated time.Time            `json:"updated" storm:"index"`
-			Created time.Time            `json:"created" storm:"index"`
-			Data    map[string]*Template `json:"data"`
-		}
-		var oldItems []*TemplateItem
-		err = udb.db.All(&oldItems)
-		if err != nil && !NotFound(err) {
-			return nil, err
-		}
-		for _, v := range oldItems {
-			item := &model.TemplateItem{ID: v.ID, Name: v.Name, Detail: v.Detail, Updated: v.Updated, Created: v.Created}
-			item.Permissions = v.Permissions
-			if v.Data != nil {
-				item.Data = model.TemplateLangMap{}
-			}
-			for lang, tmpl := range v.Data {
-				fi := file.FromMap(udb.baseFilePath, map[string]interface{}{
-					"path":        tmpl.Path,
-					"name":        tmpl.Filename,
-					"contentType": tmpl.ContentType,
-					"size":        tmpl.Size,
-				})
-				item.Data[lang] = fi
-			}
-			err = udb.db.Save(item)
-			if err != nil {
-				return nil, err
-			}
-
-		}
-		err = udb.db.Set(docTemplVersion, docTemplVersion, example.GetVersion())
-		if err != nil {
-			return nil, err
-		}
+	err = udb.db.Set(docTemplVersion, docTemplVersion, example.GetVersion())
+	if err != nil {
+		return nil, err
 	}
-
 	return udb, nil
 }
 
