@@ -9,16 +9,14 @@ import (
 	"sync"
 
 	"github.com/ProxeusApp/proxeus-core/storage"
-
-	"github.com/asdine/storm/q"
-	uuid "github.com/satori/go.uuid"
-
 	"github.com/ProxeusApp/proxeus-core/storage/database/db"
 	"github.com/ProxeusApp/proxeus-core/sys/i18n"
 	"github.com/ProxeusApp/proxeus-core/sys/model"
+
+	"github.com/asdine/storm/q"
+	uuid "github.com/satori/go.uuid"
 )
 
-//
 type I18nDB struct {
 	db           db.DB
 	resolver     *i18n.I18nResolver

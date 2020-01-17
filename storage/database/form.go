@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"log"
 	"os"
 	"path/filepath"
 	"regexp"
@@ -61,17 +60,10 @@ func NewFormDB(c DBConfig) (*FormDB, error) {
 	udb.db.Init(example)
 	udb.db.Init(exampleComp)
 	initVars(udb.db)
-	var fVersion int
-	verr := udb.db.Get(formVersion, formVersion, &fVersion)
-	if verr == nil && fVersion != example.GetVersion() {
-		log.Println("upgrade db", fVersion, "mem", example.GetVersion())
-	}
-	err = udb.db.Set(formVersion, formVersion, example.GetVersion())
-	var fcmpVersion int
 
-	verr = udb.db.Get(formCompVersion, formCompVersion, &fcmpVersion)
-	if verr == nil && fcmpVersion != exampleComp.GetVersion() {
-		log.Println("upgrade db", fcmpVersion, "mem", exampleComp.GetVersion())
+	err = udb.db.Set(formVersion, formVersion, example.GetVersion())
+	if err != nil {
+		return nil, err
 	}
 	err = udb.db.Set(formCompVersion, formCompVersion, exampleComp.GetVersion())
 	if err != nil {
