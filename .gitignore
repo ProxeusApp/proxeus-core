@@ -12,6 +12,3 @@ main/handlers/assets/bindata.go
 
 vendor
 data
-
-storage/db/storm/testDir/
-storage/db/storm/user/

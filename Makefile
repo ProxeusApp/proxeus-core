@@ -39,7 +39,7 @@ ui-dev:
 	$(MAKE) -C ui serve-main-hosted
 
 .PHONY: generate
-generate: $(bindata) $(mocks) storage/db/storm/mock/mocks.go
+generate: $(bindata) $(mocks) storage/database/mock/mocks.go
 
 .PHONY: server
 server: generate
@@ -106,6 +106,6 @@ $(mocks): $$(patsubst %_mock.go, %.go, $$(subst /mock,, $$@))
 	mockgen -package mock  -source $<  -destination $@  -self_package github.com/ProxeusApp/proxeus-core/$(shell dirname $@)
 	goimports -w $@
 
-storage/db/storm/mock/mocks.go: storage/interfaces.go
+storage/database/mock/mocks.go: storage/interfaces.go
 	mockgen -package mock  -source storage/interfaces.go -destination $@  -self_package github.com/ProxeusApp/proxeus-core/$(shell dirname $@)
 	goimports -w $@

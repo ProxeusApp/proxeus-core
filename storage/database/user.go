@@ -1,4 +1,4 @@
-package storm
+package database
 
 import (
 	"bytes"
@@ -14,7 +14,8 @@ import (
 	"time"
 
 	"github.com/ProxeusApp/proxeus-core/storage"
-	"github.com/ProxeusApp/proxeus-core/storage/database"
+
+	"github.com/ProxeusApp/proxeus-core/storage/database/db"
 	"github.com/ProxeusApp/proxeus-core/sys/model"
 
 	"github.com/asdine/storm/q"
@@ -24,7 +25,7 @@ import (
 )
 
 type UserDB struct {
-	db           database.DB
+	db           db.DB
 	baseFilePath string
 	fileDB       storage.FilesIF
 }
@@ -54,7 +55,7 @@ func NewUserDB(c DBConfig, fileDB storage.FilesIF) (*UserDB, error) {
 	if err != nil {
 		return nil, err
 	}
-	db, err := database.OpenDatabase(c.Engine, c.URI, filepath.Join(baseDir, "users"))
+	db, err := OpenDatabase(c.Engine, c.URI, filepath.Join(baseDir, "users"))
 	if err != nil {
 		return nil, err
 	}
@@ -393,7 +394,7 @@ func (me *UserDB) put(auth model.Auth, item *model.User, updated bool) error {
 		return me.save(item, tx)
 	} else {
 		existing, err := me.Get(auth, item.ID)
-		if database.NotFound(err) {
+		if NotFound(err) {
 			err = nil
 			if !auth.AccessRights().IsGrantedFor(item.Role) {
 				return model.ErrAuthorityMissing
@@ -415,7 +416,7 @@ func (me *UserDB) put(auth model.Auth, item *model.User, updated bool) error {
 	}
 }
 
-func (me *UserDB) save(u *model.User, tx database.DB) error {
+func (me *UserDB) save(u *model.User, tx db.DB) error {
 	err := me.updateApiKeys(u, tx)
 	if err != nil {
 		return err
@@ -427,7 +428,7 @@ func (me *UserDB) save(u *model.User, tx database.DB) error {
 	return tx.Commit()
 }
 
-func (me *UserDB) updateApiKeys(u *model.User, tx database.DB) error {
+func (me *UserDB) updateApiKeys(u *model.User, tx db.DB) error {
 	newKeys := make([]model.ApiKey, 0)
 	for _, a := range u.ApiKeys {
 		if a.IsNew() {

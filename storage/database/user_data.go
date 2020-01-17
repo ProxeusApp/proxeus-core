@@ -1,4 +1,4 @@
-package storm
+package database
 
 import (
 	"log"
@@ -6,17 +6,18 @@ import (
 	"path/filepath"
 	"time"
 
+	"github.com/ProxeusApp/proxeus-core/storage"
+
 	"github.com/asdine/storm/q"
 	uuid "github.com/satori/go.uuid"
 
-	"github.com/ProxeusApp/proxeus-core/storage"
-	"github.com/ProxeusApp/proxeus-core/storage/database"
+	"github.com/ProxeusApp/proxeus-core/storage/database/db"
 	"github.com/ProxeusApp/proxeus-core/sys/file"
 	"github.com/ProxeusApp/proxeus-core/sys/model"
 )
 
 type UserDataDB struct {
-	db           database.DB
+	db           db.DB
 	baseFilePath string
 	mainDir      string
 }
@@ -38,7 +39,7 @@ func NewUserDataDB(c DBConfig) (*UserDataDB, error) {
 	if err != nil {
 		return nil, err
 	}
-	db, err := database.OpenDatabase(c.Engine, c.URI, filepath.Join(baseDir, "usrdb"))
+	db, err := OpenDatabase(c.Engine, c.URI, filepath.Join(baseDir, "usrdb"))
 	if err != nil {
 		return nil, err
 	}
@@ -242,7 +243,7 @@ func (me *UserDataDB) PutData(auth model.Auth, id string, dataObj map[string]int
 		return model.ErrAuthorityMissing
 	}
 	err = tx.Get(usrdHeavyData, item.ID, &item.Data)
-	if err != nil && !database.NotFound(err) {
+	if err != nil && !NotFound(err) {
 		return err
 	}
 	if item.Data == nil {
@@ -322,7 +323,7 @@ func (me *UserDataDB) put(auth model.Auth, item *model.UserDataItem, updated boo
 		defer tx.Rollback()
 		var existing model.UserDataItem
 		err = tx.One("ID", item.ID, &existing)
-		if database.NotFound(err) {
+		if NotFound(err) {
 			if !auth.AccessRights().AllowedToCreateUserData() {
 				return model.ErrAuthorityMissing
 			}
@@ -347,7 +348,7 @@ func (me *UserDataDB) put(auth model.Auth, item *model.UserDataItem, updated boo
 	}
 }
 
-func (me *UserDataDB) updateItem(auth model.Auth, item *model.UserDataItem, tx database.DB) error {
+func (me *UserDataDB) updateItem(auth model.Auth, item *model.UserDataItem, tx db.DB) error {
 	err := me.saveOnly(item, tx)
 	if err != nil {
 		return err
@@ -355,7 +356,7 @@ func (me *UserDataDB) updateItem(auth model.Auth, item *model.UserDataItem, tx d
 	return tx.Commit()
 }
 
-func (me *UserDataDB) saveOnly(item *model.UserDataItem, tx database.DB) error {
+func (me *UserDataDB) saveOnly(item *model.UserDataItem, tx db.DB) error {
 	if item.Data != nil {
 		err := tx.Set(usrdHeavyData, item.ID, item.Data)
 		if err != nil {

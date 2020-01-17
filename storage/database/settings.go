@@ -1,16 +1,15 @@
-package storm
+package database
 
 import (
 	"path/filepath"
 
-	"github.com/ProxeusApp/proxeus-core/storage/db"
-
+	"github.com/ProxeusApp/proxeus-core/storage"
 	"github.com/ProxeusApp/proxeus-core/sys/model"
 	"github.com/ProxeusApp/proxeus-core/sys/validate"
 )
 
 type SettingsDB struct {
-	jf db.JSONFile
+	jf storage.JSONFile
 }
 
 func NewSettingsDB(baseDir string) (*SettingsDB, error) {
@@ -20,7 +19,7 @@ func NewSettingsDB(baseDir string) (*SettingsDB, error) {
 		return nil, err
 	}
 	return &SettingsDB{
-		jf: db.JSONFile{FilePath: filepath.Join(baseDir, "main.json")},
+		jf: storage.JSONFile{FilePath: filepath.Join(baseDir, "main.json")},
 	}, nil
 }
 

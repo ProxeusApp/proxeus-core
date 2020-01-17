@@ -1,4 +1,4 @@
-package storm
+package database
 
 import (
 	"log"
@@ -7,17 +7,18 @@ import (
 	"regexp"
 	"time"
 
-	"github.com/ProxeusApp/proxeus-core/storage/database"
+	"github.com/ProxeusApp/proxeus-core/storage"
+
+	"github.com/ProxeusApp/proxeus-core/storage/database/db"
 
 	uuid "github.com/satori/go.uuid"
 
-	"github.com/ProxeusApp/proxeus-core/storage"
 	"github.com/ProxeusApp/proxeus-core/sys/file"
 	"github.com/ProxeusApp/proxeus-core/sys/model"
 )
 
 type DocTemplateDB struct {
-	db           database.DB
+	db           db.DB
 	baseFilePath string
 }
 
@@ -36,7 +37,7 @@ func NewDocTemplateDB(c DBConfig) (*DocTemplateDB, error) {
 	if err != nil {
 		return nil, err
 	}
-	db, err := database.OpenDatabase(c.Engine, c.URI, filepath.Join(baseDir, "document_templates"))
+	db, err := OpenDatabase(c.Engine, c.URI, filepath.Join(baseDir, "document_templates"))
 	if err != nil {
 		return nil, err
 	}
@@ -73,7 +74,7 @@ func NewDocTemplateDB(c DBConfig) (*DocTemplateDB, error) {
 		}
 		var oldItems []*TemplateItem
 		err = udb.db.All(&oldItems)
-		if err != nil && !database.NotFound(err) {
+		if err != nil && !NotFound(err) {
 			return nil, err
 		}
 		for _, v := range oldItems {
@@ -279,7 +280,7 @@ func (me *DocTemplateDB) put(auth model.Auth, item *model.TemplateItem, updated 
 	} else {
 		var existing model.TemplateItem
 		err := me.db.One("ID", item.ID, &existing)
-		if database.NotFound(err) {
+		if NotFound(err) {
 			if !auth.AccessRights().AllowedToCreateEntities() {
 				return model.ErrAuthorityMissing
 			}

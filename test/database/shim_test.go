@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/ProxeusApp/proxeus-core/storage/database"
+	"github.com/ProxeusApp/proxeus-core/storage/database/db"
 
 	"github.com/asdine/storm/q"
 )
@@ -23,7 +24,7 @@ var objs = map[int]myStruct{
 
 var insertData = []myStruct{objs[1], objs[3], objs[2]}
 
-func testCRUD(t *testing.T, db database.DB) {
+func testCRUD(t *testing.T, db db.DB) {
 	initDB(t, db)
 	defer db.Close()
 	// get
@@ -76,7 +77,7 @@ func testCRUD(t *testing.T, db database.DB) {
 	deleteData(t, db)
 }
 
-func testGetQuirks(t *testing.T, db database.DB) {
+func testGetQuirks(t *testing.T, db db.DB) {
 	// each for non-existing
 	err := db.Select(q.Eq("ID", "non-existing")).Each(new(myStruct), func(v interface{}) error {
 		t.Error("callback shouldn't be called")
@@ -104,7 +105,7 @@ func testGetQuirks(t *testing.T, db database.DB) {
 	}
 }
 
-func testAdvancedFetching(t *testing.T, db database.DB) {
+func testAdvancedFetching(t *testing.T, db db.DB) {
 	initDB(t, db)
 	defer db.Close()
 
@@ -231,7 +232,7 @@ func testAdvancedFetching(t *testing.T, db database.DB) {
 	deleteData(t, db)
 }
 
-func testTransactions(t *testing.T, db database.DB) {
+func testTransactions(t *testing.T, db db.DB) {
 	initDB(t, db)
 	defer db.Close()
 
@@ -302,7 +303,7 @@ func testTransactions(t *testing.T, db database.DB) {
 	deleteData(t, db)
 }
 
-func initDB(t *testing.T, db database.DB) {
+func initDB(t *testing.T, db db.DB) {
 	// explicit index building
 	{
 		err := db.Init(&myStruct{})
@@ -320,7 +321,7 @@ func initDB(t *testing.T, db database.DB) {
 	}
 }
 
-func deleteData(t *testing.T, db database.DB) {
+func deleteData(t *testing.T, db db.DB) {
 	for _, o := range insertData {
 		err := db.DeleteStruct(&o)
 		if err != nil {
