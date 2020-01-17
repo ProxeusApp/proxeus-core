@@ -41,11 +41,6 @@ func NewSignatureDB(c DBConfig) (*SignatureRequestsDB, error) {
 	if err != nil {
 		return nil, err
 	}
-	var fVersion int
-	verr := udb.db.Get(signatureVersion, signatureVersion, &fVersion)
-	if verr == nil && fVersion != example.GetVersion() {
-		//TODO: Upgrade items in DB to match new Model
-	}
 	err = udb.db.Set(signatureVersion, signatureVersion, example.GetVersion())
 	return udb, err
 }

@@ -2,9 +2,9 @@ package database
 
 import (
 	"github.com/ProxeusApp/proxeus-core/storage/database/db"
-	"github.com/asdine/storm/q"
-
 	"github.com/ProxeusApp/proxeus-core/sys/model"
+
+	"github.com/asdine/storm/q"
 )
 
 type VarsMaintenance struct {

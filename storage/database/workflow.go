@@ -1,7 +1,6 @@
 package database
 
 import (
-	"log"
 	"os"
 	"path/filepath"
 	"time"
@@ -49,11 +48,6 @@ func NewWorkflowDB(c DBConfig) (*WorkflowDB, error) {
 	example := &model.WorkflowItem{}
 	udb.db.Init(example)
 
-	var fVersion int
-	verr := udb.db.Get(workflowVersion, workflowVersion, &fVersion)
-	if verr == nil && fVersion != example.GetVersion() {
-		log.Println("upgrade db", fVersion, "mem", example.GetVersion())
-	}
 	err = udb.db.Set(workflowVersion, workflowVersion, example.GetVersion())
 	if err != nil {
 		return nil, err

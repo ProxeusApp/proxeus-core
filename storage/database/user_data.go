@@ -1,7 +1,6 @@
 package database
 
 import (
-	"log"
 	"os"
 	"path/filepath"
 	"time"
@@ -56,11 +55,6 @@ func NewUserDataDB(c DBConfig) (*UserDataDB, error) {
 	err = udb.db.ReIndex(example)
 	if err != nil {
 		return nil, err
-	}
-	var fVersion int
-	verr := udb.db.Get(usrdVersion, usrdVersion, &fVersion)
-	if verr == nil && fVersion != example.GetVersion() {
-		log.Println("upgrade db", fVersion, "mem", example.GetVersion())
 	}
 	err = udb.db.Set(usrdVersion, usrdVersion, example.GetVersion())
 	if err != nil {
