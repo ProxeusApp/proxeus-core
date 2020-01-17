@@ -437,20 +437,6 @@ func (mr *MockFormIFMockRecorder) Vars(auth, contains, options interface{}) *gom
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Vars", reflect.TypeOf((*MockFormIF)(nil).Vars), auth, contains, options)
 }
 
-// AssetsKey mocks base method
-func (m *MockFormIF) AssetsKey() string {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "AssetsKey")
-	ret0, _ := ret[0].(string)
-	return ret0
-}
-
-// AssetsKey indicates an expected call of AssetsKey
-func (mr *MockFormIFMockRecorder) AssetsKey() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AssetsKey", reflect.TypeOf((*MockFormIF)(nil).AssetsKey))
-}
-
 // Close mocks base method
 func (m *MockFormIF) Close() error {
 	m.ctrl.T.Helper()
@@ -589,20 +575,6 @@ func (m *MockWorkflowIF) Delete(auth model.Auth, id string) error {
 func (mr *MockWorkflowIFMockRecorder) Delete(auth, id interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Delete", reflect.TypeOf((*MockWorkflowIF)(nil).Delete), auth, id)
-}
-
-// AssetsKey mocks base method
-func (m *MockWorkflowIF) AssetsKey() string {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "AssetsKey")
-	ret0, _ := ret[0].(string)
-	return ret0
-}
-
-// AssetsKey indicates an expected call of AssetsKey
-func (mr *MockWorkflowIFMockRecorder) AssetsKey() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AssetsKey", reflect.TypeOf((*MockWorkflowIF)(nil).AssetsKey))
 }
 
 // Close mocks base method
@@ -1040,20 +1012,6 @@ func (m *MockUserIF) DeleteApiKey(auth model.Auth, userId, hiddenApiKey string) 
 func (mr *MockUserIFMockRecorder) DeleteApiKey(auth, userId, hiddenApiKey interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteApiKey", reflect.TypeOf((*MockUserIF)(nil).DeleteApiKey), auth, userId, hiddenApiKey)
-}
-
-// AssetsKey mocks base method
-func (m *MockUserIF) AssetsKey() string {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "AssetsKey")
-	ret0, _ := ret[0].(string)
-	return ret0
-}
-
-// AssetsKey indicates an expected call of AssetsKey
-func (mr *MockUserIFMockRecorder) AssetsKey() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AssetsKey", reflect.TypeOf((*MockUserIF)(nil).AssetsKey))
 }
 
 // Close mocks base method

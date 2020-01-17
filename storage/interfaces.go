@@ -76,7 +76,6 @@ type FormIF interface {
 	GetComp(auth model.Auth, id string) (*model.FormComponentItem, error)
 	ListComp(auth model.Auth, contains string, options Options) (map[string]*model.FormComponentItem, error)
 	Vars(auth model.Auth, contains string, options Options) ([]string, error)
-	AssetsKey() string
 	Close() error
 }
 
@@ -88,7 +87,6 @@ type WorkflowIF interface {
 	GetList(auth model.Auth, id []string) ([]*model.WorkflowItem, error)
 	Put(auth model.Auth, item *model.WorkflowItem) error
 	Delete(auth model.Auth, id string) error
-	AssetsKey() string
 	Close() error
 }
 
@@ -122,7 +120,6 @@ type UserIF interface {
 	APIKey(key string) (*model.User, error)
 	CreateApiKey(auth model.Auth, userId, apiKeyName string) (string, error)
 	DeleteApiKey(auth model.Auth, userId, hiddenApiKey string) error
-	AssetsKey() string
 	Close() error
 }
 
