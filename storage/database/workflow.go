@@ -55,10 +55,6 @@ func NewWorkflowDB(c DBConfig) (*WorkflowDB, error) {
 	return udb, nil
 }
 
-func (me *WorkflowDB) AssetsKey() string {
-	return me.baseFilePath
-}
-
 func (me *WorkflowDB) ListPublished(auth model.Auth, contains string, options storage.Options) ([]*model.WorkflowItem, error) {
 	return me.list(auth, contains, options, true)
 }
