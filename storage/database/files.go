@@ -1,4 +1,4 @@
-package storm
+package database
 
 import (
 	"io"
@@ -7,11 +7,11 @@ import (
 	"path"
 	"path/filepath"
 
-	"github.com/ProxeusApp/proxeus-core/storage/database"
+	"github.com/ProxeusApp/proxeus-core/storage/database/db"
 )
 
 type FileDB struct {
-	db database.DB
+	db db.DB
 }
 
 type storedFile struct {
@@ -25,7 +25,7 @@ func NewFileDB(c DBConfig) (*FileDB, error) {
 	if err != nil {
 		return nil, err
 	}
-	db, err := database.OpenDatabase(c.Engine, c.URI, filepath.Join(baseDir, "files"))
+	db, err := OpenDatabase(c.Engine, c.URI, filepath.Join(baseDir, "files"))
 	if err != nil {
 		return nil, err
 	}
@@ -57,7 +57,7 @@ func (d *FileDB) Write(path string, r io.Reader) error {
 func (d *FileDB) Exists(path string) (bool, error) {
 	var f storedFile
 	err := d.db.Get("storedFile", path, &f)
-	if database.NotFound(err) {
+	if NotFound(err) {
 		return false, nil
 	}
 	if err != nil {

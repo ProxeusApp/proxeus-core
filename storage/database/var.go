@@ -1,7 +1,7 @@
-package storm
+package database
 
 import (
-	"github.com/ProxeusApp/proxeus-core/storage/database"
+	"github.com/ProxeusApp/proxeus-core/storage/database/db"
 	"github.com/asdine/storm/q"
 
 	"github.com/ProxeusApp/proxeus-core/sys/model"
@@ -17,15 +17,15 @@ type Var struct {
 	VarRefs map[string]bool //ids that contain this var
 }
 
-func initVars(db database.DB) {
+func initVars(db db.DB) {
 	db.Init(&VarsMaintenance{})
 	db.Init(&Var{})
 }
 
-func updateVarsOf(auth model.Auth, id string, allNewVars []string, tx database.DB) error {
+func updateVarsOf(auth model.Auth, id string, allNewVars []string, tx db.DB) error {
 	var oldForm VarsMaintenance
 	err := tx.One("ID", id, &oldForm)
-	if database.NotFound(err) {
+	if NotFound(err) {
 		//add vars
 		err = nil
 		oldForm = VarsMaintenance{}
@@ -70,11 +70,11 @@ func updateVarsOf(auth model.Auth, id string, allNewVars []string, tx database.D
 	return tx.Save(&oldForm)
 }
 
-func remVars(auth model.Auth, id string, tx database.DB) error {
+func remVars(auth model.Auth, id string, tx db.DB) error {
 	var oldForm VarsMaintenance
 	err := tx.One("ID", id, &oldForm)
 	if err != nil {
-		if database.NotFound(err) {
+		if NotFound(err) {
 			return nil
 		}
 		return err
@@ -86,11 +86,11 @@ func remVars(auth model.Auth, id string, tx database.DB) error {
 	return tx.DeleteStruct(oldFormRef)
 }
 
-func putVar(id, strVar string, tx database.DB) error {
+func putVar(id, strVar string, tx db.DB) error {
 	var svar Var
 	err := tx.One("ID", strVar, &svar)
 	svarRef := &svar
-	if database.NotFound(err) {
+	if NotFound(err) {
 		err = tx.Save(&Var{ID: strVar, VarRefs: map[string]bool{id: true}})
 		if err != nil {
 			return err
@@ -105,11 +105,11 @@ func putVar(id, strVar string, tx database.DB) error {
 	return nil
 }
 
-func remVar(id, strVar string, tx database.DB) error {
+func remVar(id, strVar string, tx db.DB) error {
 	var svar Var
 	err := tx.One("ID", strVar, &svar)
 	svarRef := &svar
-	if database.NotFound(err) {
+	if NotFound(err) {
 		return nil
 	} else {
 		delete(svarRef.VarRefs, id)
@@ -122,7 +122,7 @@ func remVar(id, strVar string, tx database.DB) error {
 	}
 }
 
-func getVars(contains string, limit, index int, tx database.DB) ([]string, error) {
+func getVars(contains string, limit, index int, tx db.DB) ([]string, error) {
 	items := make([]string, 0)
 	err := tx.Select(
 		q.Re("ID", contains)).

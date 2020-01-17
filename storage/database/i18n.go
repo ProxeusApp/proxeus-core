@@ -1,4 +1,4 @@
-package storm
+package database
 
 import (
 	"fmt"
@@ -8,18 +8,19 @@ import (
 	"sort"
 	"sync"
 
+	"github.com/ProxeusApp/proxeus-core/storage"
+
 	"github.com/asdine/storm/q"
 	uuid "github.com/satori/go.uuid"
 
-	"github.com/ProxeusApp/proxeus-core/storage"
-	"github.com/ProxeusApp/proxeus-core/storage/database"
+	"github.com/ProxeusApp/proxeus-core/storage/database/db"
 	"github.com/ProxeusApp/proxeus-core/sys/i18n"
 	"github.com/ProxeusApp/proxeus-core/sys/model"
 )
 
 //
 type I18nDB struct {
-	db           database.DB
+	db           db.DB
 	resolver     *i18n.I18nResolver
 	langReg      *regexp.Regexp
 	allCache     map[string]map[string]string
@@ -43,7 +44,7 @@ func NewI18nDB(c DBConfig) (*I18nDB, error) {
 	if err != nil {
 		return nil, err
 	}
-	db, err := database.OpenDatabase(c.Engine, c.URI, filepath.Join(c.Dir, "i18n"))
+	db, err := OpenDatabase(c.Engine, c.URI, filepath.Join(c.Dir, "i18n"))
 	if err != nil {
 		return nil, err
 	}
@@ -59,7 +60,7 @@ func NewI18nDB(c DBConfig) (*I18nDB, error) {
 		return nil, err
 	}
 	udb.langSlice, err = udb.GetAllLangs()
-	if database.NotFound(err) {
+	if NotFound(err) {
 		err = nil
 	}
 	if err != nil {
@@ -82,7 +83,7 @@ func (me *I18nDB) Find(keyContains string, valueContains string, options storage
 		return nil, err
 	}
 	defer tx.Rollback()
-	var query database.Query
+	var query db.Query
 	m := make(map[string]map[string]string)
 	if keyContains != "" {
 		keyContains = containsCaseInsensitiveReg(keyContains)
@@ -204,7 +205,7 @@ func (me *I18nDB) Put(lang string, key string, text string) error {
 	return tx.Commit()
 }
 
-func (me *I18nDB) put(lang *string, key *string, text *string, tx database.DB) error {
+func (me *I18nDB) put(lang *string, key *string, text *string, tx db.DB) error {
 	if lang == nil || key == nil || text == nil || len(*key) == 0 {
 		return fmt.Errorf("invalid arguments: lang and key must be provided")
 	}

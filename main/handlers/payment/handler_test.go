@@ -14,8 +14,7 @@ import (
 	"github.com/ProxeusApp/proxeus-core/main/www"
 	"github.com/ProxeusApp/proxeus-core/storage"
 	"github.com/ProxeusApp/proxeus-core/storage/database"
-	"github.com/ProxeusApp/proxeus-core/storage/db/storm"
-	sm "github.com/ProxeusApp/proxeus-core/storage/db/storm/mock"
+	sm "github.com/ProxeusApp/proxeus-core/storage/database/mock"
 	"github.com/ProxeusApp/proxeus-core/sys"
 	"github.com/ProxeusApp/proxeus-core/sys/model"
 	sysSess "github.com/ProxeusApp/proxeus-core/sys/session"
@@ -518,7 +517,7 @@ var errCleanupTestData = errors.New("db data has not been cleanup up after finis
 func up(t *testing.T) (*gomock.Controller, storage.WorkflowPaymentsIF) {
 	mockCtrl := gomock.NewController(t)
 
-	workflowPaymentsDB, err := storm.NewWorkflowPaymentDB(storm.DBConfig{Dir: ".test_data"})
+	workflowPaymentsDB, err := database.NewWorkflowPaymentDB(database.DBConfig{Dir: ".test_data"})
 	if err != nil {
 		panic(err)
 	}
@@ -537,11 +536,11 @@ func down(mockCtrl *gomock.Controller, workflowPaymentsDB storage.WorkflowPaymen
 		panic(errCleanupTestData)
 	}
 
-	err = os.Remove(filepath.Join(".test_data", storm.WorkflowPaymentDBDir, storm.WorkflowPaymentDB))
+	err = os.Remove(filepath.Join(".test_data", database.WorkflowPaymentDBDir, database.WorkflowPaymentDB))
 	if err != nil {
 		panic(err.Error())
 	}
-	err = os.Remove(filepath.Join(".test_data", storm.WorkflowPaymentDBDir))
+	err = os.Remove(filepath.Join(".test_data", database.WorkflowPaymentDBDir))
 	if err != nil {
 		panic(err.Error())
 	}

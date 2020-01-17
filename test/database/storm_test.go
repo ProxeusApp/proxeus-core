@@ -5,11 +5,11 @@ import (
 	"os"
 	"testing"
 
-	"github.com/ProxeusApp/proxeus-core/storage/database"
+	"github.com/ProxeusApp/proxeus-core/storage/database/db"
 )
 
-func openStormDB(t *testing.T, path string) *database.StormShim {
-	db, err := database.OpenStorm(path)
+func openStormDB(t *testing.T, path string) *db.StormShim {
+	db, err := db.OpenStorm(path)
 	if err != nil {
 		t.Fatal(err)
 	}

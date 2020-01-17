@@ -1,4 +1,4 @@
-package storm
+package database
 
 import (
 	"log"
@@ -7,7 +7,8 @@ import (
 	"time"
 
 	"github.com/ProxeusApp/proxeus-core/storage"
-	"github.com/ProxeusApp/proxeus-core/storage/database"
+
+	"github.com/ProxeusApp/proxeus-core/storage/database/db"
 
 	"github.com/asdine/storm/q"
 	uuid "github.com/satori/go.uuid"
@@ -16,7 +17,7 @@ import (
 )
 
 type WorkflowDB struct {
-	db           database.DB
+	db           db.DB
 	baseFilePath string
 }
 
@@ -36,7 +37,7 @@ func NewWorkflowDB(c DBConfig) (*WorkflowDB, error) {
 	if err != nil {
 		return nil, err
 	}
-	db, err := database.OpenDatabase(c.Engine, c.URI, filepath.Join(baseDir, "workflows"))
+	db, err := OpenDatabase(c.Engine, c.URI, filepath.Join(baseDir, "workflows"))
 	if err != nil {
 		return nil, err
 	}
@@ -188,7 +189,7 @@ func (me *WorkflowDB) put(auth model.Auth, item *model.WorkflowItem, updated boo
 		defer tx.Rollback()
 		var existing model.WorkflowItem
 		err = tx.One("ID", item.ID, &existing)
-		if database.NotFound(err) {
+		if NotFound(err) {
 			if !auth.AccessRights().AllowedToCreateEntities() {
 				return model.ErrAuthorityMissing
 			}
@@ -213,7 +214,7 @@ func (me *WorkflowDB) put(auth model.Auth, item *model.WorkflowItem, updated boo
 	}
 }
 
-func (me *WorkflowDB) updateWF(auth model.Auth, item *model.WorkflowItem, tx database.DB) error {
+func (me *WorkflowDB) updateWF(auth model.Auth, item *model.WorkflowItem, tx db.DB) error {
 	err := me.saveOnly(item, tx)
 	if err != nil {
 		return err
@@ -246,7 +247,7 @@ func (me *WorkflowDB) Delete(auth model.Auth, id string) error {
 	return tx.Commit()
 }
 
-func (me *WorkflowDB) saveOnly(item *model.WorkflowItem, tx database.DB) error {
+func (me *WorkflowDB) saveOnly(item *model.WorkflowItem, tx db.DB) error {
 	if item.Data != nil {
 		err := tx.Set(workflowHeavyData, item.ID, item.Data)
 		if err != nil {

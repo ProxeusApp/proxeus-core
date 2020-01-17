@@ -1,4 +1,4 @@
-package storm
+package database
 
 import (
 	"errors"
@@ -9,12 +9,12 @@ import (
 
 	"github.com/asdine/storm/q"
 
-	"github.com/ProxeusApp/proxeus-core/storage/database"
+	"github.com/ProxeusApp/proxeus-core/storage/database/db"
 	"github.com/ProxeusApp/proxeus-core/sys/model"
 )
 
 type WorkflowPaymentsDB struct {
-	db database.DB
+	db db.DB
 }
 
 const workflowPaymentVersion = "payment_vers"
@@ -29,7 +29,7 @@ func NewWorkflowPaymentDB(c DBConfig) (*WorkflowPaymentsDB, error) {
 	if err != nil {
 		return nil, err
 	}
-	db, err := database.OpenDatabase(c.Engine, c.URI, filepath.Join(baseDir, WorkflowPaymentDB))
+	db, err := OpenDatabase(c.Engine, c.URI, filepath.Join(baseDir, WorkflowPaymentDB))
 	if err != nil {
 		return nil, err
 	}
@@ -94,7 +94,7 @@ func (me *WorkflowPaymentsDB) GetByWorkflowIdAndFromEthAddress(workflowID, fromE
 
 	var (
 		item  model.WorkflowPaymentItem
-		query database.Query
+		query db.Query
 	)
 
 	if len(statuses) == 0 {
@@ -162,7 +162,7 @@ func (me *WorkflowPaymentsDB) ConfirmPayment(txHash, from, to string, xes uint64
 
 	err = query.First(&item)
 	if err != nil {
-		if !database.NotFound(err) {
+		if !NotFound(err) {
 			return err
 		}
 
@@ -176,7 +176,7 @@ func (me *WorkflowPaymentsDB) ConfirmPayment(txHash, from, to string, xes uint64
 
 		err = query.First(&item)
 		if err != nil {
-			if !database.NotFound(err) {
+			if !NotFound(err) {
 				return err
 			}
 
