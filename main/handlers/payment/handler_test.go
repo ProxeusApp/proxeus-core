@@ -14,10 +14,12 @@ import (
 	"github.com/ProxeusApp/proxeus-core/main/www"
 	"github.com/ProxeusApp/proxeus-core/storage"
 	"github.com/ProxeusApp/proxeus-core/storage/database"
+	"github.com/ProxeusApp/proxeus-core/storage/database/db"
 	sm "github.com/ProxeusApp/proxeus-core/storage/database/mock"
 	"github.com/ProxeusApp/proxeus-core/sys"
 	"github.com/ProxeusApp/proxeus-core/sys/model"
 	sysSess "github.com/ProxeusApp/proxeus-core/sys/session"
+
 	"github.com/golang/mock/gomock"
 	"github.com/gorilla/sessions"
 	"github.com/labstack/echo"
@@ -204,7 +206,7 @@ func TestGetWorkflowPayment(t *testing.T) {
 
 		payment, err := getWorkflowPayment(workflowPaymentsDB, txHash, from, status)
 
-		if !database.NotFound(err) {
+		if !db.NotFound(err) {
 			t.Errorf("Expected to have not found but got: %v", err)
 		}
 		assert.Nil(t, payment)
@@ -258,7 +260,7 @@ func TestUpdateWorkflowPaymentPending(t *testing.T) {
 		}
 
 		err = updateWorkflowPaymentPending(workflowPaymentsDB, paymentId, txHash, "0x6")
-		if !database.NotFound(err) {
+		if !db.NotFound(err) {
 			t.Error("expected not found err, got", err)
 		}
 

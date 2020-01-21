@@ -26,7 +26,7 @@ func NewSignatureDB(c DBConfig) (*SignatureRequestsDB, error) {
 	if err != nil {
 		return nil, err
 	}
-	db, err := OpenDatabase(c.Engine, c.URI, filepath.Join(baseDir, signatureDB))
+	db, err := db.OpenDatabase(c.Engine, c.URI, filepath.Join(baseDir, signatureDB))
 	if err != nil {
 		return nil, err
 	}

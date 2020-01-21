@@ -25,7 +25,7 @@ func NewFileDB(c DBConfig) (*FileDB, error) {
 	if err != nil {
 		return nil, err
 	}
-	db, err := OpenDatabase(c.Engine, c.URI, filepath.Join(baseDir, "files"))
+	db, err := db.OpenDatabase(c.Engine, c.URI, filepath.Join(baseDir, "files"))
 	if err != nil {
 		return nil, err
 	}
@@ -57,7 +57,7 @@ func (d *FileDB) Write(path string, r io.Reader) error {
 func (d *FileDB) Exists(path string) (bool, error) {
 	var f storedFile
 	err := d.db.Get("storedFile", path, &f)
-	if NotFound(err) {
+	if db.NotFound(err) {
 		return false, nil
 	}
 	if err != nil {

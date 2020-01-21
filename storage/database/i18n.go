@@ -42,7 +42,7 @@ func NewI18nDB(c DBConfig) (*I18nDB, error) {
 	if err != nil {
 		return nil, err
 	}
-	db, err := OpenDatabase(c.Engine, c.URI, filepath.Join(c.Dir, "i18n"))
+	database, err := db.OpenDatabase(c.Engine, c.URI, filepath.Join(c.Dir, "i18n"))
 	if err != nil {
 		return nil, err
 	}
@@ -50,7 +50,7 @@ func NewI18nDB(c DBConfig) (*I18nDB, error) {
 		langs:    map[string]*model.Lang{},
 		resolver: &i18n.I18nResolver{},
 		allCache: map[string]map[string]string{},
-		db:       db,
+		db:       database,
 		langReg:  regexp.MustCompile(`^[A-Za-z_]{2,6}$`)}
 	example := &i18nInternal{}
 	err = udb.db.Init(example)
@@ -58,7 +58,7 @@ func NewI18nDB(c DBConfig) (*I18nDB, error) {
 		return nil, err
 	}
 	udb.langSlice, err = udb.GetAllLangs()
-	if NotFound(err) {
+	if db.NotFound(err) {
 		err = nil
 	}
 	if err != nil {

@@ -38,7 +38,7 @@ func NewUserDataDB(c DBConfig) (*UserDataDB, error) {
 	if err != nil {
 		return nil, err
 	}
-	db, err := OpenDatabase(c.Engine, c.URI, filepath.Join(baseDir, "usrdb"))
+	db, err := db.OpenDatabase(c.Engine, c.URI, filepath.Join(baseDir, "usrdb"))
 	if err != nil {
 		return nil, err
 	}
@@ -237,7 +237,7 @@ func (me *UserDataDB) PutData(auth model.Auth, id string, dataObj map[string]int
 		return model.ErrAuthorityMissing
 	}
 	err = tx.Get(usrdHeavyData, item.ID, &item.Data)
-	if err != nil && !NotFound(err) {
+	if err != nil && !db.NotFound(err) {
 		return err
 	}
 	if item.Data == nil {
@@ -317,7 +317,7 @@ func (me *UserDataDB) put(auth model.Auth, item *model.UserDataItem, updated boo
 		defer tx.Rollback()
 		var existing model.UserDataItem
 		err = tx.One("ID", item.ID, &existing)
-		if NotFound(err) {
+		if db.NotFound(err) {
 			if !auth.AccessRights().AllowedToCreateUserData() {
 				return model.ErrAuthorityMissing
 			}

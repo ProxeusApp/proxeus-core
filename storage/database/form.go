@@ -46,7 +46,7 @@ func NewFormDB(c DBConfig) (*FormDB, error) {
 	if err != nil {
 		return nil, err
 	}
-	db, err := OpenDatabase(c.Engine, c.URI, filepath.Join(baseDir, "forms"))
+	db, err := db.OpenDatabase(c.Engine, c.URI, filepath.Join(baseDir, "forms"))
 	if err != nil {
 		return nil, err
 	}
@@ -143,7 +143,7 @@ func (me *FormDB) put(auth model.Auth, item *model.FormItem, updated bool) error
 		defer tx.Rollback()
 		var existing model.FormItem
 		err = tx.One("ID", item.ID, &existing)
-		if NotFound(err) {
+		if db.NotFound(err) {
 			err = nil
 			if !auth.AccessRights().AllowedToCreateEntities() {
 				return model.ErrAuthorityMissing

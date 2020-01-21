@@ -18,10 +18,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/ProxeusApp/proxeus-core/storage/database"
-
-	"github.com/ProxeusApp/proxeus-core/storage/portable"
-
 	"github.com/ProxeusApp/proxeus-core/main/app"
 	cfg "github.com/ProxeusApp/proxeus-core/main/config"
 	"github.com/ProxeusApp/proxeus-core/main/handlers/blockchain"
@@ -29,6 +25,8 @@ import (
 	"github.com/ProxeusApp/proxeus-core/main/helpers"
 	"github.com/ProxeusApp/proxeus-core/main/www"
 	"github.com/ProxeusApp/proxeus-core/storage"
+	"github.com/ProxeusApp/proxeus-core/storage/database/db"
+	"github.com/ProxeusApp/proxeus-core/storage/portable"
 	"github.com/ProxeusApp/proxeus-core/sys"
 	"github.com/ProxeusApp/proxeus-core/sys/eio"
 	"github.com/ProxeusApp/proxeus-core/sys/email"
@@ -453,7 +451,7 @@ func LoginWithWallet(c *www.Context, challenge, signature string) (bool, *model.
 	}
 	var usr *model.User
 	usr, err = c.System().DB.User.GetByBCAddress(address)
-	if database.NotFound(err) {
+	if db.NotFound(err) {
 		stngs := c.System().GetSettings()
 		it := &model.User{
 			EthereumAddr: address,
@@ -997,7 +995,7 @@ func CheckForWorkflowPayment(e echo.Context) error {
 	if paymentRequired {
 		_, err := c.System().DB.WorkflowPayments.GetByWorkflowIdAndFromEthAddress(workflowId, user.EthereumAddr, []string{model.PaymentStatusConfirmed})
 		if err != nil {
-			if database.NotFound(err) {
+			if db.NotFound(err) {
 				return c.NoContent(http.StatusNotFound)
 			}
 			return c.NoContent(http.StatusBadRequest)
@@ -1048,7 +1046,7 @@ func DocumentHandler(e echo.Context) error {
 
 		usrDataItem, _, err := c.System().DB.UserData.GetByWorkflow(sess, wf, false)
 		if err != nil {
-			if !database.NotFound(err) {
+			if !db.NotFound(err) {
 				return c.String(http.StatusNotFound, err.Error())
 			}
 
@@ -1440,7 +1438,7 @@ func UserDocumentSignatureRequestGetCurrentUserHandler(e echo.Context) error {
 	for _, sigreq := range *signatureRequests {
 		var requesterName string
 		requester, err := c.System().DB.User.GetByBCAddress(sigreq.Requestor)
-		if err != nil && !database.NotFound(err) {
+		if err != nil && !db.NotFound(err) {
 			return c.NoContent(http.StatusInternalServerError)
 		}
 		if requester != nil {
@@ -1490,7 +1488,7 @@ func UserDeleteHandler(e echo.Context) error {
 	//remove documents / workflow instances of user
 	userDataDB := c.System().DB.UserData
 	workflowInstances, err := userDataDB.List(sess, "", storage.Options{}, false)
-	if err != nil && !database.NotFound(err) {
+	if err != nil && !db.NotFound(err) {
 		return c.NoContent(http.StatusInternalServerError)
 	}
 	for _, workflowInstance := range workflowInstances {
@@ -1503,7 +1501,7 @@ func UserDeleteHandler(e echo.Context) error {
 	//set workflow templates to deactivated
 	workflowDB := c.System().DB.Workflow
 	workflows, err := workflowDB.List(sess, "", storage.Options{})
-	if err != nil && !database.NotFound(err) {
+	if err != nil && !db.NotFound(err) {
 		return c.NoContent(http.StatusInternalServerError)
 	}
 	for _, workflow := range workflows {

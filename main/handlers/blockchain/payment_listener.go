@@ -7,15 +7,13 @@ import (
 	"math/big"
 	"time"
 
-	"github.com/ProxeusApp/proxeus-core/storage/database"
-
+	"github.com/ProxeusApp/proxeus-core/main/ethglue"
 	"github.com/ProxeusApp/proxeus-core/storage"
+	"github.com/ProxeusApp/proxeus-core/storage/database/db"
 
 	"github.com/ethereum/go-ethereum"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
-
-	"github.com/ProxeusApp/proxeus-core/main/ethglue"
 )
 
 type listener struct {
@@ -83,7 +81,7 @@ func (me *PaymentListener) listenLoop(ctx context.Context) (shouldReconnect bool
 			event := new(XesMainTokenTransfer)
 			err := me.eventsHandler(&vLog, event)
 			if err != nil {
-				if !database.NotFound(err) { //ErrNotFound already logged in eventsHandler
+				if !db.NotFound(err) { //ErrNotFound already logged in eventsHandler
 					if err == xesOverflowError {
 						log.Fatal("[blockchain][listener] overflow err: ", err.Error())
 					}
@@ -151,7 +149,7 @@ func (me *PaymentListener) eventsHandler(lg *types.Log, event *XesMainTokenTrans
 
 	err = me.workflowPaymentsDB.ConfirmPayment(lg.TxHash.String(), event.FromAddress.String(), event.ToAddress.String(), bigXes.Uint64())
 	if err != nil {
-		if database.NotFound(err) {
+		if db.NotFound(err) {
 			log.Printf(" [PaymentListener][eventHandler] info: no matching payment found for txHash: %s, reason: %s", lg.TxHash.String(), err.Error())
 			return err
 		}

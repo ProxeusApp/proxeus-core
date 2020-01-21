@@ -66,7 +66,8 @@ test: generate
 
 .PHONY: test-api
 test-api: generate
-	go clean -testcache && go test ./test
+	go clean -testcache && go test ./test/...
+
 
 .PHONY: coverage
 comma:=,

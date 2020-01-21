@@ -54,7 +54,7 @@ func NewUserDB(c DBConfig, fileDB storage.FilesIF) (*UserDB, error) {
 	if err != nil {
 		return nil, err
 	}
-	db, err := OpenDatabase(c.Engine, c.URI, filepath.Join(baseDir, "users"))
+	db, err := db.OpenDatabase(c.Engine, c.URI, filepath.Join(baseDir, "users"))
 	if err != nil {
 		return nil, err
 	}
@@ -384,7 +384,7 @@ func (me *UserDB) put(auth model.Auth, item *model.User, updated bool) error {
 		return me.save(item, tx)
 	} else {
 		existing, err := me.Get(auth, item.ID)
-		if NotFound(err) {
+		if db.NotFound(err) {
 			err = nil
 			if !auth.AccessRights().IsGrantedFor(item.Role) {
 				return model.ErrAuthorityMissing

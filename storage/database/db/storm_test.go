@@ -1,15 +1,13 @@
-package database
+package db
 
 import (
 	"io/ioutil"
 	"os"
 	"testing"
-
-	"github.com/ProxeusApp/proxeus-core/storage/database/db"
 )
 
-func openStormDB(t *testing.T, path string) *db.StormShim {
-	db, err := db.OpenStorm(path)
+func openStormDB(t *testing.T, path string) DB {
+	db, err := OpenDatabase("storm", "", path)
 	if err != nil {
 		t.Fatal(err)
 	}
