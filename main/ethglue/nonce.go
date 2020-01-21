@@ -10,14 +10,13 @@ import (
 	"github.com/labstack/gommon/log"
 
 	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/ethclient"
 )
 
 type NonceManager struct {
 	nextNonce       *big.Int
 	lastNonceChange time.Time
 
-	ethClient  *ethclient.Client
+	ethClient  pendingNonceGetter
 	ethAccount common.Address
 
 	errStreakCount int64
@@ -26,6 +25,10 @@ type NonceManager struct {
 
 const maxErrStreak = 3
 const idleSyncTimeInMinutes = 15
+
+type pendingNonceGetter interface {
+	PendingNonceAt(ctx context.Context, account common.Address) (uint64, error)
+}
 
 func (n *NonceManager) NextNonce() *big.Int {
 	n.mu.Lock()
@@ -51,7 +54,7 @@ func (n *NonceManager) OnAccountChange(addr string) {
 	n.syncNonce()
 }
 
-func (n *NonceManager) OnDial(c *ethclient.Client) {
+func (n *NonceManager) OnDial(c pendingNonceGetter) {
 	n.ethClient = c
 }
 
@@ -104,28 +107,4 @@ func (n *NonceManager) pendingNonceFromNode() *big.Int {
 func (n *NonceManager) syncNonce() {
 	n.nextNonce = n.pendingNonceFromNode()
 	n.lastNonceChange = time.Now()
-}
-
-func (n *NonceManager) DebugPrint() {
-	log.Printf("[NonceManager]: nonce stored: %v network: %v",
-		n.nextNonce.Int64(), n.pendingNonceFromNode().Int64())
-}
-
-func (n *NonceManager) DebugDecrease() {
-	n.mu.Lock()
-	defer n.mu.Unlock()
-	n.nextNonce.Add(n.nextNonce, big.NewInt(-1))
-}
-
-func (n *NonceManager) DebugForceIdle() {
-	n.mu.Lock()
-	defer n.mu.Unlock()
-	n.lastNonceChange = time.Time{}
-}
-
-// false doesn't mean we are incorrect!
-func (n *NonceManager) DebugNonceEqualsNetwork() bool {
-	n.mu.Lock()
-	defer n.mu.Unlock()
-	return n.nextNonce.Cmp(n.pendingNonceFromNode()) == 0
 }
