@@ -8,6 +8,8 @@ import (
 	"testing"
 	"time"
 
+	"github.com/ProxeusApp/proxeus-core/storage/database/db"
+
 	"github.com/ProxeusApp/proxeus-core/storage/database"
 
 	"github.com/ProxeusApp/proxeus-core/main/handlers/blockchain/mock"
@@ -151,7 +153,7 @@ func TestPaymentEventHandling(t *testing.T) {
 		err = runTest(mockCtrl, workflowPaymentsDB, xesAmount, eventTxHash, paymentID,
 			paymentTxHash, from, to, model.PaymentStatusRedeemed, xesAmount)
 
-		if !database.NotFound(err) {
+		if !db.NotFound(err) {
 			t.Errorf("Expected to have not found but got: %v", err)
 		}
 
@@ -182,7 +184,7 @@ func TestPaymentEventHandling(t *testing.T) {
 
 		err = runTest(mockCtrl, workflowPaymentsDB, xesAmountEvent, eventTxHash, paymentID, paymentTxHash, from,
 			to, model.PaymentStatusCreated, xesAmount)
-		if !database.NotFound(err) {
+		if !db.NotFound(err) {
 			t.Errorf("Expected to have not found but got: %v", err)
 		}
 

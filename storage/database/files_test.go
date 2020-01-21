@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/ProxeusApp/proxeus-core/storage"
+	"github.com/ProxeusApp/proxeus-core/storage/database/db"
 
 	. "github.com/onsi/gomega"
 )
@@ -33,7 +34,7 @@ func TestFile(t *testing.T) {
 
 	// read with err
 	err := fi.Read("bla_ble", buf)
-	Expect(NotFound(err)).To(Equal(true))
+	Expect(db.NotFound(err)).To(Equal(true))
 	Expect(fi.Read("", buf)).To(HaveOccurred())
 
 	// exists or not

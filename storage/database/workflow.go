@@ -36,7 +36,7 @@ func NewWorkflowDB(c DBConfig) (*WorkflowDB, error) {
 	if err != nil {
 		return nil, err
 	}
-	db, err := OpenDatabase(c.Engine, c.URI, filepath.Join(baseDir, "workflows"))
+	db, err := db.OpenDatabase(c.Engine, c.URI, filepath.Join(baseDir, "workflows"))
 	if err != nil {
 		return nil, err
 	}
@@ -179,7 +179,7 @@ func (me *WorkflowDB) put(auth model.Auth, item *model.WorkflowItem, updated boo
 		defer tx.Rollback()
 		var existing model.WorkflowItem
 		err = tx.One("ID", item.ID, &existing)
-		if NotFound(err) {
+		if db.NotFound(err) {
 			if !auth.AccessRights().AllowedToCreateEntities() {
 				return model.ErrAuthorityMissing
 			}

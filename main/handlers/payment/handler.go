@@ -7,7 +7,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/ProxeusApp/proxeus-core/storage/database"
+	"github.com/ProxeusApp/proxeus-core/storage/database/db"
 
 	cfg "github.com/ProxeusApp/proxeus-core/main/config"
 	"github.com/ProxeusApp/proxeus-core/main/handlers/blockchain"
@@ -109,7 +109,7 @@ func GetWorkflowPayment(e echo.Context) error {
 
 	payment, err := getWorkflowPayment(c.System().DB.WorkflowPayments, txHash, user.EthereumAddr, status)
 	if err != nil {
-		if database.NotFound(err) {
+		if db.NotFound(err) {
 			return c.NoContent(http.StatusNotFound)
 		}
 		log.Println("[GetWorkflowPayment] GetByTxHashAndStatusAndFromEthAddress err: ", err.Error())
@@ -228,7 +228,7 @@ func CheckIfWorkflowPaymentRequired(c *www.Context, workflowId string) (bool, er
 
 	_, alreadyStarted, err := c.System().DB.UserData.GetByWorkflow(sess, workflow, false)
 	if err != nil {
-		if !database.NotFound(err) {
+		if !db.NotFound(err) {
 			return true, nil
 		}
 		//if workflow not found (strm.ErrNotFound ) still check with isPaymentRequired

@@ -25,7 +25,7 @@ func initVars(db db.DB) {
 func updateVarsOf(auth model.Auth, id string, allNewVars []string, tx db.DB) error {
 	var oldForm VarsMaintenance
 	err := tx.One("ID", id, &oldForm)
-	if NotFound(err) {
+	if db.NotFound(err) {
 		//add vars
 		err = nil
 		oldForm = VarsMaintenance{}
@@ -74,7 +74,7 @@ func remVars(auth model.Auth, id string, tx db.DB) error {
 	var oldForm VarsMaintenance
 	err := tx.One("ID", id, &oldForm)
 	if err != nil {
-		if NotFound(err) {
+		if db.NotFound(err) {
 			return nil
 		}
 		return err
@@ -90,7 +90,7 @@ func putVar(id, strVar string, tx db.DB) error {
 	var svar Var
 	err := tx.One("ID", strVar, &svar)
 	svarRef := &svar
-	if NotFound(err) {
+	if db.NotFound(err) {
 		err = tx.Save(&Var{ID: strVar, VarRefs: map[string]bool{id: true}})
 		if err != nil {
 			return err
@@ -109,7 +109,7 @@ func remVar(id, strVar string, tx db.DB) error {
 	var svar Var
 	err := tx.One("ID", strVar, &svar)
 	svarRef := &svar
-	if NotFound(err) {
+	if db.NotFound(err) {
 		return nil
 	} else {
 		delete(svarRef.VarRefs, id)

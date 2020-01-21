@@ -36,7 +36,7 @@ func NewDocTemplateDB(c DBConfig) (*DocTemplateDB, error) {
 	if err != nil {
 		return nil, err
 	}
-	db, err := OpenDatabase(c.Engine, c.URI, filepath.Join(baseDir, "document_templates"))
+	db, err := db.OpenDatabase(c.Engine, c.URI, filepath.Join(baseDir, "document_templates"))
 	if err != nil {
 		return nil, err
 	}
@@ -227,7 +227,7 @@ func (me *DocTemplateDB) put(auth model.Auth, item *model.TemplateItem, updated 
 	} else {
 		var existing model.TemplateItem
 		err := me.db.One("ID", item.ID, &existing)
-		if NotFound(err) {
+		if db.NotFound(err) {
 			if !auth.AccessRights().AllowedToCreateEntities() {
 				return model.ErrAuthorityMissing
 			}

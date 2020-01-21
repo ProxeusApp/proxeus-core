@@ -29,7 +29,7 @@ func NewWorkflowPaymentDB(c DBConfig) (*WorkflowPaymentsDB, error) {
 	if err != nil {
 		return nil, err
 	}
-	db, err := OpenDatabase(c.Engine, c.URI, filepath.Join(baseDir, WorkflowPaymentDB))
+	db, err := db.OpenDatabase(c.Engine, c.URI, filepath.Join(baseDir, WorkflowPaymentDB))
 	if err != nil {
 		return nil, err
 	}
@@ -162,7 +162,7 @@ func (me *WorkflowPaymentsDB) ConfirmPayment(txHash, from, to string, xes uint64
 
 	err = query.First(&item)
 	if err != nil {
-		if !NotFound(err) {
+		if !db.NotFound(err) {
 			return err
 		}
 
@@ -176,7 +176,7 @@ func (me *WorkflowPaymentsDB) ConfirmPayment(txHash, from, to string, xes uint64
 
 		err = query.First(&item)
 		if err != nil {
-			if !NotFound(err) {
+			if !db.NotFound(err) {
 				return err
 			}
 
