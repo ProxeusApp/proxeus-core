@@ -34,10 +34,6 @@ func (me *InitialHandler) Handler(next echo.HandlerFunc) echo.HandlerFunc {
 		if me.cleanOnNextCall && c.Request().RequestURI != "/api/import/results" && c.Request().RequestURI != "/api/init" {
 			me.configured, _ = c.System().Configured()
 			me.cleanOnNextCall = false
-			er2 := c.System().SessionMgmnt.Clean()
-			if er2 != nil {
-				return c.NoContent(http.StatusInternalServerError)
-			}
 			return next(c)
 		}
 

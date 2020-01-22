@@ -3,9 +3,9 @@ package www
 import (
 	"net/http"
 
-	"github.com/labstack/echo"
+	"github.com/ProxeusApp/proxeus-core/sys"
 
-	"github.com/ProxeusApp/proxeus-core/sys/session"
+	"github.com/labstack/echo"
 )
 
 // SessionAuthToken create a request session if a valid API Key is found
@@ -42,15 +42,10 @@ func SessionTokenAuth(next echo.HandlerFunc) echo.HandlerFunc {
 	}
 }
 
-func sessionFromSessionToken(c *Context) (*session.Session, error) {
+func sessionFromSessionToken(c *Context) (*sys.Session, error) {
 	token := c.SessionToken()
 	if token == "" {
 		return nil, nil
 	}
-
-	sess, err := c.System().SessionMgmnt.Get(token)
-	if err != nil {
-		return nil, err
-	}
-	return sess, nil
+	return c.System().GetSession(token)
 }

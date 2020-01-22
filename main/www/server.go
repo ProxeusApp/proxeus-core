@@ -44,7 +44,7 @@ func Setup(serverVersion string) *echo.Echo {
 		if s == nil {
 			return
 		}
-		if s.ID() != "" {
+		if s.S.ID != "" {
 			id := s.UserID()
 			user, err := c.System().DB.User.Get(s, id)
 			if err != nil {

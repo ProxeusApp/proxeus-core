@@ -102,3 +102,7 @@ func randomHash() string {
 	}
 	return h.String()
 }
+
+func init() {
+	rand.Seed(time.Now().UnixNano())
+}

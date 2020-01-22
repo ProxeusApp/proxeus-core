@@ -204,8 +204,7 @@ func (me *DocTemplateDB) put(auth model.Auth, item *model.TemplateItem, updated 
 		if !auth.AccessRights().AllowedToCreateEntities() {
 			return model.ErrAuthorityMissing
 		}
-		u2 := uuid.NewV4()
-		item.ID = u2.String()
+		item.ID = uuid.NewV4().String()
 		item.Permissions = model.Permissions{Owner: auth.UserID()}
 		item.Created = time.Now()
 		item.Updated = time.Now()

@@ -3,6 +3,8 @@ package db
 import (
 	"os"
 	"path/filepath"
+	"sync"
+	"time"
 
 	"github.com/asdine/storm"
 	"github.com/asdine/storm/codec/msgpack"
@@ -12,6 +14,20 @@ import (
 type StormShim struct {
 	db *storm.DB
 	tx storm.Node
+
+	hasTTL     bool
+	once       sync.Once
+	ticker     *time.Ticker
+	tickerDone chan struct{}
+}
+
+const ttlBucket = "ttlAttribute"
+
+type ttlAttribute struct {
+	Expires int64 // seconds since epoch
+	TTL     time.Duration
+	Bucket  string
+	Key     interface{}
 }
 
 func OpenStorm(path string) (*StormShim, error) {
@@ -21,16 +37,58 @@ func OpenStorm(path string) (*StormShim, error) {
 		return nil, err
 	}
 	db, err := storm.Open(path, storm.Codec(msgpack.Codec))
-	return &StormShim{db: db, tx: db}, err
+	s := &StormShim{db: db, tx: db}
+	var hasTTL bool
+	s.Get(ttlBucket, "ttl", &hasTTL)
+	s.hasTTL = hasTTL
+	if hasTTL {
+		s.once.Do(s.fireTTLCleaner)
+	}
+	return s, err
 }
 
 // Get a value from a bucket
-func (s *StormShim) Get(bucketName string, key interface{}, to interface{}) error {
+func (s *StormShim) Get(bucketName string, key interface{}, to interface{}, opts ...*GetOptions) error {
+	if s.hasTTL && ttlRefresh(opts) {
+		var a ttlAttribute
+		err := s.tx.Get(ttlBucket, key, &a)
+		if err == nil {
+			// TTL entry found
+			now := time.Now().Unix()
+			if a.Expires <= now {
+				s.elementExpired(&a)
+			} else {
+				a.Expires = now + (a.TTL.Milliseconds() / 1e3)
+				s.tx.Set(ttlBucket, key, a)
+			}
+		}
+	}
 	return s.tx.Get(bucketName, key, to)
 }
 
 // Set a key/value pair into a bucket
-func (s *StormShim) Set(bucketName string, key interface{}, value interface{}) error {
+func (s *StormShim) Set(bucketName string, key interface{}, value interface{}, opts ...*SetOptions) error {
+	ttl := ttlDuration(opts)
+	if ttl > 0 {
+		if !s.hasTTL {
+			s.hasTTL = true
+			err := s.tx.Set(ttlBucket, "ttl", true)
+			if err != nil {
+				return err
+			}
+			s.once.Do(s.fireTTLCleaner)
+		}
+		err := s.tx.Set(ttlBucket, key,
+			&ttlAttribute{
+				Expires: time.Now().UTC().Add(ttl).Unix(),
+				TTL:     ttl,
+				Bucket:  bucketName,
+				Key:     key,
+			})
+		if err != nil {
+			return err
+		}
+	}
 	return s.tx.Set(bucketName, key, value)
 }
 
@@ -109,6 +167,10 @@ func (s *StormShim) All(to interface{}) error {
 }
 
 func (s *StormShim) Close() error {
+	if s.ticker != nil {
+		s.ticker.Stop()
+		close(s.tickerDone)
+	}
 	return s.db.Close()
 }
 
@@ -154,4 +216,34 @@ func (s StormQueryShim) First(to interface{}) error {
 // Execute the given function for each element
 func (s StormQueryShim) Each(kind interface{}, fn func(interface{}) error) error {
 	return s.q.Each(kind, fn)
+}
+
+func (s *StormShim) elementExpired(a *ttlAttribute) {
+	s.db.Delete(a.Bucket, a.Key)
+}
+
+func (s *StormShim) fireTTLCleaner() {
+	s.ticker = time.NewTicker(1 * time.Second)
+	s.tickerDone = make(chan struct{})
+	go func() {
+		for {
+			select {
+			case t := <-s.ticker.C:
+				var deleteTTLs []interface{}
+				s.db.Select(q.Lte("Expires", t.Unix())).
+					Each(new(ttlAttribute), func(v interface{}) error {
+						if a, ok := v.(*ttlAttribute); ok {
+							s.elementExpired(a)
+							deleteTTLs = append(deleteTTLs, a.Key)
+						}
+						return nil
+					})
+				for _, k := range deleteTTLs {
+					s.db.Delete(ttlBucket, k)
+				}
+			case <-s.tickerDone:
+				return
+			}
+		}
+	}()
 }

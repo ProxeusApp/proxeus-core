@@ -32,7 +32,6 @@ import (
 	"github.com/ProxeusApp/proxeus-core/sys/email"
 	"github.com/ProxeusApp/proxeus-core/sys/file"
 	"github.com/ProxeusApp/proxeus-core/sys/model"
-	"github.com/ProxeusApp/proxeus-core/sys/session"
 	"github.com/ProxeusApp/proxeus-core/sys/utils"
 	"github.com/ProxeusApp/proxeus-core/sys/validate"
 	workflow2 "github.com/ProxeusApp/proxeus-core/sys/workflow"
@@ -173,7 +172,7 @@ func ExportUser(e echo.Context) error {
 	return Export(sess, []portable.EntityType{portable.User}, c, id...)
 }
 
-func Export(sess *session.Session, exportEntities []portable.EntityType, e echo.Context, id ...string) error {
+func Export(sess *sys.Session, exportEntities []portable.EntityType, e echo.Context, id ...string) error {
 	c := e.(*www.Context)
 	if len(exportEntities) == 0 {
 		return c.NoContent(http.StatusBadRequest)
@@ -215,7 +214,7 @@ func GetImportResults(e echo.Context) error {
 	return results("lastImport", sess, c)
 }
 
-func results(key string, sess *session.Session, c echo.Context) error {
+func results(key string, sess *sys.Session, c echo.Context) error {
 	if _, exists := c.QueryParams()["delete"]; exists {
 		del := c.QueryParam("delete")
 		if del == "" {
@@ -514,7 +513,7 @@ func GetSessionTokenHandler(e echo.Context) (err error) {
 	c.Response().Header().Del("Set-Cookie")
 
 	return c.JSON(http.StatusOK, map[string]string{
-		"token": sess.ID(),
+		"token": sess.S.ID,
 	})
 }
 
@@ -524,17 +523,10 @@ func DeleteSessionTokenHandler(e echo.Context) (err error) {
 	return c.NoContent(http.StatusOK)
 }
 
-type TokenRequest struct {
-	Email  string     `json:"email" validate:"email=true,required=true"`
-	Token  string     `json:"token"`
-	UserID string     `json:"userID"`
-	Role   model.Role `json:"role"`
-}
-
 func InviteRequest(e echo.Context) (err error) {
 	c := e.(*www.Context)
 	sess := c.Session(false)
-	m := &TokenRequest{}
+	m := &model.TokenRequest{}
 	if err := c.Bind(&m); err != nil {
 		return err
 	}
@@ -550,43 +542,35 @@ func InviteRequest(e echo.Context) (err error) {
 		m.Role = stngs.DefaultRole
 	}
 	if usr, err := c.System().DB.User.GetByEmail(m.Email); usr == nil {
-		resetKey := m.Email + "_register"
-		var token *TokenRequest
-		err = c.System().Cache.Get(resetKey, &token)
+		var token model.TokenRequest
+		token.Email = m.Email
+		token.Token = uuid.NewV4().String()
+		token.Role = m.Role
+		token.Type = model.TokenRegister
+		err = c.System().DB.Session.PutTokenRequest(&token)
 		if err != nil {
-			token = m
-			u2 := uuid.NewV4()
-			token.Token = u2.String()
-			err = c.System().EmailSender.Send(&email.Email{
-				From:    stngs.EmailFrom,
-				To:      []string{m.Email},
-				Subject: c.I18n().T("Invitation"),
-				Body: fmt.Sprintf(
-					"Hi there,\n\nyou have been invited to join Proxeus. If you would like to benefit from the invitation, please proceed by visiting this link:\n%s\n\nProxeus",
-					helpers.AbsoluteURL(c, "/register/", token.Token),
-				),
-			})
-			if err != nil {
-				return c.String(http.StatusFailedDependency, c.I18n().T("couldn't send the email"))
-			}
-			err = c.System().Cache.Put(resetKey, token)
-			if err != nil {
-				return c.NoContent(http.StatusInternalServerError)
-			}
-			err = c.System().Cache.Put(token.Token, token)
-			if err != nil {
-				return c.NoContent(http.StatusInternalServerError)
-			}
+			return c.NoContent(http.StatusInternalServerError)
 		}
-	} else {
-		return c.JSON(http.StatusUnprocessableEntity, map[string]interface{}{"email": []map[string]interface{}{{"msg": c.I18n().T("Account with that email already exists.")}}})
+
+		err = c.System().EmailSender.Send(&email.Email{
+			From:    stngs.EmailFrom,
+			To:      []string{m.Email},
+			Subject: c.I18n().T("Invitation"),
+			Body: fmt.Sprintf(
+				"Hi there,\n\nyou have been invited to join Proxeus. If you would like to benefit from the invitation, please proceed by visiting this link:\n%s\n\nProxeus",
+				helpers.AbsoluteURL(c, "/register/", token.Token),
+			),
+		})
+		if err != nil {
+			return c.String(http.StatusFailedDependency, c.I18n().T("couldn't send the email"))
+		}
 	}
 	return c.NoContent(http.StatusOK)
 }
 
 func RegisterRequest(e echo.Context) (err error) {
 	c := e.(*www.Context)
-	m := &TokenRequest{}
+	m := &model.TokenRequest{}
 	if err := c.Bind(&m); err != nil {
 		return err
 	}
@@ -594,26 +578,22 @@ func RegisterRequest(e echo.Context) (err error) {
 	if err != nil {
 		return c.JSON(http.StatusUnprocessableEntity, err)
 	}
-	stngs := c.System().GetSettings()
-	m.Role = stngs.DefaultRole
-
 	if usr, _ := c.System().DB.User.GetByEmail(m.Email); usr != nil {
 		// always return ok if provided email was valid
 		// otherwise public users can test what email accounts exist
 		return c.NoContent(http.StatusOK)
 	}
 
-	resetKey := m.Email + "_register"
-	var token *TokenRequest
-
-	err = c.System().Cache.Get(resetKey, &token)
-	if err == nil {
-		return c.NoContent(http.StatusOK)
+	var token model.TokenRequest
+	token.Email = m.Email
+	token.Token = uuid.NewV4().String()
+	stngs := c.System().GetSettings()
+	token.Role = stngs.DefaultRole
+	token.Type = model.TokenRegister
+	err = c.System().DB.Session.PutTokenRequest(&token)
+	if err != nil {
+		return c.NoContent(http.StatusInternalServerError)
 	}
-
-	token = m
-	u2 := uuid.NewV4()
-	token.Token = u2.String()
 
 	if c.System().TestMode {
 		c.Response().Header().Set("X-Test-Token", token.Token)
@@ -631,27 +611,12 @@ func RegisterRequest(e echo.Context) (err error) {
 			return c.NoContent(http.StatusExpectationFailed)
 		}
 	}
-
-	err = c.System().Cache.Put(resetKey, token)
-	if err != nil {
-		return c.NoContent(http.StatusInternalServerError)
-	}
-	err = c.System().Cache.Put(token.Token, token)
-	if err != nil {
-		return c.NoContent(http.StatusInternalServerError)
-	}
-
 	return c.NoContent(http.StatusOK)
 }
 
 func Register(e echo.Context) error {
 	c := e.(*www.Context)
-	token := c.Param("token")
-	var tokenRequest *TokenRequest
-	err := c.System().Cache.Get(token, &tokenRequest)
-	if err != nil {
-		return c.NoContent(http.StatusBadRequest)
-	}
+	tokenID := c.Param("token")
 	p := &struct {
 		Password string `json:"password"`
 	}{}
@@ -661,7 +626,11 @@ func Register(e echo.Context) error {
 	if len(p.Password) < 6 {
 		return c.JSON(http.StatusUnprocessableEntity, map[string]interface{}{"password": []map[string]interface{}{{"msg": c.I18n().T("Password not strong enough")}}})
 	}
-	newUser := &model.User{Email: tokenRequest.Email, Role: tokenRequest.Role}
+	r, err := c.System().DB.Session.GetTokenRequest(model.TokenRegister, tokenID)
+	if err != nil {
+		return c.NoContent(http.StatusExpectationFailed)
+	}
+	newUser := &model.User{Email: r.Email, Role: r.Role}
 	err = c.System().DB.User.Put(root, newUser)
 	if err != nil {
 		return c.NoContent(http.StatusExpectationFailed)
@@ -673,11 +642,7 @@ func Register(e echo.Context) error {
 	if err != nil {
 		return c.NoContent(http.StatusExpectationFailed)
 	}
-	err = c.System().Cache.Remove(tokenRequest.Email + "_register")
-	if err != nil {
-		return c.NoContent(http.StatusExpectationFailed)
-	}
-	err = c.System().Cache.Remove(tokenRequest.Token)
+	err = c.System().DB.Session.DeleteTokenRequest(r)
 	if err != nil {
 		return c.NoContent(http.StatusExpectationFailed)
 	}
@@ -686,7 +651,7 @@ func Register(e echo.Context) error {
 
 func ResetPasswordRequest(e echo.Context) (err error) {
 	c := e.(*www.Context)
-	m := &TokenRequest{}
+	m := &model.TokenRequest{}
 	if err := c.Bind(&m); err != nil {
 		return err
 	}
@@ -695,36 +660,28 @@ func ResetPasswordRequest(e echo.Context) (err error) {
 		return c.JSON(http.StatusUnprocessableEntity, err)
 	}
 	if usr, err := c.System().DB.User.GetByEmail(m.Email); err == nil {
-		resetKey := m.Email + "_reset_pw"
-		var token *TokenRequest
-		err = c.System().Cache.Get(resetKey, &token)
+		var token model.TokenRequest
+		token.Email = m.Email
+		token.Token = uuid.NewV4().String()
+		token.UserID = usr.ID
+		token.Type = model.TokenResetPassword
+		err = c.System().DB.Session.PutTokenRequest(&token)
 		if err != nil {
-			token = m
-			u2 := uuid.NewV4()
-			token.Token = u2.String()
-			token.UserID = usr.ID
-			stngs := c.System().GetSettings()
-			err = c.System().EmailSender.Send(&email.Email{
-				From:    stngs.EmailFrom,
-				To:      []string{m.Email},
-				Subject: c.I18n().T("Reset Password"),
-				Body: fmt.Sprintf(
-					"Hi %s,\n\nif you requested a password reset, please go on and click on this link to reset your password\n%s\n\nIf you didn't request it, please ignore this email.\n\nProxeus",
-					usr.Name,
-					helpers.AbsoluteURL(c, "/reset/password/", token.Token),
-				),
-			})
-			if err != nil {
-				return c.NoContent(http.StatusExpectationFailed)
-			}
-			err = c.System().Cache.Put(resetKey, token)
-			if err != nil {
-				return c.NoContent(http.StatusInternalServerError)
-			}
-			err = c.System().Cache.Put(token.Token, token)
-			if err != nil {
-				return c.NoContent(http.StatusInternalServerError)
-			}
+			return c.NoContent(http.StatusInternalServerError)
+		}
+
+		err = c.System().EmailSender.Send(&email.Email{
+			From:    c.System().GetSettings().EmailFrom,
+			To:      []string{m.Email},
+			Subject: c.I18n().T("Reset Password"),
+			Body: fmt.Sprintf(
+				"Hi %s,\n\nif you requested a password reset, please go on and click on this link to reset your password\n%s\n\nIf you didn't request it, please ignore this email.\n\nProxeus",
+				usr.Name,
+				helpers.AbsoluteURL(c, "/reset/password/", token.Token),
+			),
+		})
+		if err != nil {
+			return c.NoContent(http.StatusExpectationFailed)
 		}
 	}
 	// always return ok if provided email was valid
@@ -734,12 +691,7 @@ func ResetPasswordRequest(e echo.Context) (err error) {
 
 func ResetPassword(e echo.Context) error {
 	c := e.(*www.Context)
-	token := c.Param("token")
-	var resetPwByEmail *TokenRequest
-	err := c.System().Cache.Get(token, &resetPwByEmail)
-	if err != nil {
-		return c.NoContent(http.StatusBadRequest)
-	}
+	tokenID := c.Param("token")
 	p := &struct {
 		Password string `json:"password"`
 	}{}
@@ -749,15 +701,12 @@ func ResetPassword(e echo.Context) error {
 	if len(p.Password) < 6 {
 		return c.JSON(http.StatusUnprocessableEntity, map[string]interface{}{"password": []map[string]interface{}{{"msg": c.I18n().T("Password not strong enough")}}})
 	}
-	err = c.System().DB.User.PutPw(resetPwByEmail.UserID, p.Password)
+	r, err := c.System().DB.Session.GetTokenRequest(model.TokenResetPassword, tokenID)
+	err = c.System().DB.User.PutPw(r.UserID, p.Password)
 	if err != nil {
 		return c.NoContent(http.StatusExpectationFailed)
 	}
-	err = c.System().Cache.Remove(resetPwByEmail.Email + "_reset_pw")
-	if err != nil {
-		return c.NoContent(http.StatusExpectationFailed)
-	}
-	err = c.System().Cache.Remove(resetPwByEmail.Token)
+	err = c.System().DB.Session.DeleteTokenRequest(r)
 	if err != nil {
 		return c.NoContent(http.StatusExpectationFailed)
 	}
@@ -766,7 +715,7 @@ func ResetPassword(e echo.Context) error {
 
 func ChangeEmailRequest(e echo.Context) (err error) {
 	c := e.(*www.Context)
-	m := &TokenRequest{}
+	m := &model.TokenRequest{}
 	_ = c.Bind(&m)
 	err = validate.Struct(m)
 	if err != nil {
@@ -777,69 +726,54 @@ func ChangeEmailRequest(e echo.Context) (err error) {
 		return c.NoContent(http.StatusUnauthorized)
 	}
 	if usr, err := c.System().DB.User.GetByEmail(m.Email); usr == nil {
-		resetKey := m.Email + "_change_email"
-		var token *TokenRequest
-		err = c.System().Cache.Get(resetKey, &token)
-		if err != nil {
-			token = m
-			u2 := uuid.NewV4()
-			usr, _ = c.System().DB.User.Get(sess, sess.UserID())
-			if usr == nil {
-				return c.NoContent(http.StatusUnauthorized)
-			}
-			token.Token = u2.String()
-			token.UserID = sess.UserID()
-			stngs := c.System().GetSettings()
-			err = c.System().EmailSender.Send(&email.Email{
-				From:    stngs.EmailFrom,
-				To:      []string{m.Email},
-				Subject: c.I18n().T("Change Email"),
-				Body: fmt.Sprintf(
-					"Hi %s,\n\nif you have requested an email change, please go on and click on this link to validate it:\n%s\n\nIf you didn't request it, please ignore this email.\n\nProxeus",
-					usr.Name,
-					helpers.AbsoluteURL(c, "/change/email/", token.Token),
-				),
-			})
-			if err != nil {
-				return c.NoContent(http.StatusExpectationFailed)
-			}
-			err = c.System().Cache.Put(resetKey, token)
-			if err != nil {
-				return c.NoContent(http.StatusInternalServerError)
-			}
-			err = c.System().Cache.Put(token.Token, token)
-			if err != nil {
-				return c.NoContent(http.StatusInternalServerError)
-			}
+		var token model.TokenRequest
+		usr, _ = c.System().DB.User.Get(sess, sess.UserID())
+		if usr == nil {
+			return c.NoContent(http.StatusUnauthorized)
 		}
-	} else {
-		return c.JSON(http.StatusUnprocessableEntity, map[string]interface{}{"email": []map[string]interface{}{{"msg": c.I18n().T("Please choose another one.")}}})
+		token.Email = m.Email
+		token.Token = uuid.NewV4().String()
+		token.UserID = sess.UserID()
+		token.Type = model.TokenChangeEmail
+		err = c.System().DB.Session.PutTokenRequest(&token)
+		if err != nil {
+			return c.NoContent(http.StatusInternalServerError)
+		}
+
+		err = c.System().EmailSender.Send(&email.Email{
+			From:    c.System().GetSettings().EmailFrom,
+			To:      []string{m.Email},
+			Subject: c.I18n().T("Change Email"),
+			Body: fmt.Sprintf(
+				"Hi %s,\n\nif you have requested an email change, please go on and click on this link to validate it:\n%s\n\nIf you didn't request it, please ignore this email.\n\nProxeus",
+				usr.Name,
+				helpers.AbsoluteURL(c, "/change/email/", token.Token),
+			),
+		})
+		if err != nil {
+			return c.NoContent(http.StatusExpectationFailed)
+		}
 	}
 	return c.NoContent(http.StatusOK)
 }
 
 func ChangeEmail(e echo.Context) error {
 	c := e.(*www.Context)
-	token := c.Param("token")
-	var tokenRequest *TokenRequest
-	err := c.System().Cache.Get(token, &tokenRequest)
+	tokenID := c.Param("tokenID")
+	r, err := c.System().DB.Session.GetTokenRequest(model.TokenChangeEmail, tokenID)
 	if err != nil {
 		return c.NoContent(http.StatusBadRequest)
 	}
-	err = c.System().DB.User.UpdateEmail(tokenRequest.UserID, tokenRequest.Email)
+	err = c.System().DB.User.UpdateEmail(r.UserID, r.Email)
 	if err != nil {
 		return c.NoContent(http.StatusExpectationFailed)
 	}
-	err = c.System().Cache.Remove(tokenRequest.Email + "_change_email")
-	if err != nil {
-		return c.NoContent(http.StatusExpectationFailed)
-	}
-	err = c.System().Cache.Remove(tokenRequest.Token)
+	err = c.System().DB.Session.DeleteTokenRequest(r)
 	if err != nil {
 		return c.NoContent(http.StatusExpectationFailed)
 	}
 	sess := c.Session(false)
-	if sess != nil && sess.UserID() == tokenRequest.UserID {
+	if sess != nil && sess.UserID() == r.UserID {
 		sess.Delete("user")
 		getUserFromSession(c, sess)
 	}
@@ -1061,11 +995,11 @@ func DocumentHandler(e echo.Context) error {
 			}
 		}
 
-		docApp, err = app.NewDocumentApp(usrDataItem, sess, c.System(), ID, sess.SessionDir())
+		docApp, err = app.NewDocumentApp(usrDataItem, sess, c.System(), ID, sess.GetSessionDir())
 		if err != nil {
 			return c.String(http.StatusUnprocessableEntity, err.Error())
 		}
-		sess.Put("docApp_"+ID, docApp)
+		sess.PutMemory("docApp_"+ID, docApp)
 	}
 
 	st, err = docApp.Current(nil)
@@ -1091,7 +1025,7 @@ func DocumentDeleteHandler(e echo.Context) error {
 		if err != nil {
 			return c.String(http.StatusBadRequest, err.Error())
 		}
-		sess.Delete("docApp_" + userDataItem.WorkflowID)
+		sess.DeleteMemory("docApp_" + userDataItem.WorkflowID)
 		err = c.System().DB.UserData.Delete(sess, c.System().DB.Files, ID)
 		if err != nil {
 			return c.String(http.StatusBadRequest, err.Error())
@@ -1135,13 +1069,13 @@ func DocumentEditHandler(e echo.Context) error {
 	return c.NoContent(http.StatusUnprocessableEntity)
 }
 
-func getUserFromSession(c *www.Context, s *session.Session) (user *model.User) {
+func getUserFromSession(c *www.Context, s *sys.Session) (user *model.User) {
 	if s == nil {
 		return nil
 	}
 	err := s.Get("user", &user)
 	if err != nil {
-		if s.ID() != "" {
+		if s.S.ID != "" {
 			id := s.UserID()
 			user, err = c.System().DB.User.Get(s, id)
 			if err != nil {
@@ -1182,7 +1116,7 @@ func DocumentNextHandler(e echo.Context) error {
 		//after tx success
 		if _, ok := c.QueryParams()["final"]; ok {
 			dataID := docApp.DataID
-			sess.Delete("docApp_" + ID)
+			sess.DeleteMemory("docApp_" + ID)
 			var item *model.UserDataItem
 			item, err = c.System().DB.UserData.Get(sess, dataID)
 			if err != nil {
@@ -1350,16 +1284,17 @@ func DocumentPreviewHandler(e echo.Context) error {
 	return c.NoContent(http.StatusNotFound)
 }
 
-func getDocApp(c *www.Context, sess *session.Session, ID string) *app.DocumentFlowInstance {
+func getDocApp(c *www.Context, sess *sys.Session, ID string) *app.DocumentFlowInstance {
 	if sess != nil {
 		var docApp *app.DocumentFlowInstance
 		sessDocAppID := "docApp_" + ID
-		err := sess.Get(sessDocAppID, &docApp)
-		if err != nil {
+		v, ok := sess.GetMemory(sessDocAppID)
+		if !ok {
 			return nil
 		}
+		docApp = v.(*app.DocumentFlowInstance)
 		if docApp != nil && docApp.NeedToBeInitialized() {
-			err = docApp.Init(sess, c.System())
+			err := docApp.Init(sess, c.System())
 			if err != nil {
 				log.Println("Init err", err)
 				return nil

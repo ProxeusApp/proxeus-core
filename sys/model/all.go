@@ -122,6 +122,22 @@ type (
 	}
 
 	TemplateLangMap map[string]*file.IO
+
+	TokenRequest struct {
+		Email  string    `json:"email" validate:"email=true,required=true"`
+		Token  string    `json:"token"`
+		UserID string    `json:"userID"`
+		Role   Role      `json:"role"`
+		Type   TokenType `json:"type"`
+	}
+
+	TokenType string
+)
+
+const (
+	TokenResetPassword TokenType = "reset_pw"
+	TokenRegister      TokenType = "register_usr"
+	TokenChangeEmail   TokenType = "change_email"
 )
 
 func (me *FormItem) GetVersion() int {

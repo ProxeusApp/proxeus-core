@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"reflect"
 	"strings"
+	"time"
 
 	"github.com/asdine/storm/q"
 	"go.mongodb.org/mongo-driver/bson"
@@ -21,6 +22,7 @@ type MongoShim struct {
 }
 
 const initializedKey = "initialized"
+const ttlKey = "ttl"
 
 func OpenMongo(dbURI string, dbName string) (*MongoShim, error) {
 	spl := strings.Split(dbName, "/")
@@ -54,15 +56,21 @@ func (s *MongoShim) nameToCollection(n string) *mongo.Collection {
 		return c
 	}
 	c := s.db.Collection(n)
-	s.assureUniqueIndex(c)
+	err := s.assureUniqueIndex(c)
+	if err != nil {
+		return nil
+	}
 	s.collections[n] = c
 	// just to force collection creation as implicit creation doesn't work for transactions
-	c.UpdateOne(s.ctx(), bson.M{"K": initializedKey}, bson.M{"$set": bson.M{"V": true}},
+	_, err = c.UpdateOne(s.ctx(), bson.M{"K": initializedKey}, bson.M{"$set": bson.M{"V": true}},
 		options.Update().SetUpsert(true))
+	if err != nil {
+		return nil
+	}
 	return c
 }
 
-func (s *MongoShim) assureUniqueIndex(c *mongo.Collection) {
+func (s *MongoShim) assureUniqueIndex(c *mongo.Collection) error {
 	i := mongo.IndexModel{
 		Keys: bson.M{
 			"K":    1,
@@ -70,7 +78,15 @@ func (s *MongoShim) assureUniqueIndex(c *mongo.Collection) {
 		},
 		Options: options.Index().SetUnique(true).SetName("custom-keys"),
 	}
-	c.Indexes().CreateOne(s.ctx(), i)
+	i2 := mongo.IndexModel{
+		Keys: bson.M{
+			"expireAt": 1,
+		},
+		Options: options.Index().SetName("ttl-index").SetSparse(true).
+			SetExpireAfterSeconds(0),
+	}
+	_, err := c.Indexes().CreateMany(s.ctx(), []mongo.IndexModel{i, i2})
+	return err
 }
 
 func (s *MongoShim) objectToCollection(o interface{}) *mongo.Collection {
@@ -86,23 +102,47 @@ func (s *MongoShim) typeToCollection(t reflect.Type) *mongo.Collection {
 }
 
 // Get a value from a bucket
-func (s *MongoShim) Get(bucketName string, key interface{}, to interface{}) error {
+func (s *MongoShim) Get(bucketName string, key interface{}, to interface{}, opts ...*GetOptions) error {
 	c := s.nameToCollection(bucketName)
 	var raw bson.Raw
 	err := c.FindOne(s.ctx(), bson.M{"K": key}).Decode(&raw)
 	if err != nil {
 		return err
 	}
+
+	if ttlRefresh(opts) {
+		tv, err := raw.LookupErr(ttlKey)
+		if err == nil {
+			// item had ttl set
+			var ttl time.Duration
+			err = tv.Unmarshal(&ttl)
+			if err != nil {
+				return err
+			}
+			_, err := c.UpdateOne(s.ctx(), bson.M{"K": key},
+				bson.M{"$set": bson.M{"expireAt": time.Now().UTC().Add(ttl)}})
+			if err != nil {
+				return err
+			}
+		}
+	}
 	return raw.Lookup("V").Unmarshal(to)
 }
 
 // Set a key/value pair into a bucket
-func (s *MongoShim) Set(bucketName string, key interface{}, value interface{}) error {
+func (s *MongoShim) Set(bucketName string, key interface{}, value interface{}, opts ...*SetOptions) error {
 	if t := reflect.ValueOf(key).Type().Kind(); t != reflect.String {
 		return fmt.Errorf("required string type got %s", t.String())
 	}
 	c := s.nameToCollection(bucketName)
-	_, err := c.UpdateOne(s.ctx(), bson.M{"K": key}, bson.M{"$set": bson.M{"V": value}},
+	v := bson.M{"V": value}
+
+	ttl := ttlDuration(opts)
+	if ttl > 0 {
+		v["expireAt"] = time.Now().UTC().Add(ttl)
+		v[ttlKey] = ttl
+	}
+	_, err := c.UpdateOne(s.ctx(), bson.M{"K": key}, bson.M{"$set": v},
 		options.Update().SetUpsert(true))
 	return err
 }
