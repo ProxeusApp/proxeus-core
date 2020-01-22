@@ -8,9 +8,10 @@ import (
 	"os"
 	"testing"
 
+	"github.com/ProxeusApp/proxeus-core/sys/model"
+
 	"github.com/ethereum/go-ethereum/crypto"
 
-	"github.com/ProxeusApp/proxeus-core/main/handlers/api"
 	uuid "github.com/satori/go.uuid"
 	"gopkg.in/gavv/httpexpect.v2"
 )
@@ -71,7 +72,7 @@ func registerTestUser(s *session) *user {
 	s.t.Logf("Starting test %s", s.id)
 	s.t.Logf("User %s %s", u.username, u.password)
 
-	tr := &api.TokenRequest{
+	tr := &model.TokenRequest{
 		Email: u.username,
 	}
 

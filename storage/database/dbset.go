@@ -1,6 +1,10 @@
 package database
 
-import "github.com/ProxeusApp/proxeus-core/storage"
+import (
+	"time"
+
+	"github.com/ProxeusApp/proxeus-core/storage"
+)
 
 func NewDBSet(sDB storage.SettingsIF, folderPath string) (me *storage.DBSet, err error) {
 	me = &storage.DBSet{Settings: sDB}
@@ -46,6 +50,18 @@ func NewDBSet(sDB storage.SettingsIF, folderPath string) (me *storage.DBSet, err
 		return nil, err
 	}
 	me.WorkflowPayments, err = NewWorkflowPaymentDB(conf)
+	if err != nil {
+		return nil, err
+	}
+	sessionExpiration, err := time.ParseDuration(settings.SessionExpiry)
+	if err != nil {
+		return nil, err
+	}
+	tokenExpiration, err := time.ParseDuration(settings.CacheExpiry)
+	if err != nil {
+		return nil, err
+	}
+	me.Session, err = NewSessionDB(conf, sessionExpiration, tokenExpiration)
 	if err != nil {
 		return nil, err
 	}

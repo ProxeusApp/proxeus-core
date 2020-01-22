@@ -3,6 +3,7 @@ package db
 import (
 	"reflect"
 	"testing"
+	"time"
 
 	"github.com/asdine/storm/q"
 )
@@ -227,6 +228,55 @@ func testAdvancedFetching(t *testing.T, db DB) {
 	}
 
 	deleteData(t, db)
+}
+
+func testTTL(t *testing.T, db DB) {
+	defer db.Close()
+
+	err := db.Set("bucketTTL", "123", &myStruct{ID: "abc"},
+		OptionWithTTL(time.Duration(1)*time.Second))
+	if err != nil {
+		t.Error(err)
+	}
+
+	// get immediately, should be present
+	{
+		var ms myStruct
+		err = db.Get("bucketTTL", "123", &ms)
+		if err != nil || ms.ID != "abc" {
+			t.Error("expected to get object, got err", err, "obj", ms)
+		}
+	}
+
+	{
+		wait := make(chan struct{})
+		shouldContinue := true
+		go func() {
+			select {
+			case <-wait:
+			case <-time.After(70 * time.Second):
+				// after this time TTL feature should delete the record
+				// mongo default TTL check interval is 60 seconds
+				shouldContinue = false
+			}
+		}()
+
+		var err error
+		var ms myStruct
+		// repeat until deletion due to TTL is observed (or timeout test fail)
+		for shouldContinue {
+			ms = myStruct{}
+			err = db.Get("bucketTTL", "123", &ms, OptionWithNoTTLRefresh())
+			if NotFound(err) {
+				close(wait)
+				break
+			}
+			time.Sleep(3 * time.Millisecond)
+		}
+		if !NotFound(err) {
+			t.Error("expected not found err, got err", err, "obj", ms)
+		}
+	}
 }
 
 func testTransactions(t *testing.T, db DB) {

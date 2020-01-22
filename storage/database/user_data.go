@@ -287,8 +287,7 @@ func (me *UserDataDB) put(auth model.Auth, item *model.UserDataItem, updated boo
 		if !auth.AccessRights().AllowedToCreateUserData() {
 			return model.ErrAuthorityMissing
 		}
-		u2 := uuid.NewV4()
-		item.ID = u2.String()
+		item.ID = uuid.NewV4().String()
 		item.Permissions = model.Permissions{Owner: auth.UserID()}
 		item.Created = time.Now()
 		item.Updated = item.Created

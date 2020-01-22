@@ -12,6 +12,8 @@ import (
 	"os"
 	"strings"
 
+	"github.com/ProxeusApp/proxeus-core/sys"
+
 	"github.com/ProxeusApp/proxeus-core/storage/portable"
 
 	"github.com/labstack/echo"
@@ -24,7 +26,6 @@ import (
 	"github.com/ProxeusApp/proxeus-core/sys/eio"
 	"github.com/ProxeusApp/proxeus-core/sys/file"
 	"github.com/ProxeusApp/proxeus-core/sys/model"
-	"github.com/ProxeusApp/proxeus-core/sys/session"
 )
 
 var rendererHelper = func(e echo.Context, tmplPath, fileName string) error {
@@ -284,7 +285,7 @@ func IdeGetDeleteHandler(e echo.Context) error {
 	if sess != nil {
 		id := c.Param("id")
 		lang := c.Param("lang")
-		err := ideDelete(c, id, lang, sess)
+		err := ideDelete(id, lang, sess)
 		if err != nil {
 			return c.String(http.StatusBadRequest, err.Error())
 		}
@@ -293,9 +294,9 @@ func IdeGetDeleteHandler(e echo.Context) error {
 	return c.NoContent(http.StatusBadRequest)
 }
 
-func ideDelete(c *www.Context, id, lang string, sess *session.Session) error {
+func ideDelete(id, lang string, sess *sys.Session) error {
 	sess.Delete(id + lang)
-	return sess.DeleteFile(c.System().DB, id+lang)
+	return sess.DeleteFile(id + lang)
 }
 
 func IdePostUploadHandler(e echo.Context) error {
@@ -309,7 +310,7 @@ func IdePostUploadHandler(e echo.Context) error {
 			fileName = "unknown"
 		}
 		sess.Put(id+lang, fileName)
-		err := sess.WriteFile(c.System().DB, id+lang, c.Request().Body)
+		err := sess.WriteFile(id+lang, c.Request().Body)
 		c.Request().Body.Close()
 		if err != nil {
 			return c.String(http.StatusBadRequest, err.Error())
@@ -393,7 +394,7 @@ func UploadTemplateHandler(e echo.Context) error {
 			c.System().DB.Template.PutVars(sess, id, lang, vars)
 		}
 		//remove pending file from the session
-		err = ideDelete(c, id, lang, sess)
+		err = ideDelete(id, lang, sess)
 		if err != nil {
 			return c.NoContent(http.StatusBadRequest)
 		}

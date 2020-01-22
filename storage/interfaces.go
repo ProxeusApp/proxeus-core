@@ -20,6 +20,7 @@ type DBSet struct {
 	SignatureRequests SignatureRequestsIF
 	WorkflowPayments  WorkflowPaymentsIF
 	Files             FilesIF
+	Session           SessionIF
 }
 
 type Options struct {
@@ -173,6 +174,19 @@ type FilesIF interface {
 	Close() error
 }
 
+type SessionIF interface {
+	Get(sid string) (*model.Session, error)
+	Put(s *model.Session) error
+	Delete(s *model.Session) error
+	GetTokenRequest(t model.TokenType, id string) (*model.TokenRequest, error)
+	PutTokenRequest(r *model.TokenRequest) error
+	DeleteTokenRequest(r *model.TokenRequest) error
+	GetValue(key string, v interface{}) error
+	PutValue(key string, v interface{}) error
+	DeleteValue(key string) error
+	Close() error
+}
+
 func (db *DBSet) Close() error {
 	cs := []io.Closer{
 		db.Settings,
@@ -185,6 +199,7 @@ func (db *DBSet) Close() error {
 		db.SignatureRequests,
 		db.WorkflowPayments,
 		db.Files,
+		db.Session,
 	}
 	for _, c := range cs {
 		if c == nil {

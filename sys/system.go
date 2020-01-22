@@ -5,30 +5,24 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
+	"log"
 	"os"
 	"path/filepath"
 	"strings"
 	"time"
 
-	"github.com/ProxeusApp/proxeus-core/storage/database"
-
-	"github.com/ProxeusApp/proxeus-core/storage/portable"
-
 	"github.com/ethereum/go-ethereum/accounts/abi"
-
-	"github.com/ProxeusApp/proxeus-core/main/handlers/blockchain"
-	"github.com/ProxeusApp/proxeus-core/storage"
-
-	"log"
+	"github.com/patrickmn/go-cache"
 
 	cfg "github.com/ProxeusApp/proxeus-core/main/config"
-	"github.com/ProxeusApp/proxeus-core/sys/cache"
-	"github.com/ProxeusApp/proxeus-core/sys/email"
-	"github.com/ProxeusApp/proxeus-core/sys/validate"
-
+	"github.com/ProxeusApp/proxeus-core/main/handlers/blockchain"
+	"github.com/ProxeusApp/proxeus-core/storage"
+	"github.com/ProxeusApp/proxeus-core/storage/database"
+	"github.com/ProxeusApp/proxeus-core/storage/portable"
 	"github.com/ProxeusApp/proxeus-core/sys/eio"
+	"github.com/ProxeusApp/proxeus-core/sys/email"
 	"github.com/ProxeusApp/proxeus-core/sys/model"
-	"github.com/ProxeusApp/proxeus-core/sys/session"
+	"github.com/ProxeusApp/proxeus-core/sys/validate"
 )
 
 var (
@@ -44,20 +38,17 @@ var (
 
 type (
 	System struct {
-		TestMode                    bool
-		SessionMgmnt                *session.Manager
-		DB                          *storage.DBSet
-		DS                          *eio.DocumentServiceClient
-		EmailSender                 email.EmailSender
-		Cache                       *cache.UCache
+		TestMode    bool
+		DB          *storage.DBSet
+		DS          *eio.DocumentServiceClient
+		EmailSender email.EmailSender
+
 		settingsDB                  storage.SettingsIF
 		settingsInUse               model.Settings
 		paymentListenerCancelFunc   context.CancelFunc
 		signatureListenerCancelFunc context.CancelFunc
 		tick                        *time.Ticker
-	}
-	sessionNotify struct {
-		system *System
+		cache                       *cache.Cache
 	}
 )
 
@@ -83,14 +74,10 @@ func (me *System) init(stngs *model.Settings) error {
 	stngs.DataDir, _ = filepath.Abs(stngs.DataDir)
 	log.Printf("Init with settings: %#v\n", stngs)
 
-	expiry, err := time.ParseDuration(stngs.SessionExpiry)
-	if err != nil {
-		expiry = time.Hour
-	}
-
 	me.DS = &eio.DocumentServiceClient{Url: stngs.DocumentServiceUrl}
 	me.settingsInUse.DocumentServiceUrl = stngs.DocumentServiceUrl
 
+	var err error
 	me.EmailSender, err = email.NewSparkPostEmailSender(stngs.SparkpostApiKey, stngs.EmailFrom)
 	if err != nil {
 		return err
@@ -114,26 +101,8 @@ func (me *System) init(stngs *model.Settings) error {
 	cfg.Config.AirdropAmountXES = stngs.AirdropAmountXES
 
 	me.closeDBs()
-	var cacheExpiry time.Duration
-	cacheExpiry, err = time.ParseDuration(stngs.CacheExpiry)
-	if err != nil {
-		cacheExpiry = time.Hour
-	}
 
-	_, err = os.Stat(stngs.DataDir)
-	if os.IsNotExist(err) {
-		err = os.MkdirAll(stngs.DataDir, 0755)
-		if err != nil {
-			return err
-		}
-	}
-	config := cache.UCacheConfig{
-		DiskStorePath: filepath.Join(stngs.DataDir, "cache"),
-		StoreType:     cache.DiskCache,
-		ExtendExpiry:  false,
-		DefaultExpiry: cacheExpiry,
-	}
-	me.Cache, err = cache.NewUCache(config)
+	err = os.MkdirAll(stngs.DataDir, 0755)
 	if err != nil {
 		return err
 	}
@@ -142,12 +111,13 @@ func (me *System) init(stngs *model.Settings) error {
 	if err != nil {
 		return err
 	}
-	sessionNotify := &sessionNotify{system: me}
-	me.SessionMgmnt, err = session.NewManagerWithNotify(stngs.DataDir, expiry, sessionNotify)
+	me.settingsInUse.DataDir = stngs.DataDir
+
+	cacheExpiry, err := time.ParseDuration(stngs.SessionExpiry)
 	if err != nil {
 		return err
 	}
-	me.settingsInUse.DataDir = stngs.DataDir
+	me.cache = cache.New(cacheExpiry, 10*time.Minute)
 
 	XESABI, err := abi.JSON(strings.NewReader(blockchain.XesMainTokenABI))
 	if err != nil {
@@ -237,24 +207,10 @@ func (me *System) PutSettings(stngs *model.Settings) error {
 	return me.init(stngs)
 }
 
-func (me *sessionNotify) OnSessionCreated(id string, s *session.Session) {
-	log.Println("OnSessionCreated", s)
-}
-
-func (me *sessionNotify) OnSessionLoaded(id string, s *session.Session) {
-	log.Println("OnSessionLoaded", s)
-}
-
-func (me *sessionNotify) OnSessionExpired(id string, s *session.Session) {
-	log.Println("OnSessionExpired", s, id)
-}
-
-func (me *sessionNotify) OnSessionRemoved(id string) {
-	log.Println("OnSessionRemoved", id)
-}
-
-func (me *System) Export(writer io.Writer, s *session.Session, entities []portable.EntityType) (portable.ProcessedResults, error) {
-	ie, err := portable.NewImportExport(s, me.DB, s.SessionDir())
+func (me *System) Export(writer io.Writer, s *Session, entities []portable.EntityType) (portable.ProcessedResults, error) {
+	dir := filepath.Join(os.TempDir(), s.GetSessionDir())
+	defer os.RemoveAll(dir)
+	ie, err := portable.NewImportExport(s, me.DB, dir)
 	if err != nil {
 		return nil, err
 	}
@@ -281,8 +237,10 @@ func (me *System) Export(writer io.Writer, s *session.Session, entities []portab
 	return ie.Processed(), nil
 }
 
-func (me *System) ExportSingle(writer io.Writer, s *session.Session, entity portable.EntityType, id ...string) (portable.ProcessedResults, error) {
-	ie, err := portable.NewImportExport(s, me.DB, s.SessionDir())
+func (me *System) ExportSingle(writer io.Writer, s *Session, entity portable.EntityType, id ...string) (portable.ProcessedResults, error) {
+	dir := filepath.Join(os.TempDir(), s.GetSessionDir())
+	defer os.RemoveAll(dir)
+	ie, err := portable.NewImportExport(s, me.DB, dir)
 	if err != nil {
 		return nil, err
 	}
@@ -307,8 +265,10 @@ func (me *System) ExportSingle(writer io.Writer, s *session.Session, entity port
 	return ie.Processed(), nil
 }
 
-func (me *System) Import(reader io.Reader, s *session.Session, skipExisting bool) (portable.ProcessedResults, error) {
-	ie, err := portable.NewImportExport(s, me.DB, s.SessionDir())
+func (me *System) Import(reader io.Reader, s *Session, skipExisting bool) (portable.ProcessedResults, error) {
+	dir := filepath.Join(os.TempDir(), s.GetSessionDir())
+	defer os.RemoveAll(dir)
+	ie, err := portable.NewImportExport(s, me.DB, dir)
 	if err != nil {
 		return nil, err
 	}
@@ -336,15 +296,16 @@ func (me *System) Import(reader io.Reader, s *session.Session, skipExisting bool
 	return ie.Processed(), nil
 }
 
+func (me *System) GetSession(sid string) (*Session, error) {
+	s, err := me.DB.Session.Get(sid)
+	return &Session{S: s, db: me.DB, cache: me.cache}, err
+}
+
+func (me *System) NewSession(usr *model.User) (*Session, error) {
+	return NewSession(me, usr)
+}
+
 func (me *System) closeDBs() {
-	if me.Cache != nil {
-		me.Cache.Close()
-		me.Cache = nil
-	}
-	if me.SessionMgmnt != nil {
-		_ = me.SessionMgmnt.Close()
-		me.SessionMgmnt = nil
-	}
 	if me.DB == nil {
 		return
 	}

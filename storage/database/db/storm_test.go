@@ -28,6 +28,13 @@ func TestGetQuirksStorm(t *testing.T) {
 	testGetQuirks(t, openStormDB(t, f.Name()))
 }
 
+func TestTTLStorm(t *testing.T) {
+	f, _ := ioutil.TempFile("", "test_db_")
+	defer os.Remove(f.Name())
+
+	testTTL(t, openStormDB(t, f.Name()))
+}
+
 func TestAdvancedFetchingStorm(t *testing.T) {
 	f, _ := ioutil.TempFile("", "test_db_")
 	defer os.Remove(f.Name())
