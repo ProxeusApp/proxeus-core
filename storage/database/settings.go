@@ -1,6 +1,7 @@
 package database
 
 import (
+	"os"
 	"os/user"
 	"path/filepath"
 	"strings"
@@ -29,8 +30,7 @@ func resolveHomeDirectory(path string) string {
 
 func NewSettingsDB(settingsFile string, initialSettings *model.Settings) (*SettingsDB, error) {
 	path := resolveHomeDirectory(settingsFile)
-
-	err := ensureDir(filepath.Dir(path))
+	err := os.MkdirAll(filepath.Dir(path), 0750)
 	if err != nil {
 		return nil, err
 	}

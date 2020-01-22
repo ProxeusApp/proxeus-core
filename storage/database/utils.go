@@ -1,7 +1,6 @@
 package database
 
 import (
-	"os"
 	"regexp"
 	"strings"
 
@@ -59,18 +58,6 @@ func makeSimpleQuery(o storage.Options) *simpleQuery {
 	sq.rawIndex = sq.index
 	sq.index = sq.index * sq.limit
 	return sq
-}
-
-func ensureDir(dir string) error {
-	var err error
-	_, err = os.Stat(dir)
-	if os.IsNotExist(err) {
-		err = os.MkdirAll(dir, 0750)
-		if err != nil {
-			return err
-		}
-	}
-	return nil
 }
 
 func defaultMatcher(auth model.Auth, contains string, params *simpleQuery, includeReadGranted bool) []q.Matcher {

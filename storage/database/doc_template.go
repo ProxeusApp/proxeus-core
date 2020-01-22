@@ -24,27 +24,13 @@ type DocTemplateDB struct {
 const docTemplVersion = "doctmpl_vers"
 
 func NewDocTemplateDB(c DBConfig) (*DocTemplateDB, error) {
-	var err error
-
 	baseDir := filepath.Join(c.Dir, "document_template")
-	err = ensureDir(baseDir)
-	if err != nil {
-		return nil, err
-	}
-	assetDir := filepath.Join(baseDir, "assets")
-	err = ensureDir(assetDir)
-	if err != nil {
-		return nil, err
-	}
 	db, err := db.OpenDatabase(c.Engine, c.URI, filepath.Join(baseDir, "document_templates"))
 	if err != nil {
 		return nil, err
 	}
-	udb := &DocTemplateDB{db: db}
-	udb.baseFilePath = assetDir
-
+	udb := &DocTemplateDB{db: db, baseFilePath: filepath.Join(baseDir, "assets")}
 	example := &model.TemplateItem{}
-
 	udb.db.Init(example)
 	initVars(udb.db)
 	err = udb.db.Set(docTemplVersion, docTemplVersion, example.GetVersion())

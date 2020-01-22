@@ -34,24 +34,12 @@ const formVersion = "form_version"
 const formCompVersion = "formComp_version"
 
 func NewFormDB(c DBConfig) (*FormDB, error) {
-	var err error
-
 	baseDir := filepath.Join(c.Dir, "form")
-	err = ensureDir(baseDir)
-	if err != nil {
-		return nil, err
-	}
-	assetDir := filepath.Join(baseDir, "assets")
-	err = ensureDir(assetDir)
-	if err != nil {
-		return nil, err
-	}
 	db, err := db.OpenDatabase(c.Engine, c.URI, filepath.Join(baseDir, "forms"))
 	if err != nil {
 		return nil, err
 	}
-	udb := &FormDB{db: db}
-	udb.baseFilePath = assetDir
+	udb := &FormDB{db: db, baseFilePath: filepath.Join(baseDir, "assets")}
 
 	udb.db.Init(formHeavyData)
 

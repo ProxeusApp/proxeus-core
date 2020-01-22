@@ -1,6 +1,9 @@
 package db
 
 import (
+	"os"
+	"path/filepath"
+
 	"github.com/asdine/storm"
 	"github.com/asdine/storm/codec/msgpack"
 	"github.com/asdine/storm/q"
@@ -12,6 +15,11 @@ type StormShim struct {
 }
 
 func OpenStorm(path string) (*StormShim, error) {
+	dir := filepath.Dir(path)
+	err := os.MkdirAll(dir, 0750)
+	if err != nil {
+		return nil, err
+	}
 	db, err := storm.Open(path, storm.Codec(msgpack.Codec))
 	return &StormShim{db: db, tx: db}, err
 }

@@ -56,7 +56,7 @@ func NewImportExport(auth model.Auth, dbSet *storage.DBSet, dir string) (*Import
 	}
 	ie.mainDir = filepath.Join(dir, u.String())
 	ie.dir = filepath.Join(ie.mainDir, "data")
-	err := ensureDir(ie.dir)
+	err := os.MkdirAll(ie.dir, 0750)
 	if err != nil {
 		return nil, err
 	}
@@ -64,18 +64,6 @@ func NewImportExport(auth model.Auth, dbSet *storage.DBSet, dir string) (*Import
 	ie.dbConfig = database.DBConfig{Engine: "storm", Dir: ie.dir}
 	ie.db.Files, err = database.NewFileDB(ie.dbConfig)
 	return ie, err
-}
-
-func ensureDir(dir string) error {
-	var err error
-	_, err = os.Stat(dir)
-	if os.IsNotExist(err) {
-		err = os.MkdirAll(dir, 0750)
-		if err != nil {
-			return err
-		}
-	}
-	return nil
 }
 
 func (ie *ImportExport) SetSkipExistingOnImport(yes bool) {
