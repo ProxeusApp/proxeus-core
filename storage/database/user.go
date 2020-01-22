@@ -362,8 +362,7 @@ func (me *UserDB) put(auth model.Auth, item *model.User, updated bool) error {
 	defer tx.Rollback()
 	now := time.Now()
 	if item.ID == "" {
-		u2 := uuid.NewV4()
-		item.ID = u2.String()
+		item.ID = uuid.NewV4().String()
 		if !auth.AccessRights().IsGrantedFor(item.Role) {
 			return model.ErrAuthorityMissing
 		}
@@ -484,8 +483,7 @@ func (me *UserDB) PutProfilePhoto(auth model.Auth, id string, reader io.Reader) 
 	}
 	u.Updated = time.Now()
 	if u.PhotoPath == "" {
-		u2 := uuid.NewV4()
-		u.PhotoPath = u2.String()
+		u.PhotoPath = uuid.NewV4().String()
 		err = me.db.Save(u)
 		if err != nil {
 			return err

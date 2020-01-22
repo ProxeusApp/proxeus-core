@@ -1,15 +1,17 @@
 package db
 
 import (
+	"time"
+
 	"github.com/asdine/storm/q"
 )
 
 // DB represents common set of the db API.
 type DB interface {
 	// Get a value from a bucket
-	Get(bucketName string, key interface{}, to interface{}) error
+	Get(bucketName string, key interface{}, to interface{}, opts ...*GetOptions) error
 	// Set a key/value pair into a bucket
-	Set(bucketName string, key interface{}, value interface{}) error
+	Set(bucketName string, key interface{}, value interface{}, opts ...*SetOptions) error
 	// Delete deletes a key from a bucket
 	Delete(bucketName string, key interface{}) error
 
@@ -59,4 +61,20 @@ type Query interface {
 	First(to interface{}) error
 	// Execute the given function for each element
 	Each(kind interface{}, fn func(interface{}) error) error
+}
+
+type SetOptions struct {
+	TTL time.Duration
+}
+
+type GetOptions struct {
+	NoTTLRefresh bool
+}
+
+func OptionWithTTL(ttl time.Duration) *SetOptions {
+	return &SetOptions{TTL: ttl}
+}
+
+func OptionWithNoTTLRefresh() *GetOptions {
+	return &GetOptions{NoTTLRefresh: true}
 }

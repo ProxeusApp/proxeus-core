@@ -86,12 +86,9 @@ func Tar(src string, srcExtraList []string, writer io.Writer) error {
 }
 
 func Untar(dst string, r io.Reader) (err error) {
-	_, err = os.Stat(dst)
-	if os.IsNotExist(err) {
-		err = os.MkdirAll(dst, 0750)
-		if err != nil {
-			return
-		}
+	err = os.MkdirAll(dst, 0750)
+	if err != nil {
+		return
 	}
 	var gzr *gzip.Reader
 	gzr, err = gzip.NewReader(r)
@@ -124,10 +121,8 @@ func Untar(dst string, r io.Reader) (err error) {
 
 		// if its a dir and it doesn't exist create it
 		case tar.TypeDir:
-			if _, err = os.Stat(target); err != nil {
-				if err = os.MkdirAll(target, 0755); err != nil {
-					return
-				}
+			if err = os.MkdirAll(target, 0755); err != nil {
+				return
 			}
 			// if it's a file create it
 		case tar.TypeReg:

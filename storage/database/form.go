@@ -112,8 +112,7 @@ func (me *FormDB) put(auth model.Auth, item *model.FormItem, updated bool) error
 		if !auth.AccessRights().AllowedToCreateEntities() {
 			return model.ErrAuthorityMissing
 		}
-		u2 := uuid.NewV4()
-		item.ID = u2.String()
+		item.ID = uuid.NewV4().String()
 		item.Permissions = model.Permissions{Owner: auth.UserID()}
 		tx, err := me.db.Begin(true)
 		if err != nil {
@@ -249,8 +248,7 @@ func (me *FormDB) PutComp(auth model.Auth, comp *model.FormComponentItem) error 
 	}
 
 	if comp.ID == "" { //insert new item
-		u2 := uuid.NewV4()
-		comp.ID = u2.String()
+		comp.ID = uuid.NewV4().String()
 	}
 
 	return me.db.Save(comp)

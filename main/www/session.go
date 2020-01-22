@@ -11,8 +11,8 @@ import (
 	"github.com/labstack/echo"
 	"github.com/labstack/echo-contrib/session"
 
+	"github.com/ProxeusApp/proxeus-core/sys"
 	"github.com/ProxeusApp/proxeus-core/sys/model"
-	sysSess "github.com/ProxeusApp/proxeus-core/sys/session"
 )
 
 func SessionMiddleware() echo.MiddlewareFunc {
@@ -30,11 +30,11 @@ func init() {
 	anonymousUser.Name = "anonymous"
 }
 
-func getSessionWithUser(c *Context, create bool, usr *model.User) (currentSession *sysSess.Session, err error) {
+func getSessionWithUser(c *Context, create bool, usr *model.User) (currentSession *sys.Session, err error) {
 	if !create || usr == nil {
 		if csess := c.Get("sys.session"); csess != nil {
 			var ok bool
-			if currentSession, ok = csess.(*sysSess.Session); ok {
+			if currentSession, ok = csess.(*sys.Session); ok {
 				return
 			}
 		}
@@ -47,14 +47,14 @@ func getSessionWithUser(c *Context, create bool, usr *model.User) (currentSessio
 	if sid, ok := sess.Values["id"]; ok {
 		//session exists
 		if sidStr, ok := sid.(string); ok {
-			if c.System() != nil && c.System().SessionMgmnt != nil {
-				currentSession, err = c.System().SessionMgmnt.Get(sidStr)
+			if c.System() != nil {
+				currentSession, err = c.System().GetSession(sidStr)
 			}
 		}
 	}
 	if create && usr != nil && currentSession != nil {
-		if currentSession.ID() != usr.ID || currentSession.AccessRights() != usr.Role || currentSession.UserName() != usr.Name {
-			currentSession.Kill()
+		if currentSession.S.UsrID != usr.ID || currentSession.AccessRights() != usr.Role || currentSession.S.UserName != usr.Name {
+			currentSession.DeleteAll()
 			currentSession = nil
 		}
 	}
@@ -62,9 +62,12 @@ func getSessionWithUser(c *Context, create bool, usr *model.User) (currentSessio
 		if usr == nil {
 			usr = anonymousUser
 		}
-		currentSession, err = c.System().SessionMgmnt.New(usr.ID, usr.Name, usr.Role)
+		currentSession, err = c.System().NewSession(usr)
+		if err != nil {
+			return
+		}
 		if currentSession != nil {
-			sess.Values["id"] = currentSession.ID()
+			sess.Values["id"] = currentSession.S.ID
 			options := sessions.Options{
 				Path:     "/",
 				MaxAge:   60 * 30, // 30 minutes,
@@ -82,12 +85,12 @@ func getSessionWithUser(c *Context, create bool, usr *model.User) (currentSessio
 	}
 	return
 }
-func getSession(c *Context, create bool) (currentSession *sysSess.Session, err error) {
+func getSession(c *Context, create bool) (currentSession *sys.Session, err error) {
 	return getSessionWithUser(c, create, nil)
 }
 
 func delSession(c *Context) (err error) {
-	var sess *sysSess.Session
+	var sess *sys.Session
 	sess, err = getSession(c, false)
 	if err != nil {
 		return err
@@ -95,9 +98,9 @@ func delSession(c *Context) (err error) {
 	if sess == nil {
 		return os.ErrNotExist
 	}
-	err = sess.Kill()
+	err = sess.DeleteAll()
 	DeleteCookie(c, "s")
-	return
+	return err
 }
 
 var pastTime = time.Unix(0, 0)

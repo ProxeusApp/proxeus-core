@@ -18,8 +18,6 @@ import (
 	sm "github.com/ProxeusApp/proxeus-core/storage/database/mock"
 	"github.com/ProxeusApp/proxeus-core/sys"
 	"github.com/ProxeusApp/proxeus-core/sys/model"
-	sysSess "github.com/ProxeusApp/proxeus-core/sys/session"
-
 	"github.com/golang/mock/gomock"
 	"github.com/gorilla/sessions"
 	"github.com/labstack/echo"
@@ -35,8 +33,8 @@ func setupPaymentRequestTest(httpMethod, targetUrl, body string) (*www.Context, 
 
 	sessionStore := sessions.NewCookieStore([]byte("secret_Dummy_1234"), []byte("12345678901234567890123456789012"))
 	c.Set("_session_store", sessionStore)
-	sysSession := &sysSess.Session{}
-	sysSession.SetUserID("1")
+	sysSession := &sys.Session{S: &model.Session{}}
+	sysSession.S.UsrID = "1"
 
 	c.Set("sys.session", sysSession)
 	wwwContext := &www.Context{Context: c}

@@ -6,13 +6,13 @@ require (
 	github.com/DataDog/zstd v1.4.4 // indirect
 	github.com/SparkPost/gosparkpost v0.0.0-20170825125937-4c6d2a3be658
 	github.com/ajg/form v1.5.1 // indirect
+	github.com/allegro/bigcache v1.2.1 // indirect
 	github.com/aristanetworks/goarista v0.0.0-20190522184417-004c259faaeb // indirect
 	github.com/asdine/storm v0.0.0-20190418133842-e0f77eada154
 	github.com/asticode/go-bindata v1.0.0 // indirect
 	github.com/btcsuite/btcd v0.0.0-20190523000118-16327141da8c // indirect
 	github.com/c2h5oh/datasize v0.0.0-20171227191756-4eba002a5eae
 	github.com/cespare/cp v1.1.1 // indirect
-	github.com/davecgh/go-spew v1.1.1
 	github.com/deckarep/golang-set v1.7.1 // indirect
 	github.com/disintegration/imaging v1.6.0
 	github.com/dlclark/regexp2 v1.1.6 // indirect
@@ -43,6 +43,7 @@ require (
 	github.com/mattn/go-colorable v0.1.2 // indirect
 	github.com/moul/http2curl v1.0.0 // indirect
 	github.com/onsi/gomega v1.8.1
+	github.com/patrickmn/go-cache v2.1.0+incompatible
 	github.com/pborman/uuid v0.0.0-20180906182336-adf5a7427709 // indirect
 	github.com/pkg/errors v0.8.1
 	github.com/robertkrimen/otto v0.0.0-20180617131154-15f95af6e78d
@@ -51,9 +52,10 @@ require (
 	github.com/sergi/go-diff v1.0.0 // indirect
 	github.com/smartystreets/goconvey v1.6.4 // indirect
 	github.com/stretchr/testify v1.4.0
+	github.com/tidwall/pretty v1.0.0 // indirect
 	github.com/valyala/fasthttp v0.0.0-20171207120941-e5f51c11919d // indirect
 	github.com/valyala/fasttemplate v1.0.1 // indirect
-	github.com/vmihailenco/msgpack v4.0.4+incompatible
+	github.com/vmihailenco/msgpack v4.0.4+incompatible // indirect
 	github.com/wadey/gocovmerge v0.0.0-20160331181800-b5bfa59ec0ad // indirect
 	github.com/xdg/scram v0.0.0-20180814205039-7eeb5667e42c // indirect
 	github.com/xdg/stringprep v1.0.0 // indirect
@@ -64,7 +66,7 @@ require (
 	github.com/yudai/gojsondiff v0.0.0-20170107030110-7b1b7adf999d // indirect
 	github.com/yudai/golcs v0.0.0-20170316035057-ecda9a501e82 // indirect
 	github.com/yudai/pp v2.0.1+incompatible // indirect
-	go.etcd.io/bbolt v1.3.3
+	go.etcd.io/bbolt v1.3.3 // indirect
 	go.mongodb.org/mongo-driver v1.2.0
 	golang.org/x/crypto v0.0.0-20190513172903-22d7a77e9e5f
 	golang.org/x/image v0.0.0-20190523035834-f03afa92d3ff // indirect

@@ -2,6 +2,7 @@ package db
 
 import (
 	"fmt"
+	"time"
 
 	"go.mongodb.org/mongo-driver/mongo"
 
@@ -20,4 +21,24 @@ func OpenDatabase(engine, uri, name string) (DB, error) {
 
 func NotFound(err error) bool {
 	return err == mongo.ErrNoDocuments || err == storm.ErrNotFound
+}
+
+func ttlRefresh(opts []*GetOptions) bool {
+	ttlRefresh := true
+	for _, o := range opts {
+		if o.NoTTLRefresh {
+			ttlRefresh = false
+		}
+	}
+	return ttlRefresh
+}
+
+func ttlDuration(opts []*SetOptions) time.Duration {
+	var ttl time.Duration
+	for _, o := range opts {
+		if o.TTL > 0 {
+			ttl = o.TTL
+		}
+	}
+	return ttl
 }

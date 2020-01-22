@@ -6,6 +6,8 @@ import (
 	"net/url"
 	"strconv"
 
+	"github.com/ProxeusApp/proxeus-core/sys"
+
 	"github.com/labstack/echo"
 
 	"io/ioutil"
@@ -15,7 +17,6 @@ import (
 	"github.com/ProxeusApp/proxeus-core/main/www"
 	"github.com/ProxeusApp/proxeus-core/sys/file"
 	"github.com/ProxeusApp/proxeus-core/sys/form"
-	"github.com/ProxeusApp/proxeus-core/sys/session"
 	"github.com/ProxeusApp/proxeus-core/sys/validate"
 )
 
@@ -180,11 +181,14 @@ func PostFileIdFieldName(e echo.Context) error {
 	return c.NoContent(http.StatusBadRequest)
 }
 
-func GetDataManager(sess *session.Session) form.DataManager {
-	dc := form.NewDataManager(sess.SessionDir())
-	err := sess.Get("testDC", &dc)
-	if err != nil {
-		sess.Put("testDC", dc)
+func GetDataManager(sess *sys.Session) form.DataManager {
+	var dc form.DataManager
+	v, ok := sess.GetMemory("testDC")
+	if ok {
+		dc = v.(form.DataManager)
+	} else {
+		dc = form.NewDataManager(sess.GetSessionDir())
+		sess.PutMemory("testDC", dc)
 	}
 	return dc
 }

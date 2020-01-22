@@ -9,7 +9,6 @@ import (
 
 	"github.com/ProxeusApp/proxeus-core/sys"
 	"github.com/ProxeusApp/proxeus-core/sys/model"
-	"github.com/ProxeusApp/proxeus-core/sys/session"
 )
 
 var singleSystem *sys.System
@@ -31,7 +30,7 @@ func (me *Context) Lang() string {
 	return me.webI18n.Lang
 }
 
-func (me *Context) Session(create bool) *session.Session {
+func (me *Context) Session(create bool) *sys.Session {
 	sess, err := getSession(me, create)
 	if err != nil {
 		me.Logger().Error(err)
@@ -40,7 +39,7 @@ func (me *Context) Session(create bool) *session.Session {
 	return sess
 }
 
-func (me *Context) SessionWithUser(usr *model.User) *session.Session {
+func (me *Context) SessionWithUser(usr *model.User) *sys.Session {
 	sess, err := getSessionWithUser(me, true, usr)
 	if err != nil {
 		return nil

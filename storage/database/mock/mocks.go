@@ -1667,3 +1667,168 @@ func (mr *MockFilesIFMockRecorder) Close() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Close", reflect.TypeOf((*MockFilesIF)(nil).Close))
 }
+
+// MockSessionIF is a mock of SessionIF interface
+type MockSessionIF struct {
+	ctrl     *gomock.Controller
+	recorder *MockSessionIFMockRecorder
+}
+
+// MockSessionIFMockRecorder is the mock recorder for MockSessionIF
+type MockSessionIFMockRecorder struct {
+	mock *MockSessionIF
+}
+
+// NewMockSessionIF creates a new mock instance
+func NewMockSessionIF(ctrl *gomock.Controller) *MockSessionIF {
+	mock := &MockSessionIF{ctrl: ctrl}
+	mock.recorder = &MockSessionIFMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use
+func (m *MockSessionIF) EXPECT() *MockSessionIFMockRecorder {
+	return m.recorder
+}
+
+// Get mocks base method
+func (m *MockSessionIF) Get(sid string) (*model.Session, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Get", sid)
+	ret0, _ := ret[0].(*model.Session)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// Get indicates an expected call of Get
+func (mr *MockSessionIFMockRecorder) Get(sid interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Get", reflect.TypeOf((*MockSessionIF)(nil).Get), sid)
+}
+
+// Put mocks base method
+func (m *MockSessionIF) Put(s *model.Session) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Put", s)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// Put indicates an expected call of Put
+func (mr *MockSessionIFMockRecorder) Put(s interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Put", reflect.TypeOf((*MockSessionIF)(nil).Put), s)
+}
+
+// Delete mocks base method
+func (m *MockSessionIF) Delete(s *model.Session) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Delete", s)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// Delete indicates an expected call of Delete
+func (mr *MockSessionIFMockRecorder) Delete(s interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Delete", reflect.TypeOf((*MockSessionIF)(nil).Delete), s)
+}
+
+// GetTokenRequest mocks base method
+func (m *MockSessionIF) GetTokenRequest(t model.TokenType, id string) (*model.TokenRequest, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetTokenRequest", t, id)
+	ret0, _ := ret[0].(*model.TokenRequest)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetTokenRequest indicates an expected call of GetTokenRequest
+func (mr *MockSessionIFMockRecorder) GetTokenRequest(t, id interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetTokenRequest", reflect.TypeOf((*MockSessionIF)(nil).GetTokenRequest), t, id)
+}
+
+// PutTokenRequest mocks base method
+func (m *MockSessionIF) PutTokenRequest(r *model.TokenRequest) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "PutTokenRequest", r)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// PutTokenRequest indicates an expected call of PutTokenRequest
+func (mr *MockSessionIFMockRecorder) PutTokenRequest(r interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "PutTokenRequest", reflect.TypeOf((*MockSessionIF)(nil).PutTokenRequest), r)
+}
+
+// DeleteTokenRequest mocks base method
+func (m *MockSessionIF) DeleteTokenRequest(r *model.TokenRequest) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DeleteTokenRequest", r)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// DeleteTokenRequest indicates an expected call of DeleteTokenRequest
+func (mr *MockSessionIFMockRecorder) DeleteTokenRequest(r interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteTokenRequest", reflect.TypeOf((*MockSessionIF)(nil).DeleteTokenRequest), r)
+}
+
+// GetValue mocks base method
+func (m *MockSessionIF) GetValue(key string, v interface{}) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetValue", key, v)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// GetValue indicates an expected call of GetValue
+func (mr *MockSessionIFMockRecorder) GetValue(key, v interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetValue", reflect.TypeOf((*MockSessionIF)(nil).GetValue), key, v)
+}
+
+// PutValue mocks base method
+func (m *MockSessionIF) PutValue(key string, v interface{}) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "PutValue", key, v)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// PutValue indicates an expected call of PutValue
+func (mr *MockSessionIFMockRecorder) PutValue(key, v interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "PutValue", reflect.TypeOf((*MockSessionIF)(nil).PutValue), key, v)
+}
+
+// DeleteValue mocks base method
+func (m *MockSessionIF) DeleteValue(key string) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DeleteValue", key)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// DeleteValue indicates an expected call of DeleteValue
+func (mr *MockSessionIFMockRecorder) DeleteValue(key interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteValue", reflect.TypeOf((*MockSessionIF)(nil).DeleteValue), key)
+}
+
+// Close mocks base method
+func (m *MockSessionIF) Close() error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Close")
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// Close indicates an expected call of Close
+func (mr *MockSessionIFMockRecorder) Close() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Close", reflect.TypeOf((*MockSessionIF)(nil).Close))
+}

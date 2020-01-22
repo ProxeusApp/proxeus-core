@@ -21,6 +21,10 @@ func TestGetQuirksMongo(t *testing.T) {
 	testGetQuirks(t, openMongoDB(t))
 }
 
+func TestTTLMongo(t *testing.T) {
+	testTTL(t, openMongoDB(t))
+}
+
 func TestAdvancedFetchingMongo(t *testing.T) {
 	testAdvancedFetching(t, openMongoDB(t))
 }
