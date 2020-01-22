@@ -49,7 +49,7 @@ func NewManagerWithNotify(sessionsDir string, expiry time.Duration, notify Notif
 	}
 	sessionsDir = filepath.Join(sessionsDir, sessions)
 	s := &Manager{sessionsDir: sessionsDir, notify: notify}
-	err = s.ensureDir(sessionsDir)
+	err = os.MkdirAll(sessionsDir, 0750)
 	if err != nil {
 		return
 	}
@@ -120,23 +120,6 @@ func (me *Manager) Remove(id string) error {
 	return me.remSessionDir(id)
 }
 
-func (me *Manager) ensureDir(sessionsDir string) error {
-	_, err := os.Stat(sessionsDir)
-	if os.IsNotExist(err) {
-		perm := os.FileMode(0750)
-		err = os.MkdirAll(sessionsDir, perm)
-		if err == nil {
-			//Mkdir err not important as we have the MkdirAll error already
-			err = os.Mkdir(sessionsDir, perm)
-			if os.IsExist(err) {
-				err = nil
-			}
-		}
-		return err
-	}
-	return nil
-}
-
 func (me *Manager) onSessionLoad(key string, val interface{}) {
 	if sess, ok := val.(*Session); ok {
 		sess.loaded(me)
@@ -170,7 +153,7 @@ func (me *Manager) remSessionDir(id string) error {
 
 func (me *Manager) setup(session *Session) error {
 	session.sessionDir = me.constructSessionDir(session.id)
-	return me.ensureDir(session.sessionDir)
+	return os.MkdirAll(session.sessionDir, 0750)
 }
 
 func (me *Manager) constructSessionDir(key string) string {

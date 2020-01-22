@@ -43,23 +43,12 @@ const userVersion = "user_version"
 const passwordBucket = "pw_bucket"
 
 func NewUserDB(c DBConfig, fileDB storage.FilesIF) (*UserDB, error) {
-	var err error
 	baseDir := filepath.Join(c.Dir, "user")
-	err = ensureDir(baseDir)
-	if err != nil {
-		return nil, err
-	}
-	assetDir := filepath.Join(baseDir, "assets")
-	err = ensureDir(assetDir)
-	if err != nil {
-		return nil, err
-	}
 	db, err := db.OpenDatabase(c.Engine, c.URI, filepath.Join(baseDir, "users"))
 	if err != nil {
 		return nil, err
 	}
-	udb := &UserDB{db: db}
-	udb.baseFilePath = assetDir
+	udb := &UserDB{db: db, baseFilePath: filepath.Join(baseDir, "assets")}
 	udb.fileDB = fileDB
 
 	example := &model.User{}

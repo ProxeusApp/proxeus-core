@@ -21,10 +21,6 @@ type storedFile struct {
 
 func NewFileDB(c DBConfig) (*FileDB, error) {
 	baseDir := path.Join(c.Dir, "file")
-	err := ensureDir(baseDir)
-	if err != nil {
-		return nil, err
-	}
 	db, err := db.OpenDatabase(c.Engine, c.URI, filepath.Join(baseDir, "files"))
 	if err != nil {
 		return nil, err

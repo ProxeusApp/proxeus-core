@@ -19,13 +19,7 @@ const signatureDBDir = "signaturerequests"
 const signatureDB = "signaturerequestsdb"
 
 func NewSignatureDB(c DBConfig) (*SignatureRequestsDB, error) {
-	var err error
-
 	baseDir := filepath.Join(c.Dir, signatureDBDir)
-	err = ensureDir(baseDir)
-	if err != nil {
-		return nil, err
-	}
 	db, err := db.OpenDatabase(c.Engine, c.URI, filepath.Join(baseDir, signatureDB))
 	if err != nil {
 		return nil, err

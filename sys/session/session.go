@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"log"
+	"os"
 	"path/filepath"
 
 	"github.com/ProxeusApp/proxeus-core/storage"
@@ -82,7 +83,7 @@ func (me *Session) UserName() string {
 
 //SessionDir provides the sessions directory
 func (me *Session) SessionDir() string {
-	me.ensureSessionDir()
+	os.MkdirAll(me.sessionDir, 0750)
 	return me.sessionDir
 }
 
@@ -99,13 +100,6 @@ func (me *Session) WriteFile(db *storage.DBSet, filename string, reader io.Reade
 //DeleteFile from sessions directory with filename
 func (me *Session) DeleteFile(db *storage.DBSet, filename string) error {
 	return db.Files.Delete(me.FilePath(filename))
-}
-
-func (me *Session) ensureSessionDir() error {
-	if me.manager != nil {
-		return me.manager.ensureDir(me.sessionDir)
-	}
-	return fmt.Errorf("couldn't ensure session dir exists, manager reference missing")
 }
 
 func (me *Session) String() string {
