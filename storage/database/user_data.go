@@ -26,24 +26,13 @@ const usrdVersion = "usrd_vers"
 const usrdMainDir = "userdata"
 
 func NewUserDataDB(c DBConfig) (*UserDataDB, error) {
-	var err error
-
 	baseDir := filepath.Join(c.Dir, usrdMainDir)
-	err = ensureDir(baseDir)
-	if err != nil {
-		return nil, err
-	}
-	assetDir := filepath.Join(baseDir, "assets")
-	err = ensureDir(assetDir)
-	if err != nil {
-		return nil, err
-	}
 	db, err := db.OpenDatabase(c.Engine, c.URI, filepath.Join(baseDir, "usrdb"))
 	if err != nil {
 		return nil, err
 	}
-	udb := &UserDataDB{db: db, mainDir: baseDir}
-	udb.baseFilePath = assetDir
+	udb := &UserDataDB{db: db, mainDir: baseDir,
+		baseFilePath: filepath.Join(baseDir, "assets")}
 
 	udb.db.Init(usrdHeavyData)
 

@@ -22,13 +22,7 @@ const WorkflowPaymentDBDir = "workflowpayments"
 const WorkflowPaymentDB = "workflowpaymentsdb"
 
 func NewWorkflowPaymentDB(c DBConfig) (*WorkflowPaymentsDB, error) {
-	var err error
-
 	baseDir := filepath.Join(c.Dir, WorkflowPaymentDBDir)
-	err = ensureDir(baseDir)
-	if err != nil {
-		return nil, err
-	}
 	db, err := db.OpenDatabase(c.Engine, c.URI, filepath.Join(baseDir, WorkflowPaymentDB))
 	if err != nil {
 		return nil, err

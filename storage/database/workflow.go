@@ -24,24 +24,12 @@ const workflowHeavyData = "wh_data"
 const workflowVersion = "wf_vers"
 
 func NewWorkflowDB(c DBConfig) (*WorkflowDB, error) {
-	var err error
-
 	baseDir := filepath.Join(c.Dir, "workflow")
-	err = ensureDir(baseDir)
-	if err != nil {
-		return nil, err
-	}
-	assetDir := filepath.Join(baseDir, "assets")
-	err = ensureDir(assetDir)
-	if err != nil {
-		return nil, err
-	}
 	db, err := db.OpenDatabase(c.Engine, c.URI, filepath.Join(baseDir, "workflows"))
 	if err != nil {
 		return nil, err
 	}
-	udb := &WorkflowDB{db: db}
-	udb.baseFilePath = assetDir
+	udb := &WorkflowDB{db: db, baseFilePath: filepath.Join(baseDir, "assets")}
 
 	udb.db.Init(workflowHeavyData)
 

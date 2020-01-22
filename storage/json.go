@@ -17,7 +17,7 @@ func NewJSONFile(filePath string, perm os.FileMode) *JSONFile {
 	return &JSONFile{filePath: filePath, perm: perm}
 }
 
-func (j JSONFile) Put(d interface{}) error {
+func (j *JSONFile) Put(d interface{}) error {
 	b, err := json.MarshalIndent(d, "", "\t")
 	if err != nil {
 		return err
@@ -25,7 +25,7 @@ func (j JSONFile) Put(d interface{}) error {
 	return renameio.WriteFile(j.filePath, b, j.perm)
 }
 
-func (j JSONFile) Get(d interface{}) error {
+func (j *JSONFile) Get(d interface{}) error {
 	f, err := os.Open(j.filePath)
 	if err != nil {
 		return err

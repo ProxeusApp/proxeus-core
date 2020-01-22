@@ -36,12 +36,6 @@ type i18nInternal struct {
 }
 
 func NewI18nDB(c DBConfig) (*I18nDB, error) {
-	var err error
-
-	err = ensureDir(c.Dir)
-	if err != nil {
-		return nil, err
-	}
 	database, err := db.OpenDatabase(c.Engine, c.URI, filepath.Join(c.Dir, "i18n"))
 	if err != nil {
 		return nil, err
