@@ -5,8 +5,6 @@ import (
 	"log"
 	"os"
 	"testing"
-
-	"github.com/ProxeusApp/proxeus-core/sys/validate"
 )
 
 //Use this when you are extending the tests
@@ -25,37 +23,11 @@ type (
 	}
 )
 
-type FormFieldError struct { //TODO this is supposed to show how custom errors can be received in Next, Previous or Current of the workflow but not in use yet
-	ValidationError map[string]validate.Error `json:"validationError"`
-}
-
-func (me *FormFieldError) Error() string {
-	bts, err := json.Marshal(me)
-	if err != nil {
-		return ""
-	}
-	return string(bts)
-}
-
 //key = node.ID, value = true executed | false closed
 //TODO this is supposed to help checking if the NodeIF calls are correct but not in use yet
 type MyNodeState map[string]bool
 
 var nodeStateMap = MyNodeState{}
-
-func (me MyNodeState) onlyTrue(id string) bool {
-	trueCount := 0
-	targetTrue := false
-	for k, v := range me {
-		if v {
-			trueCount++
-		}
-		if k == id && v {
-			targetTrue = true
-		}
-	}
-	return trueCount == 1 && targetTrue
-}
 
 func NewFormImpl(n *Node) (NodeIF, error) {
 	return &FormImpl{}, nil
@@ -313,12 +285,6 @@ func TestDeepForwardOnly(t *testing.T) {
 		},
 		NodeImpl: map[string]*NodeDef{"form": {InitImplFunc: NewFormImpl, Background: false}, "template": {InitImplFunc: NewTmplImpl, Background: true}, "user": {InitImplFunc: NewUserImpl, Background: true}},
 	}
-
-	//wd = &Workflow{}
-	//err = json.Unmarshal([]byte(deepWF), &wd)
-	//if err != nil {
-	//	t.Error(err)
-	//}
 	p, err = New(wd, conf)
 	if err != nil {
 		t.Error(err)
