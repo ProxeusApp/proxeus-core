@@ -1,7 +1,9 @@
 package database
 
 import (
+	"os/user"
 	"path/filepath"
+	"strings"
 
 	"github.com/ProxeusApp/proxeus-core/storage"
 	"github.com/ProxeusApp/proxeus-core/sys/model"
@@ -9,18 +11,46 @@ import (
 )
 
 type SettingsDB struct {
-	jf storage.JSONFile
+	jf *storage.JSONFile
 }
 
-func NewSettingsDB(baseDir string) (*SettingsDB, error) {
-	baseDir = filepath.Join(baseDir, "settings")
-	err := ensureDir(baseDir)
+func resolveHomeDirectory(path string) string {
+	if !strings.HasPrefix(path, "~") {
+		return path
+	}
+
+	u, err := user.Current()
+	if err != nil {
+		return path
+	}
+
+	return filepath.Clean(filepath.Join(u.HomeDir, path[1:]))
+}
+
+func NewSettingsDB(settingsFile string, initialSettings *model.Settings) (*SettingsDB, error) {
+	path := resolveHomeDirectory(settingsFile)
+
+	err := ensureDir(filepath.Dir(path))
 	if err != nil {
 		return nil, err
 	}
-	return &SettingsDB{
-		jf: storage.JSONFile{FilePath: filepath.Join(baseDir, "main.json")},
-	}, nil
+
+	sdb := &SettingsDB{
+		jf: storage.NewJSONFile(path, 0600),
+	}
+
+	_, err = sdb.Get()
+	if err != nil {
+		if initialSettings == nil {
+			initialSettings = model.NewDefaultSettings()
+		}
+		err = sdb.Put(initialSettings)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	return sdb, nil
 }
 
 func (se *SettingsDB) Put(s *model.Settings) error {

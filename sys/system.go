@@ -6,7 +6,6 @@ import (
 	"io"
 	"io/ioutil"
 	"os"
-	"os/user"
 	"path/filepath"
 	"strings"
 	"time"
@@ -53,7 +52,6 @@ type (
 		Cache                       *cache.UCache
 		settingsDB                  storage.SettingsIF
 		settingsInUse               model.Settings
-		fallbackSettings            *model.Settings
 		paymentListenerCancelFunc   context.CancelFunc
 		signatureListenerCancelFunc context.CancelFunc
 		tick                        *time.Ticker
@@ -63,26 +61,14 @@ type (
 	}
 )
 
-func provideProxeusSettings() (storage.SettingsIF, error) {
-	u, err := user.Current()
+func NewWithSettings(settingsFile string, initialSettings *model.Settings) (*System, error) {
+	stngsDB, err := database.NewSettingsDB(settingsFile, initialSettings)
 	if err != nil {
 		return nil, err
 	}
-	stngsDB, err := database.NewSettingsDB(filepath.Join(u.HomeDir, ".proxeus"))
-	if err != nil {
-		return nil, err
-	}
-	return stngsDB, nil
-}
+	me := &System{settingsDB: stngsDB}
 
-func NewWithSettings(settings model.Settings) (*System, error) {
-	stngsDB, err := provideProxeusSettings()
-	if err != nil {
-		return nil, err
-	}
-	me := &System{settingsDB: stngsDB, fallbackSettings: &settings}
-
-	if strings.ToLower(settings.TestMode) == "true" {
+	if strings.ToLower(initialSettings.TestMode) == "true" {
 		me.TestMode = true
 	}
 
@@ -240,13 +226,6 @@ func (me *System) Configured() (bool, error) {
 
 func (me *System) GetSettings() *model.Settings {
 	stngs, _ := me.settingsDB.Get()
-	if stngs == nil {
-		if me.fallbackSettings != nil {
-			stngs = me.fallbackSettings
-		} else {
-			stngs = model.NewDefaultSettings()
-		}
-	}
 	return stngs
 }
 

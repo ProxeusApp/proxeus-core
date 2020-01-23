@@ -277,7 +277,7 @@ func PostInit(e echo.Context) error {
 	}
 	err = c.System().PutSettings(d.Settings)
 	if err != nil {
-		fmt.Println("Error during PostInit: ", err)
+		fmt.Println("Error during PostInit settings: ", err)
 		return c.NoContent(http.StatusInternalServerError)
 	}
 	if !yes {
@@ -286,12 +286,12 @@ func PostInit(e echo.Context) error {
 		if uex == nil {
 			err = c.System().DB.User.Put(root, u)
 			if err != nil {
-				fmt.Println("Error during PostInit: ", err)
+				fmt.Println("Error during PostInit user: ", err)
 				return c.NoContent(http.StatusInternalServerError)
 			}
 			err = c.System().DB.User.PutPw(u.ID, d.User.Password)
 			if err != nil {
-				fmt.Println("Error during PostInit: ", err)
+				fmt.Println("Error during PostInit password: ", err)
 				return c.NoContent(http.StatusInternalServerError)
 			}
 		}
