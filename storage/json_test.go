@@ -13,7 +13,7 @@ type flow struct {
 func TestJSONFile(t *testing.T) {
 	fPath := filepath.Join(os.TempDir(), "test.json")
 	defer os.Remove(fPath)
-	jf := JSONFile{FilePath: fPath}
+	jf := JSONFile{filePath: fPath, perm: 0600}
 
 	// write
 	fw := &flow{Test: "my json"}

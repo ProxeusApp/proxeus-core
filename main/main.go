@@ -26,7 +26,7 @@ var ServerVersion = "build-unknown"
 var embedded *www.Embedded
 
 func main() {
-	system, err := sys.NewWithSettings(cfg.Config.Settings)
+	system, err := sys.NewWithSettings(cfg.Config.SettingsFile, &cfg.Config.Settings)
 	if err != nil {
 		panic(err)
 	}
@@ -36,6 +36,11 @@ func main() {
 		fmt.Println("# STARTING PROXEUS IN TEST MODE - NOT FOR PRODUCTION #")
 		fmt.Println("#######################################################")
 	}
+
+	fmt.Println()
+	fmt.Println("#######################################################")
+	fmt.Printf("# Configuration: %#v\n", cfg.Config)
+	fmt.Println("#######################################################")
 
 	www.SetSystem(system)
 

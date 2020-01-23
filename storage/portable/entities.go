@@ -201,7 +201,7 @@ func (ie *ImportExport) importTemplate() error {
 func (ie *ImportExport) exportSettings(id ...string) error {
 	if ie.db.Settings == nil {
 		var err error
-		ie.db.Settings, err = database.NewSettingsDB(ie.dir)
+		ie.db.Settings, err = database.NewSettingsDB(ie.dir, nil)
 		if err != nil {
 			ie.processedEntry(Settings, string(Settings), err)
 			return err
@@ -532,7 +532,7 @@ func (ie *ImportExport) exportUserData(id ...string) error {
 func (ie *ImportExport) importSettings() error {
 	if ie.db.Settings == nil {
 		var err error
-		ie.db.Settings, err = database.NewSettingsDB(ie.dir)
+		ie.db.Settings, err = database.NewSettingsDB(ie.dir, nil)
 		if err != nil {
 			ie.processedEntry(Settings, string(Settings), err)
 			return err
