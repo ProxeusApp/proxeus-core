@@ -13,8 +13,6 @@ import (
 	"strconv"
 
 	"github.com/labstack/echo"
-
-	"github.com/ProxeusApp/proxeus-core/sys/model"
 )
 
 var (
@@ -163,14 +161,6 @@ func (wi18n *WebI18n) getDefaultLang() string {
 		defaultLang = "en"
 	}
 	return defaultLang
-}
-
-func (wi18n *WebI18n) GetActiveLangs() []*model.Lang {
-	if wi18n.i18nStore != nil {
-		lngs, _ := wi18n.i18nStore.GetLangs(true)
-		return lngs
-	}
-	return nil
 }
 
 func (wi18n *WebI18n) GetAll() map[string]string {
