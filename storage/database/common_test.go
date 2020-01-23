@@ -64,7 +64,7 @@ func TestMain(m *testing.M) {
 		}
 	}
 
-	se, err := NewSettingsDB(dir)
+	se, err := NewSettingsDB(filepath.Join(dir, "settings/main.json"), dummySettings())
 	maybeFail(err)
 	err = se.Put(dummySettings())
 	maybeFail(err)

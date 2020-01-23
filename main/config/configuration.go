@@ -1,6 +1,7 @@
 package config
 
 import (
+	"fmt"
 	"os"
 	"reflect"
 	"strconv"
@@ -15,6 +16,7 @@ import (
 //1. Using the default meta in a struct
 //2. Using the specified arguments in flag
 type Configuration struct {
+	SettingsFile    string `json:"settingsFile" default:"~/.proxeus/settings/main.json" usage:"Path to the settings file"`
 	EthClientURL    string `json:"ethClientURL" default:"https://ropsten.infura.io/v3/" usage:"Ethereum client URL"`
 	EthWebSocketURL string `json:"ethWebSocketURL" default:"wss://ropsten.infura.io/ws/v3/" usage:"Ethereum websocket URL"`
 
@@ -38,26 +40,35 @@ func init() {
 	if !strings.HasSuffix(os.Args[0], ".test") {
 		flag.Parse()
 	}
-	v := reflect.ValueOf(pCfg)
 	flag.VisitAll(func(f *flag.Flag) {
-		field := v.Elem().FieldByName(f.Name)
-		strFlagVal := f.Value.String()
-		if strFlagVal == f.DefValue {
-			//if val same as default try from env var
-			strVal := os.Getenv(f.Name)
-			if strVal != "" {
-				strFlagVal = strVal
-			}
-		}
-		if field.Kind() == reflect.String {
-			field.SetString(strFlagVal)
-		} else if field.Kind() == reflect.Bool {
-			bl, _ := strconv.ParseBool(strFlagVal)
-			field.SetBool(bl)
-		} else if field.Kind() != reflect.Invalid && field.Type() == reflect.TypeOf(model.CREATOR) {
-			pCfg.DefaultRole = model.StringToRole(strFlagVal)
-		}
+		initStruct(f, reflect.ValueOf(pCfg).Elem())
 	})
+
+	fmt.Println("###########################################")
+	fmt.Printf("CONFIG %#v\n", Config)
+	fmt.Println("###########################################")
+}
+
+func initStruct(f *flag.Flag, v reflect.Value) {
+	field := v.FieldByName(f.Name)
+	strFlagVal := f.Value.String()
+	if strFlagVal == f.DefValue {
+		//if val same as default try from env var
+		strVal := os.Getenv(f.Name)
+		if strVal != "" {
+			strFlagVal = strVal
+		}
+	}
+	if field.Kind() == reflect.String {
+		field.SetString(strFlagVal)
+	} else if field.Kind() == reflect.Bool {
+		bl, _ := strconv.ParseBool(strFlagVal)
+		field.SetBool(bl)
+	} else if field.Kind() != reflect.Invalid && field.Type() == reflect.TypeOf(model.CREATOR) {
+		field.Set(reflect.ValueOf(model.StringToRole(strFlagVal)))
+	} else if field.Kind() == reflect.Struct {
+		initStruct(f, field)
+	}
 }
 
 func flagStruct(strct interface{}) {
