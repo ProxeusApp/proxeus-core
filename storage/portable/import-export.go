@@ -98,7 +98,7 @@ func (ie *ImportExport) Pack() (*os.File, error) {
 	if err != nil {
 		return nil, err
 	}
-	err = tar.Tar(ie.dir, nil, f)
+	err = tar.Tar(ie.dir, f)
 	er := f.Close()
 	if er != nil {
 		return nil, er
