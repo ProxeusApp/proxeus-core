@@ -2,6 +2,7 @@ package portable
 
 import (
 	"fmt"
+	"os"
 	"path/filepath"
 	"strings"
 	"sync"
@@ -201,7 +202,8 @@ func (ie *ImportExport) importTemplate() error {
 func (ie *ImportExport) exportSettings(id ...string) error {
 	if ie.db.Settings == nil {
 		var err error
-		ie.db.Settings, err = database.NewSettingsDB(ie.dir, nil)
+		settingsFile := filepath.Join(ie.dir, "settings/main.json")
+		ie.db.Settings, err = database.NewSettingsDB(settingsFile, nil)
 		if err != nil {
 			ie.processedEntry(Settings, string(Settings), err)
 			return err
@@ -529,10 +531,24 @@ func (ie *ImportExport) exportUserData(id ...string) error {
 	return nil
 }
 
+func exists(name string) bool {
+	if _, err := os.Stat(name); err != nil {
+		if os.IsNotExist(err) {
+			return false
+		}
+	}
+	return true
+}
+
 func (ie *ImportExport) importSettings() error {
 	if ie.db.Settings == nil {
+		settingsFile := filepath.Join(ie.dir, "settings/main.json")
+		if !exists(settingsFile) {
+			// do not import anything
+			return nil
+		}
 		var err error
-		ie.db.Settings, err = database.NewSettingsDB(ie.dir, nil)
+		ie.db.Settings, err = database.NewSettingsDB(settingsFile, nil)
 		if err != nil {
 			ie.processedEntry(Settings, string(Settings), err)
 			return err
