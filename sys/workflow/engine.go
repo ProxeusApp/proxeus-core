@@ -188,7 +188,7 @@ func (me *Engine) Previous(skipBackgroundNodes bool) (bool, error) {
 	i := me.stepsSize - 1
 	count := 0
 	for i >= 0 {
-		if lastNode != nil {
+		if lastNode != nil && n != nil {
 			n.remove()
 		}
 		n = me.steps[i].Node
@@ -356,10 +356,7 @@ func (me Stack) is(step *Step) bool {
 }
 
 func (me *Engine) Close() error {
-	if me.jsParser != nil {
-		me.jsParser.Close()
-		me.jsParser = nil
-	}
+	me.jsParser = nil
 	me.stack = nil
 	me.getWorkflow = nil
 	me.getData = nil
