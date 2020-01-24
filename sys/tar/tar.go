@@ -3,18 +3,15 @@ package tar
 import (
 	"archive/tar"
 	"compress/gzip"
-	"fmt"
 	"io"
 	"os"
 	"path/filepath"
 	"strings"
 )
 
-func Tar(src string, srcExtraList []string, writer io.Writer) error {
+func Tar(src string, writer io.Writer) error {
 	gzw := gzip.NewWriter(writer)
-
 	tw := tar.NewWriter(gzw)
-
 	defer func() {
 		tw.Close()
 		gzw.Close()
@@ -49,40 +46,7 @@ func Tar(src string, srcExtraList []string, writer io.Writer) error {
 		f.Close()
 		return nil
 	})
-	if err != nil {
-		return err
-	}
-
-	for _, file := range srcExtraList {
-		fi, err := os.Stat(file)
-		if err != nil {
-			return fmt.Errorf("unable to tar files - %v", err.Error())
-		}
-		// create a new dir/file header
-		header, err := tar.FileInfoHeader(fi, fi.Name())
-		if err != nil {
-			return err
-		}
-
-		// write the header
-		if err := tw.WriteHeader(header); err != nil {
-			return err
-		}
-
-		// return on non-regular files (thanks to [kumo](https://medium.com/@komuw/just-like-you-did-fbdd7df829d3) for this suggested update)
-		if !fi.Mode().IsRegular() {
-			return nil
-		}
-		f, err := os.Open(file)
-		if err != nil {
-			return err
-		}
-		if _, err := io.Copy(tw, f); err != nil {
-			return err
-		}
-		f.Close()
-	}
-	return nil
+	return err
 }
 
 func Untar(dst string, r io.Reader) (err error) {
