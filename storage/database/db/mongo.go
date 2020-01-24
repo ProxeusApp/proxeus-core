@@ -51,23 +51,25 @@ func (s *MongoShim) ctx() context.Context {
 	return s.context
 }
 
-func (s *MongoShim) nameToCollection(n string) *mongo.Collection {
+func (s *MongoShim) nameToCollection(n string) (*mongo.Collection, error) {
 	if c, ok := s.collections[n]; ok {
-		return c
+		return c, nil
 	}
 	c := s.db.Collection(n)
-	err := s.assureUniqueIndex(c)
-	if err != nil {
-		return nil
-	}
 	s.collections[n] = c
-	// just to force collection creation as implicit creation doesn't work for transactions
-	_, err = c.UpdateOne(s.ctx(), bson.M{"K": initializedKey}, bson.M{"$set": bson.M{"V": true}},
-		options.Update().SetUpsert(true))
-	if err != nil {
-		return nil
+
+	var err error
+	fr := c.FindOne(s.ctx(), bson.M{"K": initializedKey})
+	if fr.Err() == mongo.ErrNoDocuments {
+		err = s.assureUniqueIndex(c)
+		if err != nil {
+			return c, err
+		}
+		// just to force collection creation as implicit creation doesn't work for transactions
+		_, err = c.UpdateOne(s.ctx(), bson.M{"K": initializedKey}, bson.M{"$set": bson.M{"V": true}},
+			options.Update().SetUpsert(true))
 	}
-	return c
+	return c, err
 }
 
 func (s *MongoShim) assureUniqueIndex(c *mongo.Collection) error {
@@ -89,12 +91,12 @@ func (s *MongoShim) assureUniqueIndex(c *mongo.Collection) error {
 	return err
 }
 
-func (s *MongoShim) objectToCollection(o interface{}) *mongo.Collection {
+func (s *MongoShim) objectToCollection(o interface{}) (*mongo.Collection, error) {
 	t := reflect.Indirect(reflect.ValueOf(o)).Type()
 	return s.typeToCollection(t)
 }
 
-func (s *MongoShim) typeToCollection(t reflect.Type) *mongo.Collection {
+func (s *MongoShim) typeToCollection(t reflect.Type) (*mongo.Collection, error) {
 	if t.Kind() == reflect.Ptr {
 		t = t.Elem()
 	}
@@ -103,9 +105,12 @@ func (s *MongoShim) typeToCollection(t reflect.Type) *mongo.Collection {
 
 // Get a value from a bucket
 func (s *MongoShim) Get(bucketName string, key interface{}, to interface{}, opts ...*GetOptions) error {
-	c := s.nameToCollection(bucketName)
+	c, err := s.nameToCollection(bucketName)
+	if err != nil {
+		return err
+	}
 	var raw bson.Raw
-	err := c.FindOne(s.ctx(), bson.M{"K": key}).Decode(&raw)
+	err = c.FindOne(s.ctx(), bson.M{"K": key}).Decode(&raw)
 	if err != nil {
 		return err
 	}
@@ -134,7 +139,10 @@ func (s *MongoShim) Set(bucketName string, key interface{}, value interface{}, o
 	if t := reflect.ValueOf(key).Type().Kind(); t != reflect.String {
 		return fmt.Errorf("required string type got %s", t.String())
 	}
-	c := s.nameToCollection(bucketName)
+	c, err := s.nameToCollection(bucketName)
+	if err != nil {
+		return err
+	}
 	v := bson.M{"V": value}
 
 	ttl := ttlDuration(opts)
@@ -142,15 +150,18 @@ func (s *MongoShim) Set(bucketName string, key interface{}, value interface{}, o
 		v["expireAt"] = time.Now().UTC().Add(ttl)
 		v[ttlKey] = ttl
 	}
-	_, err := c.UpdateOne(s.ctx(), bson.M{"K": key}, bson.M{"$set": v},
+	_, err = c.UpdateOne(s.ctx(), bson.M{"K": key}, bson.M{"$set": v},
 		options.Update().SetUpsert(true))
 	return err
 }
 
 // Delete deletes a key from a bucket
 func (s *MongoShim) Delete(bucketName string, key interface{}) error {
-	c := s.nameToCollection(bucketName)
-	_, err := c.DeleteOne(s.ctx(), bson.M{"K": key})
+	c, err := s.nameToCollection(bucketName)
+	if err != nil {
+		return err
+	}
+	_, err = c.DeleteOne(s.ctx(), bson.M{"K": key})
 	if err != nil {
 		return err
 	}
@@ -207,12 +218,13 @@ func (s *MongoShim) Select(matchers ...q.Matcher) Query {
 
 // Init creates the indexes and buckets for a given structure
 func (s *MongoShim) Init(data interface{}) error {
+	var err error
 	if str, ok := data.(string); ok {
-		s.nameToCollection(str)
+		_, err = s.nameToCollection(str)
 	} else {
-		s.objectToCollection(data)
+		_, err = s.objectToCollection(data)
 	}
-	return nil
+	return err
 }
 
 // ReIndex rebuilds all the indexes of a bucket
@@ -221,12 +233,12 @@ func (s *MongoShim) ReIndex(data interface{}) error {
 }
 
 func (s *MongoShim) bucketAndKey(data interface{}) (bucket string, key interface{}, err error) {
-	c := s.objectToCollection(data)
+	c, err := s.objectToCollection(data)
 	id := reflect.Indirect(reflect.ValueOf(data)).FieldByName("ID")
 	if !id.IsValid() {
 		return "", "", errors.New("no ID field provided")
 	}
-	return c.Name(), id.Interface(), nil
+	return c.Name(), id.Interface(), err
 }
 
 // Save a structure
@@ -254,9 +266,12 @@ func (s *MongoShim) DeleteStruct(data interface{}) error {
 
 // One returns one record by the specified index
 func (s *MongoShim) One(fieldName string, value interface{}, to interface{}) error {
-	c := s.objectToCollection(to)
+	c, err := s.objectToCollection(to)
+	if err != nil {
+		return err
+	}
 	var raw bson.Raw
-	err := c.FindOne(s.ctx(), bson.M{"V." + strings.ToLower(fieldName): value}).Decode(&raw)
+	err = c.FindOne(s.ctx(), bson.M{"V." + strings.ToLower(fieldName): value}).Decode(&raw)
 	if err != nil {
 		return err
 	}
@@ -265,7 +280,10 @@ func (s *MongoShim) One(fieldName string, value interface{}, to interface{}) err
 
 // Count all the matching records
 func (s *MongoShim) Count(data interface{}) (int, error) {
-	c := s.objectToCollection(data)
+	c, err := s.objectToCollection(data)
+	if err != nil {
+		return 0, err
+	}
 	count, err := c.CountDocuments(s.ctx(), bson.D{})
 	count-- // subtract initializedKey
 	return int(count), err
@@ -284,7 +302,10 @@ func (s *MongoShim) findWithConstraints(filter interface{}, to interface{}, q *M
 		// set slice element type
 		typ = typ.Elem()
 	}
-	c := s.typeToCollection(typ)
+	c, err := s.typeToCollection(typ)
+	if err != nil {
+		return 0, err
+	}
 
 	cur, err := c.Find(s.ctx(), filter, q.opts())
 	if err != nil {
