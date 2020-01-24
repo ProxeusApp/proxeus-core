@@ -38,18 +38,6 @@ func (me *ApiKey) IsNew() bool {
 	return len(me.Key) > 11
 }
 
-func (me *ApiKey) UserIDPrefix() string {
-	return ReadUserIDPrefix(me.Key)
-}
-
 func MatchesApiKey(hiddenApiKey, apiKey string) bool {
 	return strings.HasPrefix(apiKey, hiddenApiKey[0:4]) && strings.HasSuffix(apiKey, hiddenApiKey[len(hiddenApiKey)-4:])
-}
-
-//read the user id prefix from the center of the api key
-func ReadUserIDPrefix(apiKey string) string {
-	if len(apiKey) > 24 {
-		return apiKey[16:24]
-	}
-	return ""
 }

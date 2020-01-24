@@ -26,21 +26,6 @@ func IsReadGrantedFor(auth model.Auth, includeGrant bool) q.Matcher {
 	return m
 }
 
-type PublicByIDMatcher struct {
-	CheckWrite bool //false checks for read perm
-}
-
-func (me *PublicByIDMatcher) MatchField(v interface{}) (bool, error) {
-	if prm, ok := v.(model.Permission); ok {
-		if me.CheckWrite {
-			return prm.IsWrite(), nil
-		} else {
-			return prm.IsRead(), nil
-		}
-	}
-	return false, nil
-}
-
 type GrantMatcher struct {
 	Auth       model.Auth
 	CheckWrite bool //false checks for read perm
