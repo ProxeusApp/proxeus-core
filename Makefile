@@ -74,7 +74,7 @@ comma:=,
 space:= $() $()
 coverpkg=$(subst $(space),$(comma), $(filter-out %/mock %/assets, $(shell go list ./main/... ./sys/... ./storage/...)))
 coverage: generate
-	go test -coverprofile artifacts/cover_unittests.out ./main/... ./sys/... ./storage/...
+	go test -coverprofile artifacts/cover_unittests.out -coverpkg="$(coverpkg)" ./main/... ./sys/... ./storage/...
 	go test -v -tags coverage -coverprofile artifacts/cover_integration.out -coverpkg="$(coverpkg)" ./main
 
 .PHONY: print-coverage
