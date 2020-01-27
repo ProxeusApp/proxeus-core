@@ -590,6 +590,9 @@ func RegisterRequest(e echo.Context) (err error) {
 	stngs := c.System().GetSettings()
 	token.Role = stngs.DefaultRole
 	token.Type = model.TokenRegister
+	if c.System().TestMode && m.Role > 0 {
+		token.Role = m.Role
+	}
 	err = c.System().DB.Session.PutTokenRequest(&token)
 	if err != nil {
 		return c.NoContent(http.StatusInternalServerError)
