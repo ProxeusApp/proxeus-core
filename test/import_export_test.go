@@ -3,6 +3,8 @@ package test
 import (
 	"net/http"
 	"testing"
+
+	"github.com/ProxeusApp/proxeus-core/sys/model"
 )
 
 func TestImportExport(t *testing.T) {
@@ -10,9 +12,9 @@ func TestImportExport(t *testing.T) {
 	u := registerTestUser(s)
 	login(s, u)
 
-	b1 := s.e.GET("api/export").WithQueryString("include=UserData").
+	b1 := s.e.GET("/api/export").WithQueryString("include=UserData").
 		Expect().Status(http.StatusOK).Body().Raw()
-	s.e.POST("api/import").WithQueryString("skipExisting=false").WithBytes([]byte(b1)).
+	s.e.POST("/api/import").WithQueryString("skipExisting=false").WithBytes([]byte(b1)).
 		Expect().Status(http.StatusOK)
 
 	deleteUser(s, u)
@@ -51,4 +53,38 @@ func importWorkflow(s *session, exportedW []byte, expectedW *workflow) {
 
 	s.e.GET("/api/admin/workflow/{id}").WithPath("id", expectedW.ID).Expect().Status(http.StatusOK).
 		JSON().Object().ContainsMap(removeTimeFields(toMap(expectedW)))
+}
+
+func exportImportEntity(s *session, entity string) {
+	b := s.e.GET("/api/{entity}/export").WithPath("entity", entity).
+		Expect().Status(http.StatusOK).Body().Raw()
+	s.e.POST("/api/import").WithQueryString("skipExisting=false").
+		WithBytes([]byte(b)).Expect().Status(http.StatusOK)
+}
+
+func TestImportExportAdmin(t *testing.T) {
+	s := new(t, serverURL)
+	u := registerSuperAdmin(s)
+	login(s, u)
+	exportEntities := []string{
+		"userdata",
+		"user",
+		"i18n",
+		"workflow",
+		"form",
+		"template",
+	}
+	for _, entity := range exportEntities {
+		exportImportEntity(s, entity)
+	}
+	//deleteUser(s, u)
+}
+
+func TestImportExportRoot(t *testing.T) {
+	t.Skip("fix settings validation")
+	s := new(t, serverURL)
+	u := registerTestUserWithRole(s, model.ROOT)
+	login(s, u)
+	exportImportEntity(s, "settings")
+	//deleteUser(s, u)
 }
