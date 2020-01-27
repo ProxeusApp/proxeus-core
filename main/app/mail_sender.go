@@ -1,6 +1,7 @@
 package app
 
 import (
+	"errors"
 	"fmt"
 	"log"
 
@@ -10,7 +11,8 @@ import (
 )
 
 type mailSenderNode struct {
-	ctx *DocumentFlowInstance
+	ctx  *DocumentFlowInstance
+	ctx2 *ExecuteAtOnceContext
 }
 
 func (me *mailSenderNode) Execute(n *workflow.Node) (proceed bool, err error) {
@@ -20,9 +22,17 @@ func (me *mailSenderNode) Execute(n *workflow.Node) (proceed bool, err error) {
 		log.Println("Can't initialize sparkPostEmailSender: " + err.Error())
 		return false, err
 	}
-	chfxes, err := me.ctx.readData("input.CHFXES")
-	if err != nil {
-		return false, err
+	var chfxes interface{}
+	if me.ctx != nil {
+		chfxes, err = me.ctx.readData("input.CHFXES")
+		if err != nil {
+			return false, err
+		}
+	} else {
+		chfxes = me.ctx2.data["CHFXES"]
+		if chfxes == nil {
+			return false, errors.New("no data")
+		}
 	}
 	err = mailSender.Send(&email.Email{
 		From:    "info@proxeus.com",
