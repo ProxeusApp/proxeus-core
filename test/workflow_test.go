@@ -38,7 +38,7 @@ func createWorkflow(s *session, u *user, name string) *workflow {
 	f := &workflow{
 		permissions: permissions{Owner: u.uuid},
 		Name:        name,
-		Detail:      "details0",
+		Detail:      "test",
 		Created:     now,
 		Updated:     now,
 	}

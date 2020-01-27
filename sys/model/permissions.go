@@ -178,19 +178,6 @@ func (me *Permissions) Change(auth Auth, changed *Permissions) *Permissions {
 	return me
 }
 
-func (me *Permissions) UserIdsSlice() []string {
-	usrIds := make([]string, 0)
-	if me.Owner != "" {
-		usrIds = append(usrIds, me.Owner)
-	}
-	for usrID := range me.Grant {
-		if usrID != "" {
-			usrIds = append(usrIds, usrID)
-		}
-	}
-	return usrIds
-}
-
 func (me *Permissions) UserIdsMap(usrIds map[string]bool) {
 	if me.Owner != "" {
 		usrIds[me.Owner] = true

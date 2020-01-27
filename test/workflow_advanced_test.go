@@ -15,26 +15,8 @@ func TestWorkflowAdvanced(t *testing.T) {
 	s := new(t, serverURL)
 	u := registerTestUser(s)
 	login(s, u)
-	w1 := createWorkflow(s, u, "sub-workflow1-"+s.id)
-	w2 := createWorkflow(s, u, "workflow2-"+s.id)
 
-	f := createSimpleForm(s, u, "form-"+s.id, fieldName)
-	f2 := createSimpleForm(s, u, "form2-"+s.id, field2Name)
-
-	tpl := createSimpleTemplate(s, u, "template-"+s.id, "test/assets/test_template.odt")
-
-	w1.Data = advancedWorkflowData(t, workflow1Data, map[string]string{
-		"formId":     f.ID,
-		"templateId": tpl.ID,
-	})
-	w2.Data = advancedWorkflowData(t, workflow2Data, map[string]string{
-		"formId":        f.ID,
-		"form2Id":       f2.ID,
-		"subworkflowId": w1.ID,
-	})
-
-	updateWorkflow(s, w1)
-	updateWorkflow(s, w2)
+	w1, w2 := prepareWorkflows(s, u)
 
 	exported := exportWorkflow(s, w2)
 	deleteWorkflow(s, w2.ID, false)
@@ -47,6 +29,33 @@ func TestWorkflowAdvanced(t *testing.T) {
 	deleteWorkflow(s, w2.ID, false)
 	deleteWorkflow(s, w1.ID, true)
 	deleteUser(s, u)
+}
+
+func prepareWorkflows(s *session, u *user) (*workflow, *workflow) {
+	w1 := createWorkflow(s, u, "sub-workflow1-"+s.id)
+	w2 := createWorkflow(s, u, "workflow2-"+s.id)
+
+	f := createSimpleForm(s, u, "form-"+s.id, fieldName)
+	f2 := createSimpleForm(s, u, "form2-"+s.id, field2Name)
+
+	tpl := createSimpleTemplate(s, u, "template-"+s.id, "test/assets/test_template.odt")
+	tpl2 := createSimpleTemplate(s, u, "template2-"+s.id, "test/assets/test_template.odt")
+
+	w1.Data = advancedWorkflowData(s.t, workflow1Data, map[string]string{
+		"formId":      f.ID,
+		"templateId":  tpl.ID,
+		"template2Id": tpl2.ID,
+	})
+	w2.Data = advancedWorkflowData(s.t, workflow2Data, map[string]string{
+		"formId":        f.ID,
+		"form2Id":       f2.ID,
+		"subworkflowId": w1.ID,
+	})
+
+	updateWorkflow(s, w1)
+	updateWorkflow(s, w2)
+
+	return w1, w2
 }
 
 func advancedWorkflowData(t *testing.T, data string, dataValues map[string]string) map[string]interface{} {
@@ -156,6 +165,20 @@ const workflow1Data = `{
           "type": "template",
           "p": {
             "x": 301,
+            "y": -78
+          },
+          "conns": [
+            {
+              "id": "{{.template2Id}}"
+            }
+          ]
+        },
+        "{{.template2Id}}": {
+          "id": "{{.template2Id}}",
+          "name": "test2",
+          "type": "template",
+          "p": {
+            "x": 351,
             "y": -78
           }
         }
