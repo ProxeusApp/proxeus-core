@@ -24,9 +24,6 @@ func (me *mailSenderNode) Execute(n *workflow.Node) (proceed bool, err error) {
 	if err != nil {
 		return false, err
 	}
-	if me.ctx.system.TestMode {
-		return true, nil
-	}
 	err = mailSender.Send(&email.Email{
 		From:    "info@proxeus.com",
 		To:      []string{"info@proxeus.com"},
