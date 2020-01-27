@@ -433,6 +433,9 @@ func (me *UserDB) updateApiKeys(u *model.User, tx db.DB) error {
 }
 
 func (me *UserDB) setTinyUserIconBase64(item *model.User) error {
+	if item.PhotoPath == "" {
+		return nil
+	}
 	var buf bytes.Buffer
 	err := me.fileDB.Read(me.fullPhotoPath(item), &buf)
 	if err != nil {
