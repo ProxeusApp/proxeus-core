@@ -8,7 +8,8 @@ import (
 )
 
 type priceRetrieverNode struct {
-	ctx *DocumentFlowInstance
+	ctx  *DocumentFlowInstance
+	ctx2 *ExecuteAtOnceContext
 }
 
 func (me priceRetrieverNode) Execute(n *workflow.Node) (proceed bool, err error) {
@@ -46,9 +47,13 @@ func (me priceRetrieverNode) Execute(n *workflow.Node) (proceed bool, err error)
 	Please note, writeField writes it inside -> input:{} as it was used only for the form updates.
 	Please change if you need to use another context than input! Input was initially meant for form input only.
 	*/
-	err = me.ctx.writeField(n, "CHFXES", chfXesString)
-	if err != nil {
-		return false, err
+	if me.ctx != nil {
+		err = me.ctx.writeField(n, "CHFXES", chfXesString)
+		if err != nil {
+			return false, err
+		}
+	} else {
+		me.ctx2.data["CHFXES"] = chfXesString
 	}
 
 	/**

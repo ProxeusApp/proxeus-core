@@ -53,6 +53,12 @@ func ExecuteWorkflowAtOnce(c *www.Context, a model.Auth, wfi *model.WorkflowItem
 		},
 		GetData: eaoc.getData,
 		NodeImpl: map[string]*workflow.NodeDef{
+			"mailsender": {InitImplFunc: func(n *workflow.Node) (workflow.NodeIF, error) {
+				return &mailSenderNode{ctx2: eaoc}, nil
+			}, Background: true},
+			"priceretriever": {InitImplFunc: func(n *workflow.Node) (workflow.NodeIF, error) {
+				return &priceRetrieverNode{ctx2: eaoc}, nil
+			}, Background: true},
 			"form": {InitImplFunc: func(n *workflow.Node) (workflow.NodeIF, error) {
 				return &EAOFormNodeImpl{ctx: eaoc}, nil
 			}, Background: false},
@@ -96,11 +102,7 @@ func ExecuteWorkflowAtOnce(c *www.Context, a model.Auth, wfi *model.WorkflowItem
 
 func (me *ExecuteAtOnceContext) WriteZIP(filePaths []string, writer io.Writer) error {
 	zipWriter := zip.NewWriter(writer)
-	defer func() {
-		if zipWriter != nil && zipWriter.Close() != nil {
-			return
-		}
-	}()
+	defer zipWriter.Close()
 	zipFile := func(p string) error {
 		var buf bytes.Buffer
 		err := me.c.System().DB.Files.Read(p, &buf)
@@ -211,19 +213,5 @@ func (me *EAODocTmplNodeImpl) Execute(n *workflow.Node) (proceed bool, err error
 	return true, nil
 }
 
-func (me *EAODocTmplNodeImpl) Remove(n *workflow.Node) {
-	//remove the template from the app collection as it is not part of the path anymore
-	if me.renderedPathName != "" {
-		me.ctx.c.System().DB.Files.Delete(me.renderedPathName)
-		i := 0
-		for _, p := range me.ctx.filePaths {
-			if me.renderedPathName != p {
-				me.ctx.filePaths[i] = p
-				i++
-			}
-		}
-		me.ctx.filePaths = me.ctx.filePaths[:i]
-	}
-}
-
-func (me *EAODocTmplNodeImpl) Close() {}
+func (me *EAODocTmplNodeImpl) Remove(n *workflow.Node) {}
+func (me *EAODocTmplNodeImpl) Close()                  {}
