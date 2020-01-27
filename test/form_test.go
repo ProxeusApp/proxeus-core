@@ -35,6 +35,7 @@ func createForm(s *session, u *user, name string) *form {
 	f := &form{
 		permissions: permissions{Owner: u.uuid},
 		Name:        name,
+		Detail:      "test",
 		Created:     now,
 		Updated:     now,
 	}

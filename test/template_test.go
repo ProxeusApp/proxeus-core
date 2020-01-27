@@ -55,6 +55,7 @@ func createTemplate(s *session, u *user, name string) *template {
 	t := &template{
 		permissions: permissions{Owner: u.uuid},
 		Name:        name,
+		Detail:      "test",
 		Created:     now,
 		Updated:     now,
 	}
@@ -125,6 +126,8 @@ func templatePreviews(s *session, t *template, f *form) {
 	// used when template is not active (no preview)
 	s.e.GET("/api/admin/template/download/" + t.ID + "/en").WithQueryString("raw").Expect().
 		Status(http.StatusOK).Body().Equal(string(odtFileBytes))
+	s.e.GET("/api/admin/template/download/" + t.ID + "/en").Expect().
+		Status(http.StatusOK).Body().Length().Gt(1000)
 }
 
 func uploadTemplateFile(s *session, t *template, lang string, b []byte, contentType string, fileName string) {
@@ -139,6 +142,9 @@ func uploadTemplateFile(s *session, t *template, lang string, b []byte, contentT
 	r.Path("$.data.en.name").Equal(fileName)
 	r.Path("$.data.en.contentType").Equal(contentType)
 
+	// TODO: fix vars on DS side
+	s.e.GET("/api/admin/template/vars").WithQuery("c", t.ID).Expect().
+		Status(http.StatusNotFound)
 }
 
 func deleteTemplate(s *session, id string, expectEmptyList bool) {

@@ -35,7 +35,7 @@ func exportWorkflow(s *session, w *workflow) []byte {
 	stats := s.e.GET("api/export/results").Expect().JSON().Path("$.results").Object()
 	stats.Path("$.Form").Object().Keys().Length().Equal(2)
 	stats.Path("$.FormComponent").Object().Keys().Length().Equal(1)
-	stats.Path("$.Template").Object().Keys().Length().Equal(1)
+	stats.Path("$.Template").Object().Keys().Length().Equal(2)
 	stats.Path("$.User").Object().Keys().Length().Equal(1)
 
 	return []byte(b2)
@@ -57,7 +57,9 @@ func importWorkflow(s *session, exportedW []byte, expectedW *workflow) {
 
 func exportImportEntity(s *session, entity string) {
 	b := s.e.GET("/api/{entity}/export").WithPath("entity", entity).
+		WithQuery("contains", "test").
 		Expect().Status(http.StatusOK).Body().Raw()
+
 	s.e.POST("/api/import").WithQueryString("skipExisting=false").
 		WithBytes([]byte(b)).Expect().Status(http.StatusOK)
 }
@@ -66,6 +68,9 @@ func TestImportExportAdmin(t *testing.T) {
 	s := new(t, serverURL)
 	u := registerSuperAdmin(s)
 	login(s, u)
+
+	w1, w2 := prepareWorkflows(s, u)
+
 	exportEntities := []string{
 		"userdata",
 		"user",
@@ -77,6 +82,8 @@ func TestImportExportAdmin(t *testing.T) {
 	for _, entity := range exportEntities {
 		exportImportEntity(s, entity)
 	}
+	deleteWorkflow(s, w2.ID, false)
+	deleteWorkflow(s, w1.ID, true)
 	//deleteUser(s, u)
 }
 
