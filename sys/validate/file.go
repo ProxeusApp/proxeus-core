@@ -107,31 +107,6 @@ func FileTypes() FTypes {
 	return ftRepository
 }
 
-func FileWithExt(src io.Reader, fileExtension, min, max string) (*TmpFile, error) {
-	return FileWithOptions(src, FileType{Exact: true, Kind: fileExtension}, min, max)
-}
-
-func FileWithType(src io.Reader, ft types.Type, min, max string) (*TmpFile, error) {
-	return FileWithOptions(src, FileType{Exact: true, Kind: ft.Extension}, min, max)
-}
-
-func FileWithOptions(src io.Reader, ft FileType, min, max string) (*TmpFile, error) {
-	rules := Rules{}
-	if ft.Kind != "" {
-		rules["file"] = Rules{
-			"exact": ft.Exact,
-			"kind":  ft.Kind,
-		}
-	}
-	if min != "" {
-		rules["min"] = min
-	}
-	if max != "" {
-		rules["max"] = max
-	}
-	return File(src, rules)
-}
-
 func File(src io.Reader, rules Rules) (*TmpFile, error) {
 	validr := newValidator(nil, rules)
 	if validr == nil {

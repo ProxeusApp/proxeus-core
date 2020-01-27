@@ -17,11 +17,12 @@ func TestUser(t *testing.T) {
 
 func TestUserProfile(t *testing.T) {
 	s := new(t, serverURL)
-	u := registerTestUser(s)
-	login(s, u)
-
+	s.e.POST("/api/me").Expect().Status(http.StatusMethodNotAllowed)
 	s.e.GET("/api/config").Expect().Status(http.StatusOK).
 		JSON().Object().ContainsKey("blockchainNet")
+
+	u := registerTestUser(s)
+	login(s, u)
 
 	resetPassword(s, u)
 	changeEmail(s, u)
