@@ -600,19 +600,18 @@ func RegisterRequest(e echo.Context) (err error) {
 
 	if c.System().TestMode {
 		c.Response().Header().Set("X-Test-Token", token.Token)
-	} else {
-		err = c.System().EmailSender.Send(&email.Email{
-			From:    stngs.EmailFrom,
-			To:      []string{m.Email},
-			Subject: c.I18n().T("Register"),
-			Body: fmt.Sprintf(
-				"Hi there,\n\nplease proceed with your registration by visiting this link:\n%s\n\nIf you didn't request this, please ignore this email.\n\nProxeus",
-				helpers.AbsoluteURL(c, "/register/", token.Token),
-			),
-		})
-		if err != nil {
-			return c.NoContent(http.StatusExpectationFailed)
-		}
+	}
+	err = c.System().EmailSender.Send(&email.Email{
+		From:    stngs.EmailFrom,
+		To:      []string{m.Email},
+		Subject: c.I18n().T("Register"),
+		Body: fmt.Sprintf(
+			"Hi there,\n\nplease proceed with your registration by visiting this link:\n%s\n\nIf you didn't request this, please ignore this email.\n\nProxeus",
+			helpers.AbsoluteURL(c, "/register/", token.Token),
+		),
+	})
+	if err != nil {
+		return c.NoContent(http.StatusExpectationFailed)
 	}
 	return c.NoContent(http.StatusOK)
 }
@@ -673,6 +672,9 @@ func ResetPasswordRequest(e echo.Context) (err error) {
 			return c.NoContent(http.StatusInternalServerError)
 		}
 
+		if c.System().TestMode {
+			c.Response().Header().Set("X-Test-Token", token.Token)
+		}
 		err = c.System().EmailSender.Send(&email.Email{
 			From:    c.System().GetSettings().EmailFrom,
 			To:      []string{m.Email},
@@ -743,6 +745,9 @@ func ChangeEmailRequest(e echo.Context) (err error) {
 			return c.NoContent(http.StatusInternalServerError)
 		}
 
+		if c.System().TestMode {
+			c.Response().Header().Set("X-Test-Token", token.Token)
+		}
 		err = c.System().EmailSender.Send(&email.Email{
 			From:    c.System().GetSettings().EmailFrom,
 			To:      []string{m.Email},
@@ -762,7 +767,7 @@ func ChangeEmailRequest(e echo.Context) (err error) {
 
 func ChangeEmail(e echo.Context) error {
 	c := e.(*www.Context)
-	tokenID := c.Param("tokenID")
+	tokenID := c.Param("token")
 	r, err := c.System().DB.Session.GetTokenRequest(model.TokenChangeEmail, tokenID)
 	if err != nil {
 		return c.NoContent(http.StatusBadRequest)

@@ -5,6 +5,8 @@ import (
 	"testing"
 )
 
+const exampleKey = "API keys"
+
 func TestI18n(t *testing.T) {
 	s := new(t, serverURL)
 	u := registerTestUser(s)
@@ -21,10 +23,15 @@ func TestI18n(t *testing.T) {
 	s.e.GET("/api/i18n/search").WithQuery("c", "login").Expect().Status(http.StatusOK).
 		JSON().Object().Keys().Length().Ge(1)
 
-	s.e.GET("/api/i18n/search").WithJSON([]string{"API keys"}).Expect().Status(http.StatusOK).
+	s.e.GET("/api/i18n/search").WithJSON([]string{exampleKey}).Expect().Status(http.StatusOK).
 		JSON().Object().Keys().Length().Ge(1)
-	s.e.GET("/api/i18n/search").WithJSON("API keys").Expect().Status(http.StatusOK).
+	s.e.GET("/api/i18n/search").WithJSON(exampleKey).Expect().Status(http.StatusOK).
 		JSON().Object().Keys().Length().Ge(1)
+
+	s.e.POST("/api/admin/i18n/translate").WithJSON([]string{exampleKey}).Expect().Status(http.StatusOK).
+		JSON().Array().First().String().Equal(exampleKey)
+	s.e.POST("/api/admin/i18n/translate").WithJSON(exampleKey).Expect().Status(http.StatusOK).
+		JSON().String().Equal(exampleKey)
 
 	deleteUser(s, u)
 }
@@ -40,7 +47,6 @@ func TestI18nAdmin(t *testing.T) {
 		r.Headers().ContainsKey("Content-Disposition")
 	}
 
-	const exampleKey = "API keys"
 	r := s.e.GET("/api/admin/i18n/find").WithQuery("k", exampleKey).
 		Expect().Status(http.StatusOK).JSON().Object()
 	r.Keys().Length().Equal(1)
