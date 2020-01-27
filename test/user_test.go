@@ -62,7 +62,15 @@ func TestUser(t *testing.T) {
 	deleteUser(s, u)
 }
 
+func registerSuperAdmin(s *session) *user {
+	return registerTestUserWithRole(s, model.SUPERADMIN)
+}
+
 func registerTestUser(s *session) *user {
+	return registerTestUserWithRole(s, 0)
+}
+
+func registerTestUserWithRole(s *session, role model.Role) *user {
 	// Register test user
 	u := &user{
 		username: fmt.Sprintf("test%s@example.com", s.id),
@@ -74,6 +82,10 @@ func registerTestUser(s *session) *user {
 
 	tr := &model.TokenRequest{
 		Email: u.username,
+	}
+
+	if role > 0 {
+		tr.Role = role
 	}
 
 	r := s.e.POST("/api/register").WithJSON(tr).Expect()

@@ -28,3 +28,39 @@ func TestI18n(t *testing.T) {
 
 	deleteUser(s, u)
 }
+
+func TestI18nAdmin(t *testing.T) {
+	s := new(t, serverURL)
+	u := registerSuperAdmin(s)
+	login(s, u)
+
+	{
+		r := s.e.GET("/api/i18n/export").Expect().Status(http.StatusOK)
+		r.Body().Length().Gt(100)
+		r.Headers().ContainsKey("Content-Disposition")
+	}
+
+	const exampleKey = "API keys"
+	r := s.e.GET("/api/admin/i18n/find").WithQuery("k", exampleKey).
+		Expect().Status(http.StatusOK).JSON().Object()
+	r.Keys().Length().Equal(1)
+
+	lang := r.Value(exampleKey).Object().Keys().First().String().Raw()
+	value := r.Value(exampleKey).Object().Value(lang).String().Raw()
+
+	s.e.POST("/api/admin/i18n/update").
+		WithJSON(map[string]map[string]string{exampleKey: {lang: value}}).
+		Expect().Status(http.StatusOK)
+
+	s.e.POST("/api/admin/i18n/lang").WithJSON(map[string]bool{lang: true}).
+		Expect().Status(http.StatusOK)
+
+	fallback := s.e.GET("/api/admin/i18n/meta").Expect().Status(http.StatusOK).
+		JSON().Path("$.langFallback").String().Raw()
+
+	s.e.POST("/api/admin/i18n/fallback").WithQuery("lang", fallback).
+		Expect().Status(http.StatusOK)
+
+	// TODO: should be possible to delete admin too
+	//deleteUser(s, u)
+}
