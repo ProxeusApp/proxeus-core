@@ -8,6 +8,8 @@ import (
 	sp "github.com/SparkPost/gosparkpost"
 )
 
+var TestMode bool
+
 type sparkPostEmailSender struct {
 	client           *sp.Client
 	defaultEmailFrom string
@@ -46,14 +48,13 @@ func (me *sparkPostEmailSender) Send(e *Email) error {
 	} else {
 		content.Text = e.Body
 	}
-
 	tx := &sp.Transmission{
 		Recipients: e.To,
 		Content:    content,
 	}
-	_, _, err := me.client.Send(tx)
-	if err != nil {
-		return err
+	if TestMode {
+		return nil
 	}
+	_, _, err := me.client.Send(tx)
 	return err
 }

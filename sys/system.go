@@ -61,6 +61,7 @@ func NewWithSettings(settingsFile string, initialSettings *model.Settings) (*Sys
 
 	if strings.ToLower(initialSettings.TestMode) == "true" {
 		me.TestMode = true
+		email.TestMode = true
 	}
 
 	err = me.init(me.GetSettings())
