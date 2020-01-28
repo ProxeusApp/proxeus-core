@@ -1,10 +1,10 @@
 package validate
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"os"
 	"strings"
 
@@ -73,23 +73,6 @@ type FileType struct {
 	Kind  string `json:"kind"`  //(image,video,audio...) or (jpg,png,mp4,mp3...)
 }
 
-type TmpFile struct {
-	*os.File
-}
-
-func (me *TmpFile) Close() error {
-	if me.File != nil {
-		err := me.File.Close()
-		_ = os.Remove(me.Name())
-		return err
-	}
-	return nil
-}
-
-func (me *TmpFile) CloseWithoutRemove() error {
-	return me.File.Close()
-}
-
 func (r Rules) FileType() *FileType {
 	if ftif, ok := r["file"]; ok && ftif != nil {
 		bts, err := json.Marshal(ftif)
@@ -107,27 +90,11 @@ func FileTypes() FTypes {
 	return ftRepository
 }
 
-func File(src io.Reader, rules Rules) (*TmpFile, error) {
+func File(src io.Reader, rules Rules) ([]byte, error) {
 	validr := newValidator(nil, rules)
 	if validr == nil {
 		return nil, os.ErrInvalid
 	}
-	var err error
-	var tmpFile *TmpFile
-	defer func() {
-		if err != nil && tmpFile != nil {
-			//ensure we cleanup if any error occurs by closing and removing the tmp file
-			_ = tmpFile.Close()
-		}
-	}()
-	//read FileType, minSize and maxSize from rules
-	var tmpf *os.File
-	tmpf, err = ioutil.TempFile("", "validate")
-	if err != nil {
-		return nil, err
-	}
-	tmpFile = &TmpFile{tmpf}
-
 	var minBytes int64 = -1
 	var maxBytes int64 = -1
 	ft := rules.FileType()
@@ -149,29 +116,14 @@ func File(src io.Reader, rules Rules) (*TmpFile, error) {
 		}
 		maxBytes = int64(max)
 	}
-	_, err = validateStream(tmpFile, src, ft, minBytes, maxBytes)
+	var buf bytes.Buffer
+	_, err := validateStream(&buf, src, ft, minBytes, maxBytes)
 	if err != nil {
 		validr.add(&Error{Msg: err.Error()})
 		err = *validr.errs
 		return nil, *validr.errs
 	}
-	err = tmpFile.CloseWithoutRemove()
-	if err != nil {
-		return nil, err
-	}
-	tmpf, err = os.Open(tmpFile.Name())
-	if err != nil {
-		return nil, err
-	}
-	tmpFile = &TmpFile{tmpf}
-	return tmpFile, nil
-}
-
-func (me *validator) file() {
-
-}
-
-func (me *validator) fileStream(dst io.Writer, src io.Reader) {
+	return buf.Bytes(), nil
 }
 
 //validateStream breaks if there is an error in the type, min or max validation
