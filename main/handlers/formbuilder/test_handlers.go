@@ -1,6 +1,7 @@
 package formbuilder
 
 import (
+	"bytes"
 	"encoding/json"
 	"net/http"
 	"net/url"
@@ -153,7 +154,7 @@ func PostFileIdFieldName(e echo.Context) error {
 				fileName = "unknown"
 			}
 			defer c.Request().Body.Close()
-			tmpFile, err := form.ValidateFile(c.Request().Body, formSrc, fieldname)
+			buf, err := form.ValidateFile(c.Request().Body, formSrc, fieldname)
 			if err != nil {
 				if er, ok := err.(validate.ErrorMap); ok {
 					er.Translate(func(key string, args ...string) string {
@@ -163,14 +164,13 @@ func PostFileIdFieldName(e echo.Context) error {
 				}
 				return c.JSON(http.StatusUnprocessableEntity, map[string]interface{}{"errors": err})
 			}
-			defer tmpFile.Close()
 			//TODO improve efficienty of file move
 			err = dc.PutDataFile(c.System().DB.Files, id, fieldname,
 				file.Meta{
 					Name:        fileName,
 					ContentType: c.Request().Header.Get("Content-Type"),
 				},
-				tmpFile,
+				bytes.NewBuffer(buf),
 			)
 			if err == nil {
 				fData, _ := dc.GetDataByPath(id, fieldname)

@@ -56,40 +56,23 @@ func createForm(s *session, u *user, name string) *form {
 	return f
 }
 
-func createSimpleForm(s *session, u *user, name, fieldName string) *form {
+func createFormWithData(s *session, u *user, name, fieldName, formData string) *form {
 	f := createForm(s, u, name)
-	f.Data = simpleFormData(fieldName)
+	f.Data = getFormData(fieldName, formData)
 	return updateForm(s, f)
 }
 
-func simpleFormData(fieldName string) map[string]interface{} {
-	j := fmt.Sprintf(`{
-    "formSrc": {
-      "components": {
-        "5zvr98w21yynozx60nhmc": {
-          "_compId": "HC2",
-          "_order": 0,
-          "autocomplete": "on",
-          "help": "test-help",
-          "label": "test-label",
-          "name": "%s",
-          "placeholder": "test-placeholder",
-          "validate": {
-            "required": true
-          }
-        }
-      },
-      "v": 2
-    }
-  }`, fieldName)
+func createSimpleForm(s *session, u *user, name, fieldName string) *form {
+	return createFormWithData(s, u, name, fieldName, simpleFormData)
+}
 
+func getFormData(fieldName, data string) map[string]interface{} {
+	j := fmt.Sprintf(data, fieldName)
 	var result map[string]interface{}
-
 	err := json.Unmarshal([]byte(j), &result)
 	if err != nil {
 		return nil
 	}
-
 	return result
 }
 
@@ -121,3 +104,23 @@ func deleteForm(s *session, id string, expectEmptyList bool) {
 			JSON().Path("$..name").Array().NotContains(id)
 	}
 }
+
+const simpleFormData = `{
+    "formSrc": {
+      "components": {
+        "5zvr98w21yynozx60nhmc": {
+          "_compId": "HC2",
+          "_order": 0,
+          "autocomplete": "on",
+          "help": "test-help",
+          "label": "test-label",
+          "name": "%s",
+          "placeholder": "test-placeholder",
+          "validate": {
+            "required": true
+          }
+        }
+      },
+      "v": 2
+    }
+  }`
