@@ -1106,15 +1106,11 @@ func DocumentNextHandler(e echo.Context) error {
 	if docApp == nil {
 		return c.String(http.StatusBadRequest, "app does not exist")
 	}
-	var (
-		status *app.Status
-	)
-
 	formInput, err := helpers.ParseDataFromReq(c)
 	if err != nil {
 		return c.String(http.StatusBadRequest, err.Error())
 	}
-	status, err = docApp.Next(formInput)
+	status, err := docApp.Next(formInput)
 	if err == nil && !status.HasNext {
 		//done
 		_, _, status, err = docApp.Confirm(c.Lang(), formInput, c.System().DB.UserData)

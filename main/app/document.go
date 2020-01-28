@@ -10,6 +10,8 @@ import (
 	"strconv"
 	"sync"
 
+	"github.com/ProxeusApp/proxeus-core/storage/database/db"
+
 	"github.com/ProxeusApp/proxeus-core/storage"
 	"github.com/ProxeusApp/proxeus-core/sys"
 	"github.com/ProxeusApp/proxeus-core/sys/eio"
@@ -272,21 +274,15 @@ func (me *DocumentFlowInstance) UpdateFile(name string, fm file.Meta, reader io.
 	if err != nil {
 		return
 	}
-	var tmpFile *validate.TmpFile
-	tmpFile, err = form.ValidateFile(reader, me.statusResult.Data, name)
+	buf, err := form.ValidateFile(reader, me.statusResult.Data, name)
 	if err != nil {
 		if er, ok := err.(validate.Errors); ok {
 			verrs = er
 			err = nil
 		}
 	}
-	defer func() {
-		if tmpFile != nil {
-			_ = tmpFile.Close()
-		}
-	}()
 	if len(verrs) == 0 {
-		err = me.DataCluster.PutDataFile(me.system.DB.Files, n.ID, name, fm, tmpFile)
+		err = me.DataCluster.PutDataFile(me.system.DB.Files, n.ID, name, fm, bytes.NewBuffer(buf))
 		if err != nil {
 			return
 		}
@@ -297,7 +293,7 @@ func (me *DocumentFlowInstance) UpdateFile(name string, fm file.Meta, reader io.
 			return
 		}
 		dbF, err = me.system.DB.UserData.GetDataFile(me.auth, me.DataID, "input."+name)
-		if err == os.ErrNotExist {
+		if db.NotFound(err) {
 			dbF = me.system.DB.UserData.NewFile(me.auth, f.Meta())
 			err = me.system.DB.UserData.PutData(me.auth, me.DataID, map[string]interface{}{"input": map[string]interface{}{name: dbF}})
 		}

@@ -12,6 +12,7 @@ import (
 	"net/url"
 	"os"
 	"path"
+	"path/filepath"
 	"time"
 
 	"github.com/ProxeusApp/proxeus-core/storage"
@@ -109,9 +110,8 @@ func (ds *DocumentServiceClient) Compile(db storage.FilesIF, template Template) 
 				if err != nil {
 					return
 				}
-
 				assetHeader, err := zip.FileInfoHeader(file.InMemoryFileInfo{
-					Path: assetPath,
+					Path: filepath.Base(assetPath),
 					Len:  asssetBuf.Len(),
 				})
 				if err != nil {

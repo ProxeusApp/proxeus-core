@@ -97,7 +97,7 @@ func _validate(formInput map[string]interface{}, compsSpec map[string]interface{
 	return errs, nil
 }
 
-func ValidateFile(src io.Reader, formSrc interface{}, fieldName string) (*validate.TmpFile, error) {
+func ValidateFile(src io.Reader, formSrc interface{}, fieldName string) ([]byte, error) {
 	return validate.File(src, RulesOf(formSrc, fieldName))
 }
 
