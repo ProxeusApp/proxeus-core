@@ -7,6 +7,8 @@ import (
 	"strings"
 	"time"
 
+	uuid "github.com/satori/go.uuid"
+
 	"github.com/gorilla/sessions"
 	"github.com/labstack/echo"
 	"github.com/labstack/echo-contrib/session"
@@ -20,14 +22,6 @@ func SessionMiddleware() echo.MiddlewareFunc {
 	gob.Register(map[string]map[string]string{})
 	sessionStore := sessions.NewCookieStore([]byte("secret_Dummy_1234"), []byte("12345678901234567890123456789012"))
 	return session.Middleware(sessionStore)
-}
-
-var anonymousUser = &model.User{Role: model.PUBLIC}
-
-func init() {
-	//init here because fields belong to super struct
-	anonymousUser.ID = ""
-	anonymousUser.Name = "anonymous"
 }
 
 func getSessionWithUser(c *Context, create bool, usr *model.User) (currentSession *sys.Session, err error) {
@@ -60,7 +54,7 @@ func getSessionWithUser(c *Context, create bool, usr *model.User) (currentSessio
 	}
 	if currentSession == nil && create {
 		if usr == nil {
-			usr = anonymousUser
+			usr = &model.User{Role: model.PUBLIC, Name: "anonymous", ID: uuid.NewV4().String()}
 		}
 		currentSession, err = c.System().NewSession(usr)
 		if err != nil {

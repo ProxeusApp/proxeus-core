@@ -36,6 +36,9 @@ func (s *Session) UserID() string {
 }
 
 func (s *Session) AccessRights() model.Role {
+	if s.S.UserName == "anonymous" {
+		return model.USER
+	}
 	return s.S.Rights
 }
 
