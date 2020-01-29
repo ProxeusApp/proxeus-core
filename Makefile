@@ -104,6 +104,9 @@ coverage: generate
 	pkill main.test
 	docker-compose -f docker-compose-dev.yml down
 	rm -fr $(testdir) 
+	gocovmerge artifacts/cover_unittests.out artifacts/cover_integration.out > artifacts/cover_merged.out
+	go tool cover -func artifacts/cover_merged.out > artifacts/cover_merged.txt
+	go tool cover -html artifacts/cover_merged.out -o artifacts/cover_merged.html
 
 
 .PHONY: print-coverage
