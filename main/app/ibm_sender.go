@@ -20,10 +20,6 @@ type IBMSenderNodeImpl struct {
 	ctx *DocumentFlowInstance
 }
 
-func newIBMSenderNodeImpl(n *workflow.Node) (workflow.NodeIF, error) {
-	return &IBMSenderNodeImpl{}, nil
-}
-
 func addConfigHeaders(req *http.Request) {
 	req.Header.Set("clientid", os.Getenv("FF_IBM_SENDER_CLIENT_ID"))
 	req.Header.Set("tenantid", os.Getenv("FF_IBM_SENDER_TENANT_ID"))
