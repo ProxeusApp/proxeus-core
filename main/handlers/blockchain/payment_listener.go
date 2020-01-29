@@ -79,15 +79,7 @@ func (me *PaymentListener) listenLoop(ctx context.Context) (shouldReconnect bool
 				return true
 			}
 			event := new(XesMainTokenTransfer)
-			err := me.eventsHandler(&vLog, event)
-			if err != nil {
-				if !db.NotFound(err) { //ErrNotFound already logged in eventsHandler
-					if err == xesOverflowError {
-						log.Fatal("[blockchain][listener] overflow err: ", err.Error())
-					}
-					log.Println("[blockchain][listener] err: ", err.Error())
-				}
-			}
+			me.eventsHandler(&vLog, event)
 		}
 	}
 }
@@ -137,6 +129,7 @@ func (me *PaymentListener) eventsHandler(lg *types.Log, event *XesMainTokenTrans
 		lg.TxHash.String(), event.Value.String(), lg)
 	err := me.xesAdapter.EventFromLog(event, lg, "Transfer")
 	if err != nil {
+		log.Println("[blockchain][listener] err: ", err.Error())
 		return err
 	}
 
@@ -158,6 +151,5 @@ func (me *PaymentListener) eventsHandler(lg *types.Log, event *XesMainTokenTrans
 		return err
 	}
 	log.Println("[PaymentListener][eventHandler] confirmed payment with hash: ", lg.TxHash.String())
-
 	return nil
 }
