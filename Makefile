@@ -79,7 +79,7 @@ test-api: server #server-docker
 		-EmailFrom=${PROXEUS_EMAIL_FROM} \
 		-PlatformDomain=http://localhost:1323 \
 		-TestMode=true &
-	go clean -testcache && PROXEUS_URL=http://localhost:1323  go test ./test
+	PROXEUS_URL=http://localhost:1323  go test -count=1 ./test
 	pkill -f artifacts/server
 	docker-compose -f docker-compose-dev.yml down
 	rm -fr $(testdir) 
@@ -100,7 +100,7 @@ coverage: generate
 					 PROXEUS_PLATFORM_DOMAIN=http://localhost:1323 \
 					 PROXEUS_TEST_MODE=true \
 					 go test -v -tags coverage -coverprofile artifacts/cover_integration.out -coverpkg="$(coverpkg)" ./main &
-	go clean -testcache && PROXEUS_URL=http://localhost:1323  go test ./test
+	PROXEUS_URL=http://localhost:1323  go test -count=1 ./test
 	pkill main.test
 	docker-compose -f docker-compose-dev.yml down
 	rm -fr $(testdir) 
