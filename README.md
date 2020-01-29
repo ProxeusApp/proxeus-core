@@ -59,7 +59,7 @@ services:
       DocumentServiceUrl: "http://document-service:2115/"
       InfuraApiKey: "${PROXEUS_INFURA_KEY}"
       SparkpostApiKey: "${PROXEUS_SPARKPOST_KEY}"
-      BlockchainContractAddress: "${PROXEUS_CONTRACT_ADDRESS}"
+      BlockchainContractAddress: "${PROXEUS_BLOCKCHAIN_CONTRACT_ADDRESS}"
       EmailFrom: "${PROXEUS_EMAIL_FROM:-no-reply@proxeus.com}"
       AirdropWalletfile: "${PROXEUS_AIRDROP_WALLET_FILE:-./data/proxeus-platform/settings/airdropwallet.json}"
       AirdropWalletkey: "${PROXEUS_AIRDROP_WALLET_KEY:-./data/proxeus-platform/settings/airdropwallet.key}"
@@ -90,7 +90,7 @@ Run the following command (Linux and OSX):
 ```
 export PROXEUS_INFURA_KEY=<Your Infura API key>
 export PROXEUS_SPARKPOST_KEY=<Your SparkPost API Key>
-export PROXEUS_CONTRACT_ADDRESS=0x1d3e5c81bf4bc60d41a8fbbb3d1bae6f03a75f71
+export PROXEUS_BLOCKCHAIN_CONTRACT_ADDRESS=0x1d3e5c81bf4bc60d41a8fbbb3d1bae6f03a75f71
 docker-compose up 
 ```
 

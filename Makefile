@@ -66,31 +66,45 @@ test: generate
 
 .PHONY: test-api
 test-api: server #server-docker
-	$(eval test-api-data-dir := $(shell mktemp -d /tmp/proxeus-test-api.XXXXX ))
-	mkdir -p $(test-api-data-dir)
+	$(eval testdir := $(shell mktemp -d /tmp/proxeus-test-api.XXXXX ))
+	mkdir -p $(testdir)
 	docker-compose -f docker-compose-dev.yml up -d document-service
 	artifacts/server \
-		-SettingsFile=$(test-api-data-dir)/settings/main.json \
-		-DataDir=$(test-api-data-dir)/data \
+		-SettingsFile=$(testdir)/settings/main.json \
+		-DataDir=$(testdir)/data \
 		-DocumentServiceUrl=http://localhost:2115 \
-		-BlockchainContractAddress=$(PROXEUS_CONTRACT_ADDRESS) \
-		-InfuraApiKey=$(PROXEUS_INFURA_KEY) \
-		-SparkpostApiKey=$(PROXEUS_SPARKPOST_KEY) \
+		-BlockchainContractAddress=$(PROXEUS_BLOCKCHAIN_CONTRACT_ADDRESS) \
+		-InfuraApiKey=$(PROXEUS_INFURA_API_KEY) \
+		-SparkpostApiKey=$(PROXEUS_SPARKPOST_API_KEY) \
 		-EmailFrom=${PROXEUS_EMAIL_FROM} \
 		-PlatformDomain=http://localhost:1323 \
 		-TestMode=true &
 	go clean -testcache && PROXEUS_URL=http://localhost:1323  go test ./test
 	pkill -f artifacts/server
 	docker-compose -f docker-compose-dev.yml down
-	rm -fr $(test-api-data-dir) 
+	rm -fr $(testdir) 
 
 .PHONY: coverage
 comma:=,
 space:= $() $()
 coverpkg=$(subst $(space),$(comma), $(filter-out %/mock %/assets, $(shell go list ./main/... ./sys/... ./storage/...)))
 coverage: generate
+	$(eval testdir := $(shell mktemp -d /tmp/proxeus-test-api.XXXXX ))
+	mkdir -p $(testdir)
+	docker-compose -f docker-compose-dev.yml up -d document-service
 	go test -coverprofile artifacts/cover_unittests.out -coverpkg="$(coverpkg)" ./main/... ./sys/... ./storage/...
-	go test -v -tags coverage -coverprofile artifacts/cover_integration.out -coverpkg="$(coverpkg)" ./main
+	echo starting test main ; \
+					 PROXEUS_DATA_DIR=$(testdir)/data \
+					 PROXEUS_SETTINGS_FILE=$(testdir)/settings/main.json \
+					 PROXEUS_DOCUMENT_SERVICE_URL=http://localhost:2115 \
+					 PROXEUS_PLATFORM_DOMAIN=http://localhost:1323 \
+					 PROXEUS_TEST_MODE=true \
+					 go test -v -tags coverage -coverprofile artifacts/cover_integration.out -coverpkg="$(coverpkg)" ./main &
+	go clean -testcache && PROXEUS_URL=http://localhost:1323  go test ./test
+	pkill main.test
+	docker-compose -f docker-compose-dev.yml down
+	rm -fr $(testdir) 
+
 
 .PHONY: print-coverage
 print-coverage:
@@ -106,8 +120,8 @@ clean:
 .PHONY: run
 run: server
 	artifacts/server -DataDir ./data/proxeus-platform/data/  -DocumentServiceUrl=http://document-service:2115 \
-		-BlockchainContractAddress=${PROXEUS_CONTRACT_ADDRESS} -InfuraApiKey=${PROXEUS_INFURA_KEY} \
-		-SparkpostApiKey=${PROXEUS_SPARKPOST_KEY} -EmailFrom=${PROXEUS_EMAIL_FROM} -TestMode=${PROXEUS_TEST_MODE}\
+		-BlockchainContractAddress=${PROXEUS_BLOCKCHAIN_CONTRACT_ADDRESS} -InfuraApiKey=${PROXEUS_INFURA_API_KEY} \
+		-SparkpostApiKey=${PROXEUS_SPARKPOST_API_KEY} -EmailFrom=${PROXEUS_EMAIL_FROM} -TestMode=${PROXEUS_TEST_MODE}\
 		-DatabaseEngine=${PROXEUS_DATABASE_ENGINE} -DatabaseURI=${PROXEUS_DATABASE_URI} -PlatformDomain=http://localhost:1323
 
 main/handlers/assets/bindata.go: $(wildcard ./ui/core/dist/**)

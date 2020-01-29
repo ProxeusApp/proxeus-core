@@ -18,9 +18,9 @@ services:
       TZ: Europe/Zurich
       DataDir: "/data/hosted"
       DocumentServiceUrl: "http://document-service:2115/"
-      BlockchainContractAddress: "${PROXEUS_CONTRACT_ADDRESS}"
-      InfuraApiKey: "${PROXEUS_INFURA_KEY}"
-      SparkpostApiKey: "${PROXEUS_SPARKPOST_KEY}"
+      BlockchainContractAddress: "${PROXEUS_BLOCKCHAIN_CONTRACT_ADDRESS}"
+      InfuraApiKey: "${PROXEUS_INFURA_API_KEY}"
+      SparkpostApiKey: "${PROXEUS_SPARKPOST_API_KEY}"
       EmailFrom: "${PROXEUS_EMAIL_FROM:-no-reply@proxeus.com}"
       AirdropWalletfile: "${PROXEUS_AIRDROP_WALLET_FILE:-/root/.proxeus/settings/airdropwallet.json}"
       AirdropWalletkey: "${PROXEUS_AIRDROP_WALLET_KEY:-/root/.proxeus/settings/airdropwallet.key}"
