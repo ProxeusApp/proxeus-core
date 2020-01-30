@@ -14,7 +14,7 @@ import (
 
 	"io/ioutil"
 
-	"github.com/ProxeusApp/proxeus-core/main/helpers"
+	"github.com/ProxeusApp/proxeus-core/main/handlers/helpers"
 	"github.com/ProxeusApp/proxeus-core/main/www"
 	"github.com/ProxeusApp/proxeus-core/sys/model"
 )

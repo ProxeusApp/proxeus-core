@@ -20,7 +20,7 @@ import (
 
 	"github.com/ProxeusApp/proxeus-core/main/handlers/api"
 	"github.com/ProxeusApp/proxeus-core/main/handlers/formbuilder"
-	"github.com/ProxeusApp/proxeus-core/main/helpers"
+	"github.com/ProxeusApp/proxeus-core/main/handlers/helpers"
 	"github.com/ProxeusApp/proxeus-core/main/www"
 	"github.com/ProxeusApp/proxeus-core/storage"
 	"github.com/ProxeusApp/proxeus-core/sys/eio"

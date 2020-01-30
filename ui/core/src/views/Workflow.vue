@@ -1189,6 +1189,7 @@ function condition(){
           ibmsender: 'fcn-ibmsender node-icon mdi mdi-send',
           mailsender: 'fcn-externalnode node-icon mdi mdi-send',
           priceretriever: 'fcn-externalnode node-icon mdi mdi-send',
+          externalNode: 'fcn-externalnode node-icon mdi mdi-link-variant',
           condition: 'fcn-condition node-icon mdi mdi-circle-outline',
           user: 'fcn-usr node-icon mdi mdi-account',
           form: 'fcn-form node-icon mdi mdi-view-quilt',
@@ -1234,6 +1235,10 @@ function condition(){
         onDblClick: function (n) {
           console.log(this)
           var url = window.location.origin + this.wfm.frontendUrlPrefix + '/' + n.group + '/' + n.id
+          window.open(url, '_blank')
+        },
+        onDblClickWithName: function (n) {
+          var url = window.location.origin + this.wfm.frontendUrlPrefix + '/' + n.group + '/' + n.label + '/' + n.id
           window.open(url, '_blank')
         },
         conditionDblClick: function (node) {
@@ -1527,6 +1532,50 @@ function condition(){
                   },
                   'dblclick': function () {
                   }
+                }
+              },
+              externalNode: {
+                connections: {
+                  from: [
+                    {
+                      node: {
+                        color: {
+                          background: '#8688ff',
+                          highlight: { background: '#5f5ff0' },
+                          hover: { background: '#5f5ff0' }
+                        },
+                        borderWidthSelected: 3
+                      },
+                      edge: {
+                        color: {
+                          color: '#8688ff',
+                          highlight: '#a8a5ff',
+                          hover: '#a8a5ff'
+                        }
+                      }
+                    }],
+                  to: Infinity,
+                  space: 1.1
+                },
+                font: {
+                  color: '#343434',
+                  size: 15,
+                  mod: 'bold',
+                  bold: {
+                    color: '#343434',
+                    size: 14, // px
+                    face: 'arial',
+                    vadjust: 0,
+                    mod: 'bold'
+                  }
+                },
+                icon: {
+                  face: 'Material Design Icons',
+                  code: '\uf339',
+                  color: '#5150c0'
+                },
+                events: {
+                  'dblclick': _.onDblClickWithName
                 }
               },
               condition: {

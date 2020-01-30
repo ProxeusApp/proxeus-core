@@ -19,7 +19,7 @@ import (
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/ethclient"
 
-	"github.com/ProxeusApp/proxeus-core/main/ethglue"
+	"github.com/ProxeusApp/proxeus-core/main/handlers/blockchain/ethglue"
 )
 
 const etherUnit = 1000000000000000000

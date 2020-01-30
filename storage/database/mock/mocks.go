@@ -591,6 +591,201 @@ func (mr *MockWorkflowIFMockRecorder) Close() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Close", reflect.TypeOf((*MockWorkflowIF)(nil).Close))
 }
 
+// RegisterExternalNode mocks base method
+func (m *MockWorkflowIF) RegisterExternalNode(auth model.Auth, n *model.ExternalNode) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "RegisterExternalNode", auth, n)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// RegisterExternalNode indicates an expected call of RegisterExternalNode
+func (mr *MockWorkflowIFMockRecorder) RegisterExternalNode(auth, n interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RegisterExternalNode", reflect.TypeOf((*MockWorkflowIF)(nil).RegisterExternalNode), auth, n)
+}
+
+// ListExternalNodes mocks base method
+func (m *MockWorkflowIF) ListExternalNodes() []*model.ExternalNode {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ListExternalNodes")
+	ret0, _ := ret[0].([]*model.ExternalNode)
+	return ret0
+}
+
+// ListExternalNodes indicates an expected call of ListExternalNodes
+func (mr *MockWorkflowIFMockRecorder) ListExternalNodes() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListExternalNodes", reflect.TypeOf((*MockWorkflowIF)(nil).ListExternalNodes))
+}
+
+// DeleteExternalNode mocks base method
+func (m *MockWorkflowIF) DeleteExternalNode(auth model.Auth, id string) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DeleteExternalNode", auth, id)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// DeleteExternalNode indicates an expected call of DeleteExternalNode
+func (mr *MockWorkflowIFMockRecorder) DeleteExternalNode(auth, id interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteExternalNode", reflect.TypeOf((*MockWorkflowIF)(nil).DeleteExternalNode), auth, id)
+}
+
+// NodeByName mocks base method
+func (m *MockWorkflowIF) NodeByName(auth model.Auth, name string) (*model.ExternalNode, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "NodeByName", auth, name)
+	ret0, _ := ret[0].(*model.ExternalNode)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// NodeByName indicates an expected call of NodeByName
+func (mr *MockWorkflowIFMockRecorder) NodeByName(auth, name interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "NodeByName", reflect.TypeOf((*MockWorkflowIF)(nil).NodeByName), auth, name)
+}
+
+// QueryFromInstanceID mocks base method
+func (m *MockWorkflowIF) QueryFromInstanceID(auth model.Auth, id string) (model.ExternalQuery, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "QueryFromInstanceID", auth, id)
+	ret0, _ := ret[0].(model.ExternalQuery)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// QueryFromInstanceID indicates an expected call of QueryFromInstanceID
+func (mr *MockWorkflowIFMockRecorder) QueryFromInstanceID(auth, id interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "QueryFromInstanceID", reflect.TypeOf((*MockWorkflowIF)(nil).QueryFromInstanceID), auth, id)
+}
+
+// PutExternalNodeInstance mocks base method
+func (m *MockWorkflowIF) PutExternalNodeInstance(auth model.Auth, i *model.ExternalNodeInstance) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "PutExternalNodeInstance", auth, i)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// PutExternalNodeInstance indicates an expected call of PutExternalNodeInstance
+func (mr *MockWorkflowIFMockRecorder) PutExternalNodeInstance(auth, i interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "PutExternalNodeInstance", reflect.TypeOf((*MockWorkflowIF)(nil).PutExternalNodeInstance), auth, i)
+}
+
+// MockExternalNodeIF is a mock of ExternalNodeIF interface
+type MockExternalNodeIF struct {
+	ctrl     *gomock.Controller
+	recorder *MockExternalNodeIFMockRecorder
+}
+
+// MockExternalNodeIFMockRecorder is the mock recorder for MockExternalNodeIF
+type MockExternalNodeIFMockRecorder struct {
+	mock *MockExternalNodeIF
+}
+
+// NewMockExternalNodeIF creates a new mock instance
+func NewMockExternalNodeIF(ctrl *gomock.Controller) *MockExternalNodeIF {
+	mock := &MockExternalNodeIF{ctrl: ctrl}
+	mock.recorder = &MockExternalNodeIFMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use
+func (m *MockExternalNodeIF) EXPECT() *MockExternalNodeIFMockRecorder {
+	return m.recorder
+}
+
+// RegisterExternalNode mocks base method
+func (m *MockExternalNodeIF) RegisterExternalNode(auth model.Auth, n *model.ExternalNode) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "RegisterExternalNode", auth, n)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// RegisterExternalNode indicates an expected call of RegisterExternalNode
+func (mr *MockExternalNodeIFMockRecorder) RegisterExternalNode(auth, n interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RegisterExternalNode", reflect.TypeOf((*MockExternalNodeIF)(nil).RegisterExternalNode), auth, n)
+}
+
+// ListExternalNodes mocks base method
+func (m *MockExternalNodeIF) ListExternalNodes() []*model.ExternalNode {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ListExternalNodes")
+	ret0, _ := ret[0].([]*model.ExternalNode)
+	return ret0
+}
+
+// ListExternalNodes indicates an expected call of ListExternalNodes
+func (mr *MockExternalNodeIFMockRecorder) ListExternalNodes() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListExternalNodes", reflect.TypeOf((*MockExternalNodeIF)(nil).ListExternalNodes))
+}
+
+// DeleteExternalNode mocks base method
+func (m *MockExternalNodeIF) DeleteExternalNode(auth model.Auth, id string) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DeleteExternalNode", auth, id)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// DeleteExternalNode indicates an expected call of DeleteExternalNode
+func (mr *MockExternalNodeIFMockRecorder) DeleteExternalNode(auth, id interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteExternalNode", reflect.TypeOf((*MockExternalNodeIF)(nil).DeleteExternalNode), auth, id)
+}
+
+// NodeByName mocks base method
+func (m *MockExternalNodeIF) NodeByName(auth model.Auth, name string) (*model.ExternalNode, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "NodeByName", auth, name)
+	ret0, _ := ret[0].(*model.ExternalNode)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// NodeByName indicates an expected call of NodeByName
+func (mr *MockExternalNodeIFMockRecorder) NodeByName(auth, name interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "NodeByName", reflect.TypeOf((*MockExternalNodeIF)(nil).NodeByName), auth, name)
+}
+
+// QueryFromInstanceID mocks base method
+func (m *MockExternalNodeIF) QueryFromInstanceID(auth model.Auth, id string) (model.ExternalQuery, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "QueryFromInstanceID", auth, id)
+	ret0, _ := ret[0].(model.ExternalQuery)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// QueryFromInstanceID indicates an expected call of QueryFromInstanceID
+func (mr *MockExternalNodeIFMockRecorder) QueryFromInstanceID(auth, id interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "QueryFromInstanceID", reflect.TypeOf((*MockExternalNodeIF)(nil).QueryFromInstanceID), auth, id)
+}
+
+// PutExternalNodeInstance mocks base method
+func (m *MockExternalNodeIF) PutExternalNodeInstance(auth model.Auth, i *model.ExternalNodeInstance) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "PutExternalNodeInstance", auth, i)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// PutExternalNodeInstance indicates an expected call of PutExternalNodeInstance
+func (mr *MockExternalNodeIFMockRecorder) PutExternalNodeInstance(auth, i interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "PutExternalNodeInstance", reflect.TypeOf((*MockExternalNodeIF)(nil).PutExternalNodeInstance), auth, i)
+}
+
 // MockTemplateIF is a mock of TemplateIF interface
 type MockTemplateIF struct {
 	ctrl     *gomock.Controller
