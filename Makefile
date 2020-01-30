@@ -77,7 +77,7 @@ test-api: server #server-docker
 		-BlockchainContractAddress=$(PROXEUS_BLOCKCHAIN_CONTRACT_ADDRESS) \
 		-InfuraApiKey=$(PROXEUS_INFURA_API_KEY) \
 		-SparkpostApiKey=$(PROXEUS_SPARKPOST_API_KEY) \
-		-EmailFrom=${PROXEUS_EMAIL_FROM} \
+		-EmailFrom=test@example.com \
 		-PlatformDomain=http://localhost:1323 \
 		-TestMode=true &
 	PROXEUS_URL=http://localhost:1323  go test -count=1 ./test
@@ -92,14 +92,15 @@ coverpkg=$(subst $(space),$(comma), $(filter-out %/mock %/assets, $(shell go lis
 coverage: generate
 	$(eval testdir := $(shell mktemp -d /tmp/proxeus-test-api.XXXXX ))
 	mkdir -p $(testdir)
-	docker-compose -f docker-compose-dev.yml up -d document-service
 	go test -coverprofile artifacts/cover_unittests.out -coverpkg="$(coverpkg)" ./main/... ./sys/... ./storage/...
+	docker-compose -f docker-compose-dev.yml up -d document-service
 	echo starting test main ; \
 					 PROXEUS_DATA_DIR=$(testdir)/data \
 					 PROXEUS_SETTINGS_FILE=$(testdir)/settings/main.json \
 					 PROXEUS_DOCUMENT_SERVICE_URL=http://localhost:2115 \
 					 PROXEUS_PLATFORM_DOMAIN=http://localhost:1323 \
 					 PROXEUS_TEST_MODE=true \
+					 PROXEUS_EMAIL_FROM=test@example.com \
 					 go test -v -tags coverage -coverprofile artifacts/cover_integration.out -coverpkg="$(coverpkg)" ./main &
 	PROXEUS_URL=http://localhost:1323  go test -count=1 ./test
 	pkill main.test
