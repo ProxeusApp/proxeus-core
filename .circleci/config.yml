@@ -25,7 +25,7 @@ jobs:
             - yarn-v1-{{ checksum "ui/yarn.lock" }}
       - run:
           name: Build UI
-          command: make ui
+          command: make init ui
       - save_cache:
           key: yarn-v1-{{ checksum "ui/yarn.lock" }}
           paths:
@@ -60,7 +60,7 @@ jobs:
             - go-mod-v2-{{ checksum "go.sum" }}
       - run:
           name: Test
-          command: make test
+          command: make init test
       - save_cache:
           key: go-mod-v2-{{ checksum "go.sum" }}
           paths:
@@ -77,7 +77,7 @@ jobs:
             - go-mod-v2-{{ checksum "go.sum" }}
       - run:
           name: Test
-          command: make server
+          command: make init server
       - persist_to_workspace:
           root: .
           paths:
@@ -107,7 +107,7 @@ jobs:
             - go-mod-v2-{{ checksum "go.sum" }}
       - run:
           name: Test
-          command: make test-api
+          command: make init test-api
 
   build-server-docker:
     executor: docker-image-golang
@@ -120,7 +120,7 @@ jobs:
             - go-mod-v2-{{ checksum "go.sum" }}
       - run:
           name: Build server binary
-          command: make server-docker
+          command: make init server-docker
       - persist_to_workspace:
           root: .
           paths:
