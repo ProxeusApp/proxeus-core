@@ -85,6 +85,7 @@ jobs:
 
   coverage-go:
     executor: docker-image-golang
+    resource_class: large
     steps:
       - checkout
       - attach_workspace:
@@ -99,6 +100,7 @@ jobs:
 
   test-api-go:
     executor: docker-image-golang
+    resource_class: large
     steps:
       - checkout
       - attach_workspace:
