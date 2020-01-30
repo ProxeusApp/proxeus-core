@@ -94,6 +94,7 @@ coverage: generate
 	mkdir -p $(testdir)
 	go test -coverprofile artifacts/cover_unittests.out -coverpkg="$(coverpkg)" ./main/... ./sys/... ./storage/...
 	docker-compose -f docker-compose-dev.yml up -d document-service
+	docker-compose -f docker-compose-dev.yml ps
 	echo starting test main ; \
 					 PROXEUS_DATA_DIR=$(testdir)/data \
 					 PROXEUS_SETTINGS_FILE=$(testdir)/settings/main.json \
