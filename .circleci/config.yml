@@ -50,6 +50,7 @@ jobs:
           paths:
             - "/go/pkg/mod"
             - "/go/bin"
+
   validate-go:
     executor: docker-image-golang
     steps:
@@ -78,6 +79,42 @@ jobs:
       - run:
           name: Test
           command: make test
+      - save_cache:
+          key: go-mod-v1-{{ checksum "go.sum" }}
+          paths:
+            - "/go/pkg/mod"
+            - "/go/bin"
+
+  coverage-go:
+    executor: docker-image-golang
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ~/project/
+      - restore_cache:
+          keys:
+            - go-mod-v1-{{ checksum "go.sum" }}
+      - run:
+          name: Test
+          command: make coverage
+      - save_cache:
+          key: go-mod-v1-{{ checksum "go.sum" }}
+          paths:
+            - "/go/pkg/mod"
+            - "/go/bin"
+
+  test-api-go:
+    executor: docker-image-golang
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ~/project/
+      - restore_cache:
+          keys:
+            - go-mod-v1-{{ checksum "go.sum" }}
+      - run:
+          name: Test
+          command: make test-api
       - save_cache:
           key: go-mod-v1-{{ checksum "go.sum" }}
           paths:
@@ -207,6 +244,12 @@ workflows:
           requires:
             - validate-go
             - build-ui
+      - coverage-go:
+          requires:
+            - test-go
+      - test-api-go:
+          requires:
+            - test-go
       - build-server-docker:
           requires:
             - test-go
