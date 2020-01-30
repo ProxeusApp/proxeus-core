@@ -63,6 +63,7 @@ func TestApi(t *testing.T) {
 		{"ImportExportRoot", testImportExportRoot},
 		{"Template", testTemplate},
 		{"WorkflowWithFile", testWorkflowWithFile},
+		{"WorkflowExternalNode", testWorkflowExternalNode},
 	}
 
 	for _, test := range tests {

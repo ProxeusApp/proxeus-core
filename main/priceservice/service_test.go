@@ -1,4 +1,4 @@
-package app
+package priceservice
 
 import (
 	"fmt"
@@ -13,6 +13,11 @@ var priceService PriceService
 
 const apiKey = "anyTestApiKey"
 
+const (
+	currencyCHF string = "CHF"
+	currencyXES string = "XES"
+)
+
 func TestMain(m *testing.M) {
 	code := m.Run()
 
@@ -24,7 +29,7 @@ func TestGetPriceInForShouldReturnValue(t *testing.T) {
 	setupResponseFor(`{ "CHF": 0.0025 }`, http.StatusOK)
 	priceService = NewCryptoComparePriceService(apiKey, server.URL)
 
-	price, err := priceService.GetPriceInFor(CurrencyCHF, CurrencyXES)
+	price, err := priceService.GetPriceInFor(currencyCHF, currencyXES)
 
 	if err != nil {
 		t.Error(err)
@@ -39,7 +44,7 @@ func TestGetPriceInForShouldReturnErrorOnStatusCodeOtherThanOk(t *testing.T) {
 		http.StatusBadRequest)
 	priceService = NewCryptoComparePriceService(apiKey, server.URL)
 
-	_, err := priceService.GetPriceInFor(CurrencyCHF, CurrencyXES)
+	_, err := priceService.GetPriceInFor(currencyCHF, currencyXES)
 
 	if err == nil {
 		t.Error("Should return an error")

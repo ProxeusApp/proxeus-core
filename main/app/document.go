@@ -129,6 +129,7 @@ func (me *DocumentFlowInstance) init(wfd *workflow.Workflow, state []workflow.St
 		NodeImpl: map[string]*workflow.NodeDef{
 			"mailsender":     {InitImplFunc: me.newMailSender, Background: true},
 			"priceretriever": {InitImplFunc: me.newPriceRetriever, Background: true},
+			"externalNode":   {InitImplFunc: me.newExternalNode, Background: true},
 			"form":           {InitImplFunc: me.newFormNodeImpl, Background: false},
 			"template":       {InitImplFunc: me.newDocTmplNodeImpl, Background: true},
 		},
@@ -203,6 +204,10 @@ func (me *DocumentFlowInstance) newMailSender(n *workflow.Node) (workflow.NodeIF
 
 func (me *DocumentFlowInstance) newPriceRetriever(n *workflow.Node) (workflow.NodeIF, error) {
 	return &priceRetrieverNode{ctx: me}, nil
+}
+
+func (me *DocumentFlowInstance) newExternalNode(n *workflow.Node) (workflow.NodeIF, error) {
+	return &externalNode{ctx: me, n: n}, nil
 }
 
 func (me *DocumentFlowInstance) newFormNodeImpl(n *workflow.Node) (workflow.NodeIF, error) {

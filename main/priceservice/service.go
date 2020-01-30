@@ -1,4 +1,4 @@
-package app
+package priceservice
 
 import (
 	"encoding/json"
@@ -7,11 +7,6 @@ import (
 	"net/http"
 
 	"github.com/pkg/errors"
-)
-
-const (
-	CurrencyCHF string = "CHF"
-	CurrencyXES string = "XES"
 )
 
 type PriceService interface {

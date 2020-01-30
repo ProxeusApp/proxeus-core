@@ -22,6 +22,7 @@ type WorkflowDB struct {
 
 const workflowHeavyData = "wh_data"
 const workflowVersion = "wf_vers"
+const externalNodeInstance = "ExternalNodeInstance"
 
 func NewWorkflowDB(c DBConfig) (*WorkflowDB, error) {
 	baseDir := filepath.Join(c.Dir, "workflow")
@@ -32,6 +33,9 @@ func NewWorkflowDB(c DBConfig) (*WorkflowDB, error) {
 	udb := &WorkflowDB{db: db, baseFilePath: filepath.Join(baseDir, "assets")}
 
 	udb.db.Init(workflowHeavyData)
+
+	udb.db.Init(externalNodeInstance)
+	udb.db.Init(new(model.ExternalNode))
 
 	example := &model.WorkflowItem{}
 	udb.db.Init(example)
@@ -234,6 +238,73 @@ func (me *WorkflowDB) saveOnly(item *model.WorkflowItem, tx db.DB) error {
 	cp := *item
 	cp.Data = nil
 	return tx.Save(&cp)
+}
+
+func (me *WorkflowDB) RegisterExternalNode(auth model.Auth, n *model.ExternalNode) error {
+	return me.db.Save(n)
+}
+
+func (me *WorkflowDB) NodeByName(auth model.Auth, name string) (*model.ExternalNode, error) {
+	var i model.ExternalNode
+	err := me.db.One("Name", name, &i)
+	return &i, err
+}
+
+func (me *WorkflowDB) QueryFromInstanceID(auth model.Auth, id string) (model.ExternalQuery, error) {
+	var i model.ExternalNodeInstance
+	err := me.db.Get(externalNodeInstance, id, &i)
+	if err != nil {
+		return model.ExternalQuery{}, err
+	}
+	n, err := me.NodeByName(auth, i.NodeName)
+	if err != nil {
+		return model.ExternalQuery{}, err
+	}
+	return model.ExternalQuery{
+		ExternalNode:         n,
+		ExternalNodeInstance: &i,
+	}, nil
+}
+
+func (me *WorkflowDB) ListExternalNodes() []*model.ExternalNode {
+	var l []*model.ExternalNode
+	me.db.Select().Each(new(model.ExternalNode), func(record interface{}) error {
+		item := record.(*model.ExternalNode)
+		l = append(l, item)
+		return nil
+	})
+	return l
+}
+
+func (me *WorkflowDB) DeleteExternalNode(auth model.Auth, id string) error {
+	return me.db.DeleteStruct(model.ExternalNode{ID: id})
+}
+
+func (me *WorkflowDB) PutExternalNodeInstance(auth model.Auth, item *model.ExternalNodeInstance) error {
+	tx, err := me.db.Begin(true)
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+	var i model.ExternalNodeInstance
+	err = tx.Get(externalNodeInstance, item.ID, &i)
+	if db.NotFound(err) {
+		if !auth.AccessRights().AllowedToCreateEntities() {
+			return model.ErrAuthorityMissing
+		}
+		item.Permissions = model.Permissions{Owner: auth.UserID()}
+		i.Permissions = item.Permissions
+	} else if err != nil {
+		return err
+	}
+	if !i.Permissions.IsWriteGrantedFor(auth) {
+		return model.ErrAuthorityMissing
+	}
+	err = tx.Set(externalNodeInstance, item.ID, item)
+	if err != nil {
+		return err
+	}
+	return tx.Commit()
 }
 
 func (me *WorkflowDB) Close() error {

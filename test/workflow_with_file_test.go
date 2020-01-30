@@ -11,7 +11,7 @@ func testWorkflowWithFile(s *session) {
 
 	w1 := createWorkflow(s, u, "workflow-"+s.id)
 	f := createFormWithData(s, u, "form-"+s.id, fieldName, fileFormData)
-	tpl := createSimpleTemplate(s, u, "template-"+s.id, "test/assets/test_template2.odt")
+	tpl := createSimpleTemplate(s, u, "template-"+s.id, "test/assets/templates/test_template2.odt")
 
 	w1.Data = simpleWorkflowData(s.id, f.ID, tpl.ID)
 	updateWorkflow(s, w1)
@@ -23,13 +23,7 @@ func testWorkflowWithFile(s *session) {
 }
 
 func executeFileWorkflow(s *session, w *workflow) {
-	{
-		r := s.e.GET("/api/document/" + w.ID).Expect().Status(http.StatusOK).JSON().Path("$.status")
-		r.Path("$.hasNext").Boolean().True()
-		r.Path("$.hasPrev").Boolean().False()
-		r.Path("$.steps").Array().Length().Gt(0)
-		r.Path("$.data").NotNull()
-	}
+	expectWorkflowInCleanState(s, w)
 
 	image, err := Asset("test/assets/image.jpg")
 	if err != nil {
@@ -45,7 +39,7 @@ func executeFileWorkflow(s *session, w *workflow) {
 	previewID := r.JSON().Path("$.status.docs[0].id").String().Raw()
 	previewPDF := s.e.GET("/api/document/" + w.ID + "/preview/" + previewID + "/en/pdf").Expect().Status(http.StatusOK).Body().Raw()
 
-	expectedPDF, err := Asset("test/assets/test_expected2.pdf")
+	expectedPDF, err := Asset("test/assets/templates/test_expected2.pdf")
 	if err != nil {
 		s.t.Errorf("Cannot read asset %s", err)
 	}

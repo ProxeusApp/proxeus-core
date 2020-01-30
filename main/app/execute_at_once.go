@@ -59,6 +59,9 @@ func ExecuteWorkflowAtOnce(c *www.Context, a model.Auth, wfi *model.WorkflowItem
 			"priceretriever": {InitImplFunc: func(n *workflow.Node) (workflow.NodeIF, error) {
 				return &priceRetrieverNode{ctx2: eaoc}, nil
 			}, Background: true},
+			"externalNode": {InitImplFunc: func(n *workflow.Node) (workflow.NodeIF, error) {
+				return &externalNode{ctx2: eaoc, n: n}, nil
+			}, Background: true},
 			"form": {InitImplFunc: func(n *workflow.Node) (workflow.NodeIF, error) {
 				return &EAOFormNodeImpl{ctx: eaoc}, nil
 			}, Background: false},

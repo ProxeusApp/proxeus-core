@@ -200,6 +200,9 @@ func MainHostedAPI(e *echo.Echo, s *www.Security, version string) {
 		{GET, CREATOR, "/api/admin/template/ide/tmplAssistanceDownload", template_ide.IdeGetTmpAssDownload},
 		{GET, PUBLIC, "/api/admin/template/ide/form", template_ide.IdeFormHandler}, // Need session
 
+		{POST, PUBLIC, "/api/admin/external/register", api.ExternalRegister},
+		{GET, CREATOR, "/api/admin/external/:name/:id", api.ExternalConfigurationPage},
+
 		// test
 		{PUT, PUBLIC, "/api/test/payments", payment.PutTestPayment},
 		{PUT, PUBLIC, "/api/test/signatures", api.PutTestSignature},

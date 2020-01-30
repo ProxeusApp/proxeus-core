@@ -21,8 +21,8 @@ import (
 	"github.com/ProxeusApp/proxeus-core/main/app"
 	cfg "github.com/ProxeusApp/proxeus-core/main/config"
 	"github.com/ProxeusApp/proxeus-core/main/handlers/blockchain"
+	"github.com/ProxeusApp/proxeus-core/main/handlers/helpers"
 	"github.com/ProxeusApp/proxeus-core/main/handlers/payment"
-	"github.com/ProxeusApp/proxeus-core/main/helpers"
 	"github.com/ProxeusApp/proxeus-core/main/www"
 	"github.com/ProxeusApp/proxeus-core/storage"
 	"github.com/ProxeusApp/proxeus-core/storage/database/db"
@@ -2038,4 +2038,45 @@ func copyWorkflows(c *www.Context, newUser *model.User) {
 		w.Data.Flow.Nodes = newNodes
 		c.System().DB.Workflow.Put(newUser, &w)
 	}
+}
+
+func ExternalConfigurationPage(e echo.Context) error {
+	c := e.(*www.Context)
+	sess := c.Session(false)
+	if sess == nil {
+		return c.NoContent(http.StatusUnauthorized)
+	}
+	id := c.Param("id")
+	name := c.Param("name")
+
+	node, err := c.System().DB.Workflow.NodeByName(sess, name)
+	if err != nil {
+		return err
+	}
+	i := &model.ExternalNodeInstance{
+		ID:       id,
+		NodeName: name,
+	}
+	err = c.System().DB.Workflow.PutExternalNodeInstance(sess, i)
+	if err != nil {
+		return err
+	}
+	q := model.ExternalQuery{
+		ExternalNode:         node,
+		ExternalNodeInstance: i,
+	}
+	return c.Redirect(http.StatusFound, q.ConfigUrl())
+}
+
+func ExternalRegister(e echo.Context) error {
+	if e.RealIP() != "127.0.0.1" {
+		return errors.New("only local ip allowed")
+	}
+	c := e.(*www.Context)
+	var node model.ExternalNode
+	err := c.Bind(&node)
+	if err != nil {
+		return err
+	}
+	return c.System().DB.Workflow.RegisterExternalNode(new(model.User), &node)
 }

@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/ProxeusApp/proxeus-core/main/priceservice"
+
 	"github.com/ProxeusApp/proxeus-core/sys/workflow"
 )
 
@@ -14,7 +16,7 @@ type priceRetrieverNode struct {
 
 func (me priceRetrieverNode) Execute(n *workflow.Node) (proceed bool, err error) {
 	log.Println("Retrieving price...")
-	cryptoComparePriceService := NewCryptoComparePriceService("API_KEY", "https://min-api.cryptocompare.com")
+	cryptoComparePriceService := priceservice.NewCryptoComparePriceService("API_KEY", "https://min-api.cryptocompare.com")
 	chfXes, err := cryptoComparePriceService.GetPriceInFor("CHF", "XES")
 	if err != nil {
 		return false, err
