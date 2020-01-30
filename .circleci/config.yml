@@ -6,7 +6,7 @@ executors:
     environment:
       PROJECT_ROOT_FOLDER: ~/project
     docker:
-      - image: golang:1.13
+      - image: circleci/golang:1.13
   docker-publisher:
     environment:
       PROJECT_ROOT_FOLDER: ~/project
@@ -252,7 +252,7 @@ workflows:
             - test-go
       - build-server-docker:
           requires:
-            - test-go
+            - test-api-go
       - build-docker-image:
           requires:
             - build-server-docker
