@@ -7,6 +7,12 @@ executors:
       PROJECT_ROOT_FOLDER: ~/project
     docker:
       - image: circleci/golang:1.13
+  docker-image-golang-test-api:
+    environment:
+      PROJECT_ROOT_FOLDER: ~/project
+    docker:
+      - image: circleci/golang:1.13
+      - image: proxeus/document-service:latest
   docker-publisher:
     environment:
       PROJECT_ROOT_FOLDER: ~/project
@@ -84,7 +90,7 @@ jobs:
             - ./artifacts/server
 
   coverage-go:
-    executor: docker-image-golang
+    executor: docker-image-golang-test-api
     resource_class: large
     steps:
       - checkout
@@ -99,7 +105,7 @@ jobs:
           command: make init coverage
 
   test-api-go:
-    executor: docker-image-golang
+    executor: docker-image-golang-test-api
     resource_class: large
     steps:
       - checkout
