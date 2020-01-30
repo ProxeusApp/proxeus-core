@@ -44,7 +44,7 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - go-mod-v1-{{ .Revision }}
+            - go-mod-v2-{{ .Revision }}
       - run:
           name: Validate
           command: make init validate
@@ -57,12 +57,12 @@ jobs:
           at: ~/project/
       - restore_cache:
           keys:
-            - go-mod-v1-{{ checksum "go.sum" }}
+            - go-mod-v2-{{ checksum "go.sum" }}
       - run:
           name: Test
           command: make test
       - save_cache:
-          key: go-mod-v1-{{ checksum "go.sum" }}
+          key: go-mod-v2-{{ checksum "go.sum" }}
           paths:
             - "/go/pkg/mod"
 
@@ -74,7 +74,7 @@ jobs:
           at: ~/project/
       - restore_cache:
           keys:
-            - go-mod-v1-{{ checksum "go.sum" }}
+            - go-mod-v2-{{ checksum "go.sum" }}
       - run:
           name: Test
           command: make server
@@ -91,7 +91,7 @@ jobs:
           at: ~/project/
       - restore_cache:
           keys:
-            - go-mod-v1-{{ checksum "go.sum" }}
+            - go-mod-v2-{{ checksum "go.sum" }}
       - run:
           name: Test
           command: make init coverage
@@ -104,7 +104,7 @@ jobs:
           at: ~/project/
       - restore_cache:
           keys:
-            - go-mod-v1-{{ checksum "go.sum" }}
+            - go-mod-v2-{{ checksum "go.sum" }}
       - run:
           name: Test
           command: make test-api
@@ -117,7 +117,7 @@ jobs:
           at: ~/project/
       - restore_cache:
           keys:
-            - go-mod-v1-{{ checksum "go.sum" }}
+            - go-mod-v2-{{ checksum "go.sum" }}
       - run:
           name: Build server binary
           command: make server-docker
