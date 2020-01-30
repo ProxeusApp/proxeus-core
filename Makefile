@@ -69,7 +69,7 @@ test: generate
 test-api: server #server-docker
 	$(eval testdir := $(shell mktemp -d /tmp/proxeus-test-api.XXXXX ))
 	mkdir -p $(testdir)
-	#docker-compose -f docker-compose-dev.yml up -d document-service
+	curl -s http://localhost:2115 > /dev/null || docker-compose -f docker-compose-dev.yml up -d document-service
 	artifacts/server \
 		-SettingsFile=$(testdir)/settings/main.json \
 		-DataDir=$(testdir)/data \
@@ -82,7 +82,7 @@ test-api: server #server-docker
 		-TestMode=true &
 	PROXEUS_URL=http://localhost:1323  go test -count=1 ./test
 	pkill -f artifacts/server
-	#docker-compose -f docker-compose-dev.yml down
+	docker-compose ps | grep -sq document_service && docker-compose -f docker-compose-dev.yml down
 	rm -fr $(testdir) 
 
 .PHONY: coverage
@@ -93,7 +93,7 @@ coverage: generate
 	$(eval testdir := $(shell mktemp -d /tmp/proxeus-test-api.XXXXX ))
 	mkdir -p $(testdir)
 	go test -coverprofile artifacts/cover_unittests.out -coverpkg="$(coverpkg)" ./main/... ./sys/... ./storage/...
-	#docker-compose -f docker-compose-dev.yml up -d document-service
+	curl -s http://localhost:2115 > /dev/null || docker-compose -f docker-compose-dev.yml up -d document-service
 	echo starting test main ; \
 					 PROXEUS_DATA_DIR=$(testdir)/data \
 					 PROXEUS_SETTINGS_FILE=$(testdir)/settings/main.json \
@@ -104,12 +104,11 @@ coverage: generate
 					 go test -v -tags coverage -coverprofile artifacts/cover_integration.out -coverpkg="$(coverpkg)" ./main &
 	PROXEUS_URL=http://localhost:1323  go test -count=1 ./test
 	pkill main.test
-	#docker-compose -f docker-compose-dev.yml down
+	docker-compose ps | grep -sq document_service && docker-compose -f docker-compose-dev.yml down
 	rm -fr $(testdir) 
 	gocovmerge artifacts/cover_unittests.out artifacts/cover_integration.out > artifacts/cover_merged.out
 	go tool cover -func artifacts/cover_merged.out > artifacts/cover_merged.txt
 	go tool cover -html artifacts/cover_merged.out -o artifacts/cover_merged.html
-
 
 .PHONY: print-coverage
 print-coverage:
