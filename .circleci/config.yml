@@ -38,19 +38,6 @@ jobs:
           paths:
             - ./ui/core/dist
 
-  init-go:
-    executor: docker-image-golang
-    steps:
-      - checkout
-      - run:
-          name: Initialize
-          command: make init
-      - save_cache:
-          key: go-mod-v1-{{ checksum "go.sum" }}
-          paths:
-            - "/go/pkg/mod"
-            - "/go/bin"
-
   validate-go:
     executor: docker-image-golang
     steps:
@@ -61,11 +48,6 @@ jobs:
       - run:
           name: Validate
           command: make init validate
-      - save_cache:
-          key: go-mod-v1-{{ checksum "go.sum" }}
-          paths:
-            - "/go/pkg/mod"
-            - "/go/bin"
 
   test-go:
     executor: docker-image-golang
@@ -83,7 +65,23 @@ jobs:
           key: go-mod-v1-{{ checksum "go.sum" }}
           paths:
             - "/go/pkg/mod"
-            - "/go/bin"
+
+  build-go:
+    executor: docker-image-golang
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ~/project/
+      - restore_cache:
+          keys:
+            - go-mod-v1-{{ checksum "go.sum" }}
+      - run:
+          name: Test
+          command: make server
+      - persist_to_workspace:
+          root: .
+          paths:
+            - ./artifacts/server
 
   coverage-go:
     executor: docker-image-golang
@@ -96,12 +94,7 @@ jobs:
             - go-mod-v1-{{ checksum "go.sum" }}
       - run:
           name: Test
-          command: make coverage
-      - save_cache:
-          key: go-mod-v1-{{ checksum "go.sum" }}
-          paths:
-            - "/go/pkg/mod"
-            - "/go/bin"
+          command: make init coverage
 
   test-api-go:
     executor: docker-image-golang
@@ -115,11 +108,6 @@ jobs:
       - run:
           name: Test
           command: make test-api
-      - save_cache:
-          key: go-mod-v1-{{ checksum "go.sum" }}
-          paths:
-            - "/go/pkg/mod"
-            - "/go/bin"
 
   build-server-docker:
     executor: docker-image-golang
@@ -133,11 +121,6 @@ jobs:
       - run:
           name: Build server binary
           command: make server-docker
-      - save_cache:
-          key: go-mod-v1-{{ checksum "go.sum" }}
-          paths:
-            - "/go/pkg/mod"
-            - "/go/bin"
       - persist_to_workspace:
           root: .
           paths:
@@ -236,20 +219,20 @@ workflows:
   build-master:
     jobs:
       - build-ui
-      - init-go
-      - validate-go:
-          requires:
-            - init-go
+      - validate-go
       - test-go:
           requires:
             - validate-go
             - build-ui
+      - build-go:
+          requires:
+            - test-go
       - coverage-go:
           requires:
-            - test-go
+            - build-go
       - test-api-go:
           requires:
-            - test-go
+            - build-go
       - build-server-docker:
           requires:
             - test-api-go

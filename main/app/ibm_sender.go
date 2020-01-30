@@ -10,8 +10,9 @@ import (
 
 	"log"
 
-	"github.com/ProxeusApp/proxeus-core/sys/workflow"
 	"github.com/pkg/errors"
+
+	"github.com/ProxeusApp/proxeus-core/sys/workflow"
 )
 
 var forwardURL = os.Getenv("FF_IBM_SENDER_URL")

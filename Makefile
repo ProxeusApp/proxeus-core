@@ -18,6 +18,7 @@ endif
 dependencies=go curl
 mocks=main/handlers/blockchain/mock/adapter_mock.go
 bindata=main/handlers/assets/bindata.go test/bindata.go
+golocalimport=github.com/ProxeusApp/proxeus-core
 
 .PHONY: all
 all: ui server
@@ -50,15 +51,15 @@ server-docker: generate
 	$(DOCKER_LINUX) go build $(GO_OPTS) -tags nocgo -o ./artifacts/server-docker ./main
 
 .PHONY: validate
-validate:
-	@if [[ "$$(goimports -l -local git.proxeus.com main sys | grep -v bindata.go | tee /dev/tty | wc -l | xargs)" != "0" ]]; then \
+validate: init
+	@if [[ "$$(goimports -l -local $(golocalimport) main sys | grep -v bindata.go | tee /dev/tty | wc -l | xargs)" != "0" ]]; then \
 		echo "Format validation error.  Please run make fmt"; exit 1; \
 	fi
 	@echo "Format validated"
 
 .PHONY: fmt
 fmt:
-	goimports -w -local git.proxeus.com main sys
+	goimports -w -local $(golocalimport) main sys
 
 .PHONY: test
 test: generate 
