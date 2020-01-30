@@ -14,6 +14,7 @@ import Templates from '../views/Templates.vue'
 import Template from '../views/Template.vue'
 import Workflow from '../views/Workflow.vue'
 import Workflows from '../views/Workflows.vue'
+import External from '../views/External.vue'
 import NotFound from '../views/app/Errors/NotFound.vue'
 import AdminImportExport from '../views/AdminImportExport'
 
@@ -89,6 +90,11 @@ export default new Router({
           path: 'workflow/:id',
           name: 'Workflow',
           component: Workflow,
+          props: { sidebarToggled: true }
+        }, {
+          path: 'externalNode/:name/:id',
+          name: 'External configuration',
+          component: External,
           props: { sidebarToggled: true }
         }
       ]

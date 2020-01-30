@@ -89,6 +89,16 @@ type WorkflowIF interface {
 	Put(auth model.Auth, item *model.WorkflowItem) error
 	Delete(auth model.Auth, id string) error
 	Close() error
+	ExternalNodeIF
+}
+
+type ExternalNodeIF interface {
+	RegisterExternalNode(auth model.Auth, n *model.ExternalNode) error
+	ListExternalNodes() []*model.ExternalNode
+	DeleteExternalNode(auth model.Auth, id string) error
+	NodeByName(auth model.Auth, name string) (*model.ExternalNode, error)
+	QueryFromInstanceID(auth model.Auth, id string) (model.ExternalQuery, error)
+	PutExternalNodeInstance(auth model.Auth, i *model.ExternalNodeInstance) error
 }
 
 type TemplateIF interface {

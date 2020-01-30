@@ -84,14 +84,17 @@ func advancedWorkflowData(data string, dataValues map[string]string) (map[string
 	return result, nil
 }
 
+func expectWorkflowInCleanState(s *session, w *workflow) {
+	r := s.e.GET("/api/document/" + w.ID).Expect().Status(http.StatusOK).JSON().Path("$.status")
+	r.Path("$.hasNext").Boolean().True()
+	r.Path("$.hasPrev").Boolean().False()
+	r.Path("$.steps").Array().Length().Gt(0)
+	r.Path("$.data").NotNull()
+}
+
 func executeWorkflow(s *session, w *workflow) string {
-	{
-		r := s.e.GET("/api/document/" + w.ID).Expect().Status(http.StatusOK).JSON().Path("$.status")
-		r.Path("$.hasNext").Boolean().True()
-		r.Path("$.hasPrev").Boolean().False()
-		r.Path("$.steps").Array().Length().Gt(0)
-		r.Path("$.data").NotNull()
-	}
+	expectWorkflowInCleanState(s, w)
+
 	d := map[string]string{fieldName: "value1"}
 	d2 := map[string]string{field2Name: "value2"}
 	// filling a form

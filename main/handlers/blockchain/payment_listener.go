@@ -7,7 +7,7 @@ import (
 	"math/big"
 	"time"
 
-	"github.com/ProxeusApp/proxeus-core/main/ethglue"
+	"github.com/ProxeusApp/proxeus-core/main/handlers/blockchain/ethglue"
 	"github.com/ProxeusApp/proxeus-core/storage"
 	"github.com/ProxeusApp/proxeus-core/storage/database/db"
 
