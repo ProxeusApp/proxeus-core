@@ -3,11 +3,9 @@ package test
 import (
 	"bytes"
 	"net/http"
-	"testing"
 )
 
-func TestWorkflowWithFile(t *testing.T) {
-	s := new(t, serverURL)
+func testWorkflowWithFile(s *session) {
 	u := registerTestUser(s)
 	login(s, u)
 

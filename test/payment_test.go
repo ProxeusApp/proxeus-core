@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"math/rand"
 	"net/http"
-	"testing"
 	"time"
 
 	"github.com/ethereum/go-ethereum/common"
@@ -12,9 +11,9 @@ import (
 	"github.com/ProxeusApp/proxeus-core/sys/model"
 )
 
-func TestPayment(t *testing.T) {
-	s := new(t, serverURL)
-	s2 := new(t, serverURL)
+func testPayment(s *session) {
+
+	s2 := newSession(s.t, s.base)
 
 	u := registerTestUser(s)
 	u2 := registerTestUser(s2)

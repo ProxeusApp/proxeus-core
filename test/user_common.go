@@ -5,18 +5,11 @@ import (
 	"encoding/hex"
 	"fmt"
 	"net/http"
-	"os"
-	"testing"
 
 	"github.com/ProxeusApp/proxeus-core/sys/model"
 
 	"github.com/ethereum/go-ethereum/crypto"
-
-	uuid "github.com/satori/go.uuid"
-	"gopkg.in/gavv/httpexpect.v2"
 )
-
-var serverURL string
 
 type user struct {
 	uuid     string
@@ -25,32 +18,6 @@ type user struct {
 
 	ethPrivateKey *ecdsa.PrivateKey
 	EthereumAddr  string
-}
-
-type session struct {
-	id string
-	t  *testing.T
-	e  *httpexpect.Expect
-}
-
-func init() {
-	serverURL = os.Getenv("PROXEUS_URL")
-}
-
-func new(t *testing.T, serverURL string) *session {
-	return &session{
-		id: uuid.NewV4().String(),
-		t:  t,
-		e: httpexpect.WithConfig(httpexpect.Config{
-			BaseURL:  serverURL,
-			Reporter: httpexpect.NewAssertReporter(t),
-			Printers: []httpexpect.Printer{
-				//httpexpect.NewDebugPrinter(t, true),
-				httpexpect.NewCompactPrinter(t),
-				//httpexpect.NewCurlPrinter(t),
-			},
-		}),
-	}
 }
 
 func registerSuperAdmin(s *session) *user {

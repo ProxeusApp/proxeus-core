@@ -1,0 +1,8 @@
+{
+    "id": "HC1",
+    "settings": {
+        "help": "help text",
+        "label": "Headline"
+    },
+    "template": "\n        <div class=\" form-group\">\n            <div class=\"col-md-12\">\n              <h1>{{label}}</h1>\n              <span class=\"help-block\">{{help}}</span> \n            </div>\n        </div>\n        "
+}

@@ -2,13 +2,11 @@ package test
 
 import (
 	"net/http"
-	"testing"
 )
 
 const exampleKey = "API keys"
 
-func TestI18n(t *testing.T) {
-	s := new(t, serverURL)
+func testI18n(s *session) {
 	u := registerTestUser(s)
 	login(s, u)
 
@@ -36,8 +34,7 @@ func TestI18n(t *testing.T) {
 	deleteUser(s, u)
 }
 
-func TestI18nAdmin(t *testing.T) {
-	s := new(t, serverURL)
+func testI18nAdmin(s *session) {
 	u := registerSuperAdmin(s)
 	login(s, u)
 

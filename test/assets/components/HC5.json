@@ -1,0 +1,26 @@
+{
+    "id": "HC5",
+    "settings": {
+        "help": "help text",
+        "label": "Checkbox",
+        "name": "",
+        "orientation": {
+            "all": [
+                "horizontal",
+                "vertical"
+            ],
+            "selected": 1
+        },
+        "validate": {
+            "required": true
+        },
+        "values": [
+            {
+                "help": "",
+                "label": "...",
+                "value": "1"
+            }
+        ]
+    },
+    "template": "\n        <div class=\"form-group\">\n          <label class=\"col-sm-12 col-md-12 col-lg-12 control-label\">{{label}}</label>\n      \t  <div class=\"col-sm-12 col-md-12 col-lg-12 field-parent\">\n      \t       {{#each values}}\n      \t\t     <div class=\"fancy-checkbox {{#enumEq @root.orientation \"horizontal\"}}float-left{{/enumEq}}\">\n      \t\t            <input type=\"checkbox\" id=\"{{@root.id}}{{@index}}\" name=\"{{@root.name}}\" value=\"{{value}}\" />\n                          <label for=\"{{@root.id}}{{@index}}\"><span><i></i></span>{{label}}</label>\n                   </div>\n                   {{#if help}}\n                   {{#enumEq @root.orientation \"horizontal\"}}\n          \t           <span style=\"margin-right:10px;float:left;margin-bottom:0;\" class=\"help-block\">{{help}}</span>\n                   {{else}}\n                      <div class=\"row\">\n                          <div class=\"col-sm-12 col-md-12 col-lg-12\">\n          \t                <span style=\"margin-left:34px;\" class=\"help-block\">{{help}}</span>\n          \t            </div>\n                       </div>\n                   {{/enumEq}}\n      \t         {{/if}}\n      \t       {{/each}}\n      \t       <div class=\"row\">\n      \t           <div class=\"col-sm-12 col-md-12 col-lg-12\">\n      \t               <span class=\"help-block\">{{help}}</span>\n      \t           </div>\n      \t       </div>\n      \t  </div>\n      \t   <div class=\"clearfix\"></div>\n      </div>\n        "
+}

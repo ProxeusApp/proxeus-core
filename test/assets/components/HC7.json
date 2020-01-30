@@ -1,0 +1,13 @@
+{
+    "id": "HC7",
+    "settings": {
+        "help": "help text",
+        "label": "Multiline text",
+        "name": "",
+        "placeholder": "Placeholder",
+        "validate": {
+            "required": true
+        }
+    },
+    "template": "\n    <div class=\"form-group\">\n      <div class=\"col-md-12\">\n        <label class=\"control-label\" for=\"{{id}}\">{{label}}</label>\n        <div class=\"field-parent\">\n          <textarea id=\"{{id}}\" name=\"{{name}}\" placeholder=\"{{escapeForAttr placeholder}}\" class=\"form-control\"></textarea>\n           <span class=\"help-block\">{{help}}</span> \n        </div>\n      </div>\n      <div class=\"clearfix\"></div>\n    </div>\n        "
+}

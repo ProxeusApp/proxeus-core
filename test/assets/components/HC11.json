@@ -1,0 +1,16 @@
+{
+    "id": "HC11",
+    "settings": [
+        {
+            "autocomplete": "on",
+            "help": "help text",
+            "label": "Grouped simple fields",
+            "name": "",
+            "placeholder": "Placeholder",
+            "validate": {
+                "required": true
+            }
+        }
+    ],
+    "template": "\n      <div class=\"form-group\">\n      \t    {{#each this}}    <label class=\"col-md-12 control-label\" for=\"{{id}}\">{{label}}</label>\n      \t    <div class=\"col-md-12 field-parent\">\n      \t\t        <input id=\"{{id}}\" name=\"{{name}}\" type=\"text\" placeholder=\"{{escapeForAttr placeholder}}\" class=\"form-control input-md\" autocomplete=\"{{escapeForAttr autocomplete}}\">\n      \t\t       <p class=\"help-block\">{{help}}</p>\n      \t    </div>\n      \t    {{/each}}\n      </div>\n        "
+}

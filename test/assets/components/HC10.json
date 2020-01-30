@@ -1,0 +1,64 @@
+{
+    "id": "HC10",
+    "settings": [
+        {
+            "columnClass": {
+                "all": [
+                    "auto",
+                    "col-md-2",
+                    "col-md-4",
+                    "col-md-6",
+                    "col-md-8",
+                    "col-md-12"
+                ],
+                "selected": 0
+            },
+            "dropdownValues": [
+                {
+                    "label": "Label",
+                    "value": "Value"
+                }
+            ],
+            "help": "help text",
+            "initialRows": 1,
+            "label": "Dynamic List",
+            "name": "",
+            "placeholder": "Placeholder",
+            "type": {
+                "all": [
+                    "input",
+                    "textarea",
+                    "dropdown",
+                    "date"
+                ],
+                "selected": 0
+            },
+            "validate": {
+                "required": true
+            }
+        },
+        {
+            "dropdownValues": [
+                {
+                    "label": "Label",
+                    "value": "Value"
+                }
+            ],
+            "name": "",
+            "placeholder": "Placeholder",
+            "type": {
+                "all": [
+                    "input",
+                    "textarea",
+                    "dropdown",
+                    "date"
+                ],
+                "selected": 3
+            },
+            "validate": {
+                "required": true
+            }
+        }
+    ],
+    "template": "\n      <div class=\"array form-group\">\n      \t    <div class=\"col-md-12\">\n      \t\t    <div class=\"row\">\n      \t\t        <div class=\"col-md-12\"><label class=\"control-label\">{{this.0.label}}</label></div>\n      \t        </div>\n      \t    </div>\n      \t    <div class=\"col-md-12\" id=\"main{{this.0.id}}\">\n      \t        {{#eachCount this.0.initialRows}}\n      \t\t\t  <div class=\"{{#enumEq @root.0.columnClass \"auto\"}}array-row{{else}}array-row row{{/enumEq}}\">               \n      \t\t\t    {{#each @root}}\n      \t\t\t        <div {{#enumEq @root.0.columnClass \"auto\"}}class=\"array-item field-parent form-group\" style=\"{{#unless @last}}padding-right:10px;{{/unless}}float:left;width:{{percentOfOneFrom @root.length}}%;\"{{else}} class=\"array-item field-parent form-group {{enumName @root.0.columnClass}}\"{{/enumEq}}>\n      \t\t\t            {{#enumEq type \"textarea\"}}\n      \t\t\t\t        <textarea id=\"{{id}}{{@countIndex}}\" addBtnRef=\"#btn{{@root.0.id}}\" name=\"{{name}}\" nindex=\"{{@countIndex}}\" placeholder=\"{{escapeForAttr placeholder}}\" class=\"form-control\"></textarea>\n      \t\t\t            {{else}}\n          \t\t\t            {{#enumEq type \"date\"}}\n          \t\t\t                <div class=\"input-group date-field\">\n                                          <input  id=\"{{id}}{{@countIndex}}\" data-datePattern=\"{{validate.datePattern}}\" addBtnRef=\"#btn{{@root.0.id}}\" name=\"{{name}}\" nindex=\"{{@countIndex}}\" placeholder=\"{{escapeForAttr placeholder}}\" type=\"text\" class=\"text-field simple-date-field\" size=\"0\" aria-invalid=\"false\">\n                                          <span class=\"input-group-addon\">\n                                              <span class=\"fa fa-calendar\"></span>\n                                          </span>\n                                      </div>\n                                  {{else}}\n                                      {{#enumEq type \"dropdown\"}}\n                                          <select id=\"select{{id}}{{@countIndex}}\" addBtnRef=\"#btn{{@root.0.id}}\" name=\"{{name}}\" nindex=\"{{@countIndex}}\" class=\"form-control\" aria-invalid=\"false\">\n                                            {{#each dropdownValues}}\n                                            <option value=\"{{value}}\">{{label}}</option>\n                                            {{/each}}\n                                          </select>\n                                      {{else}}\n                  \t\t\t\t        <input id=\"{{id}}{{@countIndex}}\" addBtnRef=\"#btn{{@root.0.id}}\" name=\"{{name}}\" nindex=\"{{@countIndex}}\" type=\"text\" placeholder=\"{{escapeForAttr placeholder}}\" class=\"form-control input-md\">\n              \t\t\t            {{/enumEq}}\n          \t\t\t            {{/enumEq}}\n      \t\t\t            {{/enumEq}}\n      \t\t\t        </div>\n      \t\t\t     {{/each}}\n      \t               <div class=\"clearfix\"></div>           \n      \t           </div>\n      \t\t    {{/eachCount}}\n      \t    </div>\n      \t    <div class=\"col-md-12\">\n      \t\t    <div class=\"row\">\n      \t\t        <div class=\"col-md-12 form-group\">\n      \t\t\t        <button id=\"btn{{@root.0.id}}\" type=\"button\" class=\"btn btn-success pull-right\" onclick=\"add{{this.0.id}}(this);\"><span class=\"fa fa-plus\" aria-hidden=\"true\"></span></button>\n      \t\t\t        <button id=\"btnDel{{@root.0.id}}\" disabled type=\"button\" class=\"btn btn-success pull-right\" onclick=\"remove{{this.0.id}}(this);\" style=\"margin:0 15px\"><span class=\"fa fa-minus\" aria-hidden=\"true\"></span></button>\n      \t\t        </div>\n      \t        </div>\n      \t    </div>\n      \t    <div class=\"col-md-12\">\n      \t        <span class=\"help-block\">{{this.0.help}}</span>\n      \t    </div>\n      \t\t    <div class=\"clearfix\"></div>\n      \t    <script type=\"text/javascript\">\n                      $(function(){\n                          var mainEl = $(\"#main{{this.0.id}}\");\n      \t\t            initDate{{this.0.id}}(mainEl);\n      \t\t            var btnDel = $(\"#btnDel{{@root.0.id}}\");\n                          if(mainEl.find(\".array-row\").length>{{this.0.initialRows}}){\n      \t\t\t            btnDel.removeAttr(\"disabled\");\n      \t\t            }else{\n      \t\t                btnDel.attr(\"disabled\", \"disabled\");\n      \t\t            }\n                      });\n      \t\t        function add{{this.0.id}}(ce){\n      \t\t            var _this = $(ce);\n      \t\t            var array = _this.parent().parent().parent().parent();\n      \t\t            var arrayItem = array.find(\".array-row:last\");\n      \t\t            var newArrayItem = $(arrayItem.prop(\"outerHTML\"));\n      \t\t            newArrayItem.find(\"input,textarea,select\").each(function(){\n      \t\t                var newIn = $(this);\n      \t\t                newIn.attr(\"id\",randomId{{this.0.id}}());\n      \t\t            });\n      \t\t            newArrayItem.find(\"[nindex]\").each(function(e){\n      \t\t                var _nItem = $(this);\n      \t\t                try{\n      \t\t                    _nItem.attr(\"nindex\", parseInt(_nItem.attr(\"nindex\"))+1);\n      \t\t                }catch(incEx){console.log(incEx);}\n      \t\t            });\n      \t\t            newArrayItem.cleanFieldErrors();\n      \t\t            arrayItem.after(newArrayItem);\n      \t\t            func{{this.0.id}}2(arrayItem.parent());\n      \t\t            console.log(\"added\");\n      \t\t            initDate{{this.0.id}}(newArrayItem);\n      \t\t            _this.parents(\"form\").trigger(\"formFieldsAdded\",[newArrayItem]);\n      \t\t            $(\"#btnDel{{@root.0.id}}\").removeAttr(\"disabled\");\n      \t\t        }\n      \t\t        function remove{{this.0.id}}(ce){\n      \t\t            var _this = $(ce);\n      \t\t            var array = _this.parent().parent().parent().parent();\n      \t\t            var arrayItem = array.find(\".array-row:last\");\n      \t\t            if(array.find(\".array-row\").length>{{this.0.initialRows}}){\n      \t\t                arrayItem.remove();\n      \t\t                if(array.find(\".array-row\").length=={{this.0.initialRows}}){\n      \t\t                    _this.attr(\"disabled\", \"disabled\");\n      \t\t                }\n      \t\t                var firstRow = array.find(\".array-row:first-child\");\n      \t\t                firstRow.find(\"input,textarea,select\").change();\n      \t\t            }else{\n      \t\t                _this.attr(\"disabled\", \"disabled\");\n      \t\t            }\n      \t\t        }\n      \t\t        function func{{this.0.id}}2(arrayParent){\n      \t\t            {{#enumEq @root.0.columnClass \"auto\"}}\n      \t\t\t            var arrayItems = arrayParent.children(\".array-item\");\n      \t\t\t            var width = 100.0/arrayItems.length;\n      \t\t\t            arrayItems.css({width:((width-0.2)+\"%\")});\n      \t\t\t        {{/enumEq}}\n      \t\t        }\n      \t\t        function initDate{{this.0.id}}(jqMainEl){\n      \t\t            var dateFields = jqMainEl.find(\".simple-date-field\");\n      \t\t            dateFields.each(function(){\n      \t\t                var dField = $(this);\n      \t\t                dField.removeClass(\"hasDatepicker\");\n      \t\t                date{{this.0.id}}(dField, dField.attr(\"data-datePattern\"));\n      \t\t            });\n      \t\t        }\n      \t\t        function date{{this.0.id}}(jqEl, pattern){\n                          var dateInputField = jqEl;\n                          jqEl.removeClass(\"hasDatepicker\");\n                          FTG.createDatepicker(dateInputField, {\n                              clickEventElement:dateInputField.parent().find(\".input-group-addon\"),\n                              datePattern:pattern\n                          });\n      \t\t        }\n      \t            function randomId{{this.0.id}}(){\n                          return Math.random().toString(36).substring(2, 18) + Math.random().toString(36).substring(2, 18);\n                      };\n      \t    </script>\n      </div>\n        "
+}

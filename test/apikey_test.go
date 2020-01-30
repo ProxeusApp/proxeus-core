@@ -3,11 +3,9 @@ package test
 import (
 	"encoding/base64"
 	"net/http"
-	"testing"
 )
 
-func TestApiKey(t *testing.T) {
-	s := new(t, serverURL)
+func testApiKey(s *session) {
 	u := registerTestUser(s)
 
 	login(s, u)

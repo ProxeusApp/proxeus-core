@@ -1,0 +1,44 @@
+{
+    "id": "HC12",
+    "settings": {
+        "_md": {
+            "100%": "col-md-12",
+            "16%": "col-md-2",
+            "25%": "col-md-3",
+            "33%": "col-md-4",
+            "42%": "col-md-5",
+            "50%": "col-md-6",
+            "58%": "col-md-7",
+            "67%": "col-md-8",
+            "75%": "col-md-9",
+            "8%": "col-md-1",
+            "84%": "col-md-10",
+            "92%": "col-md-11",
+            "auto": "auto"
+        },
+        "_searchHelper": "group,parent,grp,container,box",
+        "access": {},
+        "column": [
+            {
+                "all": [
+                    "auto",
+                    "8%",
+                    "16%",
+                    "25%",
+                    "33%",
+                    "42%",
+                    "50%",
+                    "58%",
+                    "67%",
+                    "75%",
+                    "84%",
+                    "92%",
+                    "100%"
+                ],
+                "selected": 12
+            }
+        ],
+        "rows": 1
+    },
+    "template": "\n      <div>\n          <div class=\"col-md-12\">\n              {{#eachCount rows}}\n                  <div class=\"row\">\n                      {{#each @root.column}}\n                          <div class=\"{{enumName @this @root._md}}\">{{dropHere}}</div>\n                      {{/each}}\n                      <div class=\"clearfix\"></div>\n                  </div>\n              {{/eachCount}}\n              \n          </div>\n          <div class=\"clearfix\"></div>\n      </div>\n        "
+}

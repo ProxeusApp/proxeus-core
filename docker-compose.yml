@@ -1,3 +1,4 @@
+---
 version: '3.7'
 
 networks:
@@ -10,19 +11,19 @@ services:
     container_name: xes_platform
     depends_on:
       - document-service
-    networks: 
+    networks:
       - xes-platform-network
     restart: unless-stopped
     environment:
       TZ: Europe/Zurich
       DataDir: "/data/hosted"
       DocumentServiceUrl: "http://document-service:2115/"
-      InfuraApiKey: "${PROXEUS_INFURA_KEY}"
-      SparkpostApiKey: "${PROXEUS_SPARKPOST_KEY}"
-      BlockchainContractAddress: "${PROXEUS_CONTRACT_ADDRESS}"
+      BlockchainContractAddress: "${PROXEUS_BLOCKCHAIN_CONTRACT_ADDRESS}"
+      InfuraApiKey: "${PROXEUS_INFURA_API_KEY}"
+      SparkpostApiKey: "${PROXEUS_SPARKPOST_API_KEY}"
       EmailFrom: "${PROXEUS_EMAIL_FROM:-no-reply@proxeus.com}"
-      AirdropWalletfile: "${PROXEUS_AIRDROP_WALLET_FILE:-./data/proxeus-platform/settings/airdropwallet.json}"
-      AirdropWalletkey: "${PROXEUS_AIRDROP_WALLET_KEY:-./data/proxeus-platform/settings/airdropwallet.key}"
+      AirdropWalletfile: "${PROXEUS_AIRDROP_WALLET_FILE:-/root/.proxeus/settings/airdropwallet.json}"
+      AirdropWalletkey: "${PROXEUS_AIRDROP_WALLET_KEY:-/root/.proxeus/settings/airdropwallet.key}"
     ports:
       - "1323:1323"
     volumes:
@@ -32,7 +33,7 @@ services:
   document-service:
     image: proxeus/document-service:latest
     container_name: xes_document_service
-    networks: 
+    networks:
       - xes-platform-network
     restart: unless-stopped
     environment:

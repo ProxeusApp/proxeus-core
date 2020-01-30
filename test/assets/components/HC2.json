@@ -1,0 +1,14 @@
+{
+    "id": "HC2",
+    "settings": {
+        "autocomplete": "on",
+        "help": "help text",
+        "label": "Simple field",
+        "name": "",
+        "placeholder": "Placeholder",
+        "validate": {
+            "required": true
+        }
+    },
+    "template": "\n      <div class=\" form-group\">\n        <div class=\"col-md-12\">\n          <label class=\"control-label\" for=\"{{id}}\">{{label}}</label>\n          <div class=\"field-parent\">\n            <input id=\"{{id}}\" name=\"{{name}}\" type=\"text\" placeholder=\"{{escapeForAttr placeholder}}\" class=\"form-control input-md\" autocomplete=\"{{escapeForAttr autocomplete}}\">\n             <span class=\"help-block\">{{help}}</span> \n          </div>\n        </div>\n        <div class=\"clearfix\"></div>\n      </div>\n      "
+}

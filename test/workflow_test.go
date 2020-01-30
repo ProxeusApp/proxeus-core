@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"testing"
 	"time"
 )
 
@@ -21,8 +20,7 @@ type workflow struct {
 	Data            map[string]interface{} `json:"data"`
 }
 
-func TestWorkflow(t *testing.T) {
-	s := new(t, serverURL)
+func testWorkflow(s *session) {
 	u := registerTestUser(s)
 	login(s, u)
 	w1 := createSimpleWorkflow(s, u, "workflow1-"+s.id)
@@ -75,7 +73,7 @@ func publishWorkflowWithPrice(s *session, w *workflow, xesPrice int) {
 func createSimpleWorkflow(s *session, u *user, name string) *workflow {
 	w1 := createWorkflow(s, u, "workflow1-"+s.id)
 	f := createSimpleForm(s, u, "form-"+s.id, fieldName)
-	tpl := createSimpleTemplate(s, u, "template-"+s.id, "test/assets/test_template.odt")
+	tpl := createSimpleTemplate(s, u, "template-"+s.id, templateOdtPath)
 	w1.Data = simpleWorkflowData(s.id, f.ID, tpl.ID)
 	updateWorkflow(s, w1)
 	return w1
