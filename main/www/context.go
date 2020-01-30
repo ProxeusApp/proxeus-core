@@ -44,6 +44,7 @@ func (me *Context) SessionWithUser(usr *model.User) *sys.Session {
 	if err != nil {
 		return nil
 	}
+
 	return sess
 }
 

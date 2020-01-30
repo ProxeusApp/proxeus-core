@@ -5,7 +5,6 @@ import (
 	"net/http"
 	"path/filepath"
 	"strconv"
-	"testing"
 	"time"
 )
 
@@ -19,10 +18,9 @@ type template struct {
 	Data    map[string]interface{} `json:"data"`
 }
 
-const templateOdtPath = "test/assets/test_template.odt"
+const templateOdtPath = "test/assets/templates/test_template.odt"
 
-func TestTemplate(t *testing.T) {
-	s := new(t, serverURL)
+func testTemplate(s *session) {
 	u := registerTestUser(s)
 	login(s, u)
 	t1 := createSimpleTemplate(s, u, "template1-"+s.id, templateOdtPath)
@@ -84,20 +82,20 @@ func formLookupForTemplate(s *session, f *form) {
 		Expect().JSON().Array()
 	arrayContainsMap(s.t, array, f)
 
-	s.e.GET("api/admin/form/component").WithQueryString("l=1000").Expect().
+	s.e.GET("/api/admin/form/component").WithQueryString("l=1000").Expect().
 		JSON().Object().ContainsKey("HC1")
 }
 
 func templatePreviews(s *session, t *template, f *form) {
-	s.e.GET("api/admin/template/ide/active/" + t.ID + "/en").Expect().Status(http.StatusOK)
+	s.e.GET("/api/admin/template/ide/active/" + t.ID + "/en").Expect().Status(http.StatusOK)
 
-	pdf1 := s.e.GET("api/admin/template/ide/download/" + t.ID).Expect().
+	pdf1 := s.e.GET("/api/admin/template/ide/download/" + t.ID).Expect().
 		Status(http.StatusOK).Body().Raw()
 
-	s.e.POST("api/admin/form/test/data/" + f.ID).WithJSON(map[string]string{fieldName: "value2"}).Expect().
+	s.e.POST("/api/admin/form/test/data/" + f.ID).WithJSON(map[string]string{fieldName: "value2"}).Expect().
 		Status(http.StatusOK)
 
-	pdf2 := s.e.GET("api/admin/template/ide/download/" + t.ID).Expect().
+	pdf2 := s.e.GET("/api/admin/template/ide/download/" + t.ID).Expect().
 		Status(http.StatusOK).Body().Raw()
 
 	if len(pdf1) < 1000 || len(pdf2) < 1000 {
@@ -108,7 +106,7 @@ func templatePreviews(s *session, t *template, f *form) {
 	}
 
 	for _, format := range []string{"docx", "doc", "odt", "pdf"} {
-		s.e.GET("api/admin/template/ide/download/" + t.ID).WithQueryString("format=" + format).Expect().
+		s.e.GET("/api/admin/template/ide/download/" + t.ID).WithQueryString("format=" + format).Expect().
 			Status(http.StatusOK).Body().Length().Gt(1000)
 	}
 

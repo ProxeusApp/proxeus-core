@@ -3,11 +3,9 @@ package test
 import (
 	"fmt"
 	"net/http"
-	"testing"
 )
 
-func TestUser(t *testing.T) {
-	s := new(t, serverURL)
+func testUser(s *session) {
 	u := registerTestUser(s)
 	login(s, u)
 	logout(s)
@@ -15,8 +13,7 @@ func TestUser(t *testing.T) {
 	deleteUser(s, u)
 }
 
-func TestUserProfile(t *testing.T) {
-	s := new(t, serverURL)
+func testUserProfile(s *session) {
 	s.e.POST("/api/me").Expect().Status(http.StatusMethodNotAllowed)
 	s.e.GET("/api/config").Expect().Status(http.StatusOK).
 		JSON().Object().ContainsKey("blockchainNet")

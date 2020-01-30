@@ -454,7 +454,7 @@ func LoginWithWallet(c *www.Context, challenge, signature string) (bool, *model.
 		stngs := c.System().GetSettings()
 		it := &model.User{
 			EthereumAddr: address,
-			Role:         stngs.DefaultRole,
+			Role:         model.StringToRole(stngs.DefaultRole),
 		}
 		it.Name = "created by ethereum account sign"
 		err = c.System().DB.User.Put(root, it)
@@ -539,7 +539,7 @@ func InviteRequest(e echo.Context) (err error) {
 	}
 	stngs := c.System().GetSettings()
 	if m.Role == 0 {
-		m.Role = stngs.DefaultRole
+		m.Role = model.StringToRole(stngs.DefaultRole)
 	}
 	if usr, err := c.System().DB.User.GetByEmail(m.Email); usr == nil {
 		var token model.TokenRequest
@@ -578,17 +578,19 @@ func RegisterRequest(e echo.Context) (err error) {
 	if err != nil {
 		return c.JSON(http.StatusUnprocessableEntity, err)
 	}
+
 	if usr, _ := c.System().DB.User.GetByEmail(m.Email); usr != nil {
 		// always return ok if provided email was valid
 		// otherwise public users can test what email accounts exist
 		return c.NoContent(http.StatusOK)
 	}
 
+	stngs := c.System().GetSettings()
+
 	var token model.TokenRequest
 	token.Email = m.Email
 	token.Token = uuid.NewV4().String()
-	stngs := c.System().GetSettings()
-	token.Role = stngs.DefaultRole
+	token.Role = model.StringToRole(stngs.DefaultRole)
 	token.Type = model.TokenRegister
 	if c.System().TestMode && m.Role > 0 {
 		token.Role = m.Role

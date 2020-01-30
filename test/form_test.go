@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"testing"
 	"time"
 )
 
@@ -18,8 +17,7 @@ type form struct {
 	Data    map[string]interface{} `json:"data"`
 }
 
-func TestForm(t *testing.T) {
-	s := new(t, serverURL)
+func testForm(s *session) {
 	u := registerTestUser(s)
 	login(s, u)
 	f1 := createSimpleForm(s, u, "form1-"+s.id, "test-"+s.id)

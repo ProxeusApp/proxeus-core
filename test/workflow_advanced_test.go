@@ -5,14 +5,12 @@ import (
 	"encoding/json"
 	tpl "html/template"
 	"net/http"
-	"testing"
 )
 
 const fieldName = "test_name"
 const field2Name = "test2_name"
 
-func TestWorkflowAdvanced(t *testing.T) {
-	s := new(t, serverURL)
+func testWorkflowAdvanced(s *session) {
 	u := registerTestUser(s)
 	login(s, u)
 
@@ -38,19 +36,30 @@ func prepareWorkflows(s *session, u *user) (*workflow, *workflow) {
 	f := createSimpleForm(s, u, "form-"+s.id, fieldName)
 	f2 := createSimpleForm(s, u, "form2-"+s.id, field2Name)
 
-	tpl := createSimpleTemplate(s, u, "template-"+s.id, "test/assets/test_template.odt")
-	tpl2 := createSimpleTemplate(s, u, "template2-"+s.id, "test/assets/test_template.odt")
+	tpl := createSimpleTemplate(s, u, "template-"+s.id, templateOdtPath)
+	tpl2 := createSimpleTemplate(s, u, "template2-"+s.id, templateOdtPath)
 
-	w1.Data = advancedWorkflowData(s.t, workflow1Data, map[string]string{
+	d1, err := advancedWorkflowData(workflow1Data, map[string]string{
 		"formId":      f.ID,
 		"templateId":  tpl.ID,
 		"template2Id": tpl2.ID,
 	})
-	w2.Data = advancedWorkflowData(s.t, workflow2Data, map[string]string{
+	if err != nil {
+		s.t.Fatal(err)
+	}
+
+	w1.Data = d1
+
+	d2, err := advancedWorkflowData(workflow2Data, map[string]string{
 		"formId":        f.ID,
 		"form2Id":       f2.ID,
 		"subworkflowId": w1.ID,
 	})
+	if err != nil {
+		s.t.Fatal(err)
+	}
+
+	w2.Data = d2
 
 	updateWorkflow(s, w1)
 	updateWorkflow(s, w2)
@@ -58,10 +67,10 @@ func prepareWorkflows(s *session, u *user) (*workflow, *workflow) {
 	return w1, w2
 }
 
-func advancedWorkflowData(t *testing.T, data string, dataValues map[string]string) map[string]interface{} {
+func advancedWorkflowData(data string, dataValues map[string]string) (map[string]interface{}, error) {
 	tp, err := tpl.New("").Parse(data)
 	if err != nil {
-		t.Fatal(err)
+		return nil, err
 	}
 
 	var buf bytes.Buffer
@@ -70,9 +79,9 @@ func advancedWorkflowData(t *testing.T, data string, dataValues map[string]strin
 	var result map[string]interface{}
 	err = json.Unmarshal(buf.Bytes(), &result)
 	if err != nil {
-		t.Fatal(err)
+		return nil, err
 	}
-	return result
+	return result, nil
 }
 
 func executeWorkflow(s *session, w *workflow) string {

@@ -42,7 +42,7 @@ services:
       DocumentServiceUrl: "http://document-service:2115/"
       InfuraApiKey: "${PROXEUS_INFURA_KEY}"
       SparkpostApiKey: "${PROXEUS_SPARKPOST_KEY}"
-      BlockchainContractAddress: "${PROXEUS_CONTRACT_ADDRESS}"
+      BlockchainContractAddress: "${PROXEUS_BLOCKCHAIN_CONTRACT_ADDRESS}"
       EmailFrom: "${PROXEUS_EMAIL_FROM:-no-reply@proxeus.com}"
       AirdropWalletfile: "${PROXEUS_AIRDROP_WALLET_FILE:-./data/proxeus-platform/settings/airdropwallet.json}"
       AirdropWalletkey: "${PROXEUS_AIRDROP_WALLET_KEY:-./data/proxeus-platform/settings/airdropwallet.key}"
@@ -78,7 +78,7 @@ Environment:
 |Name           | Default Value | Description |
 |---------------|-----------------------|------------------------------|
 |PROXEUS_DATA_DIR| `./data` | Path to the directory to use a data store.|
-|PROXEUS_CONTRACT_ADDRESS|*0x1d3e5c81bf4bc60d41a8fbbb3d1bae6f03a75f71*|The address of the Proxeus contract.|
+|PROXEUS_BLOCKCHAIN_CONTRACT_ADDRESS|*0x1d3e5c81bf4bc60d41a8fbbb3d1bae6f03a75f71*|The address of the Proxeus contract.|
 |PROXEUS_INFURA_KEY|*Your Infura API Key*|An Infura API Key for Ethereum integration.|
 |PROXEUS_SPARKPOST_KEY|*Your SpartPost Key*|A SparkPost API Key for email integration.|
 |PROXEUS_EMAIL_FROM|`no-reply@example.com`|The email address used as sender when Proxeus sends an email.|
@@ -107,7 +107,7 @@ services:
       TZ: Europe/Zurich
       DataDir: "/data/hosted"
       DocumentServiceUrl: "http://document-service:2115/"
-      BlockchainContractAddress: "${PROXEUS_CONTRACT_ADDRESS}"
+      BlockchainContractAddress: "${PROXEUS_BLOCKCHAIN_CONTRACT_ADDRESS}"
       InfuraApiKey: "${PROXEUS_INFURA_KEY}"
       SparkpostApiKey: "${PROXEUS_SPARKPOST_KEY}"
       EmailFrom: "${PROXEUS_EMAIL_FROM:-no-reply@proxeus.com}"
@@ -148,7 +148,7 @@ Environment:
 |Name           | Default Value | Description |
 |---------------|-----------------------|------------------------------|
 |PROXEUS_DATA_DIR| `./data` | Path to the directory to use a data store.|
-|PROXEUS_CONTRACT_ADDRESS|*0x1d3e5c81bf4bc60d41a8fbbb3d1bae6f03a75f71*|The address of the Proxeus contract.|
+|PROXEUS_BLOCKCHAIN_CONTRACT_ADDRESS|*0x1d3e5c81bf4bc60d41a8fbbb3d1bae6f03a75f71*|The address of the Proxeus contract.|
 |PROXEUS_INFURA_KEY|*Your Infura API Key*|An Infura API Key for Ethereum integration.|
 |PROXEUS_SPARKPOST_KEY|*Your SpartPost Key*|A SparkPost API Key for email integration.|
 |PROXEUS_EMAIL_FROM|`no-reply@example.com`|The email address used as sender when Proxeus sends an email.|
@@ -274,7 +274,7 @@ Environment:
 |Name           | Default Value | Description |
 |---------------|-----------------------|------------------------------|
 |PROXEUS_DATA_DIR| `./data` | Path to the directory to use a data store.|
-|PROXEUS_CONTRACT_ADDRESS|*0x1d3e5c81bf4bc60d41a8fbbb3d1bae6f03a75f71*|The address of the Proxeus contract.|
+|PROXEUS_BLOCKCHAIN_CONTRACT_ADDRESS|*0x1d3e5c81bf4bc60d41a8fbbb3d1bae6f03a75f71*|The address of the Proxeus contract.|
 |PROXEUS_INFURA_KEY|*Your Infura API Key*|An Infura API Key for Ethereum integration.|
 |PROXEUS_SPARKPOST_KEY|*Your SpartPost Key*|A SparkPost API Key for email integration.|
 |PROXEUS_EMAIL_FROM|`no-reply@example.com`|The email address used as sender when Proxeus sends an email.|

@@ -65,17 +65,49 @@ test: generate
 	go test  ./main/... ./sys/... ./storage/...
 
 .PHONY: test-api
-test-api: generate
-	go clean -testcache && go test ./test/...
-
+test-api: server #server-docker
+	$(eval testdir := $(shell mktemp -d /tmp/proxeus-test-api.XXXXX ))
+	mkdir -p $(testdir)
+	docker-compose -f docker-compose-dev.yml up -d document-service
+	artifacts/server \
+		-SettingsFile=$(testdir)/settings/main.json \
+		-DataDir=$(testdir)/data \
+		-DocumentServiceUrl=http://localhost:2115 \
+		-BlockchainContractAddress=$(PROXEUS_BLOCKCHAIN_CONTRACT_ADDRESS) \
+		-InfuraApiKey=$(PROXEUS_INFURA_API_KEY) \
+		-SparkpostApiKey=$(PROXEUS_SPARKPOST_API_KEY) \
+		-EmailFrom=${PROXEUS_EMAIL_FROM} \
+		-PlatformDomain=http://localhost:1323 \
+		-TestMode=true &
+	PROXEUS_URL=http://localhost:1323  go test -count=1 ./test
+	pkill -f artifacts/server
+	docker-compose -f docker-compose-dev.yml down
+	rm -fr $(testdir) 
 
 .PHONY: coverage
 comma:=,
 space:= $() $()
 coverpkg=$(subst $(space),$(comma), $(filter-out %/mock %/assets, $(shell go list ./main/... ./sys/... ./storage/...)))
 coverage: generate
+	$(eval testdir := $(shell mktemp -d /tmp/proxeus-test-api.XXXXX ))
+	mkdir -p $(testdir)
+	docker-compose -f docker-compose-dev.yml up -d document-service
 	go test -coverprofile artifacts/cover_unittests.out -coverpkg="$(coverpkg)" ./main/... ./sys/... ./storage/...
-	go test -v -tags coverage -coverprofile artifacts/cover_integration.out -coverpkg="$(coverpkg)" ./main
+	echo starting test main ; \
+					 PROXEUS_DATA_DIR=$(testdir)/data \
+					 PROXEUS_SETTINGS_FILE=$(testdir)/settings/main.json \
+					 PROXEUS_DOCUMENT_SERVICE_URL=http://localhost:2115 \
+					 PROXEUS_PLATFORM_DOMAIN=http://localhost:1323 \
+					 PROXEUS_TEST_MODE=true \
+					 go test -v -tags coverage -coverprofile artifacts/cover_integration.out -coverpkg="$(coverpkg)" ./main &
+	PROXEUS_URL=http://localhost:1323  go test -count=1 ./test
+	pkill main.test
+	docker-compose -f docker-compose-dev.yml down
+	rm -fr $(testdir) 
+	gocovmerge artifacts/cover_unittests.out artifacts/cover_integration.out > artifacts/cover_merged.out
+	go tool cover -func artifacts/cover_merged.out > artifacts/cover_merged.txt
+	go tool cover -html artifacts/cover_merged.out -o artifacts/cover_merged.html
+
 
 .PHONY: print-coverage
 print-coverage:
@@ -91,16 +123,16 @@ clean:
 .PHONY: run
 run: server
 	artifacts/server -DataDir ./data/proxeus-platform/data/  -DocumentServiceUrl=http://document-service:2115 \
-		-BlockchainContractAddress=${PROXEUS_CONTRACT_ADDRESS} -InfuraApiKey=${PROXEUS_INFURA_KEY} \
-		-SparkpostApiKey=${PROXEUS_SPARKPOST_KEY} -EmailFrom=${PROXEUS_EMAIL_FROM} -TestMode=${PROXEUS_TEST_MODE}\
+		-BlockchainContractAddress=${PROXEUS_BLOCKCHAIN_CONTRACT_ADDRESS} -InfuraApiKey=${PROXEUS_INFURA_API_KEY} \
+		-SparkpostApiKey=${PROXEUS_SPARKPOST_API_KEY} -EmailFrom=${PROXEUS_EMAIL_FROM} -TestMode=${PROXEUS_TEST_MODE}\
 		-DatabaseEngine=${PROXEUS_DATABASE_ENGINE} -DatabaseURI=${PROXEUS_DATABASE_URI} -PlatformDomain=http://localhost:1323
 
 main/handlers/assets/bindata.go: $(wildcard ./ui/core/dist/**)
 	go-bindata ${BINDATA_OPTS} -pkg assets -o ./main/handlers/assets/bindata.go -prefix ./ui/core/dist ./ui/core/dist/...
 	goimports -w $@
 
-test/bindata.go: $(wildcard ./test/assets/**)
-	go-bindata ${BINDATA_OPTS} -pkg test -o ./test/bindata.go ./test/assets
+test/bindata.go: $(shell find ./test/assets/) 
+	go-bindata ${BINDATA_OPTS} -pkg test -o ./test/bindata.go ./test/assets/...
 	goimports -w $@
 
 .SECONDEXPANSION: # See https://www.gnu.org/software/make/manual/make.html#Secondary-Expansion

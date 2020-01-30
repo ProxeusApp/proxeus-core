@@ -2,13 +2,9 @@ package test
 
 import (
 	"net/http"
-	"testing"
-
-	"github.com/ProxeusApp/proxeus-core/sys/model"
 )
 
-func TestImportExport(t *testing.T) {
-	s := new(t, serverURL)
+func testImportExport(s *session) {
 	u := registerTestUser(s)
 	login(s, u)
 
@@ -22,17 +18,17 @@ func TestImportExport(t *testing.T) {
 
 func exportWorkflow(s *session, w *workflow) []byte {
 	// export by name
-	b1 := s.e.GET("api/workflow/export").WithQueryString("include=workflow&contains=" + w.Name).
+	b1 := s.e.GET("/api/workflow/export").WithQueryString("include=workflow&contains=" + w.Name).
 		Expect().Status(http.StatusOK).Body().Raw()
 	// export by id
-	b2 := s.e.GET("api/workflow/export").WithQueryString("id=" + w.ID).
+	b2 := s.e.GET("/api/workflow/export").WithQueryString("id=" + w.ID).
 		Expect().Status(http.StatusOK).Body().Raw()
 
 	if len(b1) < 1000 || len(b2) < 1000 {
 		s.t.Error("export files too small", len(b1), len(b2))
 	}
 
-	stats := s.e.GET("api/export/results").Expect().JSON().Path("$.results").Object()
+	stats := s.e.GET("/api/export/results").Expect().JSON().Path("$.results").Object()
 	stats.Path("$.Form").Object().Keys().Length().Equal(2)
 	stats.Path("$.FormComponent").Object().Keys().Length().Equal(1)
 	stats.Path("$.Template").Object().Keys().Length().Equal(2)
@@ -42,10 +38,10 @@ func exportWorkflow(s *session, w *workflow) []byte {
 }
 
 func importWorkflow(s *session, exportedW []byte, expectedW *workflow) {
-	s.e.POST("api/import").WithQueryString("skipExisting=false").WithBytes(exportedW).
+	s.e.POST("/api/import").WithQueryString("skipExisting=false").WithBytes(exportedW).
 		Expect().Status(http.StatusOK)
 
-	stats := s.e.GET("api/import/results").Expect().JSON().Path("$.results").Object()
+	stats := s.e.GET("/api/import/results").Expect().JSON().Path("$.results").Object()
 	stats.Path("$.Form").Object().Keys().Length().Equal(2)
 	stats.Path("$.FormComponent").Object().Keys().Length().Equal(1)
 	stats.Path("$.User").Object().Keys().Length().Equal(1)
@@ -64,8 +60,7 @@ func exportImportEntity(s *session, entity string) {
 		WithBytes([]byte(b)).Expect().Status(http.StatusOK)
 }
 
-func TestImportExportAdmin(t *testing.T) {
-	s := new(t, serverURL)
+func testImportExportAdmin(s *session) {
 	u := registerSuperAdmin(s)
 	login(s, u)
 
@@ -87,11 +82,8 @@ func TestImportExportAdmin(t *testing.T) {
 	//deleteUser(s, u)
 }
 
-func TestImportExportRoot(t *testing.T) {
-	t.Skip("fix settings validation")
-	s := new(t, serverURL)
-	u := registerTestUserWithRole(s, model.ROOT)
-	login(s, u)
+func testImportExportRoot(s *session) {
+	login(s, s.root)
 	exportImportEntity(s, "settings")
-	//deleteUser(s, u)
+	logout(s)
 }

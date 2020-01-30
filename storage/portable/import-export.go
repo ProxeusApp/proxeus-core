@@ -23,7 +23,8 @@ const proxeusIdentifier = "00000_e166801d00a45901e2b3ca692a6a95e367d4a976218b485
 
 type ImportExport struct {
 	mainDir                 string
-	dir                     string
+	dataDir                 string
+	settingsFile            string
 	auth                    model.Auth
 	sysDB                   *storage.DBSet
 	db                      *storage.DBSet
@@ -55,13 +56,14 @@ func NewImportExport(auth model.Auth, dbSet *storage.DBSet, dir string) (*Import
 		locatedSameUserWithDifferentID: map[string]string{},
 	}
 	ie.mainDir = filepath.Join(dir, u.String())
-	ie.dir = filepath.Join(ie.mainDir, "data")
-	err := os.MkdirAll(ie.dir, 0750)
+	ie.dataDir = filepath.Join(ie.mainDir, "data")
+	err := os.MkdirAll(ie.dataDir, 0750)
 	if err != nil {
 		return nil, err
 	}
+	ie.settingsFile = filepath.Join(ie.dataDir, "settings", "main.json")
 	ie.auth = auth
-	ie.dbConfig = database.DBConfig{Engine: "storm", Dir: ie.dir}
+	ie.dbConfig = database.DBConfig{Engine: "storm", Dir: ie.dataDir}
 	ie.db.Files, err = database.NewFileDB(ie.dbConfig)
 	return ie, err
 }
@@ -98,7 +100,7 @@ func (ie *ImportExport) Pack() (*os.File, error) {
 	if err != nil {
 		return nil, err
 	}
-	err = tar.Tar(ie.dir, f)
+	err = tar.Tar(ie.dataDir, f)
 	er := f.Close()
 	if er != nil {
 		return nil, er
@@ -114,11 +116,11 @@ func (ie *ImportExport) writeProxeusIdentifier(meta *importExportMeta) error {
 	if err != nil {
 		return err
 	}
-	return ioutil.WriteFile(filepath.Join(ie.dir, proxeusIdentifier), bts, 0600)
+	return ioutil.WriteFile(filepath.Join(ie.dataDir, proxeusIdentifier), bts, 0600)
 }
 
 func (ie *ImportExport) readProxeusIdentifier(meta *importExportMeta) error {
-	f, err := os.Open(filepath.Join(ie.dir, proxeusIdentifier))
+	f, err := os.Open(filepath.Join(ie.dataDir, proxeusIdentifier))
 	if err != nil {
 		return err
 	}
@@ -174,7 +176,7 @@ func (ie *ImportExport) Processed() ProcessedResults {
 }
 
 func (ie *ImportExport) Extract(reader io.Reader) error {
-	err := tar.Untar(ie.dir, reader)
+	err := tar.Untar(ie.dataDir, reader)
 	if gzip.ErrHeader == err {
 		return ErrNotProxeusDB
 	}

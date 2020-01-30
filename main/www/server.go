@@ -11,20 +11,30 @@ import (
 
 	"golang.org/x/crypto/acme/autocert"
 
+	"github.com/davecgh/go-spew/spew"
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
 )
+
+func debug() echo.MiddlewareFunc {
+	return func(next echo.HandlerFunc) echo.HandlerFunc {
+		return func(c echo.Context) error {
+			log.Printf("DEBUG REQUEST %s %s %v\n", c.Request().Method, c.Request().URL, spew.Sdump(c.Request().Header))
+			return next(c)
+		}
+	}
+}
 
 func Setup(serverVersion string) *echo.Echo {
 	e := echo.New()
 	e.HTTPErrorHandler = DefaultHTTPErrorHandler
 
 	// Pre routing middleware
+	//e.Pre(debug())
 	e.Pre(xVersionHeader(serverVersion))
 	c := middleware.DefaultSecureConfig
 	c.XFrameOptions = ""
 	e.Pre(middleware.SecureWithConfig(c))
-	e.Pre(middleware.Secure())
 
 	// Post routing middleware
 	e.Use(func(h echo.HandlerFunc) echo.HandlerFunc {
@@ -50,9 +60,7 @@ func Setup(serverVersion string) *echo.Echo {
 			if err != nil {
 				return
 			}
-			userName := user.Name
-			userAddr := user.EthereumAddr
-			log.Println("[echo] Method: "+e.Request().Method, "Status:", e.Response().Status, "User: "+userAddr, "("+userName+")", "URI: "+e.Request().RequestURI)
+			log.Printf("[echo] Method: %s Status: %d User: %s  %s %s URI: %s ", e.Request().Method, e.Response().Status, user.ID, user.Name, user.EthereumAddr, e.Request().RequestURI)
 			if len(reqBody) > 0 && c.Response().Status != 200 && c.Response().Status != 404 {
 				fmt.Printf("[echo][errorrequest] %s\n", reqBody)
 			}

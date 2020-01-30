@@ -6,11 +6,14 @@ import (
 	"reflect"
 	"strconv"
 	"strings"
+	"unicode"
 
 	"flag"
 
 	"github.com/ProxeusApp/proxeus-core/sys/model"
 )
+
+const ProxeusEnvPrefix = "PROXEUS_"
 
 //This configuration can be used in two ways:
 //1. Using the default meta in a struct
@@ -32,62 +35,93 @@ type Configuration struct {
 	model.Settings // extend cmd line args with settings
 }
 
-var Config Configuration
+var Config *Configuration
 
-func init() {
-	flagStruct(Config)
-	pCfg := &Config
-	if !strings.HasSuffix(os.Args[0], ".test") {
-		flag.Parse()
-	}
-	flag.VisitAll(func(f *flag.Flag) {
-		initStruct(f, reflect.ValueOf(pCfg).Elem())
-	})
-
-	fmt.Println("###########################################")
-	fmt.Printf("CONFIG %#v\n", Config)
-	fmt.Println("###########################################")
-}
-
-func initStruct(f *flag.Flag, v reflect.Value) {
-	field := v.FieldByName(f.Name)
-	strFlagVal := f.Value.String()
-	if strFlagVal == f.DefValue {
-		//if val same as default try from env var
-		strVal := os.Getenv(f.Name)
-		if strVal != "" {
-			strFlagVal = strVal
-		}
-	}
-	if field.Kind() == reflect.String {
-		field.SetString(strFlagVal)
-	} else if field.Kind() == reflect.Bool {
-		bl, _ := strconv.ParseBool(strFlagVal)
-		field.SetBool(bl)
-	} else if field.Kind() != reflect.Invalid && field.Type() == reflect.TypeOf(model.CREATOR) {
-		field.Set(reflect.ValueOf(model.StringToRole(strFlagVal)))
-	} else if field.Kind() == reflect.Struct {
-		initStruct(f, field)
-	}
-}
-
-func flagStruct(strct interface{}) {
-	roleType := reflect.TypeOf(model.CREATOR)
-	v := reflect.ValueOf(strct)
-	t := reflect.TypeOf(strct)
-	if t.Kind() != reflect.Struct {
+func Init() {
+	if Config != nil {
 		return
 	}
+	Config = New()
+}
+
+func New() *Configuration {
+	var c Configuration
+
+	flagFromStruct(flag.CommandLine, os.Environ(), &c)
+	flag.Parse()
+
+	return &c
+}
+
+func flagFromStruct(fs *flag.FlagSet, env []string, strct interface{}) {
+	v := reflect.ValueOf(strct)
+	if v.Kind() != reflect.Ptr {
+		return
+	}
+
+	v = v.Elem()
+	if v.Kind() != reflect.Struct {
+		return
+	}
+	t := v.Type()
+
+	em := envMap(env)
 	for i := 0; i < t.NumField(); i++ {
 		f := t.Field(i)
 		fname := f.Name
 		if f.Type.Kind() == reflect.Bool {
-			bv, _ := strconv.ParseBool(f.Tag.Get("default"))
-			flag.Bool(fname, bv, f.Tag.Get("usage"))
-		} else if f.Type.Kind() == reflect.String || f.Type == roleType {
-			flag.String(fname, f.Tag.Get("default"), f.Tag.Get("usage"))
+			d, u := defaultAndUsage(f, fname, em)
+			bv, _ := strconv.ParseBool(d)
+			fs.BoolVar(v.Field(i).Addr().Interface().(*bool), fname, bv, u)
+		} else if f.Type.Kind() == reflect.String {
+			d, u := defaultAndUsage(f, fname, em)
+			fs.StringVar(v.Field(i).Addr().Interface().(*string), fname, d, u)
 		} else if f.Type.Kind() == reflect.Struct {
-			flagStruct(v.Field(i).Interface())
+			flagFromStruct(fs, env, v.Field(i).Addr().Interface())
 		}
 	}
+}
+
+func envMap(env []string) map[string]string {
+	m := map[string]string{}
+	for _, e := range env {
+		kv := strings.Split(e, "=")
+		m[kv[0]] = kv[1]
+	}
+
+	return m
+}
+
+func defaultAndUsage(f reflect.StructField, fname string, envMap map[string]string) (string, string) {
+	envName := fieldToEnv(fname)
+	if envValue := envMap[envName]; envValue != "" {
+		return envValue, fmt.Sprintf("%s (%s=%s)", f.Tag.Get("usage"), envName, envValue)
+
+	} else {
+		return f.Tag.Get("default"), fmt.Sprintf("%s (%s)", f.Tag.Get("usage"), envName)
+	}
+}
+
+func fieldToEnv(f string) string {
+	var e strings.Builder
+
+	e.WriteString(ProxeusEnvPrefix)
+	previous := '_'
+	for _, c := range f {
+		if c == '-' {
+			c = '_'
+		}
+		if previous == '_' && c == '_' {
+			continue
+		}
+		if previous != '_' && !unicode.IsUpper(previous) && unicode.IsUpper(c) {
+			e.WriteByte('_')
+		}
+
+		e.WriteRune(unicode.ToUpper(c))
+
+		previous = c
+	}
+
+	return e.String()
 }
