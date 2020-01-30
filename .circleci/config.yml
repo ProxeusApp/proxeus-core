@@ -25,7 +25,7 @@ jobs:
             - yarn-v1-{{ checksum "ui/yarn.lock" }}
       - run:
           name: Build UI
-          command: make init ui
+          command: make ui
       - save_cache:
           key: yarn-v1-{{ checksum "ui/yarn.lock" }}
           paths:
