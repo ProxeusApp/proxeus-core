@@ -6,7 +6,13 @@ executors:
     environment:
       PROJECT_ROOT_FOLDER: ~/project
     docker:
-      - image: golang:1.13
+      - image: circleci/golang:1.13
+  docker-image-golang-test-api:
+    environment:
+      PROJECT_ROOT_FOLDER: ~/project
+    docker:
+      - image: circleci/golang:1.13
+      - image: proxeus/document-service:latest
   docker-publisher:
     environment:
       PROJECT_ROOT_FOLDER: ~/project
@@ -38,33 +44,16 @@ jobs:
           paths:
             - ./ui/core/dist
 
-  init-go:
-    executor: docker-image-golang
-    steps:
-      - checkout
-      - run:
-          name: Initialize
-          command: make init
-      - save_cache:
-          key: go-mod-v1-{{ checksum "go.sum" }}
-          paths:
-            - "/go/pkg/mod"
-            - "/go/bin"
   validate-go:
     executor: docker-image-golang
     steps:
       - checkout
       - restore_cache:
           keys:
-            - go-mod-v1-{{ .Revision }}
+            - go-mod-v2-{{ .Revision }}
       - run:
           name: Validate
           command: make init validate
-      - save_cache:
-          key: go-mod-v1-{{ checksum "go.sum" }}
-          paths:
-            - "/go/pkg/mod"
-            - "/go/bin"
 
   test-go:
     executor: docker-image-golang
@@ -74,15 +63,61 @@ jobs:
           at: ~/project/
       - restore_cache:
           keys:
-            - go-mod-v1-{{ checksum "go.sum" }}
+            - go-mod-v2-{{ checksum "go.sum" }}
       - run:
           name: Test
-          command: make test
+          command: make init test
       - save_cache:
-          key: go-mod-v1-{{ checksum "go.sum" }}
+          key: go-mod-v2-{{ checksum "go.sum" }}
           paths:
             - "/go/pkg/mod"
-            - "/go/bin"
+
+  build-go:
+    executor: docker-image-golang
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ~/project/
+      - restore_cache:
+          keys:
+            - go-mod-v2-{{ checksum "go.sum" }}
+      - run:
+          name: Test
+          command: make init server
+      - persist_to_workspace:
+          root: .
+          paths:
+            - ./artifacts/server
+
+  coverage-go:
+    executor: docker-image-golang-test-api
+    resource_class: large
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ~/project/
+      - setup_remote_docker
+      - restore_cache:
+          keys:
+            - go-mod-v2-{{ checksum "go.sum" }}
+      - run:
+          name: Test
+          command: make init coverage
+
+  test-api-go:
+    executor: docker-image-golang-test-api
+    resource_class: large
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ~/project/
+      - setup_remote_docker
+      - restore_cache:
+          keys:
+            - go-mod-v2-{{ checksum "go.sum" }}
+      - run:
+          name: Test
+          command: make init test-api
 
   build-server-docker:
     executor: docker-image-golang
@@ -92,15 +127,10 @@ jobs:
           at: ~/project/
       - restore_cache:
           keys:
-            - go-mod-v1-{{ checksum "go.sum" }}
+            - go-mod-v2-{{ checksum "go.sum" }}
       - run:
           name: Build server binary
-          command: make server-docker
-      - save_cache:
-          key: go-mod-v1-{{ checksum "go.sum" }}
-          paths:
-            - "/go/pkg/mod"
-            - "/go/bin"
+          command: make init server-docker
       - persist_to_workspace:
           root: .
           paths:
@@ -199,17 +229,23 @@ workflows:
   build-master:
     jobs:
       - build-ui
-      - init-go
-      - validate-go:
-          requires:
-            - init-go
+      - validate-go
       - test-go:
           requires:
             - validate-go
             - build-ui
-      - build-server-docker:
+      - build-go:
           requires:
             - test-go
+      - coverage-go:
+          requires:
+            - build-go
+      - test-api-go:
+          requires:
+            - build-go
+      - build-server-docker:
+          requires:
+            - test-api-go
       - build-docker-image:
           requires:
             - build-server-docker

@@ -18,6 +18,7 @@ endif
 dependencies=go curl
 mocks=main/handlers/blockchain/mock/adapter_mock.go
 bindata=main/handlers/assets/bindata.go test/bindata.go
+golocalimport=github.com/ProxeusApp/proxeus-core
 
 .PHONY: all
 all: ui server
@@ -50,15 +51,15 @@ server-docker: generate
 	$(DOCKER_LINUX) go build $(GO_OPTS) -tags nocgo -o ./artifacts/server-docker ./main
 
 .PHONY: validate
-validate:
-	@if [[ "$$(goimports -l -local git.proxeus.com main sys | grep -v bindata.go | tee /dev/tty | wc -l | xargs)" != "0" ]]; then \
+validate: init
+	@if [[ "$$(goimports -l -local $(golocalimport) main sys | grep -v bindata.go | tee /dev/tty | wc -l | xargs)" != "0" ]]; then \
 		echo "Format validation error.  Please run make fmt"; exit 1; \
 	fi
 	@echo "Format validated"
 
 .PHONY: fmt
 fmt:
-	goimports -w -local git.proxeus.com main sys
+	goimports -w -local $(golocalimport) main sys
 
 .PHONY: test
 test: generate 
@@ -68,7 +69,7 @@ test: generate
 test-api: server #server-docker
 	$(eval testdir := $(shell mktemp -d /tmp/proxeus-test-api.XXXXX ))
 	mkdir -p $(testdir)
-	docker-compose -f docker-compose-dev.yml up -d document-service
+	curl -s http://localhost:2115 > /dev/null || docker-compose -f docker-compose-dev.yml up -d document-service
 	artifacts/server \
 		-SettingsFile=$(testdir)/settings/main.json \
 		-DataDir=$(testdir)/data \
@@ -76,12 +77,12 @@ test-api: server #server-docker
 		-BlockchainContractAddress=$(PROXEUS_BLOCKCHAIN_CONTRACT_ADDRESS) \
 		-InfuraApiKey=$(PROXEUS_INFURA_API_KEY) \
 		-SparkpostApiKey=$(PROXEUS_SPARKPOST_API_KEY) \
-		-EmailFrom=${PROXEUS_EMAIL_FROM} \
+		-EmailFrom=test@example.com \
 		-PlatformDomain=http://localhost:1323 \
 		-TestMode=true &
 	PROXEUS_URL=http://localhost:1323  go test -count=1 ./test
 	pkill -f artifacts/server
-	docker-compose -f docker-compose-dev.yml down
+	( docker-compose ps | grep -sq document_service && docker-compose -f docker-compose-dev.yml down ) || true
 	rm -fr $(testdir) 
 
 .PHONY: coverage
@@ -91,23 +92,23 @@ coverpkg=$(subst $(space),$(comma), $(filter-out %/mock %/assets, $(shell go lis
 coverage: generate
 	$(eval testdir := $(shell mktemp -d /tmp/proxeus-test-api.XXXXX ))
 	mkdir -p $(testdir)
-	docker-compose -f docker-compose-dev.yml up -d document-service
 	go test -coverprofile artifacts/cover_unittests.out -coverpkg="$(coverpkg)" ./main/... ./sys/... ./storage/...
+	curl -s http://localhost:2115 > /dev/null || docker-compose -f docker-compose-dev.yml up -d document-service
 	echo starting test main ; \
 					 PROXEUS_DATA_DIR=$(testdir)/data \
 					 PROXEUS_SETTINGS_FILE=$(testdir)/settings/main.json \
 					 PROXEUS_DOCUMENT_SERVICE_URL=http://localhost:2115 \
 					 PROXEUS_PLATFORM_DOMAIN=http://localhost:1323 \
 					 PROXEUS_TEST_MODE=true \
+					 PROXEUS_EMAIL_FROM=test@example.com \
 					 go test -v -tags coverage -coverprofile artifacts/cover_integration.out -coverpkg="$(coverpkg)" ./main &
 	PROXEUS_URL=http://localhost:1323  go test -count=1 ./test
 	pkill main.test
-	docker-compose -f docker-compose-dev.yml down
+	( docker-compose ps | grep -sq document_service && docker-compose -f docker-compose-dev.yml down ) || true
 	rm -fr $(testdir) 
 	gocovmerge artifacts/cover_unittests.out artifacts/cover_integration.out > artifacts/cover_merged.out
 	go tool cover -func artifacts/cover_merged.out > artifacts/cover_merged.txt
 	go tool cover -html artifacts/cover_merged.out -o artifacts/cover_merged.html
-
 
 .PHONY: print-coverage
 print-coverage:
