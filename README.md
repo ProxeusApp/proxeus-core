@@ -1,3 +1,5 @@
+[![Proxeus](https://circleci.com/gh/ProxeusApp/proxeus-core.svg?style=svg&circle-token=bb734a8ee7ed59cb253f1ce1d3fe5944ff6df092)](https://app.circleci.com/github/ProxeusApp/proxeus-core/pipelines)
+
 ![](docs/_media/logo.png)
 
 # Proxeus
