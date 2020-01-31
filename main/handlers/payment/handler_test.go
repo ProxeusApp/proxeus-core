@@ -11,6 +11,11 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/golang/mock/gomock"
+	"github.com/gorilla/sessions"
+	"github.com/labstack/echo"
+	"github.com/stretchr/testify/assert"
+
 	"github.com/ProxeusApp/proxeus-core/main/www"
 	"github.com/ProxeusApp/proxeus-core/storage"
 	"github.com/ProxeusApp/proxeus-core/storage/database"
@@ -18,10 +23,6 @@ import (
 	sm "github.com/ProxeusApp/proxeus-core/storage/database/mock"
 	"github.com/ProxeusApp/proxeus-core/sys"
 	"github.com/ProxeusApp/proxeus-core/sys/model"
-	"github.com/golang/mock/gomock"
-	"github.com/gorilla/sessions"
-	"github.com/labstack/echo"
-	"github.com/stretchr/testify/assert"
 )
 
 func setupPaymentRequestTest(httpMethod, targetUrl, body string) (*www.Context, *httptest.ResponseRecorder, *model.User, *model.User) {
