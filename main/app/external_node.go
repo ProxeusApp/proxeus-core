@@ -100,6 +100,7 @@ func (ex externalNode) putData(r io.Reader) error {
 		return err
 	}
 	if ex.ctx != nil {
+		ex.ctx.statusResult.UserData = d
 		return ex.ctx.writeData(ex.n, d)
 	}
 	ex.ctx2.data = d
