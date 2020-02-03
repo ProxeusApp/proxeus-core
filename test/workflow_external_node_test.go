@@ -28,13 +28,16 @@ func executeWorkflowExternalNode(s *session, w *workflow) {
 	expectWorkflowInCleanState(s, w)
 	// filling a form
 	{
-		d := map[string]string{fieldName: "100 CHF"}
+		d := map[string]string{fieldName: "test 100 CHF"}
 		s.e.POST("/api/document/" + w.ID + "/data").WithJSON(d).Expect().Status(http.StatusOK)
 
 		r := s.e.POST("/api/document/" + w.ID + "/next").WithJSON(d).Expect().Status(http.StatusOK).
 			JSON().Path("$.status")
 		r.Path("$.steps").Array().Length().Equal(2)
 		r.Path("$.userData").Object().ContainsKey(fieldName)
+		str := r.Path("$.userData").Object().Path("$." + fieldName).String()
+		str.Contains("test")
+		str.Contains("XES")
 		r.Path("$.data").NotNull()
 	}
 }
@@ -80,7 +83,7 @@ const workflowXData = `{
         },
         "{{.externalNodeId}}": {
           "id": "{{.externalNodeId}}",
-          "name": "pricegetter",
+          "name": "priceGetter",
           "type": "externalNode",
           "p": {
             "x": 301,
