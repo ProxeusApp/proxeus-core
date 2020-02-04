@@ -70,7 +70,7 @@ test-api: server #server-docker
 	$(eval testdir := $(shell mktemp -d /tmp/proxeus-test-api.XXXXX ))
 	mkdir -p $(testdir)
 	curl -s http://localhost:2115 > /dev/null || ( docker-compose -f docker-compose-dev.yml up -d document-service && touch $(testdir)/ds-started )
-	artifacts/server \
+	( artifacts/server \
 		-SettingsFile=$(testdir)/settings/main.json \
 		-DataDir=$(testdir)/data \
 		-DocumentServiceUrl=http://localhost:2115 \
@@ -79,7 +79,7 @@ test-api: server #server-docker
 		-SparkpostApiKey=$(PROXEUS_SPARKPOST_API_KEY) \
 		-EmailFrom=test@example.com \
 		-PlatformDomain=http://localhost:1323 \
-		-TestMode=true &
+		-TestMode=true || true ) &
 	PROXEUS_URL=http://localhost:1323  go test -count=1 ./test ; ret=$$?; echo DEBUG $$ret;  pkill -f artifacts/server || true; echo DEBUG2 $$ret ; exit $$ret 
 	[ -e  $(testdir)/ds-started ] && docker-compose -f docker-compose-dev.yml down  || true
 	rm -fr $(testdir) 
