@@ -96,7 +96,6 @@ jobs:
       - checkout
       - attach_workspace:
           at: ~/project/
-      - setup_remote_docker
       - restore_cache:
           keys:
             - go-mod-v2-{{ checksum "go.sum" }}
@@ -111,7 +110,6 @@ jobs:
       - checkout
       - attach_workspace:
           at: ~/project/
-      - setup_remote_docker
       - restore_cache:
           keys:
             - go-mod-v2-{{ checksum "go.sum" }}
