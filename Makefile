@@ -80,7 +80,7 @@ test-api: server #server-docker
 		-EmailFrom=test@example.com \
 		-PlatformDomain=http://localhost:1323 \
 		-TestMode=true &
-	PROXEUS_URL=http://localhost:1323  go test -count=1 ./test ; ret=$$?; echo DEBUG $$reg;  pkill -f artifacts/server; echo DEBUG2 $$ret ; exit $$ret 
+	PROXEUS_URL=http://localhost:1323  go test -count=1 ./test ; ret=$$?; echo DEBUG $$ret;  pkill -f artifacts/server; echo DEBUG2 $$ret ; exit $$ret 
 	[ -e  $(testdir)/ds-started ] && docker-compose -f docker-compose-dev.yml down  || true
 	rm -fr $(testdir) 
 
