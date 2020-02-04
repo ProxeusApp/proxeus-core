@@ -80,7 +80,7 @@ test-api: server #server-docker
 		-EmailFrom=test@example.com \
 		-PlatformDomain=http://localhost:1323 \
 		-TestMode=true &
-	PROXEUS_URL=http://localhost:1323  go test -count=1 ./test ; ( ret=$$?; echo DEBUG $$reg;  pkill -f artifacts/server; echo DEBUG2 $$ret ; exit $$ret )
+	PROXEUS_URL=http://localhost:1323  go test -count=1 ./test ; ret=$$?; echo DEBUG $$reg;  pkill -f artifacts/server; echo DEBUG2 $$ret ; exit $$ret 
 	[ -e  $(testdir)/ds-started ] && docker-compose -f docker-compose-dev.yml down  || true
 	rm -fr $(testdir) 
 
@@ -101,7 +101,7 @@ coverage: generate
 					 PROXEUS_TEST_MODE=true \
 					 PROXEUS_EMAIL_FROM=test@example.com \
 					 go test -v -tags coverage -coverprofile artifacts/cover_integration.out -coverpkg="$(coverpkg)" ./main &
-	PROXEUS_URL=http://localhost:1323  go test -count=1 ./test ; ( ret=$$?; pkill main.test ; exit $$ret )
+	PROXEUS_URL=http://localhost:1323  go test -count=1 ./test ; ret=$$?; pkill main.test ; exit $$ret
 	[ -e  $(testdir)/ds-started ] && docker-compose -f docker-compose-dev.yml down  || true
 	rm -fr $(testdir) 
 	gocovmerge artifacts/cover_unittests.out artifacts/cover_integration.out > artifacts/cover_merged.out
