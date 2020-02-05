@@ -1,0 +1,56 @@
+---
+version: '3.7'
+
+services:
+  platform:
+    build:
+      context: .
+
+  mongo:
+    image: 'bitnami/mongodb:latest'
+    networks: ['xes-platform-network']
+    ports:
+      - 27017:27017
+    environment:
+      - MONGODB_ADVERTISED_HOSTNAME=mongo
+      - MONGODB_REPLICA_SET_MODE=primary
+      - MONGODB_ROOT_PASSWORD=root
+      - MONGODB_REPLICA_SET_KEY=replica0
+
+  mongo2:
+    image: 'bitnami/mongodb:latest'
+    depends_on:
+      - mongo
+    networks: ['xes-platform-network']
+    environment:
+      - MONGODB_ADVERTISED_HOSTNAME=mongo2
+      - MONGODB_REPLICA_SET_MODE=secondary
+      - MONGODB_PRIMARY_HOST=mongo
+      - MONGODB_PRIMARY_PORT_NUMBER=27017
+      - MONGODB_PRIMARY_ROOT_PASSWORD=root
+      - MONGODB_REPLICA_SET_KEY=replica0
+
+  mongo3:
+    image: 'bitnami/mongodb:latest'
+    depends_on:
+      - mongo
+    networks: ['xes-platform-network']
+    environment:
+      - MONGODB_ADVERTISED_HOSTNAME=mongo3
+      - MONGODB_REPLICA_SET_MODE=arbiter
+      - MONGODB_PRIMARY_HOST=mongo
+      - MONGODB_PRIMARY_PORT_NUMBER=27017
+      - MONGODB_PRIMARY_ROOT_PASSWORD=root
+      - MONGODB_REPLICA_SET_KEY=replica0
+
+  mongo-express:
+    image: mongo-express
+    depends_on:
+      - mongo
+    restart: always
+    networks: ['xes-platform-network']
+    ports:
+      - 8081:8081
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: root
