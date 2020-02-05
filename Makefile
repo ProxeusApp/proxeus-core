@@ -70,7 +70,7 @@ test-api: server #server-docker
 	$(eval testdir := $(shell mktemp -d /tmp/proxeus-test-api.XXXXX ))
 	mkdir -p $(testdir)
 	curl -s http://localhost:2115 > /dev/null || ( docker-compose -f docker-compose-dev.yml up -d document-service && touch $(testdir)/ds-started )
-	( artifacts/proxeus \
+	artifacts/proxeus \
 		-SettingsFile=$(testdir)/settings/main.json \
 		-DataDir=$(testdir)/data \
 		-DocumentServiceUrl=http://localhost:2115 \
@@ -79,12 +79,8 @@ test-api: server #server-docker
 		-SparkpostApiKey=$(PROXEUS_SPARKPOST_API_KEY) \
 		-EmailFrom=test@example.com \
 		-PlatformDomain=http://localhost:1323 \
-		-TestMode=true || true ) &
-	#PROXEUS_URL=http://localhost:1323  go test -count=1 ./test ; ret=$$?; echo DEBUG $$ret ; ( pkill -f artifacts/proxeus || true ); echo DEBUG2 $$ret ; exit $$ret 
-	PROXEUS_URL=http://localhost:1323  go test -count=1 ./test ; ret=$$?; echo DEBUG $$ret
-	echo WHICH `which pkill`
-	echo PS; ps ax
-	echo KILL; pkill proxeus; echo DEBUG $$?
+		-TestMode=true &
+	PROXEUS_URL=http://localhost:1323  go test -count=1 ./test ; ret=$$?; pkill proxeus; exit $$ret 
 	[ -e  $(testdir)/ds-started ] && docker-compose -f docker-compose-dev.yml down  || true
 	rm -fr $(testdir) 
 
@@ -105,7 +101,7 @@ coverage: generate
 					 PROXEUS_TEST_MODE=true \
 					 PROXEUS_EMAIL_FROM=test@example.com \
 					 go test -v -tags coverage -coverprofile artifacts/cover_integration.out -coverpkg="$(coverpkg)" ./main &
-	PROXEUS_URL=http://localhost:1323  go test -count=1 ./test ; ret=$$?; (  pkill main.test || true ) ; exit $$ret
+	PROXEUS_URL=http://localhost:1323  go test -count=1 ./test ; ret=$$?; pkill main.test ; exit $$ret
 	[ -e  $(testdir)/ds-started ] && docker-compose -f docker-compose-dev.yml down  || true
 	rm -fr $(testdir) 
 	gocovmerge artifacts/cover_unittests.out artifacts/cover_integration.out > artifacts/cover_merged.out
