@@ -44,11 +44,11 @@ generate: $(bindata) $(mocks) storage/database/mock/mocks.go
 
 .PHONY: server
 server: generate
-	go build $(GO_OPTS) -tags nocgo -o ./artifacts/server ./main 
+	go build $(GO_OPTS) -tags nocgo -o ./artifacts/proxeus ./main 
 
 .PHONY: server-docker
 server-docker: generate
-	$(DOCKER_LINUX) go build $(GO_OPTS) -tags nocgo -o ./artifacts/server-docker ./main
+	$(DOCKER_LINUX) go build $(GO_OPTS) -tags nocgo -o ./artifacts/proxeus-docker ./main
 
 .PHONY: validate
 validate: init
@@ -70,7 +70,7 @@ test-api: server #server-docker
 	$(eval testdir := $(shell mktemp -d /tmp/proxeus-test-api.XXXXX ))
 	mkdir -p $(testdir)
 	curl -s http://localhost:2115 > /dev/null || ( docker-compose -f docker-compose-dev.yml up -d document-service && touch $(testdir)/ds-started )
-	( artifacts/server \
+	( artifacts/proxeus \
 		-SettingsFile=$(testdir)/settings/main.json \
 		-DataDir=$(testdir)/data \
 		-DocumentServiceUrl=http://localhost:2115 \
@@ -80,11 +80,11 @@ test-api: server #server-docker
 		-EmailFrom=test@example.com \
 		-PlatformDomain=http://localhost:1323 \
 		-TestMode=true || true ) &
-	#PROXEUS_URL=http://localhost:1323  go test -count=1 ./test ; ret=$$?; echo DEBUG $$ret ; ( pkill -f artifacts/server || true ); echo DEBUG2 $$ret ; exit $$ret 
+	#PROXEUS_URL=http://localhost:1323  go test -count=1 ./test ; ret=$$?; echo DEBUG $$ret ; ( pkill -f artifacts/proxeus || true ); echo DEBUG2 $$ret ; exit $$ret 
 	PROXEUS_URL=http://localhost:1323  go test -count=1 ./test ; ret=$$?; echo DEBUG $$ret
 	echo WHICH `which pkill`
 	echo PS; ps ax
-	echo KILL; pkill -f artifacts/server; echo DEBUG $$?
+	echo KILL; pkill proxeus; echo DEBUG $$?
 	[ -e  $(testdir)/ds-started ] && docker-compose -f docker-compose-dev.yml down  || true
 	rm -fr $(testdir) 
 
@@ -125,7 +125,7 @@ clean:
 
 .PHONY: run
 run: server
-	artifacts/server -DataDir ./data/proxeus-platform/data/  -DocumentServiceUrl=http://document-service:2115 \
+	artifacts/proxeus -DataDir ./data/proxeus-platform/data/  -DocumentServiceUrl=http://document-service:2115 \
 		-BlockchainContractAddress=${PROXEUS_BLOCKCHAIN_CONTRACT_ADDRESS} -InfuraApiKey=${PROXEUS_INFURA_API_KEY} \
 		-SparkpostApiKey=${PROXEUS_SPARKPOST_API_KEY} -EmailFrom=${PROXEUS_EMAIL_FROM} -TestMode=${PROXEUS_TEST_MODE}\
 		-DatabaseEngine=${PROXEUS_DATABASE_ENGINE} -DatabaseURI=${PROXEUS_DATABASE_URI} -PlatformDomain=http://localhost:1323
