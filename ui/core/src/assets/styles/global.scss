@@ -66,18 +66,6 @@ $leftSideSpacingFromBrowserFrame: 20px;
   border: none;
 }
 
-.btn.plus-btn {
-  position: fixed;
-  width: 80px;
-  height: 80px;
-  border: 0;
-  z-index: 100;
-  bottom: 50px;
-  right: 50px;
-  box-shadow: 0px 3px 10px rgba(4, 17, 49, 0.3);
-  background-color: #00A655;
-}
-
 .btn.plus-btn .material-icons {
   font-size: 42px;
 }
@@ -193,7 +181,7 @@ body {
 }
 
 .main-container {
-  padding: 20px;
+  padding: $spacer;
 }
 
 .btn > i.material-icons {
@@ -204,10 +192,6 @@ body {
   @media (max-width: 767px) {
     display: none;
   }
-}
-
-.search-box input.form-control {
-  border: 1px solid #ececec !important;
 }
 
 .vue-notification-template.alert.warning {

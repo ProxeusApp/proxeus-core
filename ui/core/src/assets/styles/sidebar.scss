@@ -35,7 +35,6 @@ $nav-max-width: 265px;
 .sidebar {
   background: #062a85;
   top: 0;
-  height: 100%;
   padding-top: .5rem;
   overflow-x: hidden;
   overflow-y: auto;
@@ -44,10 +43,13 @@ $nav-max-width: 265px;
   transition: max-width .2s ease;
   transition: left .4s ease;
   will-change: max-width;
+  height: calc(100vh);
 
   .navbar-brand {
     overflow: hidden;
     padding-left: 1.7rem;
+    padding-top: $spacer / 1.5;
+    padding-bottom: $spacer / 3;
   }
 
   .nav-link {
@@ -56,6 +58,8 @@ $nav-max-width: 265px;
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
+    font-size: .9rem;
+    letter-spacing: .1px;
 
     &.dropdown-toggle::after {
       margin-left: 1rem;
@@ -91,7 +95,7 @@ $nav-max-width: 265px;
 
   .nav-link .material-icons {
     font-size: 1.6rem;
-    margin-right: 12px;
+    margin-right: $spacer;
     vertical-align: middle;
     color: #a9bce0;
 
@@ -181,41 +185,6 @@ $nav-max-width: 265px;
 
   }
 
-}
-
-.sidebar {
-  z-index: 1000;
-
-  @media (max-width: 767px) {
-    position: fixed !important;
-    left: -$nav-max-width;
-    max-width: $nav-max-width;
-    width: $nav-max-width !important;
-    z-index: 22232736 !important;
-
-    -webkit-box-shadow: none;
-    -moz-box-shadow: none;
-    box-shadow: none;
-  }
-}
-
-.sidebar-menutoggler {
-  display: none;
-  @media (max-width: 767px) {
-    display: inline-block;
-    font-size: 40px;
-    vertical-align: middle;
-    line-height: 1;
-    padding-bottom: 6px;
-    margin-right: 12px;
-    cursor: pointer;
-    margin-left: -9px;
-    padding-top: 5px;
-  }
-}
-
-.sidebar-menutoggler:hover {
-  color: $cyan;
 }
 
 .sidebar.menutoggled {

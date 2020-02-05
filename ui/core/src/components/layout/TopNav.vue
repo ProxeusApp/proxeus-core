@@ -1,5 +1,5 @@
 <template>
-  <nav class="navbar navbar-expand-lg mb-3 py-0 topnav d-flex flex-row"
+  <nav class="navbar navbar-expand-lg py-0 topnav d-flex flex-row"
        v-bind="$attrs"
        :class="{'bg-light':bg == null, 'border-bottom':bg==='white', 'border-bottom-0':bg!=='white'}"
        :style="{background:bg ? bg : ''}">

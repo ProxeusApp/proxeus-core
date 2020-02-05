@@ -1,5 +1,5 @@
 <template>
-  <div class="container-fluid" style="height:100%;">
+  <div class="container-fluid">
     <vue-headful :title="$t('Admin title', 'Proxeus - Admin')"/>
     <div class="row" style="height:100%;">
       <sidebar :toggled="sidebarToggled" v-if="showSidebar"></sidebar>

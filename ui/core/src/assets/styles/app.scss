@@ -23,10 +23,7 @@ $mdi-font-path: "~@mdi/font/fonts";
 
 .app-main {
   height: auto;
-
-  @media (max-width: 767px) {
-    max-width: 100% !important;
-  }
+  //min-width: 900px;
 }
 
 ::-moz-selection {
