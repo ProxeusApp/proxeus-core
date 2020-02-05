@@ -87,7 +87,7 @@ jobs:
       - persist_to_workspace:
           root: .
           paths:
-            - ./artifacts/server
+            - ./artifacts/proxeus
 
   coverage-go:
     executor: docker-image-golang-test-api
@@ -96,6 +96,7 @@ jobs:
       - checkout
       - attach_workspace:
           at: ~/project/
+      - setup_remote_docker
       - restore_cache:
           keys:
             - go-mod-v2-{{ checksum "go.sum" }}
@@ -110,6 +111,7 @@ jobs:
       - checkout
       - attach_workspace:
           at: ~/project/
+      - setup_remote_docker
       - restore_cache:
           keys:
             - go-mod-v2-{{ checksum "go.sum" }}
@@ -132,7 +134,7 @@ jobs:
       - persist_to_workspace:
           root: .
           paths:
-            - ./artifacts/server-docker
+            - ./artifacts/proxeus-docker
 
   build-docker-image:
     executor: docker-publisher
