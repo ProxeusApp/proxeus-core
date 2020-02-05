@@ -10,12 +10,12 @@ RUN mkdir -p /data/hosted
 
 WORKDIR /app
 
-COPY artifacts/server-docker /app/server
+COPY artifacts/proxeus-docker /app/proxeus
 
 COPY demo/ /app/demo/
 
 RUN chmod +x ./demo/restore-demo.sh
 
-RUN chmod +x ./server
+RUN chmod +x ./proxeus
 
-CMD ["./server"]
+CMD ["./proxeus"]

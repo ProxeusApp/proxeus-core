@@ -87,7 +87,7 @@ jobs:
       - persist_to_workspace:
           root: .
           paths:
-            - ./artifacts/server
+            - ./artifacts/proxeus
 
   coverage-go:
     executor: docker-image-golang-test-api
@@ -134,7 +134,7 @@ jobs:
       - persist_to_workspace:
           root: .
           paths:
-            - ./artifacts/server-docker
+            - ./artifacts/proxeus-docker
 
   build-docker-image:
     executor: docker-publisher
