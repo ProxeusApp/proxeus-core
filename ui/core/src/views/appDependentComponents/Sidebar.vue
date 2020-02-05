@@ -1,5 +1,5 @@
 <template>
-<responsive-sidebar class="sidebar-app" v-if="app.userIsCreatorOrHigher()">
+<responsive-sidebar class="sidebar-app" :toggled="toggled" v-if="app.userIsCreatorOrHigher()">
   <table style="height: 100%;width: 100%;">
     <tr>
       <td valign="top" style="vertical-align:top">
@@ -85,14 +85,26 @@
               class="nav-link-title">{{$t('Menu Frontend','User View')}}</span>
             </a>
           </li>
+          <li class="nav-item dropright">
+          <span data-toggle="dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                 aria-haspopup="true" aria-expanded="false" data-toggle="tooltip" data-placement="right"
+                 data-boundary="window" title="Account">
+                  <span class="material-icons">account_circle</span><span
+                class="nav-link-title">Account</span>
+              </a>
+          </span>
+            <div class="dropdown-menu ml-5" aria-labelledby="navbarDropdown">
+              <router-link :to="{name:'AdminSettings'}" class="dropdown-item" href="#">Settings</router-link>
+              <!--<router-link :to="{name:'AdminSettings'}" class="dropdown-item" href="#">Wallet</router-link>-->
+              <button class="dropdown-item btn-link" @click="logout">Logout</button>
+            </div>
+          </li>
         </ul>
       </td>
     </tr>
   </table>
 </responsive-sidebar>
-<!--<nav class="col sidebar sidebar-app px-0 pt-0" :class="{toggled:toggled}">-->
-
-<!--</nav>-->
 </template>
 
 <script>

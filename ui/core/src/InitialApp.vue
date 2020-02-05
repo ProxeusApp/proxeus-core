@@ -122,6 +122,8 @@ export default {
     background: transparent;
     height: 58px;
     vertical-align: middle;
+    display: flex;
+    align-items: center;
   }
 
   .navbar h1.navbar-text {

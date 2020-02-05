@@ -1,6 +1,6 @@
 <template>
 <button v-if="item && app.amIWriteGrantedFor(item)" type="button" @click="click"
-        class="btn btn-primary btn-round plus-btn">
+        class="btn btn-primary">
   <i class="material-icons">save</i>
 </button>
 <button v-else type="button" :title="$t('read only')" disabled="disabled" class="btn btn-primary btn-round plus-btn">

@@ -2,7 +2,7 @@
 <div v-if="user">
   <vue-headful :title="$t('User title prefix','Proxeus - ')+(user.name || $t('User title', 'User'))"/>
   <top-nav :title="user.name || $t('User title', 'User')" :returnToRoute="{name:'Users'}">
-    <td slot="td" class="tdmin" v-if="app.userIsUserOrHigher()">
+    <td slot="buttons" class="tdmin" v-if="app.userIsUserOrHigher()">
       <button v-if="user" style="height: 40px;"
               @click="app.exportData('&id='+user.id, null, '/api/user/export', 'User_'+user.id)" type="button"
               class="btn btn-primary ml-2">

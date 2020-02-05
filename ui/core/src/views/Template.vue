@@ -4,13 +4,13 @@
     :title="$t('Template title prefix', 'Proxeus - ')+(template && template.name || $t('Template title', 'Template'))"/>
   <top-nav :title="template && template.name ? template.name : $t('Template')" :sm="true"
            :returnToRoute="{name:'Templates'}">
-    <td slot="td" class="tdmin">
+    <td slot="buttons" class="tdmin">
       <span class="divider ml-auto"></span>
     </td>
-    <td slot="td" class="tdmin">
+    <td slot="buttons" class="tdmin">
       <span class="divider ml-auto"></span>
     </td>
-    <td slot="td" v-if="hasRenderedDocument" class="tdmin" v-for="(type, i) in downloadButtons" :key="i">
+    <td slot="buttons" v-if="hasRenderedDocument" class="tdmin" v-for="(type, i) in downloadButtons" :key="i">
       <a :href="`/api/admin/template/ide/download/${id}?format=${type}`"
          class="filedownload-btn px-2" target="_blank">
         <table style="text-align: center;">
@@ -25,14 +25,14 @@
         </table>
       </a>
     </td>
-    <td slot="td" class="tdmin">
+    <td slot="buttons" class="tdmin">
       <a target="_blank"
          href="https://docs.google.com/document/d/1-vJsTrU3w8dEcDr3-nV5owtxqHWSjzEf2uk6m9-cMIs/preview"
          class="btn btn-link btn-sm"><span
         class="material-icons">help</span>
       </a>
     </td>
-    <!--<td slot="td" class="tdmin">-->
+    <!--<td slot="buttons" class="tdmin">-->
     <!--<b-btn v-b-modal.extModal class="btn-sm" variant="link">-->
     <!--<span class="material-icons">extension</span>-->
     <!--</b-btn>-->
@@ -54,18 +54,18 @@
     <!--</div>-->
     <!--</b-modal>-->
     <!--</td>-->
-    <td slot="td" class="tdmin">
+    <td slot="buttons" class="tdmin">
       <button type="button" class="btn btn-link btn-sm" @click="previewVisible = !previewVisible">
         <i class="material-icons">view_column</i>
       </button>
     </td>
-    <td slot="td" class="tdmin" v-if="template && app.userIsUserOrHigher()">
+    <td slot="buttons" class="tdmin" v-if="template && app.userIsUserOrHigher()">
       <button type="button" class="btn btn-primary ml-2" @click="openPermissionDialog">
         <i class="material-icons" style="margin-right:2px;">link</i>
         <span>{{$t('Share')}}</span>
       </button>
     </td>
-    <td slot="td" class="tdmin" v-if="app.userIsUserOrHigher()">
+    <td slot="buttons" class="tdmin" v-if="app.userIsUserOrHigher()">
       <button v-if="template" style="height: 40px;"
               @click="app.exportData('&id='+template.id, null, '/api/template/export','Template_'+template.id)"
               type="button" class="btn btn-primary ml-2">
