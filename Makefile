@@ -21,7 +21,7 @@ bindata=main/handlers/assets/bindata.go test/bindata.go
 golocalimport=github.com/ProxeusApp/proxeus-core
 
 .PHONY: all
-all: ui server
+all: ui server license
 
 .PHONY: init
 init:
@@ -56,6 +56,11 @@ validate: init
 		echo "Format validation error.  Please run make fmt"; exit 1; \
 	fi
 	@echo "Format validated"
+
+.PHONY: license
+license:
+	# https://github.com/pivotal/LicenseFinder
+	license_finder
 
 .PHONY: fmt
 fmt:
