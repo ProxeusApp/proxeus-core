@@ -82,7 +82,8 @@ test-api: server #server-docker
 		-TestMode=true || true ) &
 	#PROXEUS_URL=http://localhost:1323  go test -count=1 ./test ; ret=$$?; echo DEBUG $$ret ; ( pkill -f artifacts/server || true ); echo DEBUG2 $$ret ; exit $$ret 
 	PROXEUS_URL=http://localhost:1323  go test -count=1 ./test ; ret=$$?; echo DEBUG $$ret
-	echo WHICH; which pkill
+	echo WHICH `which pkill`
+	echo PS; ps ax
 	echo KILL; pkill -f artifacts/server; echo DEBUG $$?
 	[ -e  $(testdir)/ds-started ] && docker-compose -f docker-compose-dev.yml down  || true
 	rm -fr $(testdir) 
