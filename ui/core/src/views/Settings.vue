@@ -2,7 +2,7 @@
 <div>
   <vue-headful :title="$t('Settings title', 'Proxeus - Settings')"/>
   <top-nav :title="$t('Settings')">
-    <td slot="td" class="tdmin" v-if="app.userIsUserOrHigher()">
+    <td slot="buttons" class="tdmin" v-if="app.userIsUserOrHigher()">
       <button style="height: 40px;" @click="app.exportData('', null, '/api/settings/export', 'Settings')" type="button"
               class="btn btn-primary ml-2">
         <i style="font-style: normal;font-size: 18px;">&#8659;</i>

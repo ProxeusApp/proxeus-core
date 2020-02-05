@@ -1,0 +1,75 @@
+@import "~bootstrap/scss/functions";
+@import "variables.scss";
+@import "~bootstrap/scss/bootstrap";
+@import "fonts.scss";
+@import "buttons.scss";
+
+$mdi-font-path: "~@mdi/font/fonts";
+@import "~@mdi/font/scss/materialdesignicons.scss";
+
+@import "modals.scss";
+@import "fancy-radio-checkbox.scss";
+
+@import "forms.scss";
+@import "alerts.scss";
+@import "global.scss";
+@import "topnav";
+
+@import "flatpickr.scss";
+
+.navbar h1 {
+  margin-bottom: 0;
+}
+
+.app-main {
+  height: auto;
+
+  @media (max-width: 767px) {
+    max-width: 100% !important;
+  }
+}
+
+::-moz-selection {
+  background: $info;
+  color: $primary;
+}
+
+::selection {
+  background: $info;
+  color: $primary;
+}
+
+.navbar.navbar-expand-lg {
+  z-index: 100;
+}
+
+.navbar h1.navbar-text {
+  display: inline-block;
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+  margin-top: 0;
+  margin-bottom: 0;
+  overflow: hidden;
+  min-width: 0;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.toggle-row {
+  z-index: 2223273;
+  width: 100%;
+  background: white;
+  border: 1px solid #gray-200;
+  box-shadow: 0 45px 100px rgba(0, 0, 0, .35);
+  position: relative;
+}
+
+.toggle-row-backdrop {
+  background: rgba(0, 0, 0, .2);
+  position: fixed;
+  z-index: 98;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+}

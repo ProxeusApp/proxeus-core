@@ -27,28 +27,13 @@ export default {
     Sidebar,
     FirstLoginOverlay
   },
-  data () {
-    return {
-      sidebarToggled: false
-    }
-  },
-  watch: {
-    '$route': function () {
-      this.toggleSidebar()
-    }
-  },
   computed: {
+    sidebarToggled () {
+      return this.$route.meta.sidebarToggled === true
+    },
     showSidebar () {
       return _.get(this, '$route.matched[0].props.default.showSidebar', true) === true
     }
-  },
-  methods: {
-    toggleSidebar () {
-      this.sidebarToggled = _.get(this, '$route.matched[1].props.default.sidebarToggled', false) === true
-    }
-  },
-  mounted () {
-    this.toggleSidebar()
   }
 }
 </script>

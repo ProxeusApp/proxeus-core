@@ -1,0 +1,25 @@
+.topnav {
+  height: 58px;
+
+  .topnav-buttons {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+  .btn.btn-sm.topnav-back {
+    border: 0;
+    border-right: 1px solid $gray-300;
+    border-radius: 0;
+    margin-left: -24px;
+    padding-top: 0;
+    padding-bottom: 0;
+    height: 58px;
+    vertical-align: middle;
+    background: transparent;
+    display: flex;
+    align-items: center;
+    // Iconfix
+    .material-icons {
+      margin-bottom: 4px;
+    }
+  }
+}

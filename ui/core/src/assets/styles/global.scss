@@ -66,10 +66,6 @@ $leftSideSpacingFromBrowserFrame: 20px;
   border: none;
 }
 
-.modal-content, .btn, .form-control {
-  border-radius: 0;
-}
-
 .btn.plus-btn {
   position: fixed;
   width: 80px;
@@ -132,20 +128,6 @@ $leftSideSpacingFromBrowserFrame: 20px;
   background: $gray-100;
 }
 
-.topnav td {
-  white-space: nowrap;
-}
-
-.topnav-back.btn-light {
-  background: white;
-  border: none;
-  border-right: 1px solid #e1e1e1;
-}
-
-.topnav-back.btn-light:hover {
-  background: #e1e1e1;
-}
-
 .t-ellipsis {
   white-space: nowrap;
   vertical-align: middle;
@@ -182,9 +164,9 @@ span.error {
 }
 
 .wfchart-main .vis-button, .wfchart-main .btn-legend > .btn-round {
-  -webkit-box-shadow: -8px 8px 27px 0px rgba(0, 0, 0, 0.49);
-  -moz-box-shadow: -8px 8px 27px 0px rgba(0, 0, 0, 0.49);
-  box-shadow: -8px 8px 27px 0px rgba(0, 0, 0, 0.49);
+  -webkit-box-shadow: -8px 8px 5px 0px rgba(0, 0, 0, 0.1);
+  -moz-box-shadow: -8px 8px 5px 0px rgba(0, 0, 0, 0.1);
+  box-shadow: -8px 8px 27px 0px rgba(0, 0, 0, 0.1);
 }
 
 .mbottominset {
@@ -204,11 +186,6 @@ body {
 
 .btn {
   font-family: "WorkSans-Regular", "Helvetica Neue", Helvetica, Arial, sans-serif;
-}
-
-.topnav .btn:not(.topnav-back) {
-  line-height: 1;
-  height: 40px;
 }
 
 .topnav .btn > * {
@@ -313,11 +290,6 @@ table.nicetblfixed {
 
 .mlist-item td {
   border-top: 1px solid #f7f7f7;
-}
-
-.topnav-back {
-  margin-left: -24px;
-  border-right: 1px solid #e0e0e0;
 }
 
 .no-elements {

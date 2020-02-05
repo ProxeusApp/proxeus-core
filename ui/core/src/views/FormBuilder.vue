@@ -3,15 +3,15 @@
         <vue-headful :title="$t('FormBuilder title prefix','Proxeus - ')+(form && form.name || $t('Formbuilder title', 'Formbuilder'))" v-if="!userSrc"/>
         <top-nav :title="form.name || $t('Formbuilder title', 'Formbuilder')" :sm="true" v-if="modalMode === false && form" class="mb-0"
                  :returnToRoute="{name:'Forms'}" style="margin-bottom: 0!important;">
-            <td slot="td" class="tdmin" v-if="form && app.userIsUserOrHigher()">
+            <td slot="buttons" class="tdmin" v-if="form && app.userIsUserOrHigher()">
                 <button class="btn btn-primary ml-2" @click="openPermissionDialog">
                     <i class="material-icons" style="margin-right:2px;">link</i><span>{{$t('Share')}}</span>
                 </button>
             </td>
-            <td slot="td" class="tdmin" v-if="app.userIsUserOrHigher()">
+            <td slot="buttons" class="tdmin" v-if="app.userIsUserOrHigher()">
                 <button v-if="form" style="height: 40px;" @click="app.exportData('&id='+form.id, null, '/api/form/export','Form_'+form.id)" type="button" class="btn btn-primary ml-2"><i style="font-style: normal;font-size: 18px;">&#8659; </i><span>{{$t('Export')}}</span></button>
             </td>
-            <td slot="td" class="tdmin" v-if="app.amIWriteGrantedFor(form)">
+            <td slot="buttons" class="tdmin" v-if="app.amIWriteGrantedFor(form)">
                 <button class="btn btn-primary ml-2" @click="infoToggled = !infoToggled">
                     <i data-v-204db4d3="" class="material-icons" style="padding-right: 2px;">edit</i>
                     <span>{{$t('Edit infos')}}</span>
