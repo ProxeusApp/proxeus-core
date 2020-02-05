@@ -76,15 +76,15 @@
     <import-only></import-only>
   </div>
   <button v-if="configOnly && !importResultsAvailable" type="button" @click="powerUp"
-          class="btn btn-primary btn-round plus-btn mshadow-dark">
+          class="btn btn-primary btn-round plus-btn">
     <i class="material-icons">save</i>
   </button>
   <button v-else-if="createNew && !importResultsAvailable" type="button" @click="powerUp"
-          class="btn btn-primary btn-round plus-btn mshadow-dark">
+          class="btn btn-primary btn-round plus-btn">
     <span style="font-size: 28px;">&#9211;</span>
   </button>
   <button v-if="importResultsAvailable && configured" type="button" @click="redirectToHome"
-          class="btn btn-primary btn-round plus-btn mshadow-dark">
+          class="btn btn-primary btn-round plus-btn">
     <span style="font-size: 28px;">&#9211;</span>
   </button>
 </div>

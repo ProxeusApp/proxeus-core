@@ -129,7 +129,7 @@ $leftSideSpacingFromBrowserFrame: 20px;
   z-index: 22232732;
   position: relative;
   line-height: 1;
-  background: white;
+  background: $gray-100;
 }
 
 .topnav td {
@@ -179,36 +179,6 @@ span.error {
   padding-left: 4px;
   background: none;
   font-weight: normal;
-}
-
-.mshadow {
-  -webkit-box-shadow: 0px 4px 6px 0px rgba(214, 214, 214, 1);
-  -moz-box-shadow: 0px 4px 6px 0px rgba(214, 214, 214, 1);
-  box-shadow: 0px 4px 6px 0px rgba(214, 214, 214, 1);
-}
-
-.mshadow-right {
-  -webkit-box-shadow: 4px 0px 6px 0px rgba(214, 214, 214, 1);
-  -moz-box-shadow: 4px 0px 6px 0px rgba(214, 214, 214, 1);
-  box-shadow: 4px 0px 6px 0px rgba(214, 214, 214, 1);
-}
-
-.mshadow-right-light {
-  -webkit-box-shadow: 2px 0px 6px 0px rgba(214, 214, 214, 0.5);
-  -moz-box-shadow: 2px 0px 6px 0px rgba(214, 214, 214, 0.5);
-  box-shadow: 2px 0px 6px 0px rgba(214, 214, 214, 0.5);
-}
-
-.mshadow-light {
-  -webkit-box-shadow: -2px 1px 6px 0px rgba(214, 214, 214, 0.5);
-  -moz-box-shadow: -2px 1px 6px 0px rgba(214, 214, 214, 0.5);
-  box-shadow: -2px 1px 6px 0px rgba(214, 214, 214, 0.5);
-}
-
-.mshadow-dark {
-  -webkit-box-shadow: -8px 8px 27px 0px rgba(0, 0, 0, 0.49);
-  -moz-box-shadow: -8px 8px 27px 0px rgba(0, 0, 0, 0.49);
-  box-shadow: -8px 8px 27px 0px rgba(0, 0, 0, 0.49);
 }
 
 .wfchart-main .vis-button, .wfchart-main .btn-legend > .btn-round {

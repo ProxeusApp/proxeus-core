@@ -1,10 +1,10 @@
 <template>
-<responsive-sidebar class="sidebar-light mshadow-right-light">
+<responsive-sidebar class="sidebar-light">
   <table style="height: 100%;width: 100%;">
     <tr>
       <td valign="top" style="vertical-align:top">
         <a class="navbar-brand m-0 w-100 p-0 m-0" href="#">
-          <img :src="$t('Sidebar User Logo','/static/proxeus_white.jpg')" alt="" class="d-inline-block align-top">
+          <img :src="$t('Sidebar User Logo','/static/proxeus-logo.svg')" alt="" class="d-inline-block align-top">
         </a>
         <nav class="collapse show sidebar-sticky">
           <nav class="nav main-nav flex-column main-nav-frontend">

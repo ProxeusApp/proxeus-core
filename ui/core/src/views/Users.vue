@@ -30,7 +30,7 @@
     </b-modal>
     <list-group class="user-list" :prependFunc="prependFunc" icon="person" nodeType="user" path="user">
       <button slot="addBtn" @click="modalShow=true" type="button"
-              class="btn btn-primary btn-round plus-btn mshadow-dark">
+              class="btn btn-primary btn-round plus-btn">
         <i class="material-icons">send</i>
       </button>
       <!--                <button slot="addBtn" type="button" @click="toggleNewItemFormVisible" class="btn btn-primary btn-round plus-btn mshadow-dark">-->

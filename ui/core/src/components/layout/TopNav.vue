@@ -1,5 +1,5 @@
 <template>
-<div class="topnav mshadow-light">
+<div class="topnav">
   <table style="width: 100%;height: 58px;min-height: 58px;">
     <tbody style="width: 100%;">
     <tr style="width: 100%;">

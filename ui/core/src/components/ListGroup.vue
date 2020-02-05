@@ -2,7 +2,7 @@
 <div>
   <div v-if="!listOnly" class="d-flex flex-row w-100 align-items-center">
     <slot name="addBtn">
-      <button :title="$t('create a new one')" type="button" @click="toggleNewItemFormVisible" class="btn btn-primary btn-round plus-btn mshadow-dark">
+      <button :title="$t('create a new one')" type="button" @click="toggleNewItemFormVisible" class="btn btn-primary btn-round plus-btn">
         <i class="material-icons">add</i>
       </button>
     </slot>

@@ -7,7 +7,7 @@
       <template scope="element">
         <td class="tdmin">
           <button v-if="element && app.amIWriteGrantedFor(element)" :title="$t('delete this template')" @click="areYouSureDeleteDialog($event, element)" type="button"
-                  class="btn btn-primary btn-round mshadow-light" style="z-index: 1;padding: 6px;display: inline-block;">
+                  class="btn btn-primary btn-round" style="z-index: 1;padding: 6px;display: inline-block;">
             <i class="material-icons">
               delete_forever
             </i>

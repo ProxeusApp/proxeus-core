@@ -20,8 +20,7 @@
     <div v-if="hasLangs()">
       <h2 style="margin-top:20px;">{{ $t('Translations') }}</h2>
       <div style="position:relative;">
-        <div class="mshadow-light"
-             style="width: 100%;height: 100px;background: rgb(251, 251, 251);border: 1px solid #efefef;"></div>
+        <div style="width: 100%;height: 100px;background: rgb(251, 251, 251);border: 1px solid #efefef;"></div>
         <div ref="listGroup" class="mlist-group mbottominset" style="width:100%;">
           <table class="i18n-tbl nicetbl tblspacing">
             <thead>

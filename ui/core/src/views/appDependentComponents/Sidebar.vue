@@ -1,5 +1,5 @@
 <template>
-<responsive-sidebar class="sidebar-app mshadow-right-light" v-if="app.userIsCreatorOrHigher()">
+<responsive-sidebar class="sidebar-app" v-if="app.userIsCreatorOrHigher()">
   <table style="height: 100%;width: 100%;">
     <tr>
       <td valign="top" style="vertical-align:top">
