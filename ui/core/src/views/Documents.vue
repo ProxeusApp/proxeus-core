@@ -5,7 +5,7 @@
   <div class="main-container">
     <list-group :deleteElementFunc="provideDeleteFunc" :defaultName="$t('Unnamed')" :linkResolver="getDocRoute"
                 :iconFa="'mdi mdi-view-carousel'" :fixedPath="'/api/user/document'" nodeType="UserData">
-      <router-link slot="addBtn" :to="{name:'document-create'}" class="btn btn-primary btn-round plus-btn mshadow-dark">
+      <router-link slot="addBtn" :to="{name:'document-create'}" class="btn btn-primary btn-round plus-btn">
         <i class="material-icons">add</i>
       </router-link>
       <template scope="element">
@@ -17,7 +17,7 @@
       </td>
       <td class="tdmin">
         <button v-if="element && app.amIWriteGrantedFor(element)" :title="$t('delete this item')" @click="areYouSureDialog($event, element)" type="button"
-                class="btn btn-primary btn-round mshadow-light" style="z-index: 1;padding: 6px;display: inline-block;">
+                class="btn btn-primary btn-round" style="z-index: 1;padding: 6px;display: inline-block;">
           <i class="material-icons">
             delete_forever
           </i>

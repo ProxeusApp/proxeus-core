@@ -29,7 +29,7 @@
             </td>
         </top-nav>
         <save-btn :item="workflow" :click="save"/>
-        <a target="_blank" :href="'/document/'+id" class="btn btn-primary btn-round mshadow-dark" style="
+        <a target="_blank" :href="'/document/'+id" class="btn btn-primary btn-round" style="
             position: fixed;
             bottom: 10px;
             left: 50%;

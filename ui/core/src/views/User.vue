@@ -46,7 +46,7 @@
           <hr>
         </div>
         <form id="userForm" class="form-compiled" v-append="userForm" v-if="userForm"></form>
-        <button type="button" class="btn btn-primary btn-round plus-btn mshadow-dark" :class="{saving:saving}"
+        <button type="button" class="btn btn-primary btn-round plus-btn" :class="{saving:saving}"
                 @click="saveUserForm" v-if="user">
           <i class="material-icons">save</i>
         </button>

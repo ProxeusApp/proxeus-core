@@ -1,5 +1,5 @@
 <template>
-<tr class="mlist-item mshadow-light" :class="{'animate-new-entry':element.isNew}" :data-index="index"
+<tr class="mlist-item" :class="{'animate-new-entry':element.isNew}" :data-index="index"
     @click="goToLink()">
   <td class="tdmin">
     <img v-if="element.photo" class="mlist-group-icon" :src="element.photo"/>
