@@ -19,7 +19,7 @@
             <a slot="buttons" target="_blank" :href="'/document/'+id" class="btn btn-primary ml-1">
               Run
             </a>
-            <button slot="buttons" class="btn btn-primary ml-2" @click="save" :disabled="app.amIWriteGrantedFor(item) === false">Save</button>
+            <button slot="buttons" class="btn btn-primary ml-2" @click="save" :disabled="app.amIWriteGrantedFor(workflow) === false">Save</button>
         </top-nav>
         <div class="container-fluid p-0">
             <div class="modal priceErrorModal" ref="priceErrorModal" tabindex="-1" role="dialog">
@@ -227,7 +227,6 @@ import bModalDirective from 'bootstrap-vue/es/directives/modal/modal'
 import PermissionDialog from './appDependentComponents/permDialog/PermissionDialog'
 import NameAndDetailInput from '../components/NameAndDetailInput'
 import mafdc from '@/mixinApp'
-import SaveBtn from './appDependentComponents/SaveBtn'
 import ListItemDialog from './appDependentComponents/ListItemDialog'
 
 window.vis = vis
@@ -236,7 +235,6 @@ export default {
   mixins: [mafdc, formChangeAlert],
   components: {
     ListItemDialog,
-    SaveBtn,
     NameAndDetailInput,
     PermissionDialog,
     TopNav,
@@ -1837,6 +1835,7 @@ function condition(){
           border-radius: 0;
         }
         input.form-control {
+          border-width: 1px !important;
           border-radius: 0;
           border-left: 0 !important;
         }
