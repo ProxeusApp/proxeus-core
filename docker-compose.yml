@@ -27,6 +27,7 @@ services:
       PROXEUS_DATABASE_ENGINE: "${PROXEUS_DATABASE_ENGINE:-storm}"
       PROXEUS_DATABASE_URI: "${PROXEUS_DATABASE_URI:-mongodb://root:root@mongo:27017}"
       PROXEUS_TEST_MODE: "${PROXEUS_TEST_MODE:-false}"
+      PROXEUS_ALLOW_HTTP: "${PROXEUS_ALLOW_HTTP:-false}"
     ports:
       - "1323:1323"
     volumes:

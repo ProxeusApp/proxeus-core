@@ -132,8 +132,9 @@ clean:
 run: server
 	artifacts/proxeus -DataDir ./data/proxeus-platform/data/  -DocumentServiceUrl=http://document-service:2115 \
 		-BlockchainContractAddress=${PROXEUS_BLOCKCHAIN_CONTRACT_ADDRESS} -InfuraApiKey=${PROXEUS_INFURA_API_KEY} \
-		-SparkpostApiKey=${PROXEUS_SPARKPOST_API_KEY} -EmailFrom=${PROXEUS_EMAIL_FROM} -TestMode=${PROXEUS_TEST_MODE}\
-		-DatabaseEngine=${PROXEUS_DATABASE_ENGINE} -DatabaseURI=${PROXEUS_DATABASE_URI} -PlatformDomain=http://localhost:1323
+		-SparkpostApiKey=${PROXEUS_SPARKPOST_API_KEY} -EmailFrom=${PROXEUS_EMAIL_FROM}\
+		-DatabaseEngine=${PROXEUS_DATABASE_ENGINE} -DatabaseURI=${PROXEUS_DATABASE_URI} -PlatformDomain=http://localhost:1323 \
+		-TestMode=${PROXEUS_TEST_MODE} -AllowHttp=true
 
 main/handlers/assets/bindata.go: $(wildcard ./ui/core/dist/**)
 	go-bindata ${BINDATA_OPTS} -pkg assets -o ./main/handlers/assets/bindata.go -prefix ./ui/core/dist ./ui/core/dist/...
