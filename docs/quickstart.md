@@ -58,6 +58,7 @@ services:
       PROXEUS_DATABASE_ENGINE: "${PROXEUS_DATABASE_ENGINE:-storm}"
       PROXEUS_DATABASE_URI: "${PROXEUS_DATABASE_URI:-mongodb://root:root@mongo:27017}"
       PROXEUS_TEST_MODE: "${PROXEUS_TEST_MODE:-false}"
+      PROXEUS_ALLOW_HTTP: "${PROXEUS_ALLOW_HTTP:-false}"
     ports:
       - "1323:1323"
     volumes:
@@ -86,6 +87,7 @@ Run the following command in the directory containing your `docker-compose.yml` 
 export PROXEUS_INFURA_KEY=<Your Infura API key>
 export PROXEUS_SPARKPOST_KEY=<Your SparkPost API Key>
 export PROXEUS_CONTRACT_ADDRESS=0x1d3e5c81bf4bc60d41a8fbbb3d1bae6f03a75f71
+export PROXEUS_ALLOW_HTTP=true
 docker-compose up 
 ```
 

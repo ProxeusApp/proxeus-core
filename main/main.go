@@ -38,9 +38,19 @@ func main() {
 	}
 
 	if system.TestMode {
+		fmt.Println()
 		fmt.Println("#######################################################")
 		fmt.Println("# STARTING PROXEUS IN TEST MODE - NOT FOR PRODUCTION #")
 		fmt.Println("#######################################################")
+		fmt.Println()
+	}
+
+	if system.AllowHttp {
+		fmt.Println()
+		fmt.Println("#######################################################")
+		fmt.Println("# ALLOWING HTTP - NOT FOR PRODUCTION                  #")
+		fmt.Println("#######################################################")
+		fmt.Println()
 	}
 
 	fmt.Println()
@@ -48,6 +58,7 @@ func main() {
 	fmt.Printf("Configuration: %#v\n", cfg.Config)
 	fmt.Printf("system settings: %#v\n", system.GetSettings())
 	fmt.Println("#######################################################")
+	fmt.Println()
 
 	www.SetSystem(system)
 
