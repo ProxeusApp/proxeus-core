@@ -4,7 +4,6 @@ import (
 	"encoding/gob"
 	"net/http"
 	"os"
-	"strings"
 	"time"
 
 	uuid "github.com/satori/go.uuid"
@@ -67,11 +66,13 @@ func getSessionWithUser(c *Context, create bool, usr *model.User) (currentSessio
 				MaxAge:   60 * 30, // 30 minutes,
 				HttpOnly: true,
 				SameSite: http.SameSiteStrictMode,
+				Secure:   true,
 			}
-			settings := c.System().GetSettings()
-			if strings.ToLower(settings.TestMode) != "true" {
-				options.Secure = true
+
+			if c.System().TestMode || c.System().AllowHttp {
+				options.Secure = false
 			}
+
 			sess.Options = &options
 			c.Set("sys.session", currentSession)
 			err = sess.Save(c.Request(), c.Response())

@@ -50,6 +50,7 @@ services:
       PROXEUS_DATABASE_ENGINE: "${PROXEUS_DATABASE_ENGINE:-storm}"
       PROXEUS_DATABASE_URI: "${PROXEUS_DATABASE_URI:-mongodb://root:root@mongo:27017}"
       PROXEUS_TEST_MODE: "${PROXEUS_TEST_MODE:-false}"
+      PROXEUS_ALLOW_HTTP: "${PROXEUS_ALLOW_HTTP:-false}"
     ports:
       - "1323:1323"
     volumes:
@@ -87,6 +88,7 @@ Environment:
 |PROXEUS_SPARKPOST_API_KEY|*Your SpartPost Key*|A SparkPost API Key for email integration.|
 |PROXEUS_EMAIL_FROM|`no-reply@example.com`|The email address used as sender when Proxeus sends an email.|
 |PROXEUS_PLATFORM_DOMAIN:|`http://xes-platform:1323`|The domain of the running platform.  Mainly used for display|
+|PROXEUS_ALLOW_HTTP:|`false`|Allow the use of HTTP instead of HTTPS =NOT FOR PRODUCTION=|
 
 ## Development Docker Compose
 This file will start the document service available from Docker Hub but will start
@@ -104,6 +106,8 @@ services:
   platform:
     build:
       context: .
+    environment:
+      PROXEUS_ALLOW_HTTP: "${PROXEUS_ALLOW_HTTP:-true}"
 ```
 
 
@@ -127,6 +131,7 @@ Environment:
 |PROXEUS_SPARKPOST_API_KEY|*Your SpartPost Key*|A SparkPost API Key for email integration.|
 |PROXEUS_EMAIL_FROM|`no-reply@example.com`|The email address used as sender when Proxeus sends an email.|
 |PROXEUS_PLATFORM_DOMAIN:|`http://xes-platform:1323`|The domain of the running platform.  Mainly used for display|
+|PROXEUS_ALLOW_HTTP:|`false`|Allow the use of HTTP instead of HTTPS =NOT FOR PRODUCTION=|
 
 
 ## Cloud Docker Compose
@@ -265,6 +270,7 @@ Environment:
 |PROXEUS_SPARKPOST_API_KEY|*Your SpartPost Key*|A SparkPost API Key for email integration.|
 |PROXEUS_EMAIL_FROM|`no-reply@example.com`|The email address used as sender when Proxeus sends an email.|
 |PROXEUS_PLATFORM_DOMAIN:|`http://xes-platform:1323`|The domain of the running platform.  Mainly used for display|
+|PROXEUS_ALLOW_HTTP:|`false`|Allow the use of HTTP instead of HTTPS =NOT FOR PRODUCTION=|
 |DOCKER_SOCK|`/var/run/docker.sock`| The path to the Docker socket file. Used to allow `Letsencrypt` and `watchtower` to find other containers. |
 |DOCKER_CONFIG|`/root/.docker/config.json`|The path to the docker config file.  Used to access the image repository authentication parameters |
 
