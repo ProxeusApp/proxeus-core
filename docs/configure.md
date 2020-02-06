@@ -50,7 +50,7 @@ Usage of ./artifacts/proxeus:
   -AirdropWalletkey string
     	Path to File containing the Key for the Airdrop Private Key. (PROXEUS_AIRDROP_WALLETKEY)
   -AllowHttp string
-    	Allow the use  =NOT FOR PRODUCTION=. (PROXEUS_ALLOW_HTTP) (default "false")
+    	Allow the use of HTTP =NOT FOR PRODUCTION=. (PROXEUS_ALLOW_HTTP) (default "false")
   -AutoTLS
     	Automatically generate Let's Encrypt certificate (Server must be reachable on port 443 from public internet). (PROXEUS_AUTO_TLS)
   -BlockchainContractAddress string

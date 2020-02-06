@@ -22,7 +22,7 @@ type Settings struct {
 	DatabaseEngine            string `json:"databaseEngine" default:"storm" usage:"Selects database engine, supported values: storm, mongo."`
 	DatabaseURI               string `json:"DatabaseURI" default:"" usage:"Sets database connection string, not required for embedded databases."`
 	TestMode                  string `json:"testMode" default:"false" usage:"Run the server in test mode =NOT FOR PRODUCTION=."`
-	AllowHttp                 string `json:"allowHttp" default:"false" usage:"Allow the use   =NOT FOR PRODUCTION=."`
+	AllowHttp                 string `json:"allowHttp" default:"false" usage:"Allow the use of HTTP =NOT FOR PRODUCTION=."`
 }
 
 func NewDefaultSettings() *Settings {
