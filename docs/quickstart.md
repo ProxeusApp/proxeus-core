@@ -29,6 +29,7 @@ For your convenience, a demo smart contract is deployed on the Ropsten network a
 User the example below as your `docker-compose.yml` file:
 
 ```
+---
 version: '3.7'
 
 networks:
@@ -38,7 +39,7 @@ networks:
 services:
   platform:
     image: proxeus/proxeus-core:latest
-    container_name: xes_platform
+    container_name: xes-platform
     depends_on:
       - document-service
     networks:
@@ -46,15 +47,17 @@ services:
     restart: unless-stopped
     environment:
       TZ: Europe/Zurich
-      DataDir: "/data/hosted"
-      DocumentServiceUrl: "http://document-service:2115/"
-      InfuraApiKey: "${PROXEUS_INFURA_KEY}"
-      SparkpostApiKey: "${PROXEUS_SPARKPOST_KEY}"
-      BlockchainContractAddress: "${PROXEUS_CONTRACT_ADDRESS}"
-      EmailFrom: "${PROXEUS_EMAIL_FROM:-no-reply@proxeus.com}"
-      AirdropWalletfile: "${PROXEUS_AIRDROP_WALLET_FILE:-./data/proxeus-platform/settings/airdropwallet.json}"
-      AirdropWalletkey: "${PROXEUS_AIRDROP_WALLET_KEY:-./data/proxeus-platform/settings/airdropwallet.key}"
-      TestMode: "true"
+      PROXEUS_PLATFORM_DOMAIN: "${PROXEUS_PLATFORM_DOMAIN:-http://xes-platform:1323}"
+      PROXEUS_DOCUMENT_SERVICE_URL: "http://document-service:2115/"
+      PROXEUS_BLOCKCHAIN_CONTRACT_ADDRESS: "${PROXEUS_BLOCKCHAIN_CONTRACT_ADDRESS}"
+      PROXEUS_INFURA_API_KEY: "${PROXEUS_INFURA_API_KEY}"
+      PROXEUS_SPARKPOST_API_KEY: "${PROXEUS_SPARKPOST_API_KEY}"
+      PROXEUS_EMAIL_FROM: "${PROXEUS_EMAIL_FROM:-no-reply@example.com}"
+      PROXEUS_AIRDROP_WALLET_FILE: "${PROXEUS_AIRDROP_WALLET_FILE:-/root/.proxeus/settings/airdropwallet.json}"
+      PROXEUS_AIRDROP_WALLET_KEY: "${PROXEUS_AIRDROP_WALLET_KEY:-/root/.proxeus/settings/airdropwallet.key}"
+      PROXEUS_DATABASE_ENGINE: "${PROXEUS_DATABASE_ENGINE:-storm}"
+      PROXEUS_DATABASE_URI: "${PROXEUS_DATABASE_URI:-mongodb://root:root@mongo:27017}"
+      PROXEUS_TEST_MODE: "${PROXEUS_TEST_MODE:-false}"
     ports:
       - "1323:1323"
     volumes:

@@ -16,7 +16,7 @@ to build the application.
 
 ## Running
 An executable will be created under `./artifacts/`. 
-To run it, simply run `./artifacts/server`
+To run it, simply run `./artifacts/proxeus`
 
 That should start Proxeus' server and server it on port `:1323/`
 The first time, access http://localhost:1323/init and configure your settings.
@@ -34,12 +34,4 @@ Unit & integration tests can be run with the command
 `goimports` is used to fix/sort Go import lines and format code. 
 A validation of the code can be requested with `make validate`
 
-
-
 Follow [Building Front End](frontend.md) for the web client.
-
-### Troubleshoot
-
-make init fails with `dep: command not found`
-
-Check that $GOPATH/bin is in your $PATH, add it if needed `export PATH="$PATH:$GOPATH/bin"` and run init again.
