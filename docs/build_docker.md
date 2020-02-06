@@ -19,21 +19,29 @@ Please refer to the `docker-compose.yml` file to learn how to configure a Proxeu
 
 ## Using Docker during development
 
-You can use Docker during development by using the `docker-compose-dev.yml` file:
+You can use Docker during development:
 
 ```
-docker-compose -f docker-compose-dev.yml build 
-docker-compose -f docker-compose-dev.yml up
+docker-compose build 
+docker-compose up
 ```
 
 and
 
 ```
-docker-compose -f docker-compose-dev.yml build
-docker-compose -f docker-compose-dev.yml restart
+docker-compose build
+docker-compose restart
 ```
 
 This will build the proxeus-core image based on your current project and use a deployed image 
 for the document service.
 
+## Using Docker for deployment
+
+For deployment, a `docker-compose-cloud.override.yml` file is provide and must be used
+instead of the default `docker-compose.override.yml`:
+
+```
+docker-compose -f docker-compose.yml -f docker-compose-cloud.override.yml
+```
 
