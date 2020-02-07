@@ -14,35 +14,35 @@ func openStormDB(t *testing.T, path string) DB {
 	return db
 }
 
-func TestCRUDStorm(t *testing.T) {
+func TestStormCRUD(t *testing.T) {
 	f, _ := ioutil.TempFile("", "test_db_")
 	defer os.Remove(f.Name())
 
 	testCRUD(t, openStormDB(t, f.Name()))
 }
 
-func TestGetQuirksStorm(t *testing.T) {
+func TestStormGetQuirks(t *testing.T) {
 	f, _ := ioutil.TempFile("", "test_db_")
 	defer os.Remove(f.Name())
 
 	testGetQuirks(t, openStormDB(t, f.Name()))
 }
 
-func TestTTLStorm(t *testing.T) {
+func TestStormTTL(t *testing.T) {
 	f, _ := ioutil.TempFile("", "test_db_")
 	defer os.Remove(f.Name())
 
 	testTTL(t, openStormDB(t, f.Name()))
 }
 
-func TestAdvancedFetchingStorm(t *testing.T) {
+func TestStormAdvancedFetching(t *testing.T) {
 	f, _ := ioutil.TempFile("", "test_db_")
 	defer os.Remove(f.Name())
 
 	testAdvancedFetching(t, openStormDB(t, f.Name()))
 }
 
-func TestTransactionsStorm(t *testing.T) {
+func TestStormTransactions(t *testing.T) {
 	f, _ := ioutil.TempFile("", "test_db_")
 	defer os.Remove(f.Name())
 

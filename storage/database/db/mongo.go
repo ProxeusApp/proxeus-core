@@ -27,10 +27,12 @@ const ttlKey = "ttl"
 func OpenMongo(dbURI string, dbName string) (*MongoShim, error) {
 	spl := strings.Split(dbName, "/")
 	dbName = spl[len(spl)-1]
-	client, err := mongo.Connect(context.TODO(), options.Client().ApplyURI(dbURI))
+	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
+	client, err := mongo.Connect(ctx, options.Client().ApplyURI(dbURI))
 	if err != nil {
 		return nil, err
 	}
+
 	db := client.Database(dbName)
 	return &MongoShim{
 		db:          db,

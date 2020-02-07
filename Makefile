@@ -1,6 +1,5 @@
 SHELL:= /bin/bash
 DEBUG_FLAG?=false
-PROXEUS_TEST_MODE?=false
 GO_VERSION=1.13
 
 ifeq ($(DEBUG), "true")
@@ -14,6 +13,35 @@ endif
 ifeq ($(shell uname), Darwin)
 	DOCKER_LINUX=docker run --rm -v "$(PWD):/usr/src" -w /usr/src golang:$(GO_VERSION)
 endif
+
+# Default proxeus environment
+export PROXEUS_TEST_MODE?=false
+export PROXEUS_ALLOW_HTTP?=true
+export PROXEUS_SETTINGS_FILE?=~/.proxeus/settings/main.json
+export PROXEUS_PLATFORM_DOMAIN?=http://localhost:1323
+export PROXEUS_DOCUMENT_SERVICE_URL?=http://localhost:2115
+export PROXEUS_BLOCKCHAIN_CONTRACT_ADDRESS?=${PROXEUS_BLOCKCHAIN_CONTRACT_ADDRESS}
+export PROXEUS_INFURA_API_KEY?=${PROXEUS_INFURA_API_KEY}
+export PROXEUS_SPARKPOST_API_KEY?=${PROXEUS_SPARKPOST_API_KEY}
+export PROXEUS_EMAIL_FROM=no-reply@proxeus.com
+export PROXEUS_DATA_DIR?=./data
+export PROXEUS_DATABASE_ENGINE?=storm
+export PROXEUS_DATABASE_URI?=mongodb://localhost:27017# Only used for the mongo engine
+
+# Coverage
+coverage?=false
+comma:=,
+space:= $() $()
+coverpkg=$(subst $(space),$(comma), $(filter-out %/mock %/assets, $(shell go list ./main/... ./sys/... ./storage/...)))
+
+startproxeus=artifacts/proxeus
+stopproxeus=pkill proxeus
+ifeq ($(coverage),true)
+	COVERAGE_OPTS=-coverprofile artifacts/$@.coverage -coverpkg="$(coverpkg)"
+	startproxeus=go test -v -tags coverage -coverprofile artifacts/$@-$(PROXEUS_DATABASE_ENGINE).coverage -coverpkg="$(coverpkg)" ./main
+	stopproxeus=pkill main.test
+endif
+
 #########################################################
 dependencies=go curl
 mocks=main/handlers/blockchain/mock/adapter_mock.go
@@ -68,60 +96,41 @@ fmt:
 
 .PHONY: test
 test: generate 
-	go test  ./main/... ./sys/... ./storage/...
+	go test $(COVERAGE_OPTS)  ./main/... ./sys/... ./storage/...
+
+.PHONY: test-integration
+test-integration:
+	$(eval testdir := $(shell mktemp -d /tmp/proxeus-test-api.XXXXX ))
+	mkdir -p $(testdir)
+	$(eval cid := $(shell  nc -z localhost 27017 \
+		|| docker run -d -p 27017:27017 -p 27018:27018 -p 27019:27019 proxeus/mongo-dev-cluster))
+	go test $(COVERAGE_OPTS) -count=1 -tags integration ./storage/database/db/...; ret=$$?; \
+		$(if $(cid), docker rm -f $(cid);) \
+		rm -fr $(testdir); \
+		exit $$ret
 
 .PHONY: test-api
-test-api: server #server-docker
+test-api: server
 	$(eval testdir := $(shell mktemp -d /tmp/proxeus-test-api.XXXXX ))
 	mkdir -p $(testdir)
-	curl -s http://localhost:2115 > /dev/null || ( docker-compose up -d document-service && touch $(testdir)/ds-started )
-	artifacts/proxeus \
-		-SettingsFile=$(testdir)/settings/main.json \
-		-DataDir=$(testdir)/data \
-		-DocumentServiceUrl=http://localhost:2115 \
-		-BlockchainContractAddress=$(PROXEUS_BLOCKCHAIN_CONTRACT_ADDRESS) \
-		-InfuraApiKey=$(PROXEUS_INFURA_API_KEY) \
-		-SparkpostApiKey=$(PROXEUS_SPARKPOST_API_KEY) \
-		-EmailFrom=test@example.com \
-		-PlatformDomain=http://localhost:1323 \
-		-TestMode=true &
-	PROXEUS_URL=http://localhost:1323  go test -count=1 ./test; ret=$$?; \
-				pkill proxeus; \
-				[ -e  $(testdir)/ds-started ] && docker-compose down; \
-				rm -fr $(testdir); \
-				exit $$ret
-
-.PHONY: coverage
-comma:=,
-space:= $() $()
-coverpkg=$(subst $(space),$(comma), $(filter-out %/mock %/assets, $(shell go list ./main/... ./sys/... ./storage/...)))
-coverage: generate
-	$(eval testdir := $(shell mktemp -d /tmp/proxeus-test-api.XXXXX ))
-	mkdir -p $(testdir)
-	go test -coverprofile artifacts/cover_unittests.out -coverpkg="$(coverpkg)" ./main/... ./sys/... ./storage/...
 	curl -s http://localhost:2115 > /dev/null || ( docker-compose up -d document-service && touch $(testdir)/ds-started )
 	echo starting test main ; \
 					 PROXEUS_DATA_DIR=$(testdir)/data \
 					 PROXEUS_SETTINGS_FILE=$(testdir)/settings/main.json \
-					 PROXEUS_DOCUMENT_SERVICE_URL=http://localhost:2115 \
-					 PROXEUS_PLATFORM_DOMAIN=http://localhost:1323 \
 					 PROXEUS_TEST_MODE=true \
-					 PROXEUS_EMAIL_FROM=test@example.com \
-					 go test -v -tags coverage -coverprofile artifacts/cover_integration.out -coverpkg="$(coverpkg)" ./main &
+					 $(startproxeus) &
 	PROXEUS_URL=http://localhost:1323  go test -count=1 ./test; ret=$$?; \
-				pkill main.test; \
-				[ -e  $(testdir)/ds-started ] && docker-compose down; \
-				rm -fr $(testdir); \
-				exit $$ret
-	gocovmerge artifacts/cover_unittests.out artifacts/cover_integration.out > artifacts/cover_merged.out
-	go tool cover -func artifacts/cover_merged.out > artifacts/cover_merged.txt
-	go tool cover -html artifacts/cover_merged.out -o artifacts/cover_merged.html
+		$(stopproxeus); \
+		[ -e  $(testdir)/ds-started ] && docker-compose down; \
+		rm -fr $(testdir); \
+		exit $$ret
 
-.PHONY: print-coverage
-print-coverage:
-	gocovmerge artifacts/cover_unittests.out artifacts/cover_integration.out > artifacts/cover_merged.out
-	go tool cover -func artifacts/cover_merged.out
-	go tool cover -html artifacts/cover_merged.out
+.PHONY: coverage
+coverage:
+	gocovmerge artifacts/*.coverage > artifacts/coverage
+	go tool cover -func artifacts/coverage > artifacts/coverage.txt
+	go tool cover -html artifacts/coverage -o artifacts/coverage.html
+	go tool cover -html artifacts/coverage
 
 .PHONY: clean
 clean:
@@ -130,11 +139,7 @@ clean:
 
 .PHONY: run
 run: server
-	artifacts/proxeus -DataDir ./data/proxeus-platform/data/  -DocumentServiceUrl=http://document-service:2115 \
-		-BlockchainContractAddress=${PROXEUS_BLOCKCHAIN_CONTRACT_ADDRESS} -InfuraApiKey=${PROXEUS_INFURA_API_KEY} \
-		-SparkpostApiKey=${PROXEUS_SPARKPOST_API_KEY} -EmailFrom=${PROXEUS_EMAIL_FROM}\
-		-DatabaseEngine=${PROXEUS_DATABASE_ENGINE} -DatabaseURI=${PROXEUS_DATABASE_URI} -PlatformDomain=http://localhost:1323 \
-		-TestMode=${PROXEUS_TEST_MODE} -AllowHttp=true
+	artifacts/proxeus -DataDir $(PROXEUS_DATA_DIR)/proxeus-platform/data 
 
 main/handlers/assets/bindata.go: $(wildcard ./ui/core/dist/**)
 	go-bindata ${BINDATA_OPTS} -pkg assets -o ./main/handlers/assets/bindata.go -prefix ./ui/core/dist ./ui/core/dist/...

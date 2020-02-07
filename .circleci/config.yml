@@ -12,7 +12,8 @@ executors:
       PROJECT_ROOT_FOLDER: ~/project
     docker:
       - image: circleci/golang:1.13
-      - image: proxeus/document-service:latest
+      - image: proxeus/document-service
+      - image: proxeus/mongo-dev-cluster
   docker-publisher:
     environment:
       PROJECT_ROOT_FOLDER: ~/project
@@ -101,9 +102,26 @@ jobs:
           keys:
             - go-mod-v2-{{ checksum "go.sum" }}
       - run:
-          name: Test
-          command: make init coverage
+          name: Run tests with coverage
+          command: make init test test-integration test-api coverage=true
+      - run:
+          name: Generage coverage files
+          command: make coverage
 
+  test-integration-go:
+    executor: docker-image-golang-test-api
+    resource_class: large
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ~/project/
+      - restore_cache:
+          keys:
+            - go-mod-v2-{{ checksum "go.sum" }}
+      - run:
+          name: Test integration
+          command: make init test-integration
+          
   test-api-go:
     executor: docker-image-golang-test-api
     resource_class: large
@@ -116,7 +134,7 @@ jobs:
           keys:
             - go-mod-v2-{{ checksum "go.sum" }}
       - run:
-          name: Test
+          name: Test API
           command: make init test-api
 
   build-server-docker:
@@ -240,9 +258,12 @@ workflows:
       - coverage-go:
           requires:
             - build-go
-      - test-api-go:
+      - test-integration-go:
           requires:
             - build-go
+      - test-api-go:
+          requires:
+            - test-integration-go
       - build-server-docker:
           requires:
             - test-api-go
