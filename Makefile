@@ -130,7 +130,6 @@ coverage:
 	gocovmerge artifacts/*.coverage > artifacts/coverage
 	go tool cover -func artifacts/coverage > artifacts/coverage.txt
 	go tool cover -html artifacts/coverage -o artifacts/coverage.html
-	go tool cover -html artifacts/coverage
 
 .PHONY: clean
 clean:

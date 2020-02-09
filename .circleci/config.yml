@@ -7,7 +7,7 @@ executors:
       PROJECT_ROOT_FOLDER: ~/project
     docker:
       - image: circleci/golang:1.13
-  docker-image-golang-test-api:
+  docker-image-golang-dependencies:
     environment:
       PROJECT_ROOT_FOLDER: ~/project
     docker:
@@ -90,8 +90,37 @@ jobs:
           paths:
             - ./artifacts/proxeus
 
+  test-integration-go:
+    executor: docker-image-golang-dependencies
+    resource_class: large
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ~/project/
+      - restore_cache:
+          keys:
+            - go-mod-v2-{{ checksum "go.sum" }}
+      - run:
+          name: Test integration
+          command: make init test-integration
+
+  test-api-go:
+    executor: docker-image-golang-dependencies
+    resource_class: large
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ~/project/
+      - setup_remote_docker
+      - restore_cache:
+          keys:
+            - go-mod-v2-{{ checksum "go.sum" }}
+      - run:
+          name: Test API
+          command: make init test-api
+
   coverage-go:
-    executor: docker-image-golang-test-api
+    executor: docker-image-golang-dependencies
     resource_class: large
     steps:
       - checkout
@@ -107,35 +136,8 @@ jobs:
       - run:
           name: Generage coverage files
           command: make coverage
-
-  test-integration-go:
-    executor: docker-image-golang-test-api
-    resource_class: large
-    steps:
-      - checkout
-      - attach_workspace:
-          at: ~/project/
-      - restore_cache:
-          keys:
-            - go-mod-v2-{{ checksum "go.sum" }}
-      - run:
-          name: Test integration
-          command: make init test-integration
-          
-  test-api-go:
-    executor: docker-image-golang-test-api
-    resource_class: large
-    steps:
-      - checkout
-      - attach_workspace:
-          at: ~/project/
-      - setup_remote_docker
-      - restore_cache:
-          keys:
-            - go-mod-v2-{{ checksum "go.sum" }}
-      - run:
-          name: Test API
-          command: make init test-api
+      - store_artifacts:
+          path: artifacts/coverage.*
 
   build-server-docker:
     executor: docker-image-golang
@@ -255,18 +257,18 @@ workflows:
       - build-go:
           requires:
             - test-go
-      - coverage-go:
-          requires:
-            - build-go
       - test-integration-go:
           requires:
             - build-go
       - test-api-go:
           requires:
             - test-integration-go
-      - build-server-docker:
+      - coverage-go:
           requires:
             - test-api-go
+      - build-server-docker:
+          requires:
+            - coverage-go
       - build-docker-image:
           requires:
             - build-server-docker
