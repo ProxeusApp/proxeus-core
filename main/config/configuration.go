@@ -96,7 +96,6 @@ func defaultAndUsage(f reflect.StructField, fname string, envMap map[string]stri
 	envName := fieldToEnv(fname)
 	if envValue := envMap[envName]; envValue != "" {
 		return envValue, fmt.Sprintf("%s (%s=%s)", f.Tag.Get("usage"), envName, envValue)
-
 	} else {
 		return f.Tag.Get("default"), fmt.Sprintf("%s (%s)", f.Tag.Get("usage"), envName)
 	}
