@@ -265,7 +265,7 @@ workflows:
             - test-integration-go
       - coverage-go:
           requires:
-            - test-api-go
+            - build-go
       - build-server-docker:
           requires:
             - coverage-go
