@@ -236,11 +236,6 @@ export default {
     background: white;
   }
 
-  .tabcontent {
-    border: 1px solid #062a85;
-    padding: 15px;
-  }
-
   .spanel > .spanel-title {
     position: absolute;
     background: white;

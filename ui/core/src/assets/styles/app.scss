@@ -3,6 +3,7 @@
 @import "~bootstrap/scss/bootstrap";
 @import "fonts.scss";
 @import "buttons.scss";
+@import "nav-tabs";
 
 $mdi-font-path: "~@mdi/font/fonts";
 @import "~@mdi/font/scss/materialdesignicons.scss";
@@ -24,6 +25,11 @@ $mdi-font-path: "~@mdi/font/fonts";
 .app-main {
   height: auto;
   //min-width: 900px;
+}
+
+.layout-fixed-scroll-container {
+  height: calc(100vh - 58px);
+  position: relative;
 }
 
 ::-moz-selection {

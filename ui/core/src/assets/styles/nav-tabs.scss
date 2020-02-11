@@ -1,0 +1,51 @@
+.mod-nav-tabs {
+  margin-top: $spacer / 2;
+
+  .nav {
+    border-bottom: 2px solid $gray-300;
+  }
+
+  .nav-item {
+    .nav-link {
+      background: transparent;
+      text-decoration: none;
+      font-weight: 500;
+      border: none;
+      border-bottom: 2px transparent;
+      padding: $spacer / 2;
+      margin-right: 0;
+      margin-bottom: -2px;
+      color: $text-muted;
+
+      &:hover {
+        color: $gray-900;
+      }
+
+      &.active, &.router-link-exact-active {
+        color: $body-color;
+        position: relative;
+        &:after {
+          position: absolute;
+          width: 30px;
+          height: 2px;
+          border-bottom: 3px solid $primary;
+          content: "";
+          display: block;
+          margin: 0 auto;
+          bottom: 0;
+          left: 0;
+          right: 0;
+        }
+        &:focus {
+          outline: none !important;
+          border: none;
+        }
+      }
+    }
+  }
+
+  .tabs-content {
+    padding: $spacer $spacer $spacer / 2 $spacer;
+    border: 1px solid $gray-300;
+  }
+}
