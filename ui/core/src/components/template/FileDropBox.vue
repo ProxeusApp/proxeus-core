@@ -4,6 +4,9 @@
          @change="filesChange($event.target.files)"
          ref="fileInput"
          class="input-file">
+  <div class="text-center w-100 drop-icon py-2">
+    <i class="mdi mdi-arrow-collapse-down md-48"></i>
+  </div>
   <div class="text-center pt-2 pm-1 pb-2">
     <span v-if="text" class="h5 text-muted p-0 pb-3"> {{ text }} </span>
   </div>
