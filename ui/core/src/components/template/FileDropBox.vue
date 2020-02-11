@@ -4,15 +4,15 @@
          @change="filesChange($event.target.files)"
          ref="fileInput"
          class="input-file">
-  <drop-file-design :text="text"/>
+  <div class="text-center pt-2 pm-1 pb-2">
+    <span v-if="text" class="h5 text-muted p-0 pb-3"> {{ text }} </span>
+  </div>
 </div>
 </template>
 
 <script>
-import DropFileDesign from './DropFileDesign'
 
 export default {
-  components: { DropFileDesign },
   name: 'file-drop-box',
   props: {
     multiple: {

@@ -1310,14 +1310,14 @@ function condition(){
                     {
                       node: {
                         color: {
-                          background: '#60aa61',
+                          background: '#0eaa64',
                           highlight: { background: '#99d29a' },
                           hover: { background: '#99d29a' }
                         },
                         borderWidthSelected: 1
                       },
                       edge: {
-                        color: { color: '#60aa61', highlight: '#3c763d', hover: '#3c763d' }
+                        color: { color: '#0eaa64', highlight: '#3c763d', hover: '#3c763d' }
                       }
                     }],
                   to: Infinity,
@@ -1340,7 +1340,7 @@ function condition(){
                 icon: {
                   face: 'Material Icons',
                   code: 'view_quilt',
-                  color: '#62aa44'
+                  color: '#0eaa64'
                 },
                 events: {
                   'hoverIn': function () {

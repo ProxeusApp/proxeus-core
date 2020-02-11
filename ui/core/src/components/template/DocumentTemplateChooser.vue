@@ -17,15 +17,21 @@
   </div>
   <div class="file_drop_box m-0 w-100 position-relative" v-bind="$attrs"
        :class="{active: isActive, unsaved:unsavedFile}">
-    <h5 class="text-center font-weight-bold bg-txt" v-if="readOnly === false && lang && lang.Code">
-      {{ lang.Code }}
+    <h5 class="text-center bg-txt mt-2 mb-2" v-if="readOnly === false && lang && lang.Code">
+      <strong class="d-block mx-auto">{{ lang.Code }}</strong>
+      <span class="text-muted"><small>Template Language</small></span>
     </h5>
     <input type="file" :disabled="uploadPending"
            @change="filesChange($event.target.files)"
            ref="fileInput"
            accept=".odt"
            class="input-file">
-    <drop-file-design :detail="$t('choose.or.drag.file.odt', 'Choose an ODT file or drag it here.')"/>
+    <div class="text-center w-100 drop-icon">
+      <i class="mdi mdi-arrow-collapse-down"></i>
+    </div>
+    <div class="text-center pt-2 pm-1 pb-2">
+      <span class="h5 p-0 mt-3 mb-0">Drag your file here to begin<br> or click to browse</span>
+    </div>
     <table class="file-upload-btns btns-table" v-if="anyFile" :class="{active: isActive, unsaved:unsavedFile}">
       <tr>
         <td class="min" v-show="isWrite()">
@@ -44,8 +50,7 @@
         </td>
         <td class="min" v-show="isWrite() && lang">
           <button :class="{disabled:!unsavedFile}" @click="uploadFile" type="button"
-                  class="align-left ml-auto fub-btn sb bg-primary"
-                  style="border-color: #40e1d1;border-radius: 0;color: #40e1d1;">
+                  class="align-left ml-auto fub-btn sb bg-primary">
             <i v-if="!uploadPending" class="mdi mdi-upload"></i>
             <i v-else class="mdi mdi-loading mdi-spin"
                style="animation: mdi-spin 0.6s ease-in 0s infinite normal none running;"></i>
@@ -68,7 +73,6 @@
 import bModal from 'bootstrap-vue/es/components/modal/modal'
 import bBtn from 'bootstrap-vue/es/components/button/button'
 import bModalDirective from 'bootstrap-vue/es/directives/modal/modal'
-import DropFileDesign from './DropFileDesign'
 import mafdc from '@/mixinApp'
 
 const uploadUrl = '/api/admin/template/upload/:id/:lang'
@@ -81,7 +85,6 @@ export default {
   mixins: [mafdc],
   name: 'document-template-chooser',
   components: {
-    DropFileDesign,
     'b-modal': bModal,
     'b-btn': bBtn
   },
@@ -277,56 +280,13 @@ export default {
   }
 
   .input-file {
+    top: 0;
     opacity: 0; /* invisible but it's there! */
     width: 100%;
     height: 100%;
     position: absolute;
     cursor: pointer;
-  }
-
-  .dnd-and-select-file-icon {
-    pointer-events: none;
-    position: relative;
-    width: 100%;
-    margin-top: 110px;
-  }
-
-  .dnd-and-select-file-icon .outer {
-    display: table;
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 100%;
-    width: 100%;
-  }
-
-  .dnd-and-select-file-icon .middle {
-    display: table-cell;
-    vertical-align: middle;
-  }
-
-  .dnd-and-select-file-icon .inner {
-    position: relative;
-    margin-left: auto;
-    margin-right: auto;
-    width: 60%;
-  }
-
-  .dnd-and-select-file-icon .arrow-cont {
-    border: 6px solid #dddddd;
-    border-top: none;
-    width: 100%;
-    height: 40px;
-  }
-
-  .dnd-and-select-file-icon .mdi {
-    color: #dddddd;
-    width: 100%;
-    font-size: 5em;
-    text-align: center;
-    font-weight: 100;
-    top: -50px;
-    position: absolute;
+    z-index: 10;
   }
 
   .btns-table {
@@ -339,7 +299,7 @@ export default {
 
   .file-upload-btns {
     position: relative;
-    border-radius: 0;
+    z-index: 20;
 
     .align-middle {
       line-height: 1;
@@ -357,7 +317,7 @@ export default {
   .file-upload-btns .fub-btn {
     height: 40px;
     vertical-align: middle;
-    border-radius: 0;
+    border-radius: $border-radius;
     outline: none;
     border: 1px solid #06255f;
     color: #ffffff;
@@ -384,29 +344,46 @@ export default {
     background-color: #06255f !important;
   }
 
-  .delete-btn.unsaved {
-    border-color: #40e1d1;
-    color: #40e1d1;
-    border-radius: 0;
-  }
-
   .file_drop_box {
-    border: 2px dashed #dddddd;
+    border: none;
     min-width: 155px;
+    padding: $spacer / 2;
+
+    &:after {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      border: 5px dashed $gray-200;
+    }
+
+    &:hover {
+      &:after {
+        border: 5px dashed $gray-400;
+      }
+    }
 
     &.active {
-      border: 2px dashed #40e1d1;
+      &:after {
+        border: 5px dashed $gray-400;
+      }
     }
 
     &.unsaved {
       background: rgba(67, 255, 239, 0.2);
-      border: 2px dashed #40e1d1;
     }
 
     .heading-small {
       font-size: 1.2rem;
     }
 
+  }
+
+  .drop-icon {
+    font-size: 30px;
+    color: $text-muted;
   }
 
   .sb {
@@ -417,27 +394,6 @@ export default {
     width: 100%;
     color: white;
     vertical-align: middle;
-
-    &.active {
-      text-decoration: underline !important;
-    }
-
-    &.unsaved {
-      color: #40e1d1;
-    }
-
-    &.unsaved {
-      color: #40e1d1;
-    }
-
-  }
-
-  .lang-code {
-    color: #40e1d1;
-    text-transform: uppercase;
-    font-weight: bold;
-    padding-left: 5px;
-    padding-right: 5px;
   }
 
   .file-name {
@@ -445,11 +401,11 @@ export default {
     padding-right: 5px;
   }
 
-  .file-upload-btns .fub-btn.disabled {
+  .file-upload-btns .fub-btn.disabled.sb {
     cursor: not-allowed;
-    background-color: #e6e6e6 !important;
-    color: #bbbbbb !important;
-    border-color: #bbbbbb !important;
+    background-color: $gray-300 !important;
+    color: $gray-500 !important;
+    border-color: $gray-400 !important;
   }
 
   td.min {
@@ -463,7 +419,7 @@ export default {
   }
 
   .file_drop_box:hover {
-    background: rgba(67, 255, 239, 0.4);
+    background: $gray-100;
   }
 
   .file_drop_box p {
