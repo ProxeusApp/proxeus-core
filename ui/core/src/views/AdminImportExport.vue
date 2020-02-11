@@ -1,7 +1,7 @@
 <template>
 <div style="height:100%;">
   <vue-headful :title="$t('Data title', 'Proxeus - Data')"/>
-  <top-nav :title="$t('Data')" bg="#ffffff" class="border-bottom-0"/>
+  <top-nav :title="$t('Data')" />
   <import-export :chooser="true" :exportTypes="[]"/>
 </div>
 </template>

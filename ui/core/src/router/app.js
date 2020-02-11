@@ -52,12 +52,12 @@ export default new Router({
           path: 'settings',
           name: 'Settings',
           component: Settings,
-          meta: { sidebarToggled: true }
+          meta: { sidebarToggled: false }
         }, {
           path: 'data',
           name: 'AdminImportExport',
           component: AdminImportExport,
-          meta: { sidebarToggled: true }
+          meta: { sidebarToggled: false }
         }, {
           path: 'user/:id',
           name: 'User',
