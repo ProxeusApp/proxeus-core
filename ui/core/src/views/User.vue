@@ -6,7 +6,6 @@
       <button v-if="user" style="height: 40px;"
               @click="app.exportData('&id='+user.id, null, '/api/user/export', 'User_'+user.id)" type="button"
               class="btn btn-primary ml-2">
-        <i style="font-style: normal;font-size: 18px;">&#8659;</i>
         <span>Export</span></button>
     </td>
   </top-nav>
