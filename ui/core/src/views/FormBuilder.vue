@@ -522,7 +522,7 @@ export default {
     }
 
     .fb-component.selected {
-        background: rgba(0, 0, 0, .03);
+        background: rgba(255, 255, 255, .9);
     }
 
     .hcbuilder-settings-body input:invalid {

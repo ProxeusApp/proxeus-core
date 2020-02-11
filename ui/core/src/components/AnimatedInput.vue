@@ -1,9 +1,9 @@
 <template>
 <div class="field-parent">
-  <div class="inanimated">
-    <input :maxlength="max" :autofocus="autofocus" :disabled="disabled" @input="change" :name="name" ref="field"
-           class="ineffect" :class="{'has-content':hasContent}" :type="type" placeholder="">
+  <div class="form-group">
     <label>{{label}}</label>
+    <input :maxlength="max" :autofocus="autofocus" :disabled="disabled" @input="change" :name="name" ref="field"
+           class="form-control" :class="{'has-content':hasContent}" :type="type" placeholder="">
     <span class="focus-border"></span>
     <a v-if="action.Func && action.Name" class="faction" href="JavaScript:void(0);"
        @click="action.Func">{{action.Name}}
