@@ -1,6 +1,6 @@
 <template>
-<div class="field-parent">
-  <div class="form-group">
+<div class="field-parent mb-3">
+  <div class="form-group mb-0">
     <label>{{label}}</label>
     <input :maxlength="max" :autofocus="autofocus" :disabled="disabled" @input="change" :name="name" ref="field"
            class="form-control" :class="{'has-content':hasContent}" :type="type" placeholder="">
@@ -11,6 +11,7 @@
     <a v-if="action.Link && action.Name" class="faction" :target="action.Target" :href="action.Link">{{action.Name}}</a>
   </div>
   <div class="errors"></div>
+  <slot></slot>
 </div>
 </template>
 
