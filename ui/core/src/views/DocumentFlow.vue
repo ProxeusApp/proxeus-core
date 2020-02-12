@@ -51,6 +51,10 @@
             <div>
               <spinner background="transparent"/>
             </div>
+            <div class="processing-hint">
+              {{$t('Document processing hint', 'Processing your request. This might take a while.')}}
+
+            </div>
           </div>
           <div><!--to prevent from flickering-->
             <div class="card-header border-bottom-0" style="visibility: hidden;">
@@ -729,6 +733,13 @@ export default {
     position: relative;
     .card-header {
       background-color:$primary;
+    }
+    .processing-hint {
+      position: absolute;
+      margin: 180px auto;
+      width: 100%;
+      text-align: center;
+      color: $primary;
     }
   }
 
