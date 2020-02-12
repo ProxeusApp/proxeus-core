@@ -1,105 +1,103 @@
 <template>
-<div>
-  <div v-if="!listOnly" class="d-flex flex-row w-100 align-items-center">
-    <slot name="addBtn">
-      <button :title="$t('create a new one')" type="button" @click="toggleNewItemFormVisible" class="btn btn-primary btn-round plus-btn mshadow-dark">
-        <i class="material-icons">add</i>
-      </button>
-    </slot>
-    <button type="button" v-show="itemsSelected && false" @click="remove" class="btn btn-danger ml-3">Remove
-    </button>
-  </div>
-  <div class="p-0 ml-0" style="position:relative;">
-    <search-box v-on:search="search" ref="searchBox"/>
-    <table style="position: absolute;display: inline-block;top:18px;right: 150px;z-index: 10;">
-      <tbody>
-      <tr>
-        <td>
-          <div v-if="delImpsUrl" @click="delImpsAction" class="easy-read" style="cursor: pointer;">
-            <a href="JavaScript:void(0);" style="position: relative;display: inline-block;"
-               class="badge badge-primary">Imported
-              <button class="btn btn-primary btn-round"
-                      style="cursor: pointer;position: absolute;right: -23px;top: -20px;padding: 3px;">
-                <i class="material-icons">close</i>
-              </button>
-            </a>
-          </div>
-        </td>
-        <td>
-          <div v-if="delExsUrl" @click="delExsAction" class="easy-read" style="margin-left: 30px;cursor: pointer;">
-            <a href="JavaScript:void(0);" style="position: relative;display: inline-block;"
-               class="badge badge-primary">Exported
-              <button class="btn btn-primary btn-round"
-                      style="cursor: pointer;position: absolute;right: -23px;top: -20px;padding: 3px;">
-                <i class="material-icons">close</i>
-              </button>
-            </a>
-          </div>
-        </td>
-      </tr>
-      </tbody>
-    </table>
-    <button v-if="elements && elements.length>0" @click="exportData" type="button" class="btn btn-primary"
-            style="position: absolute;right: 12px;top: 12px;"><span>&#8659; Export</span></button>
-  </div>
-  <div ref="listGroup" class="mlist-group mbottominset">
-    <slot name="newItemForm">
-      <div v-show="newItemFormVisible" v-if="!listOnly"
-           class="p-0 new-item-form list-group-item-action flex-column align-items-start bg-light"
-           style="position: relative;">
-        <i @click="newItemFormVisible=false" style="position: absolute;right: 10px;top:10px;cursor:pointer;"
-           class="material-icons">
-          clear
-        </i>
-        <h2 class="pt-2 pl-2 text-center">Create new {{ path }}</h2>
-        <div class="d-flex flex-row w-100 justify-content-between align-items-center">
-          <div class="py-2 px-2 w-auto">
-            <label for="newNameInput">Name</label>
-          </div>
-          <div class="py-2 px-2 w-50">
-            <input type="text" ref="newItemName" v-model.trim="newElement.name" name="newNameInput"
-                   id="newNameInput" class="form-control" required>
-          </div>
-          <div class="py-2 px-2 w-auto">
-            <label for="newDetailInput">Detail</label>
-          </div>
-          <div class="py-2 px-2 w-50">
-            <input type="text" v-model.trim="newElement.detail" name="newDetailInput" id="newDetailInput"
-                   class="form-control">
-          </div>
-          <div v-if="displayPrice" class="py-2 px-2 w-auto">
-            <label for="newPriceInput">Price&nbsp;(XES)</label>
-          </div>
-          <div v-if="displayPrice" class="py-2 px-2 w-30">
-            <input type="number" v-model.number="newElement.price" name="newPriceInput" id="newPriceInput"
-                   class="form-control">
-          </div>
-          <div class="py-2 px-2 w-auto">
-            <button type="button" @click="create" class="btn btn-primary btn-round"
-                    :disabled="newElement.name === '' || displayPrice === true && newElement.price === ''">
-              <span class="material-icons">check</span>
-            </button>
-          </div>
-        </div>
-      </div>
-    </slot>
-    <slot name="list">
-      <div v-if="!elements || elements.length===0" class="no-elements mt-3">
-        <div v-if="loading" style="height: 60px;width: 100%;"></div>
-        <span v-else class="light-text">{{ $t('No elements found') }}</span>
-      </div>
-      <table v-else class="nicetbl tblspacing">
+  <div>
+    <div v-if="!listOnly" class="d-flex flex-row w-100 align-items-center mb-3">
+      <slot name="addBtn">
+        <button :title="$t('create a new one')" type="button" @click="toggleNewItemFormVisible" class="btn btn-primary">
+          Create new
+        </button>
+        <button v-if="elements && elements.length>0" @click="exportData" type="button" class="btn btn-link ml-auto">Export</button>
+      </slot>
+      <button type="button" v-show="itemsSelected && false" @click="remove" class="btn btn-secondary ml-3">Remove</button>
+    </div>
+    <div class="p-0 ml-0" style="position:relative;">
+      <search-box v-on:search="search" ref="searchBox"/>
+      <table style="position: absolute;display: inline-block;top:18px;right: 150px;z-index: 10;">
         <tbody>
-        <list-item :defaultName="defaultName" :to="getLink(element)" :index="index" v-for="(element, index) in elements"
-                   :key="element.id" :timestamps="timestamps" :iconFa="iconFa" :icon="icon" :element="element" :price="element.price">
-          <slot v-bind="element"/>
-        </list-item>
+        <tr>
+          <td>
+            <div v-if="delImpsUrl" @click="delImpsAction" class="easy-read" style="cursor: pointer;">
+              <a href="JavaScript:void(0);" style="position: relative;display: inline-block;"
+                 class="badge badge-primary">Imported
+                <button class="btn btn-primary btn-round"
+                        style="cursor: pointer;position: absolute;right: -23px;top: -20px;padding: 3px;">
+                  <i class="material-icons">close</i>
+                </button>
+              </a>
+            </div>
+          </td>
+          <td>
+            <div v-if="delExsUrl" @click="delExsAction" class="easy-read" style="margin-left: 30px;cursor: pointer;">
+              <a href="JavaScript:void(0);" style="position: relative;display: inline-block;"
+                 class="badge badge-primary">Exported
+                <button class="btn btn-primary btn-round"
+                        style="cursor: pointer;position: absolute;right: -23px;top: -20px;padding: 3px;">
+                  <i class="material-icons">close</i>
+                </button>
+              </a>
+            </div>
+          </td>
+        </tr>
         </tbody>
       </table>
-    </slot>
-    <trigger :init="triggerInit" @trigger="bottomTrigger"/>
+    </div>
+    <div ref="listGroup" class="mbottominset">
+      <slot name="newItemForm">
+        <div v-show="newItemFormVisible" v-if="!listOnly"
+             class="p-0 new-item-form list-group-item-action flex-column align-items-start bg-light"
+             style="position: relative;">
+          <i @click="newItemFormVisible=false" style="position: absolute;right: 10px;top:10px;cursor:pointer;"
+             class="material-icons">
+            clear
+          </i>
+          <h2 class="pt-2 pl-2 text-center">Create new {{ path }}</h2>
+          <div class="d-flex flex-row w-100 justify-content-between align-items-center">
+            <div class="py-2 px-2 w-auto">
+              <label for="newNameInput">Name</label>
+            </div>
+            <div class="py-2 px-2 w-50">
+              <input type="text" ref="newItemName" v-model.trim="newElement.name" name="newNameInput"
+                     id="newNameInput" class="form-control" required>
+            </div>
+            <div class="py-2 px-2 w-auto">
+              <label for="newDetailInput">Detail</label>
+            </div>
+            <div class="py-2 px-2 w-50">
+              <input type="text" v-model.trim="newElement.detail" name="newDetailInput" id="newDetailInput"
+                     class="form-control">
+            </div>
+            <div v-if="displayPrice" class="py-2 px-2 w-auto">
+              <label for="newPriceInput">Price&nbsp;(XES)</label>
+            </div>
+            <div v-if="displayPrice" class="py-2 px-2 w-30">
+              <input type="number" v-model.number="newElement.price" name="newPriceInput" id="newPriceInput"
+                     class="form-control">
+            </div>
+            <div class="py-2 px-2 w-auto">
+              <button type="button" @click="create" class="btn btn-primary btn-round"
+                      :disabled="newElement.name === '' || displayPrice === true && newElement.price === ''">
+                <span class="material-icons">check</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </slot>
+      <slot name="list">
+        <div v-if="!elements || elements.length===0" class="no-elements mt-3">
+          <div v-if="loading" style="height: 60px;width: 100%;"></div>
+          <span v-else class="light-text">{{ $t('No elements found') }}</span>
+        </div>
+        <table v-else class="table mt-3">
+          <tbody>
+          <list-item :defaultName="defaultName" :to="getLink(element)" :index="index" v-for="(element, index) in elements"
+                     :key="element.id" :timestamps="timestamps" :iconFa="iconFa" :icon="icon" :element="element" :price="element.price">
+            <slot v-bind="element"/>
+          </list-item>
+          </tbody>
+        </table>
+      </slot>
+      <trigger :init="triggerInit" @trigger="bottomTrigger"/>
+    </div>
   </div>
-</div>
 </template>
 
 <script>

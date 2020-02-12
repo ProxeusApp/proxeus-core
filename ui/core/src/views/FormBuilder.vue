@@ -2,23 +2,16 @@
     <div class="">
         <vue-headful :title="$t('FormBuilder title prefix','Proxeus - ')+(form && form.name || $t('Formbuilder title', 'Formbuilder'))" v-if="!userSrc"/>
         <top-nav :title="form.name || $t('Formbuilder title', 'Formbuilder')" :sm="true" v-if="modalMode === false && form" class="mb-0"
-                 :returnToRoute="{name:'Forms'}" style="margin-bottom: 0!important;">
-            <td slot="td" class="tdmin" v-if="form && app.userIsUserOrHigher()">
-                <button class="btn btn-primary ml-2" @click="openPermissionDialog">
-                    <i class="material-icons" style="margin-right:2px;">link</i><span>{{$t('Share')}}</span>
-                </button>
-            </td>
-            <td slot="td" class="tdmin" v-if="app.userIsUserOrHigher()">
-                <button v-if="form" style="height: 40px;" @click="app.exportData('&id='+form.id, null, '/api/form/export','Form_'+form.id)" type="button" class="btn btn-primary ml-2"><i style="font-style: normal;font-size: 18px;">&#8659; </i><span>{{$t('Export')}}</span></button>
-            </td>
-            <td slot="td" class="tdmin" v-if="app.amIWriteGrantedFor(form)">
-                <button class="btn btn-primary ml-2" @click="infoToggled = !infoToggled">
-                    <i data-v-204db4d3="" class="material-icons" style="padding-right: 2px;">edit</i>
-                    <span>{{$t('Edit infos')}}</span>
-                </button>
-            </td>
+                 :returnToRoute="{name:'Forms'}">
+            <button slot="buttons" v-if="form && app.userIsUserOrHigher()" class="btn btn-link" @click="openPermissionDialog">
+                {{ $t('Share') }}
+            </button>
+            <button slot="buttons" v-if="form && app.userIsUserOrHigher()" @click="app.exportData('&id='+form.id, null, '/api/form/export','Form_'+form.id)" type="button" class="btn btn-link">{{$t('Export')}}</button>
+            <button slot="buttons" v-if="app.amIWriteGrantedFor(form)" class="btn btn-link" @click="infoToggled = !infoToggled">
+                <span>{{$t('Edit infos')}}</span>
+            </button>
+          <button slot="buttons" class="btn btn-primary ml-2" @click="save" :disabled="app.amIWriteGrantedFor(form) === false">Save</button>
         </top-nav>
-        <save-btn :item="form" :click="save"/>
         <div class="container-fluid">
             <div class="toggle-row row py-3 position-absolute" v-if="form" v-show="infoToggled">
                 <name-and-detail-input v-model="form"/>
@@ -529,7 +522,7 @@ export default {
     }
 
     .fb-component.selected {
-        background: rgba(0, 0, 0, .03);
+        background: rgba(255, 255, 255, .9);
     }
 
     .hcbuilder-settings-body input:invalid {
@@ -552,6 +545,8 @@ export default {
             /*border: 1px solid #cecece;*/
             border-bottom: 0;
             padding: 0px .75rem;
+            border-top-left-radius: 4px;
+            border-top-right-radius: 4px;
 
             .nav-link {
                 color: white;

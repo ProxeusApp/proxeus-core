@@ -82,7 +82,6 @@ export default {
     height: 10px;
     position: relative;
     margin: 0 auto;
-    border-bottom: 2px solid #aaaaaa;
   }
 
   .ltrigger .mdi-loading.mdi-spin {

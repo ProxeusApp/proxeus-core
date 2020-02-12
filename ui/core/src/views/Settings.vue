@@ -2,14 +2,13 @@
 <div>
   <vue-headful :title="$t('Settings title', 'Proxeus - Settings')"/>
   <top-nav :title="$t('Settings')">
-    <td slot="td" class="tdmin" v-if="app.userIsUserOrHigher()">
-      <button style="height: 40px;" @click="app.exportData('', null, '/api/settings/export', 'Settings')" type="button"
-              class="btn btn-primary ml-2">
-        <i style="font-style: normal;font-size: 18px;">&#8659;</i>
+    <td slot="buttons" class="tdmin" v-if="app.userIsUserOrHigher()">
+      <button @click="app.exportData('', null, '/api/settings/export', 'Settings')" type="button"
+              class="btn btn-link ml-2">
         <span>{{$t('Export')}}</span></button>
     </td>
   </top-nav>
-  <div class="container-fluid" style="padding:20px 20px;">
+  <div ref="scrollable" class="main-container layout-fixed-scroll-container" style="overflow: auto;">
     <settings-inner/>
   </div>
 </div>

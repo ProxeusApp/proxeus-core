@@ -3,43 +3,24 @@
         <vue-headful
                 :title="$t('Workflow title prefix', 'Proxeus - ')+(workflow && workflow.name || $t('Workflow title', 'Workflow'))"/>
         <top-nav :title="workflow && workflow.name ? workflow.name : 'Workflow'" :returnToRoute="{name:'Workflows'}">
-            <td slot="td" class="tdmin" v-if="workflow && app.userIsUserOrHigher()">
-                <button class="btn btn-primary ml-2" @click="openPermissionDialog">
-                    <i class="material-icons" style="margin-right:2px;">link</i>
-                    <span>{{$t('Share')}}</span>
-                </button>
-            </td>
-            <td slot="td" class="tdmin" v-if="workflow && app.amIWriteGrantedFor(workflow)">
-                <button class="btn btn-primary ml-2" @click="publishModalShow = true">
-                    <i class="material-icons" style="margin-right:2px;">video_library</i>
-                    <span>{{$t('Publish')}}</span>
-                </button>
-            </td>
-            <td slot="td" class="tdmin" v-if="app.userIsUserOrHigher()">
-                <button style="height: 40px;" @click="app.exportData('&id='+id, null, '/api/workflow/export', 'Workflow_'+id)"
-                        type="button" class="btn btn-primary ml-2">
-                    <i style="font-style: normal;font-size: 18px;">&#8659;</i>
-                    <span>{{$t('Export')}}</span></button>
-            </td>
-            <td slot="td" class="tdmin" v-if="workflow && app.amIWriteGrantedFor(workflow)">
-                <button class="btn btn-primary ml-2" @click="infoToggled = !infoToggled">
-                    <i data-v-204db4d3="" class="material-icons" style="padding-right: 2px;">edit</i>
-                    <span>{{$t('Edit infos')}}</span>
-                </button>
-            </td>
+            <button slot="buttons" v-if="workflow && app.userIsUserOrHigher()" class="btn btn-link" @click="openPermissionDialog">
+                <span>{{$t('Share')}}</span>
+            </button>
+            <button slot="buttons" v-if="workflow && app.amIWriteGrantedFor(workflow)" class="btn btn-link" @click="publishModalShow = true">
+                <span>{{$t('Publish')}}</span>
+            </button>
+            <button slot="buttons" v-if="app.userIsUserOrHigher()" @click="app.exportData('&id='+id, null, '/api/workflow/export', 'Workflow_'+id)"
+                    type="button" class="btn btn-link">
+                <span>{{$t('Export')}}</span>
+            </button>
+            <button slot="buttons" v-if="workflow && app.amIWriteGrantedFor(workflow)" class="btn btn-link" @click="infoToggled = !infoToggled">
+                <span>{{$t('Edit infos')}}</span>
+            </button>
+            <a slot="buttons" target="_blank" :href="'/document/'+id" class="btn btn-primary ml-1">
+              Run
+            </a>
+            <button slot="buttons" class="btn btn-primary ml-2" @click="save" :disabled="app.amIWriteGrantedFor(workflow) === false">Save</button>
         </top-nav>
-        <save-btn :item="workflow" :click="save"/>
-        <a target="_blank" :href="'/document/'+id" class="btn btn-primary btn-round mshadow-dark" style="
-            position: fixed;
-            bottom: 10px;
-            left: 50%;
-            z-index: 1;
-            display: inline-block;
-        ">
-            <i class="material-icons">
-                play_arrow
-            </i>
-        </a>
         <div class="container-fluid p-0">
             <div class="modal priceErrorModal" ref="priceErrorModal" tabindex="-1" role="dialog">
               <div class="modal-dialog" role="document">
@@ -74,7 +55,7 @@
                                 <div class="fcf-main" style="width: 100%;">
                                     <div class="flow-chart-finder">
                                         <div>
-                                            <div style="width: 100%;">
+                                            <div class="w-100 flow-chart-search-box">
                                                 <div class="field-parent">
                                                     <form autocomplete="off">
                                                         <div class="input-group w-100 search-box">
@@ -85,7 +66,7 @@
                                                             </div>
                                                               <input type="search" autocomplete="off" ref="workflowElementAdd"
                                                                      class="form-control text-field flow-chart-finder-input"
-                                                                     :placeholder="$t('Click here to add elements to your workflow')"
+                                                                     :placeholder="$t('Search for workflow elements…')"
                                                                      style="box-sizing: border-box;">
                                                             <div class="input-group-append fcf-layout-switch p-1 bg-light border">
                                                                 <button type="button"
@@ -125,12 +106,12 @@
                                         <!--</div>-->
                                         <!--</div>-->
                                         <!--</div>-->
-                                        <div data-id="condition" class="flow-chart-node">
+                                        <div data-id="condition" class="flow-chart-node flow-chart-node-condition">
                                             <div class="flow-chart-node-inner">
                                                 <div class="fci-node">
                                                     <i class="node-icon fcn-condition mdi mdi-rhombus-outline"
                                                        aria-hidden="true"></i>
-                                                    <div class="flow-chart-finder-simple mt-2">{{$t('condition')}}</div>
+                                                    <div class="flow-chart-finder-simple">{{$t('condition')}}</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -246,7 +227,6 @@ import bModalDirective from 'bootstrap-vue/es/directives/modal/modal'
 import PermissionDialog from './appDependentComponents/permDialog/PermissionDialog'
 import NameAndDetailInput from '../components/NameAndDetailInput'
 import mafdc from '@/mixinApp'
-import SaveBtn from './appDependentComponents/SaveBtn'
 import ListItemDialog from './appDependentComponents/ListItemDialog'
 
 window.vis = vis
@@ -255,7 +235,6 @@ export default {
   mixins: [mafdc, formChangeAlert],
   components: {
     ListItemDialog,
-    SaveBtn,
     NameAndDetailInput,
     PermissionDialog,
     TopNav,
@@ -1170,9 +1149,10 @@ function condition(){
               '<div data-id="{{id}}" class="flow-chart-node">' +
               '    <div class="flow-chart-node-inner">' +
               '    <div class="fci-node">' +
+              '       <i class="{{iconClass}}" aria-hidden="true"></i>' +
               '       <table>' +
               '           <tbody>' +
-              '               <tr><td><div class="flow-chart-finder-simple mt-2">' +
+              '               <tr><td><div class="flow-chart-finder-simple">' +
               '                   {{name}}' +
               '               </div></td></tr>' +
               '               <tr><td><div class="flow-chart-finder-detail">' +
@@ -1180,7 +1160,6 @@ function condition(){
               '               </div></td></tr>' +
               '           </tbody>' +
               '       </table>' +
-              '       <i class="{{iconClass}}" aria-hidden="true"></i>' +
               '    </div>' +
               '    </div>' +
               '</div>'
@@ -1331,14 +1310,14 @@ function condition(){
                     {
                       node: {
                         color: {
-                          background: '#60aa61',
+                          background: '#0eaa64',
                           highlight: { background: '#99d29a' },
                           hover: { background: '#99d29a' }
                         },
                         borderWidthSelected: 1
                       },
                       edge: {
-                        color: { color: '#60aa61', highlight: '#3c763d', hover: '#3c763d' }
+                        color: { color: '#0eaa64', highlight: '#3c763d', hover: '#3c763d' }
                       }
                     }],
                   to: Infinity,
@@ -1361,7 +1340,7 @@ function condition(){
                 icon: {
                   face: 'Material Icons',
                   code: 'view_quilt',
-                  color: '#62aa44'
+                  color: '#0eaa64'
                 },
                 events: {
                   'hoverIn': function () {
@@ -1850,12 +1829,20 @@ function condition(){
         font-size: 30px;
     }
 
-    .app-workflow .topnav {
-        margin-bottom: 0rem !important
-    }
-
-    .app-workflow .search-box input {
-        border-radius: 0;
+    .app-workflow {
+      .search-box {
+        .input-group-text {
+          border-radius: 0;
+        }
+        input.form-control {
+          border-width: 1px !important;
+          border-radius: 0;
+          border-left: 0 !important;
+        }
+      }
+      .topnav {
+        margin-bottom: 0!important;
+      }
     }
 
     .app-workflow .toggle-row {
@@ -1972,12 +1959,12 @@ function condition(){
     }
 
     .flow-chart-finder-input {
-      border: 1px solid $gray-200 !important;
-      text-indent: 8px;
+      //border: 1px solid $gray-200 !important;
+      /*text-indent: 8px;*/
     }
     .flow-chart-finder-input::placeholder {
-      color: #00A655;
-      text-indent: 8px;
+      /*color: #00A655;*/
+      /*text-indent: 8px;*/
     }
 
     .custom-menu {
@@ -2010,9 +1997,10 @@ function condition(){
       border: 3px solid;
     }
     .flow-chart-finder .input-group-text {
-      width: 73px;
-      background-color: #00A655;
-      border: 1px solid #00A655;
+      width: 64px;
+      background-color: #00d499;
+      border: 1px solid $gray-300;
+      border-left: none;
       cursor: pointer;
       .material-icons {
         width: 73px;

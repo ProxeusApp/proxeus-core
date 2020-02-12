@@ -66,22 +66,6 @@ $leftSideSpacingFromBrowserFrame: 20px;
   border: none;
 }
 
-.modal-content, .btn, .form-control {
-  border-radius: 0;
-}
-
-.btn.plus-btn {
-  position: fixed;
-  width: 80px;
-  height: 80px;
-  border: 0;
-  z-index: 100;
-  bottom: 50px;
-  right: 50px;
-  box-shadow: 0px 3px 10px rgba(4, 17, 49, 0.3);
-  background-color: #00A655;
-}
-
 .btn.plus-btn .material-icons {
   font-size: 42px;
 }
@@ -125,25 +109,11 @@ $leftSideSpacingFromBrowserFrame: 20px;
 }
 
 .topnav {
-  padding: 0 25px;
+  padding: 0 $spacer * 1.5;
   z-index: 22232732;
   position: relative;
   line-height: 1;
-  background: white;
-}
-
-.topnav td {
-  white-space: nowrap;
-}
-
-.topnav-back.btn-light {
-  background: white;
-  border: none;
-  border-right: 1px solid #e1e1e1;
-}
-
-.topnav-back.btn-light:hover {
-  background: #e1e1e1;
+  background: $gray-100;
 }
 
 .t-ellipsis {
@@ -181,40 +151,10 @@ span.error {
   font-weight: normal;
 }
 
-.mshadow {
-  -webkit-box-shadow: 0px 4px 6px 0px rgba(214, 214, 214, 1);
-  -moz-box-shadow: 0px 4px 6px 0px rgba(214, 214, 214, 1);
-  box-shadow: 0px 4px 6px 0px rgba(214, 214, 214, 1);
-}
-
-.mshadow-right {
-  -webkit-box-shadow: 4px 0px 6px 0px rgba(214, 214, 214, 1);
-  -moz-box-shadow: 4px 0px 6px 0px rgba(214, 214, 214, 1);
-  box-shadow: 4px 0px 6px 0px rgba(214, 214, 214, 1);
-}
-
-.mshadow-right-light {
-  -webkit-box-shadow: 2px 0px 6px 0px rgba(214, 214, 214, 0.5);
-  -moz-box-shadow: 2px 0px 6px 0px rgba(214, 214, 214, 0.5);
-  box-shadow: 2px 0px 6px 0px rgba(214, 214, 214, 0.5);
-}
-
-.mshadow-light {
-  -webkit-box-shadow: -2px 1px 6px 0px rgba(214, 214, 214, 0.5);
-  -moz-box-shadow: -2px 1px 6px 0px rgba(214, 214, 214, 0.5);
-  box-shadow: -2px 1px 6px 0px rgba(214, 214, 214, 0.5);
-}
-
-.mshadow-dark {
-  -webkit-box-shadow: -8px 8px 27px 0px rgba(0, 0, 0, 0.49);
-  -moz-box-shadow: -8px 8px 27px 0px rgba(0, 0, 0, 0.49);
-  box-shadow: -8px 8px 27px 0px rgba(0, 0, 0, 0.49);
-}
-
 .wfchart-main .vis-button, .wfchart-main .btn-legend > .btn-round {
-  -webkit-box-shadow: -8px 8px 27px 0px rgba(0, 0, 0, 0.49);
-  -moz-box-shadow: -8px 8px 27px 0px rgba(0, 0, 0, 0.49);
-  box-shadow: -8px 8px 27px 0px rgba(0, 0, 0, 0.49);
+  -webkit-box-shadow: -8px 8px 5px 0px rgba(0, 0, 0, 0.1);
+  -moz-box-shadow: -8px 8px 5px 0px rgba(0, 0, 0, 0.1);
+  box-shadow: -8px 8px 27px 0px rgba(0, 0, 0, 0.1);
 }
 
 .mbottominset {
@@ -236,17 +176,12 @@ body {
   font-family: "WorkSans-Regular", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
-.topnav .btn:not(.topnav-back) {
-  line-height: 1;
-  height: 40px;
-}
-
 .topnav .btn > * {
   vertical-align: middle;
 }
 
 .main-container {
-  padding: 20px;
+  padding: $spacer $spacer * 1.5;
 }
 
 .btn > i.material-icons {
@@ -257,10 +192,6 @@ body {
   @media (max-width: 767px) {
     display: none;
   }
-}
-
-.search-box input.form-control {
-  border: 1px solid #ececec !important;
 }
 
 .vue-notification-template.alert.warning {
@@ -292,12 +223,14 @@ body {
 }
 
 .mlist-item {
-  border-bottom: 1px solid #d8d8d8;
   cursor: pointer;
+  &:last-child {
+    border-bottom: 1px solid $gray-200;
+  }
 }
 
 .mlist-item > td {
-  padding: 4px 8px 4px 0;
+  padding: $spacer / 2 $spacer;
 }
 
 .mlist-item > td:first-child {
@@ -337,113 +270,8 @@ table.nicetblfixed {
   table-layout: fixed;
 }
 
-.mlist-item td:last-child {
-  border-right: 1px solid #f7f7f7;
-}
-
-.mlist-item td {
-  border-top: 1px solid #f7f7f7;
-}
-
-.topnav-back {
-  margin-left: -24px;
-  border-right: 1px solid #e0e0e0;
-}
-
 .no-elements {
   text-align: center;
-}
-
-/**animated input field**/
-.inanimated {
-  position: relative;
-  margin-top: 26px;
-}
-
-.inanimated .faction {
-  position: absolute;
-  right: 4px;
-  bottom: 4px;
-  background: white;
-  padding: 4px 6px;
-  border-radius: 45px;
-  border: 1px solid #e6e6e6;
-  font-size: 14px;
-}
-
-.inanimated input:focus {
-  outline: none;
-  border: none;
-  border-bottom: 1px solid transparent;
-}
-
-.inanimated input[type="text"] {
-  width: 100%;
-  box-sizing: border-box;
-  letter-spacing: 1px;
-}
-
-.inanimated .ineffect {
-  border: none;
-  border-bottom: 1px solid #cccccc;
-  width: 100%;
-  padding: 7px 6px;
-  background: #00000008;
-  color: #062a85;
-  font-family: "WorkSans-Regular", "Helvetica Neue", Helvetica, Arial, sans-serif;
-}
-
-.inanimated .ineffect ~ .focus-border {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 0;
-  height: 1px;
-  background-color: #062a85;
-  transition: 0.4s;
-}
-
-.inanimated .ineffect:focus ~ .focus-border,
-.inanimated .has-content.ineffect ~ .focus-border {
-  width: 100%;
-  transition: 0.4s;
-}
-
-.inanimated .ineffect ~ label {
-  position: absolute;
-  left: 6px;
-  width: 100%;
-  top: 2px;
-  color: #062a85;
-  transition: 0.3s;
-  letter-spacing: 0.5px;
-  pointer-events: none;
-  padding: 2px;
-  font-size: 16px;
-}
-
-.inanimated .ineffect:focus ~ label, .inanimated .has-content.ineffect ~ label {
-  top: -18px;
-  left: 2px;
-  font-size: 14px;
-  color: #062a85;
-  transition: 0.3s;
-  height: 18px;
-}
-
-.inanimated input[disabled].ineffect {
-  border-bottom: 1px solid #cccccc;
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-.inanimated input[disabled].ineffect ~ .focus-border {
-  background-color: grey;
-  width: 100%;
-}
-
-.inanimated input[disabled].ineffect ~ label {
-  opacity: 0.6;
 }
 
 .fancy-checkbox input[type="checkbox"] {
@@ -636,14 +464,5 @@ table.nicetblfixed {
 /***********************************/
 
 .bg-txt {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  font-size: 7em;
-  text-transform: uppercase;
-  vertical-align: middle;
-  z-index: -1;
-  color: rgba(64, 225, 209, 0.41);
-  line-height: 85%;
-  font-family: "WorkSans-Regular", "Helvetica Neue", Helvetica, Arial, sans-serif;
+
 }

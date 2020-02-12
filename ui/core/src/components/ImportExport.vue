@@ -1,29 +1,12 @@
 <template>
 <div class="main-container">
   <div>
-    <table>
-      <tr>
-        <td>
-          <button class="btn btn-default tabbtn" :class="{active:tabImport}" @click="tabImport=true"
-                  @focus="$event.target.blur();" type="button">{{$t('Import')}}
-          </button>
-        </td>
-        <td>
-          <button class="btn btn-default tabbtn" :class="{active:!tabImport}" @click="tabImport=false"
-                  @focus="$event.target.blur();" type="button">{{$t('Export')}}
-          </button>
-        </td>
-      </tr>
-    </table>
-    <div ref="scrollable" style="height: 100%;overflow: auto;" class="tabcontent">
-      <div v-show="tabImport" ref="inputs">
+    <nav-tabs class="mt-0">
+      <tab title="Import" :selected="true">
         <import-only/>
-      </div>
-      <div v-show="!tabImport">
+      </tab>
+      <tab title="Export">
         <div class="tabcontent">
-          <h5>
-            <strong>{{$t('Export')}}</strong>
-          </h5>
           <table style="width: 100%;">
             <tbody>
             <tr v-if="chooser || app.userIsAdminOrHigher()">
@@ -70,18 +53,10 @@
                 </table>
               </td>
             </tr>
-            <tr>
-              <td class="tdmax" style="text-align: left;">
-                <div class="text-muted">{{$t('Export explanation','Export data by clicking on the button.')}}</div>
-              </td>
-              <td class="tdmin" style="text-align: right;">
-                <button style="white-space: nowrap;" @click="exportClick" :disabled="getParams()?false:true"
-                        type="button" class="btn btn-primary"><span>&#8659; {{$t('Export')}}</span></button>
-              </td>
-            </tr>
             </tbody>
           </table>
-
+          <button @click="exportClick" :disabled="getParams()?false:true"
+                  type="button" class="btn btn-primary mt-3"><span>{{$t('Export')}}</span></button>
         </div>
         <div v-if="lastExportResults" class="tabcontent" style="margin-top:15px;position: relative;">
           <span class="imexclose" @click="app.loadLastExportResults(updateExportResults,'delete')">&#10799;</span>
@@ -90,18 +65,19 @@
           </h5>
           <imex-results :imexResult="lastExportResults"/>
         </div>
-      </div>
-    </div>
+      </tab>
+    </nav-tabs>
   </div>
 </div>
 </template>
 
 <script>
 import mafdc from '@/mixinApp'
-import FileDropBox from '../components/template/FileDropBox'
 import ImexResults from '../components/ImexResults'
 import Checkbox from '../components/Checkbox'
 import ImportOnly from './ImportOnly'
+import NavTabs from '@/components/nav-tabs/NavTabs'
+import Tab from '@/components/nav-tabs/Tab'
 
 export default {
   mixins: [mafdc],
@@ -122,7 +98,8 @@ export default {
     ImportOnly,
     Checkbox,
     ImexResults,
-    FileDropBox
+    NavTabs,
+    Tab
   },
   data () {
     return {
@@ -134,7 +111,6 @@ export default {
         Workflow: false,
         Template: false
       },
-      tabImport: true,
       lastExportResults: null
     }
   },
@@ -202,6 +178,8 @@ export default {
 </script>
 
 <style lang="scss">
+  @import "@/assets/styles/variables.scss";
+
   .imexclose {
     position: absolute;
     top: 2px;
@@ -217,7 +195,7 @@ export default {
   }
 
   .imptbl {
-    background: #0900ff08;
+    background: $gray-100;
   }
 
   .imptbl td {
@@ -234,11 +212,6 @@ export default {
   .tabbtn.active {
     border: 1px solid #062a85;
     background: white;
-  }
-
-  .tabcontent {
-    border: 1px solid #062a85;
-    padding: 15px;
   }
 
   .spanel > .spanel-title {

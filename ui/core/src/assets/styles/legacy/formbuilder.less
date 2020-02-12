@@ -1,6 +1,13 @@
 .hcbuild-main {
   position: relative;
   overflow: hidden;
+
+  .form-group {
+    margin-bottom: .5rem;
+    label {
+      margin-bottom: .25rem;
+    }
+  }
 }
 
 .hcbuild-main .hcbuild-workspace-body .fb-component input, .hcbuild-main .hcbuild-comp-body .fb-component input,
@@ -477,12 +484,12 @@ svg.dragline > line:hover, svg.dragline > line.hover {
 .hcbuild-main .hcbuild-comp-body .fb-drop-here,
 .hcbuild-main .hcbuild-viewer .fb-drop-here{
   position: relative;
-  background-color: #ebebeb;
+  background-color: #f4f5f6;
   background-image:
-          linear-gradient(#f4f5f6 1px, transparent 1px),
-          linear-gradient(#f4f5f6 1px, transparent 1px),
-          linear-gradient(90deg, #f4f5f6 1px, transparent 1px),
-          linear-gradient(90deg, #ffffff 1px, transparent 1px);
+          linear-gradient(#fafbfc 1px, transparent 1px),
+          linear-gradient(#fafbfc 1px, transparent 1px),
+          linear-gradient(90deg, #fafbfc 1px, transparent 1px),
+          linear-gradient(90deg, #fafbfc 1px, transparent 1px);
   background-size: 15px 15px, 60px 60px, 15px 15px, 60px 60px, 60px 60px, 60px 60px;
   border: 1px solid #dee2e6;
 }
@@ -520,10 +527,6 @@ svg.dragline > line:hover, svg.dragline > line.hover {
 
 /***READ ONLY***/
 
-.hcbuild-main .fbc-dz, .hcbuild-main .fbc-ndz {
-  border: 1px solid transparent;
-}
-
 .hcbuild-main .fbc-dz.drag-active {
   background: rgba(0, 0, 0, 0.08);
 }
@@ -550,7 +553,7 @@ svg.dragline > line:hover, svg.dragline > line.hover {
 }
 
 .hcbuild-main .fbc-dz > .fb-component:not(.fbc-grp-parent):not(.dragging) > i.fbdbg {
-  background: rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.8);
 }
 
 .hcbuild-main .drag-mirror > .fb-component, .hcbuild-main .fb-component.dragging, .hcbuild-main .fb-component.fbc-new {
@@ -693,6 +696,7 @@ i.fb-ws-only.fbdh.dhtop > *, i.fb-ws-only.fbdh.dhbottom > * {
 .hcbuild-main .fb-workspace .fbc-dz .fb-component.selected > i.fbdfg {
   border-top: 1px solid #40e1d1;
   border-bottom: 1px solid #40e1d1;
+  border-left: 4px solid #40e1d1;
 }
 
 .hcbuild-main .fb-workspace .fbc-dz .fb-component.selected > i.fbdfg > i.right {
@@ -1394,7 +1398,7 @@ i.fb-ws-only.fbdh.dhtop > *, i.fb-ws-only.fbdh.dhbottom > * {
 
 .hcbuild-main .panel-footer {
   padding: 10px 15px;
-  background-color: #f4f5f6;
+  background-color: #efeff0;
   border-top: 1px solid #dee2e6;
 }
 
@@ -1621,8 +1625,4 @@ i.fb-ws-only.fbdh.dhtop > *, i.fb-ws-only.fbdh.dhbottom > * {
   float: left;
   margin-right: 8px;
   margin-bottom: 8px;
-}
-
-.hcbuild-main .hcbuilder .btn {
-  border-radius: 0;
 }

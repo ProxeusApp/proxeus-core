@@ -32,7 +32,7 @@
         </div>
     </div>
       <div style="position:relative;">
-          <button v-if="app.me && (app.me.id === user.id)" :disabled="createNew" style="padding:4px;position:absolute;right:0;top:-5px;" :title="$t('Create a API key')" type="button" @click="add" class="btn btn-primary btn-round mshadow-dark">
+          <button v-if="app.me && (app.me.id === user.id)" :disabled="createNew" style="padding:4px;position:absolute;right:0;top:-5px;" :title="$t('Create a API key')" type="button" @click="add" class="btn btn-primary btn-round">
               <i class="material-icons">add</i>
           </button>
           <div class="fregular sub-title">{{$t('API keys')}}</div>

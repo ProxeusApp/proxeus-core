@@ -1,5 +1,5 @@
 <template>
-<nav class="navbar navbar-expand-lg navbar-light bg-light" style="max-height: 58px;">
+<nav class="navbar navbar-expand-lg navbar-light bg-light" style="max-height: 60px;">
   <!--<wallet id="wallet-component"></wallet>-->
   <a href="/" class="navbar-brand">
     <svg width="140" viewBox="0 0 187 55" xmlns="http://www.w3.org/2000/svg"><title color="#fff">logo</title>

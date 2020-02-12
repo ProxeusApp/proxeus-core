@@ -2,11 +2,10 @@
 <div v-if="user">
   <vue-headful :title="$t('User title prefix','Proxeus - ')+(user.name || $t('User title', 'User'))"/>
   <top-nav :title="user.name || $t('User title', 'User')" :returnToRoute="{name:'Users'}">
-    <td slot="td" class="tdmin" v-if="app.userIsUserOrHigher()">
+    <td slot="buttons" class="tdmin" v-if="app.userIsUserOrHigher()">
       <button v-if="user" style="height: 40px;"
               @click="app.exportData('&id='+user.id, null, '/api/user/export', 'User_'+user.id)" type="button"
               class="btn btn-primary ml-2">
-        <i style="font-style: normal;font-size: 18px;">&#8659;</i>
         <span>Export</span></button>
     </td>
   </top-nav>
@@ -46,7 +45,7 @@
           <hr>
         </div>
         <form id="userForm" class="form-compiled" v-append="userForm" v-if="userForm"></form>
-        <button type="button" class="btn btn-primary btn-round plus-btn mshadow-dark" :class="{saving:saving}"
+        <button type="button" class="btn btn-primary btn-round plus-btn" :class="{saving:saving}"
                 @click="saveUserForm" v-if="user">
           <i class="material-icons">save</i>
         </button>

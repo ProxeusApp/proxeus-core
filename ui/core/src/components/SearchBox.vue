@@ -1,5 +1,5 @@
 <template>
-<div class="mshadow search-box" :class="[cls ? cls: '']">
+<div class="search-box" :class="[cls ? cls: '']">
   <input type="text" class="form-control" :placeholder="placeholder || 'Search for...'" ref="searchbox" v-bind="$attrs"
          v-model="searchTerm">
 </div>

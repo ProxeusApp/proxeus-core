@@ -17,7 +17,7 @@
         </svg>
       </router-link>
     </td>
-    <td slot="td" class="tdmin">
+    <td slot="buttons" class="tdmin">
       <language-drop-down style="margin-top: 3px;"/>
     </td>
   </top-nav>

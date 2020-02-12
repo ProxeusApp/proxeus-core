@@ -715,16 +715,21 @@ input.flow-chart-finder-input {
   margin: -1px;
 }
 
+.flow-chart-search-box {
+  z-index: 11;
+  position: relative;
+}
+
 .flow-chart-finder-cnt {
   position: absolute;
   top: 0;
   left: 0;
-  padding: 4px 10px;
+  padding: 0;
+  box-shadow: 0 0 50px rgba(0, 0, 0, .1);
+  background: white;
 }
 
 .flow-chart-finder-result {
-  background: rgba(255, 255, 255, 0.87);
-  border: 1px solid;
   max-height: 40vh;
   overflow: auto;
   width: 100%;
@@ -743,8 +748,7 @@ input.flow-chart-finder-input {
 
 .flow-chart-node-inner {
   position: relative;
-  margin: 5px;
-  padding: 5px;
+  padding: 4px $spacer;
   min-height: 54px;
 }
 
@@ -759,11 +763,20 @@ input.flow-chart-finder-input {
 }
 
 .flow-chart-finder-cnt.fcf-row .flow-chart-node-inner {
-  border-top: 1px solid rgba(0, 0, 0, 0.12);
+  border-top: 1px solid $gray-200;
+}
+
+.fcf-row .fcfr-body .flow-chart-node:first-child .flow-chart-node-inner {
+  border-top: none;
+}
+
+.fcf-grid {
+  padding: $spacer / 2;
 }
 
 .flow-chart-finder-cnt.fcf-grid .flow-chart-node {
   display: inline-block;
+  margin: $spacer / 3;
 }
 
 .flow-chart-finder-cnt.fcf-grid .fcfr-body .fci-node {
@@ -781,7 +794,8 @@ input.flow-chart-finder-input {
 
 .fci-node {
   position: relative;
-  display: inline-block;
+  display: flex;
+  align-items: center;
   cursor: move;
 }
 
@@ -795,11 +809,19 @@ input.flow-chart-finder-input {
 }
 
 .flow-chart-main .flow-chart-node-inner i.node-icon {
-  position: absolute;
-  top: 8px;
-  left: 0;
+  margin-right: $spacer;
   font-size: 42px;
-  text-shadow: 3px 3px 10px rgba(0, 0, 0, .1);
+  margin-top: -4px;
+}
+
+.wfchart-snavi .wfc-snn .flow-chart-node.flow-chart-node-condition {
+  .flow-chart-node-inner {
+    padding: $spacer / 2;
+  }
+
+  .node-icon {
+    margin-right: $spacer / 2;
+  }
 }
 
 .flow-chart-finder-result-main .fcfr-close {
@@ -830,7 +852,6 @@ input.flow-chart-finder-input {
 }
 
 .flow-chart-finder-simple {
-  padding-left: 46px;
   font-weight: bold;
   white-space: nowrap;
   overflow: hidden;
@@ -838,10 +859,11 @@ input.flow-chart-finder-input {
 }
 
 .flow-chart-finder-detail {
-  padding-left: 46px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  color: $text-muted;
+  font-size: $font-size-sm;
 }
 
 .fcn-fcn-externalnode {
@@ -853,7 +875,7 @@ input.flow-chart-finder-input {
 }
 
 .fcn-form {
-  color: #62aa44;
+  color: #0eaa64;
 }
 
 .fcn-tmpl {
@@ -904,15 +926,7 @@ input.flow-chart-finder-input {
 
 .flow-chart-main .wfchart-snavi .flow-chart-finder-simple {
   margin: 0;
-  padding-top: 46px;
   padding-left: 0;
-}
-
-.flow-chart-main .wfchart-snavi .wfc-snn .flow-chart-node-inner .fci-node i.fa,
-.flow-chart-main .wfchart-snavi .wfc-snn .flow-chart-node-inner .fci-node i.node-icon {
-  width: 100%;
-  text-align: center;
-  display: table;
 }
 
 .modal.in .modal-dialog {
