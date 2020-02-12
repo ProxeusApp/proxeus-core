@@ -21,17 +21,17 @@
       </div>
       <template slot="modal-footer">
       <button @click="onDialogHide" class="btn btn-secondary">
-        <i class="material-icons">cancel</i>
+        Cancel
       </button>
       <button @click="onDialogOk" class="btn btn-primary">
-        <i class="material-icons">check_circle</i>
+        Send invitation
       </button>
       </template>
     </b-modal>
     <list-group class="user-list" :prependFunc="prependFunc" icon="person" nodeType="user" path="user">
       <button slot="addBtn" @click="modalShow=true" type="button"
-              class="btn btn-primary btn-round plus-btn mshadow-dark">
-        <i class="material-icons">send</i>
+              class="btn btn-primary mb-3">
+        Invite user
       </button>
       <!--                <button slot="addBtn" type="button" @click="toggleNewItemFormVisible" class="btn btn-primary btn-round plus-btn mshadow-dark">-->
       <!--                    <i class="material-icons">add</i>-->

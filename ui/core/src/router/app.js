@@ -38,7 +38,7 @@ export default new Router({
           path: 'form/:id',
           name: 'FormBuilder',
           component: FormBuilder,
-          props: { sidebarToggled: true }
+          meta: { sidebarToggled: true }
         }, {
           path: 'form',
           name: 'Forms',
@@ -47,17 +47,17 @@ export default new Router({
           path: 'i18n',
           name: 'I18n',
           component: I18n,
-          props: { sidebarToggled: true }
+          meta: { sidebarToggled: true }
         }, {
           path: 'settings',
           name: 'Settings',
           component: Settings,
-          props: { sidebarToggled: true }
+          meta: { sidebarToggled: false }
         }, {
           path: 'data',
           name: 'AdminImportExport',
           component: AdminImportExport,
-          props: { sidebarToggled: true }
+          meta: { sidebarToggled: false }
         }, {
           path: 'user/:id',
           name: 'User',
@@ -71,17 +71,17 @@ export default new Router({
           path: 'template/:id',
           name: 'Template',
           component: Template,
-          props: { sidebarToggled: true }
+          meta: { sidebarToggled: true }
         }, {
           path: 'support',
           name: 'Support',
           component: Support,
-          props: { sidebarToggled: false }
+          meta: { sidebarToggled: false }
         }, {
           path: 'template',
           name: 'Templates',
           component: Templates,
-          props: { sidebarToggled: false }
+          meta: { sidebarToggled: false }
         }, {
           path: 'workflow',
           name: 'Workflows',
@@ -90,12 +90,12 @@ export default new Router({
           path: 'workflow/:id',
           name: 'Workflow',
           component: Workflow,
-          props: { sidebarToggled: true }
+          meta: { sidebarToggled: true }
         }, {
           path: 'externalNode/:name/:id',
           name: 'External configuration',
           component: External,
-          props: { sidebarToggled: true }
+          meta: { sidebarToggled: true }
         }
       ]
     }, {

@@ -1,165 +1,134 @@
 <template>
-<div class="h-100 TplIde">
-  <vue-headful
-    :title="$t('Template title prefix', 'Proxeus - ')+(template && template.name || $t('Template title', 'Template'))"/>
-  <top-nav :title="template && template.name ? template.name : $t('Template')" :sm="true"
-           :returnToRoute="{name:'Templates'}">
-    <td slot="td" class="tdmin">
-      <span class="divider ml-auto"></span>
-    </td>
-    <td slot="td" class="tdmin">
-      <span class="divider ml-auto"></span>
-    </td>
-    <td slot="td" v-if="hasRenderedDocument" class="tdmin" v-for="(type, i) in downloadButtons" :key="i">
-      <a :href="`/api/admin/template/ide/download/${id}?format=${type}`"
-         class="filedownload-btn px-2" target="_blank">
-        <table style="text-align: center;">
-          <tr>
-            <td><span class="d-block text-uppercase">{{ type }}</span></td>
-          </tr>
-          <tr>
-            <td>
-              <i class="mdi mdi-download text-info"></i>
-            </td>
-          </tr>
-        </table>
-      </a>
-    </td>
-    <td slot="td" class="tdmin">
+  <div class="h-100 TplIde">
+    <vue-headful
+      :title="$t('Template title prefix', 'Proxeus - ')+(template && template.name || $t('Template title', 'Template'))"/>
+    <top-nav :title="template && template.name ? template.name : $t('Template')" :sm="true"
+             :returnToRoute="{name:'Templates'}">
+      <td slot="buttons" class="tdmin">
+        <span class="divider ml-auto"></span>
+      </td>
+      <td slot="buttons" class="tdmin">
+        <span class="divider ml-auto"></span>
+      </td>
+      <td slot="buttons" v-if="hasRenderedDocument" class="tdmin" v-for="(type, i) in downloadButtons" :key="i">
+        <a :href="`/api/admin/template/ide/download/${id}?format=${type}`"
+           class="filedownload-btn px-2" target="_blank">
+          <table style="text-align: center;">
+            <tr>
+              <td><span class="d-block text-uppercase">{{ type }}</span></td>
+            </tr>
+            <tr>
+              <td>
+                <i class="mdi mdi-download text-info"></i>
+              </td>
+            </tr>
+          </table>
+        </a>
+      </td>
       <a target="_blank"
          href="https://docs.google.com/document/d/1-vJsTrU3w8dEcDr3-nV5owtxqHWSjzEf2uk6m9-cMIs/preview"
          class="btn btn-link btn-sm"><span
         class="material-icons">help</span>
       </a>
-    </td>
-    <!--<td slot="td" class="tdmin">-->
-    <!--<b-btn v-b-modal.extModal class="btn-sm" variant="link">-->
-    <!--<span class="material-icons">extension</span>-->
-    <!--</b-btn>-->
-    <!--<b-modal id="extModal" ref="extModal" title="LibreHub Extension Download">-->
-    <!--<div class="list-group list-group-flush">-->
-    <!--<a v-for="(option, index) in extDownloadOptions" :key="index" target="_blank"-->
-    <!--:href="`/api/admin/template/ide/tmplAssistanceDownload?os=${option.os}&app=libreoffice`"-->
-    <!--class="list-group-item list-group-item-action d-flex flex-row">-->
-    <!--<i class="fab" :class="option.icon"></i>-->
-    <!--<span class="ml-3">{{ option.label }}</span>-->
-    <!--</a>-->
-    <!--</div>-->
-    <!--<h5 slot="modal-header" class="modal-title">LibreHub Extension Download</h5>-->
-    <!--<button slot="modal-header" @click="hideModal" type="button" aria-label="Close" class="close">-->
-    <!--<i class="material-icons">close</i>-->
-    <!--</button>-->
-    <!--<div slot="modal-footer">-->
-    <!--<button type="button" class="btn btn-secondary" @click="hideModal">Close</button>-->
-    <!--</div>-->
-    <!--</b-modal>-->
-    <!--</td>-->
-    <td slot="td" class="tdmin">
-      <button type="button" class="btn btn-link btn-sm" @click="previewVisible = !previewVisible">
+      <button slot="buttons" type="button" class="btn btn-link" @click="previewVisible = !previewVisible">
         <i class="material-icons">view_column</i>
       </button>
-    </td>
-    <td slot="td" class="tdmin" v-if="template && app.userIsUserOrHigher()">
-      <button type="button" class="btn btn-primary ml-2" @click="openPermissionDialog">
-        <i class="material-icons" style="margin-right:2px;">link</i>
+      <button slot="buttons" v-if="template && app.userIsUserOrHigher()" type="button" class="btn btn-link"
+              @click="openPermissionDialog">
         <span>{{$t('Share')}}</span>
       </button>
-    </td>
-    <td slot="td" class="tdmin" v-if="app.userIsUserOrHigher()">
-      <button v-if="template" style="height: 40px;"
+      <button slot="buttons"
+              v-if="app.userIsUserOrHigher() && template"
               @click="app.exportData('&id='+template.id, null, '/api/template/export','Template_'+template.id)"
-              type="button" class="btn btn-primary ml-2">
-        <i style="font-style: normal;font-size: 18px;">&#8659;</i>
+              type="button" class="btn btn-link">
         <span>{{$t('Export')}}</span></button>
-    </td>
-    <button type="button" v-if="template && app.amIWriteGrantedFor(template)" slot="buttons"
-            class="btn btn-primary ml-2" @click="infoToggled = !infoToggled">
-      <i style="padding-right: 2px;" class="material-icons">edit</i>
-      <span>{{$t('Edit infos')}}</span></button>
-  </top-nav>
-  <div class="container-fluid layout-fixed-scroll-container">
-    <div class="toggle-row row py-2 position-absolute" v-show="infoToggled" v-if="template">
-      <name-and-detail-input v-model="template"/>
-    </div>
-    <div class="toggle-row-backdrop" @click="infoToggled = !infoToggled" v-show="infoToggled"></div>
-    <div class="row h-100 align-items-start">
-      <div :class="{'col-6 layout-fixed-scroll-view': previewVisible, 'col-12': previewVisible === false}">
-        <div class="row mt-3" v-if="hasNoLangs()">
-          <div class="col-sm-12 mt-1">
-            <document-template-chooser :readOnly="true"
-                                       :is-active="readOnly.active"
-                                       @on-file-upload-pending="fileUploadPending"
-                                       @on-file-upload-success="fileUploadSuccess"
-                                       @on-file-upload-fail="fileUploadFail"
-                                       @unsavedFile-remove="fileUnsavedRemoved"
-                                       @dropped="fileDropped"
-                                       @setActive="setActive"
-                                       @setInactive="setInactive"
-                                       @setServerFileActive="setServerFileActive">
-            </document-template-chooser>
+      <button type="button" v-if="template && app.amIWriteGrantedFor(template)" slot="buttons"
+              class="btn btn-link" @click="infoToggled = !infoToggled">
+        <span>{{$t('Edit infos')}}</span></button>
+      <save-btn slot="buttons" class="ml-2" :item="template" :click="save"/>
+    </top-nav>
+    <div class="container-fluid layout-fixed-scroll-container">
+      <div class="toggle-row row py-2 position-absolute" v-show="infoToggled" v-if="template">
+        <name-and-detail-input v-model="template"/>
+      </div>
+      <div class="toggle-row-backdrop" @click="infoToggled = !infoToggled" v-show="infoToggled"></div>
+      <div class="row h-100 align-items-start">
+        <div :class="{'col-6 layout-fixed-scroll-view': previewVisible, 'col-12': previewVisible === false}">
+          <div class="row mt-3" v-if="hasNoLangs()">
+            <div class="col-sm-12 mt-1">
+              <document-template-chooser :readOnly="true"
+                                         :is-active="readOnly.active"
+                                         @on-file-upload-pending="fileUploadPending"
+                                         @on-file-upload-success="fileUploadSuccess"
+                                         @on-file-upload-fail="fileUploadFail"
+                                         @unsavedFile-remove="fileUnsavedRemoved"
+                                         @dropped="fileDropped"
+                                         @setActive="setActive"
+                                         @setInactive="setInactive"
+                                         @setServerFileActive="setServerFileActive">
+              </document-template-chooser>
+            </div>
           </div>
-        </div>
-        <div class="row mt-3" v-if="meta !== null">
-          <div class="col" v-for="lang in meta.activeLangs" :key="lang.Code" v-if="template && meta">
-            <document-template-chooser :readOnly="template && !app.amIWriteGrantedFor(template)"
-                                       :lang="lang"
-                                       :is-active="lang.active"
-                                       :multiDivider="true"
-                                       @on-file-upload-pending="fileUploadPending"
-                                       @on-file-upload-success="fileUploadSuccess"
-                                       @on-file-upload-fail="fileUploadFail"
-                                       @unsavedFile-remove="fileUnsavedRemoved"
-                                       @dropped="fileDropped"
-                                       @setActive="setActive"
-                                       @setInactive="setInactive"
-                                       :saveFunc="getSaveFunc"
-                                       @setServerFileActive="setServerFileActive"
-                                       :initFile="getFileForLang(lang.Code)"/>
+          <div class="row mt-3" v-if="meta !== null">
+            <div class="col" v-for="lang in meta.activeLangs" :key="lang.Code" v-if="template && meta">
+              <document-template-chooser :readOnly="template && !app.amIWriteGrantedFor(template)"
+                                         :lang="lang"
+                                         :is-active="lang.active"
+                                         :multiDivider="true"
+                                         @on-file-upload-pending="fileUploadPending"
+                                         @on-file-upload-success="fileUploadSuccess"
+                                         @on-file-upload-fail="fileUploadFail"
+                                         @unsavedFile-remove="fileUnsavedRemoved"
+                                         @dropped="fileDropped"
+                                         @setActive="setActive"
+                                         @setInactive="setInactive"
+                                         :saveFunc="getSaveFunc"
+                                         @setServerFileActive="setServerFileActive"
+                                         :initFile="getFileForLang(lang.Code)"/>
+            </div>
           </div>
-        </div>
-        <div class="row">
-          <div class="col-sm-12" id="formsContainer">
-            <search-box v-on:search="search"></search-box>
-            <template-form v-for="form in forms" :form="form" :key="form.id"
-                           :comps="components"
-                           @updatedFormField="handleFormUpdate"
-                           v-if="form && components"/>
-            <div style="display: none">
-              <div id="log"></div>
-              <div id="inputContainer">
-                <form id="form1">
-                  <input type="text" id="msg" placeholder="json" style="width:100%;"/>
-                </form>
-                <form id="form2">
-                  <input type="text" id="plainText" placeholder="plain text" style="width:100%;">
-                </form>
-                <input type="text" id="plainTextDirect" placeholder="plain text direct"
-                       onkeyup="plainTextDirect(this)"
-                       style="width:100%;">
+          <div class="row">
+            <div class="col-sm-12" id="formsContainer">
+              <search-box v-on:search="search"></search-box>
+              <template-form v-for="form in forms" :form="form" :key="form.id"
+                             :comps="components"
+                             @updatedFormField="handleFormUpdate"
+                             v-if="form && components"/>
+              <div style="display: none">
+                <div id="log"></div>
+                <div id="inputContainer">
+                  <form id="form1">
+                    <input type="text" id="msg" placeholder="json" style="width:100%;"/>
+                  </form>
+                  <form id="form2">
+                    <input type="text" id="plainText" placeholder="plain text" style="width:100%;">
+                  </form>
+                  <input type="text" id="plainTextDirect" placeholder="plain text direct"
+                         onkeyup="plainTextDirect(this)"
+                         style="width:100%;">
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-      <div class="col-6 px-0 layout-fixed-scroll-view right-0"
-           :class="{overflowHidden:loadingPdf}" v-show="previewVisible">
-        <spinner v-show="loadingPdf" cls="position-sticky"/>
-        <div class="viewer-container h-100">
-          <div id="viewer" class="pdfViewer px-2 pt-2 h-100">
-            <object @load="pdfLoaded()" type="application/pdf" :data="src" class="pdf" v-if="src"></object>
+        <div class="col-6 px-0 layout-fixed-scroll-view right-0"
+             :class="{overflowHidden:loadingPdf}" v-show="previewVisible">
+          <spinner v-show="loadingPdf" cls="position-sticky"/>
+          <div class="viewer-container h-100">
+            <div id="viewer" class="pdfViewer px-2 pt-2 h-100">
+              <object @load="pdfLoaded()" type="application/pdf" :data="src" class="pdf" v-if="src"></object>
+            </div>
           </div>
         </div>
+        <div id="libreAssistanceContainer">
+        </div>
       </div>
-      <div id="libreAssistanceContainer">
-      </div>
-    </div>
 
+    </div>
+    <permission-dialog v-if="template" :save="save" :publicLink="app.makeURL('/p/template/'+template.id)"
+                       v-model="template"
+                       :setup="setupDialog"/>
   </div>
-  <permission-dialog v-if="template" :save="save" :publicLink="app.makeURL('/p/template/'+template.id)"
-                     v-model="template"
-                     :setup="setupDialog"/>
-  <save-btn :item="template" :click="save"/>
-</div>
 
 </template>
 
@@ -289,7 +258,8 @@ export default {
           this.$notify({
             group: 'app',
             title: this.$t('Error'),
-            text: this.$t('Could not load template. Please try again or if the error persists contact the platform operator.\n'),
+            text: this.$t(
+              'Could not load template. Please try again or if the error persists contact the platform operator.\n'),
             type: 'error'
           })
           this.$router.push({ name: 'Templates' })
@@ -371,7 +341,8 @@ export default {
                 this.$notify({
                   group: 'app',
                   title: this.$t('Error'),
-                  text: this.$t('Could not update template. Please try again or if the error persists contact the platform operator.\n'),
+                  text: this.$t(
+                    'Could not update template. Please try again or if the error persists contact the platform operator.\n'),
                   type: 'error'
                 })
               })
@@ -630,7 +601,8 @@ export default {
       this.$notify({
         group: 'app',
         title: this.$t('Error'),
-        text: error || this.$t('Could not connect to the server. Please try again or if the error persists contact the platform operator.\n'),
+        text: error || this.$t(
+          'Could not connect to the server. Please try again or if the error persists contact the platform operator.\n'),
         type: 'error',
         duration: 5000
       })
@@ -685,6 +657,7 @@ export default {
       }
 
     }
+
     .filedownload-btn:focus {
       outline: 0 !important;
       border: none !important;
@@ -732,7 +705,7 @@ export default {
   }
 
   .layout-fixed-scroll-container {
-    height: calc(100% - 58px);
+    height: calc(100% - 60px);
     position: relative;
   }
 

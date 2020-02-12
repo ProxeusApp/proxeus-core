@@ -4,17 +4,14 @@
     <h5>
       <strong>{{$t('Import a Proxeus database file')}}</strong>
     </h5>
-    <file-drop-box @dropped="dropImport"></file-drop-box>
-    <div class="text-muted"
-         style="text-align: center;">{{$t('Import data explanation','Choose a Proxeus exported database file to import data.')}}
-    </div>
-    <div>
+    <file-drop-box @dropped="dropImport" text="Drop or click to select a Proxeus exported database file to import data."></file-drop-box>
+    <div class="mt-2">
       <table class="imptbl" style="width: 100%;">
         <tbody>
         <tr>
           <td style="text-align: left">
-            <checkbox :disabled="importFile?false:true"
-                      :label="skipExistingEntries?$t('Skip existing entries'):$t('Overwrite existing entries')"
+            <checkbox :disabled="importFile ? false : true"
+                      :label="$t('Skip existing entries')"
                       v-model="skipExistingEntries"/>
             <span
               class="text-muted">{{$t('Import skip explanation','Choose whether existing entries should be skipped or overwritten.')}}</span>
@@ -24,7 +21,7 @@
           </td>
           <td style="text-align: right">
             <button @click="importClick" :disabled="importFile?false:true" type="button" class="btn btn-primary">
-              <span>&#8657; {{$t('Import')}}</span>
+              <span>{{$t('Import')}}</span>
             </button>
           </td>
         </tr>

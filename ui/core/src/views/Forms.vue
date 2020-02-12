@@ -5,20 +5,14 @@
   <div class="main-container">
     <list-group :deleteElementFunc="provideDeleteFunc" :prependFunc="prependFunc" :icon="icon" nodeType="form" path="form">
       <template scope="element">
-      <td class="tdmin">
         <button :title="$t('copy this form')" @click="areYouSureDialog($event, element)" type="button"
-                class="btn btn-primary btn-round mshadow-light" style="z-index: 1;padding: 6px;display: inline-block;">
-          <i class="material-icons">file_copy</i>
+                class="btn btn-primary btn-sm">
+          Duplicate
         </button>
-      </td>
-      <td class="tdmin">
         <button v-if="element && app.amIWriteGrantedFor(element)" :title="$t('delete this form')" @click="areYouSureDeleteDialog($event, element)" type="button"
-                class="btn btn-primary btn-round mshadow-light" style="z-index: 1;padding: 6px;display: inline-block;">
-          <i class="material-icons">
-            delete_forever
-          </i>
+                class="btn btn-primary btn-sm ml-2">
+          Delete
         </button>
-      </td>
       </template>
     </list-group>
     <list-item-dialog :setup="setupCopyDialog" :sureFunc="copyDialogSureAction" :icon="icon">

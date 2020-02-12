@@ -1,74 +1,46 @@
 <template>
-<div class="topnav mshadow-light">
-  <table style="width: 100%;height: 58px;min-height: 58px;">
-    <tbody style="width: 100%;">
-    <tr style="width: 100%;">
-      <td class="tdmin" v-if="isShareLinkAndUserOrHigher()">
-        <router-link class="topnav-back btn btn-light mr-3" :to="returnToRoute" v-if="returnToRoute">
-          <span class="material-icons pt-10 mdi md-36 mdi-chevron-left"></span>
-        </router-link>
-      </td>
-      <td class="tdmin" v-if="sidebarToggler && isShareLinkAndUserOrHigher()">
-        <responsive-sidebar-menu-btn/>
-      </td>
-      <slot name="td-start"/>
-      <td class="tdmax impcnt">
-                    <span class="title" style="width: 100%;padding: 4px 0;">
-                    {{ title }}
-                    </span>
-      </td>
-      <slot name="td"/>
-      <td class="tdmin">
-        <slot name="buttons"/>
-      </td>
-      <td class="tdmin">
-        <top-right-profile/>
-      </td>
-    </tr>
-    </tbody>
-  </table>
-</div>
+  <nav class="navbar navbar-expand-lg py-0 topnav d-flex flex-row"
+       v-bind="$attrs"
+       :class="{'bg-light':bg == null, 'border-bottom':bg==='white', 'border-bottom-0':bg!=='white'}"
+       :style="{background:bg ? bg : ''}">
+    <router-link class="topnav-back btn btn-sm btn-light mr-3" :to="returnToRoute" v-if="returnToRoute && isShareLinkAndUserOrHigher">
+      <span class="material-icons mdi md-36 mdi-chevron-left"></span>
+    </router-link>
+
+    <h1 class="navbar-text">
+      {{ title }}
+    </h1>
+    <div class="topnav-buttons ml-auto">
+      <!--<button class="navbar-toggler ml-auto" type="button" data-toggle="collapse" data-target="#sidebar"-->
+      <!--aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">-->
+      <!--<span class="navbar-toggler-icon"></span>-->
+      <!--</button>-->
+      <div class="ml-auto">
+        <slot name="buttons"></slot>
+<!--        <top-right-profile/>-->
+      </div>
+    </div>
+  </nav>
 </template>
 
 <script>
 import TopRightProfile from '../user/TopRightProfile'
-import ResponsiveSidebarMenuBtn from './ResponsiveSidebarMenuBtn'
 
 import mafdc from '@/mixinApp'
 
 export default {
   mixins: [mafdc],
   components: {
-    ResponsiveSidebarMenuBtn,
     TopRightProfile
   },
   name: 'top-nav',
-  props: {
-    title: {
-      type: String,
-      default: ''
-    },
-    returnToRoute: {
-      type: Object,
-      default: null
-    },
-    sidebarToggler: {
-      type: Boolean,
-      default: true
-    }
-  },
-  methods: {
+  props: [
+    'title', 'sm', 'bg', 'returnToRoute'
+  ],
+  computed: {
     isShareLinkAndUserOrHigher () {
-      return /^\/p\//.test(location.pathname) ? this.app.userIsUserOrHigher() : true
+      return /^\/p\//.test(window.location.pathname) ? this.app.userIsUserOrHigher() : true
     }
   }
 }
 </script>
-
-<style scoped>
-
-  .topnav-buttons {
-    white-space: nowrap;
-    text-overflow: ellipsis;
-  }
-</style>

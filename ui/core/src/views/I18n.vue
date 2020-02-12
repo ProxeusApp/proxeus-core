@@ -2,7 +2,7 @@
 <div>
   <vue-headful :title="$t('Internationalization title', 'Proxeus - Internationalization')"/>
   <top-nav :title="$t('Internationalization')">
-    <td slot="td" class="tdmin" v-if="app.userIsUserOrHigher()">
+    <td slot="buttons" class="tdmin" v-if="app.userIsUserOrHigher()">
       <button style="height: 40px;" @click="app.exportData('', null, '/api/i18n/export', 'i18n')" type="button"
               class="btn btn-primary ml-2">
         <i style="font-style: normal;font-size: 18px;">&#8659;</i>
@@ -20,8 +20,7 @@
     <div v-if="hasLangs()">
       <h2 style="margin-top:20px;">{{ $t('Translations') }}</h2>
       <div style="position:relative;">
-        <div class="mshadow-light"
-             style="width: 100%;height: 100px;background: rgb(251, 251, 251);border: 1px solid #efefef;"></div>
+        <div style="width: 100%;height: 100px;background: rgb(251, 251, 251);border: 1px solid #efefef;"></div>
         <div ref="listGroup" class="mlist-group mbottominset" style="width:100%;">
           <table class="i18n-tbl nicetbl tblspacing">
             <thead>

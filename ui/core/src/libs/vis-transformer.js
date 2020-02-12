@@ -773,7 +773,7 @@ function transform (wfData) {
         icon: {
           face: 'Material Icons',
           code: 'view_quilt',
-          color: '#62aa44'
+          color: '#0eaa64'
         },
         events: {
         }

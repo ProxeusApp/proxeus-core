@@ -607,8 +607,6 @@ export default {
   .perm-input input {
     width: 100%;
     height: 40px;
-    border-bottom-right-radius: 0;
-    border-top-right-radius: 0;
   }
 
   .perm-selp {
@@ -677,12 +675,4 @@ export default {
     overflow: auto;
   }
 
-  .perm-granted-tbl {
-    margin-top: 6px;
-  }
-
-  .perm-granted-tbl tr {
-    border-top: 1px solid #efefef;
-    border-bottom: 1px solid #efefef;
-  }
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <div class="container-fluid" style="height:100%;">
+  <div class="container-fluid">
     <vue-headful :title="$t('Admin title', 'Proxeus - Admin')"/>
     <div class="row" style="height:100%;">
       <sidebar :toggled="sidebarToggled" v-if="showSidebar"></sidebar>
@@ -27,28 +27,13 @@ export default {
     Sidebar,
     FirstLoginOverlay
   },
-  data () {
-    return {
-      sidebarToggled: false
-    }
-  },
-  watch: {
-    '$route': function () {
-      this.toggleSidebar()
-    }
-  },
   computed: {
+    sidebarToggled () {
+      return this.$route.meta.sidebarToggled === true
+    },
     showSidebar () {
       return _.get(this, '$route.matched[0].props.default.showSidebar', true) === true
     }
-  },
-  methods: {
-    toggleSidebar () {
-      this.sidebarToggled = _.get(this, '$route.matched[1].props.default.sidebarToggled', false) === true
-    }
-  },
-  mounted () {
-    this.toggleSidebar()
   }
 }
 </script>

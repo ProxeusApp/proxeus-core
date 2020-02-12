@@ -1,5 +1,5 @@
 <template>
-<tr class="mshadow-light">
+<tr>
   <td v-bind:class="{'tdmin':cols.length>0}" class="easy-read">{{ lk }}</td>
   <td v-for="(lang,key) in langList" :key="lang.Code"
       v-bind:class="{active:cols.indexOf(key) > -1,'tdmin tdmoremin':cols.indexOf(key) === -1}"
