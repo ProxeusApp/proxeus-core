@@ -5,14 +5,10 @@
   <div class="main-container">
     <list-group :deleteElementFunc="provideDeleteFunc" :iconFa="iconFa" nodeType="template" path="template">
       <template scope="element">
-        <td class="tdmin">
           <button v-if="element && app.amIWriteGrantedFor(element)" :title="$t('delete this template')" @click="areYouSureDeleteDialog($event, element)" type="button"
-                  class="btn btn-primary btn-round" style="z-index: 1;padding: 6px;display: inline-block;">
-            <i class="material-icons">
-              delete_forever
-            </i>
+                  class="btn btn-primary btn-sm">
+              Delete
           </button>
-        </td>
       </template>
     </list-group>
     <list-item-dialog :setup="setupDeleteDialog" :sureFunc="deleteDialogSureAction" :iconFa="iconFa">

@@ -109,7 +109,7 @@ $leftSideSpacingFromBrowserFrame: 20px;
 }
 
 .topnav {
-  padding: 0 25px;
+  padding: 0 $spacer * 1.5;
   z-index: 22232732;
   position: relative;
   line-height: 1;
@@ -181,7 +181,7 @@ body {
 }
 
 .main-container {
-  padding: $spacer;
+  padding: $spacer $spacer * 1.5;
 }
 
 .btn > i.material-icons {
@@ -223,12 +223,14 @@ body {
 }
 
 .mlist-item {
-  border-bottom: 1px solid #d8d8d8;
   cursor: pointer;
+  &:last-child {
+    border-bottom: 1px solid $gray-200;
+  }
 }
 
 .mlist-item > td {
-  padding: 4px 8px 4px 0;
+  padding: $spacer / 2 $spacer;
 }
 
 .mlist-item > td:first-child {
@@ -266,14 +268,6 @@ table.nicetblfixed {
   width: 100%;
   max-width: 100%;
   table-layout: fixed;
-}
-
-.mlist-item td:last-child {
-  border-right: 1px solid #f7f7f7;
-}
-
-.mlist-item td {
-  border-top: 1px solid #f7f7f7;
 }
 
 .no-elements {
