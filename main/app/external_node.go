@@ -23,7 +23,7 @@ type externalNode struct {
 }
 
 func (ex externalNode) Execute(n *workflow.Node) (proceed bool, err error) {
-	client := http.Client{Timeout: 5 * time.Second}
+	client := http.Client{Timeout: 15 * time.Minute}
 	q, err := ex.system().DB.Workflow.QueryFromInstanceID(ex.auth(), n.ID)
 	if err != nil {
 		return false, err
@@ -42,7 +42,13 @@ func (ex externalNode) Execute(n *workflow.Node) (proceed bool, err error) {
 	}
 	defer r.Body.Close()
 	if r.StatusCode != http.StatusOK {
-		return false, fmt.Errorf("bad node status code %d", r.StatusCode)
+		resBody, err := ioutil.ReadAll(r.Body)
+		if err != nil {
+			return false, err
+		}
+		err = fmt.Errorf("bad node status code %d, response: ", r.StatusCode)
+		log.Printf("%s, node response: %s", err, string(resBody))
+		return false, err
 	}
 	err = ex.putData(r.Body)
 	return err == nil, err
