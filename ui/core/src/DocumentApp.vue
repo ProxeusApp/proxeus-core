@@ -124,7 +124,7 @@ export default {
     padding-top: 0;
     padding-bottom: 0;
     background: transparent;
-    height: 58px;
+    height: 60px;
     vertical-align: middle;
     display: flex;
     align-items: center;

@@ -1,42 +1,46 @@
 <template>
-<tr class="mlist-item" :class="{'animate-new-entry':element.isNew}" :data-index="index"
-    @click="goToLink()">
-  <td class="tdmin">
-    <img v-if="element.photo" class="mlist-group-icon" :src="element.photo"/>
-    <i v-else class="mlist-group-icon material-icons" :class="[iconFa ? iconFa : '']">{{ icon || ''}}</i>
-  </td>
-  <td class="tdmax impcnt">
-    <div style="display:block;" class="fregular">{{ element.name||defaultName||'-' }}
-      <slot name="nameExtra"/>
-    </div>
-    <small style="display:block;" class="light-text fregular" v-if="element.email">{{element.email}}</small>
-    <small style="display:block;" class="light-text" v-if="element.etherPK">{{ element.etherPK }}</small>
-    <small style="display:block;" class="light-text" v-else-if="element.detail">{{ element.detail }}</small>
-    <small style="display:block;" class="light-text" v-else>-</small>
+  <tr class="mlist-item" :class="{'animate-new-entry':element.isNew}" :data-index="index"
+      @click="goToLink()">
+    <td class="tdmin">
+      <img v-if="element.photo" class="mlist-group-icon" :src="element.photo"/>
+      <i v-else class="mlist-group-icon material-icons" :class="[iconFa ? iconFa : '']">{{ icon || ''}}</i>
+    </td>
+    <td>
+      <div style="display:block;" class="fregular">{{ element.name||defaultName||'-' }}
+        <slot name="nameExtra"/>
+      </div>
+      <small style="display:block;" class="light-text fregular" v-if="element.email">{{element.email}}</small>
+      <small style="display:block;" class="light-text" v-if="element.etherPK">{{ element.etherPK }}</small>
+      <small style="display:block;" class="light-text" v-else-if="element.detail">{{ element.detail }}</small>
+      <small style="display:block;" class="light-text" v-else>-</small>
 
-    <small style="display:block;" class="error" v-if="error">{{error}}</small>
-  </td>
-  <td v-if="$parent.lastExs || $parent.lastImps" class="tdmin">
-    <div v-if="$parent.lastImps && $parent.lastImps.hasOwnProperty(element.id)" class="easy-read"><span class="badge"
-                                                                                                        :class="$parent.lastImps[element.id] === ''?'badge-info':'badge-danger'">{{$t('Imported')}}</span>
-    </div>
-    <div v-if="$parent.lastExs && $parent.lastExs.hasOwnProperty(element.id)" class="easy-read"><span class="badge"
-                                                                                                      :class="$parent.lastExs[element.id] === ''?'badge-info':'badge-danger'">{{$t('Exported')}}</span>
-    </div>
-  </td>
-  <slot/>
-  <td v-if="timestamps" class="tdmin impcnt" style="text-align: right;">
-    <div class="easy-read stime">{{ element.created | moment('DD.MM.YY - HH:mm') }}</div>
-    <small class="light-text">{{$t('Created')}}</small>
-  </td>
-  <td v-if="timestamps" class="tdmin impcnt" style="text-align: right;">
-    <div class="easy-read stime">{{ element.updated | moment('DD.MM.YY - HH:mm') }}</div>
-    <small class="light-text">{{$t('Updated')}}</small>
-  </td>
-  <td class="tdmin impcnt pl-2" style="text-align: right;">
-    <div v-if="price" class="easy-read stime">{{ this.price }} XES</div>
-  </td>
-</tr>
+      <small style="display:block;" class="error" v-if="error">{{error}}</small>
+    </td>
+    <td v-if="$parent.lastExs || $parent.lastImps">
+      <div v-if="$parent.lastImps && $parent.lastImps.hasOwnProperty(element.id)" class="easy-read"><span class="badge"
+                                                                                                          :class="$parent.lastImps[element.id] === ''?'badge-info':'badge-danger'">{{$t('Imported')}}</span>
+      </div>
+      <div v-if="$parent.lastExs && $parent.lastExs.hasOwnProperty(element.id)" class="easy-read"><span class="badge"
+                                                                                                        :class="$parent.lastExs[element.id] === ''?'badge-info':'badge-danger'">{{$t('Exported')}}</span>
+      </div>
+    </td>
+    <td v-if="timestamps">
+      <div class="easy-read stime">{{ element.created | moment('DD.MM.YY - HH:mm') }}</div>
+      <small class="light-text">{{$t('Created')}}</small>
+    </td>
+    <td v-if="timestamps">
+      <div class="easy-read stime">{{ element.updated | moment('DD.MM.YY - HH:mm') }}</div>
+      <small class="light-text">{{$t('Updated')}}</small>
+    </td>
+    <td class="pl-2" style="text-align: right;">
+      <div v-if="price" class="easy-read stime">{{ this.price }} XES</div>
+    </td>
+    <td class="tdmin align-items-center">
+      <div class="d-flex align-items-center">
+        <slot/>
+      </div>
+    </td>
+  </tr>
 </template>
 
 <script>

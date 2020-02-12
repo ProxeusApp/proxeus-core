@@ -28,7 +28,7 @@ $mdi-font-path: "~@mdi/font/fonts";
 }
 
 .layout-fixed-scroll-container {
-  height: calc(100vh - 58px);
+  height: calc(100vh - 60px);
   position: relative;
 }
 
@@ -40,6 +40,12 @@ $mdi-font-path: "~@mdi/font/fonts";
 ::selection {
   background: $info;
   color: $primary;
+}
+
+.table {
+  td {
+    vertical-align: middle;
+  }
 }
 
 .navbar.navbar-expand-lg {

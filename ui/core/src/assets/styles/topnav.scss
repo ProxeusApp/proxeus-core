@@ -1,5 +1,5 @@
 .topnav {
-  height: 58px;
+  height: 60px;
 
   .topnav-buttons {
     white-space: nowrap;
@@ -9,10 +9,10 @@
     border: 0;
     border-right: 1px solid $gray-300;
     border-radius: 0;
-    margin-left: -24px;
+    margin-left: -$spacer * 1.5;
     padding-top: 0;
     padding-bottom: 0;
-    height: 58px;
+    height: 60px;
     vertical-align: middle;
     background: transparent;
     display: flex;

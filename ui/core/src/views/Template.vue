@@ -705,7 +705,7 @@ export default {
   }
 
   .layout-fixed-scroll-container {
-    height: calc(100% - 58px);
+    height: calc(100% - 60px);
     position: relative;
   }
 
