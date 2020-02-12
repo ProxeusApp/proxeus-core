@@ -98,7 +98,8 @@ func SetStoredConfig(c echo.Context, conf interface{}) error {
 	}
 	buf, err := json.Marshal(n)
 	if err != nil {
-		panic(err.Error())
+		log.Print("[nodeservice] error marshalling config ", id, conf, " err ", err)
+		return err
 	}
 	client := http.Client{Timeout: 5 * time.Second}
 	_, err = client.Post(proxeusUrl+"/api/admin/external/config/"+n.ID,
@@ -137,7 +138,11 @@ func (e ExternalQuery) jwtToken() string {
 		ExpiresAt: time.Now().Add(time.Hour * 24).Unix(),
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	t, _ := token.SignedString([]byte(e.Secret))
+	t, err := token.SignedString([]byte(e.Secret))
+	if err !=nil{
+		log.Println("Could not sign token with secret", token.Raw)
+		return ""
+	}
 	return t
 }
 
