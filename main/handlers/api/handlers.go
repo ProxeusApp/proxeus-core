@@ -18,6 +18,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/ProxeusApp/proxeus-core/externalnode"
+
 	"github.com/ProxeusApp/proxeus-core/main/app"
 	cfg "github.com/ProxeusApp/proxeus-core/main/config"
 	"github.com/ProxeusApp/proxeus-core/main/handlers/blockchain"
@@ -2049,11 +2051,17 @@ func ExternalConfigurationPage(e echo.Context) error {
 	id := c.Param("id")
 	name := c.Param("name")
 
+	//QueryFromInstanceID -> instance
+	q, err := c.System().DB.Workflow.QueryFromInstanceID(sess, id)
+	if err == nil {
+		return c.Redirect(http.StatusFound, q.ConfigUrl())
+	}
+
 	node, err := c.System().DB.Workflow.NodeByName(sess, name)
 	if err != nil {
 		return err
 	}
-	i := &model.ExternalNodeInstance{
+	i := &externalnode.ExternalNodeInstance{
 		ID:       id,
 		NodeName: name,
 	}
@@ -2061,7 +2069,7 @@ func ExternalConfigurationPage(e echo.Context) error {
 	if err != nil {
 		return err
 	}
-	q := model.ExternalQuery{
+	q = externalnode.ExternalQuery{
 		ExternalNode:         node,
 		ExternalNodeInstance: i,
 	}
@@ -2073,10 +2081,57 @@ func ExternalRegister(e echo.Context) error {
 		return errors.New("only local ip allowed")
 	}
 	c := e.(*www.Context)
-	var node model.ExternalNode
+	var node externalnode.ExternalNode
 	err := c.Bind(&node)
 	if err != nil {
 		return err
 	}
 	return c.System().DB.Workflow.RegisterExternalNode(new(model.User), &node)
+}
+
+func ExternalConfigStore(e echo.Context) error {
+	if e.RealIP() != "127.0.0.1" {
+		return errors.New("only local ip allowed")
+	}
+	c := e.(*www.Context)
+
+	var node externalnode.ExternalNodeInstance
+	err := c.Bind(&node)
+	if err != nil {
+		return err
+	}
+
+	//QueryFromInstanceID -> instance
+	q, err := c.System().DB.Workflow.QueryFromInstanceID(new(model.User), node.ID)
+	if err != nil {
+		return c.String(http.StatusBadRequest, err.Error())
+	}
+
+	//Add config to instance
+	q.Config = node.Config
+
+	//PutExternalNodeInstance
+	err = c.System().DB.Workflow.PutExternalNodeInstance(new(model.User), q.ExternalNodeInstance)
+	if err != nil {
+		return c.String(http.StatusBadRequest, err.Error())
+	}
+	return c.NoContent(http.StatusOK)
+}
+
+func ExternalConfigRetrieve(e echo.Context) error {
+	if e.RealIP() != "127.0.0.1" {
+		return errors.New("only local ip allowed")
+	}
+	c := e.(*www.Context)
+	id := c.Param("id")
+	q, err := c.System().DB.Workflow.QueryFromInstanceID(new(model.User), id)
+	if err != nil {
+		return c.String(http.StatusBadRequest, err.Error())
+	}
+
+	if q.Config == nil {
+		c.NoContent(http.StatusNotFound)
+	}
+
+	return c.JSON(http.StatusOK, q.Config)
 }

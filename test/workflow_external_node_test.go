@@ -1,6 +1,8 @@
 package test
 
 import (
+	"github.com/ProxeusApp/proxeus-core/externalnode"
+
 	"net/http"
 
 	uuid "github.com/satori/go.uuid"
@@ -18,6 +20,25 @@ func testWorkflowExternalNode(s *session) {
 	updateWorkflow(s, w1)
 
 	configExternalNode(s, externalNodeId)
+
+	type configData struct {
+		FromCurrency string
+		ToCurrency   string
+	}
+
+	config := &configData{
+		FromCurrency: "CHF",
+		ToCurrency:   "XES",
+	}
+
+	node := externalnode.ExternalNodeInstance{
+		ID:     externalNodeId,
+		Config: config,
+	}
+
+	setExternalNodeConfig(s, externalNodeId, node)
+	getExternalNodeConfig(s, externalNodeId, config)
+
 	executeWorkflowExternalNode(s, w1)
 
 	deleteWorkflow(s, w1.ID, true)
@@ -55,6 +76,14 @@ func workflowExternalNodeData(s *session, formID string, externalNodeId string) 
 
 func configExternalNode(s *session, id string) {
 	s.e.GET("/api/admin/external/priceGetter/" + id).Expect().Status(http.StatusOK)
+}
+
+func setExternalNodeConfig(s *session, id string, config interface{}) {
+	s.e.POST("/api/admin/external/config/" + id).WithJSON(config).Expect().Status(http.StatusOK)
+}
+
+func getExternalNodeConfig(s *session, id string, config interface{}) {
+	s.e.GET("/api/admin/external/config/" + id).Expect().Status(http.StatusOK)
 }
 
 const workflowXData = `{
