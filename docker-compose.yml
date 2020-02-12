@@ -47,3 +47,15 @@ services:
     volumes:
       - ${PROXEUS_DATA_DIR:-./data}/document-service/logs:/document-service/logs
       - ${PROXEUS_DATA_DIR:-./data}/document-service/fonts:/document-service/fonts
+
+
+  node-crypto-forex-rates:
+    image: proxeus/node-crypto-forex-rates:latest
+    container_name: xes_node-crypto-forex-rates
+    networks:
+      - xes-platform-network
+    restart: unless-stopped
+    environment:
+      TZ: Europe/Zurich
+    ports:
+      - "8011:8011"
