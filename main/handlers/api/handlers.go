@@ -2077,8 +2077,8 @@ func ExternalConfigurationPage(e echo.Context) error {
 }
 
 func ExternalRegister(e echo.Context) error {
-	if e.RealIP() != "127.0.0.1" && e.RealIP() != "::1"{
-		log.Println("Caller: "+ e.RealIP())
+	if e.RealIP() != "127.0.0.1" && e.RealIP() != "::1" {
+		log.Println("Caller: " + e.RealIP())
 		return errors.New("only local ip allowed")
 	}
 	c := e.(*www.Context)
@@ -2091,8 +2091,8 @@ func ExternalRegister(e echo.Context) error {
 }
 
 func ExternalConfigStore(e echo.Context) error {
-	if e.RealIP() != "127.0.0.1" && e.RealIP() != "::1"{
-		log.Println("Caller: "+ e.RealIP())
+	if e.RealIP() != "127.0.0.1" && e.RealIP() != "::1" {
+		log.Println("Caller: " + e.RealIP())
 		return errors.New("only local ip allowed")
 	}
 	c := e.(*www.Context)
@@ -2121,8 +2121,8 @@ func ExternalConfigStore(e echo.Context) error {
 }
 
 func ExternalConfigRetrieve(e echo.Context) error {
-	if e.RealIP() != "127.0.0.1" && e.RealIP() != "::1"{
-		log.Println("Caller: "+ e.RealIP())
+	if e.RealIP() != "127.0.0.1" && e.RealIP() != "::1" {
+		log.Println("Caller: " + e.RealIP())
 		return errors.New("only local ip allowed")
 	}
 	c := e.(*www.Context)
