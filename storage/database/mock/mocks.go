@@ -5,14 +5,14 @@
 package mock
 
 import (
-	io "io"
-	reflect "reflect"
-	time "time"
-
+	externalnode "github.com/ProxeusApp/proxeus-core/externalnode"
 	storage "github.com/ProxeusApp/proxeus-core/storage"
 	file "github.com/ProxeusApp/proxeus-core/sys/file"
 	model "github.com/ProxeusApp/proxeus-core/sys/model"
 	gomock "github.com/golang/mock/gomock"
+	io "io"
+	reflect "reflect"
+	time "time"
 )
 
 // MockSettingsIF is a mock of SettingsIF interface
@@ -592,7 +592,7 @@ func (mr *MockWorkflowIFMockRecorder) Close() *gomock.Call {
 }
 
 // RegisterExternalNode mocks base method
-func (m *MockWorkflowIF) RegisterExternalNode(auth model.Auth, n *model.ExternalNode) error {
+func (m *MockWorkflowIF) RegisterExternalNode(auth model.Auth, n *externalnode.ExternalNode) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "RegisterExternalNode", auth, n)
 	ret0, _ := ret[0].(error)
@@ -606,10 +606,10 @@ func (mr *MockWorkflowIFMockRecorder) RegisterExternalNode(auth, n interface{}) 
 }
 
 // ListExternalNodes mocks base method
-func (m *MockWorkflowIF) ListExternalNodes() []*model.ExternalNode {
+func (m *MockWorkflowIF) ListExternalNodes() []*externalnode.ExternalNode {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ListExternalNodes")
-	ret0, _ := ret[0].([]*model.ExternalNode)
+	ret0, _ := ret[0].([]*externalnode.ExternalNode)
 	return ret0
 }
 
@@ -634,10 +634,10 @@ func (mr *MockWorkflowIFMockRecorder) DeleteExternalNode(auth, id interface{}) *
 }
 
 // NodeByName mocks base method
-func (m *MockWorkflowIF) NodeByName(auth model.Auth, name string) (*model.ExternalNode, error) {
+func (m *MockWorkflowIF) NodeByName(auth model.Auth, name string) (*externalnode.ExternalNode, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "NodeByName", auth, name)
-	ret0, _ := ret[0].(*model.ExternalNode)
+	ret0, _ := ret[0].(*externalnode.ExternalNode)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -649,10 +649,10 @@ func (mr *MockWorkflowIFMockRecorder) NodeByName(auth, name interface{}) *gomock
 }
 
 // QueryFromInstanceID mocks base method
-func (m *MockWorkflowIF) QueryFromInstanceID(auth model.Auth, id string) (model.ExternalQuery, error) {
+func (m *MockWorkflowIF) QueryFromInstanceID(auth model.Auth, id string) (externalnode.ExternalQuery, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "QueryFromInstanceID", auth, id)
-	ret0, _ := ret[0].(model.ExternalQuery)
+	ret0, _ := ret[0].(externalnode.ExternalQuery)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -664,7 +664,7 @@ func (mr *MockWorkflowIFMockRecorder) QueryFromInstanceID(auth, id interface{}) 
 }
 
 // PutExternalNodeInstance mocks base method
-func (m *MockWorkflowIF) PutExternalNodeInstance(auth model.Auth, i *model.ExternalNodeInstance) error {
+func (m *MockWorkflowIF) PutExternalNodeInstance(auth model.Auth, i *externalnode.ExternalNodeInstance) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "PutExternalNodeInstance", auth, i)
 	ret0, _ := ret[0].(error)
@@ -701,7 +701,7 @@ func (m *MockExternalNodeIF) EXPECT() *MockExternalNodeIFMockRecorder {
 }
 
 // RegisterExternalNode mocks base method
-func (m *MockExternalNodeIF) RegisterExternalNode(auth model.Auth, n *model.ExternalNode) error {
+func (m *MockExternalNodeIF) RegisterExternalNode(auth model.Auth, n *externalnode.ExternalNode) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "RegisterExternalNode", auth, n)
 	ret0, _ := ret[0].(error)
@@ -715,10 +715,10 @@ func (mr *MockExternalNodeIFMockRecorder) RegisterExternalNode(auth, n interface
 }
 
 // ListExternalNodes mocks base method
-func (m *MockExternalNodeIF) ListExternalNodes() []*model.ExternalNode {
+func (m *MockExternalNodeIF) ListExternalNodes() []*externalnode.ExternalNode {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ListExternalNodes")
-	ret0, _ := ret[0].([]*model.ExternalNode)
+	ret0, _ := ret[0].([]*externalnode.ExternalNode)
 	return ret0
 }
 
@@ -743,10 +743,10 @@ func (mr *MockExternalNodeIFMockRecorder) DeleteExternalNode(auth, id interface{
 }
 
 // NodeByName mocks base method
-func (m *MockExternalNodeIF) NodeByName(auth model.Auth, name string) (*model.ExternalNode, error) {
+func (m *MockExternalNodeIF) NodeByName(auth model.Auth, name string) (*externalnode.ExternalNode, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "NodeByName", auth, name)
-	ret0, _ := ret[0].(*model.ExternalNode)
+	ret0, _ := ret[0].(*externalnode.ExternalNode)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -758,10 +758,10 @@ func (mr *MockExternalNodeIFMockRecorder) NodeByName(auth, name interface{}) *go
 }
 
 // QueryFromInstanceID mocks base method
-func (m *MockExternalNodeIF) QueryFromInstanceID(auth model.Auth, id string) (model.ExternalQuery, error) {
+func (m *MockExternalNodeIF) QueryFromInstanceID(auth model.Auth, id string) (externalnode.ExternalQuery, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "QueryFromInstanceID", auth, id)
-	ret0, _ := ret[0].(model.ExternalQuery)
+	ret0, _ := ret[0].(externalnode.ExternalQuery)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -773,7 +773,7 @@ func (mr *MockExternalNodeIFMockRecorder) QueryFromInstanceID(auth, id interface
 }
 
 // PutExternalNodeInstance mocks base method
-func (m *MockExternalNodeIF) PutExternalNodeInstance(auth model.Auth, i *model.ExternalNodeInstance) error {
+func (m *MockExternalNodeIF) PutExternalNodeInstance(auth model.Auth, i *externalnode.ExternalNodeInstance) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "PutExternalNodeInstance", auth, i)
 	ret0, _ := ret[0].(error)
