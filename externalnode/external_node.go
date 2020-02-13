@@ -36,7 +36,7 @@ type (
 	}
 )
 
-const proxeusUrl = "http://127.0.0.1:1323"
+const proxeusUrl = "http://localhost:1323"
 
 func Health(c echo.Context) error {
 	return c.String(http.StatusOK, "I'm ok")

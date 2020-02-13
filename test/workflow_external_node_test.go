@@ -75,7 +75,7 @@ func workflowExternalNodeData(s *session, formID string, externalNodeId string) 
 }
 
 func configExternalNode(s *session, id string) {
-	s.e.GET("/api/admin/external/priceGetter/" + id).Expect().Status(http.StatusOK)
+	s.e.GET("/api/admin/external/node-crypto-forex-rates/" + id).Expect().Status(http.StatusOK)
 }
 
 func setExternalNodeConfig(s *session, id string, config interface{}) {
@@ -112,7 +112,7 @@ const workflowXData = `{
         },
         "{{.externalNodeId}}": {
           "id": "{{.externalNodeId}}",
-          "name": "priceGetter",
+          "name": "node-crypto-forex-rates",
           "type": "externalNode",
           "p": {
             "x": 301,
