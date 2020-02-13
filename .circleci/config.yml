@@ -12,6 +12,7 @@ executors:
       PROJECT_ROOT_FOLDER: ~/project
     docker:
       - image: circleci/golang:1.13
+      - image: proxeus/node-crypto-forex-rates
       - image: proxeus/document-service
       - image: proxeus/mongo-dev-cluster
   docker-publisher:

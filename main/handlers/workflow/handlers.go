@@ -13,7 +13,7 @@ import (
 
 	"github.com/ProxeusApp/proxeus-core/main/handlers/api"
 
-	"github.com/ProxeusApp/proxeus-core/main/handlers/customNode"
+	"github.com/ProxeusApp/proxeus-core/main/handlers/externalnode"
 	"github.com/ProxeusApp/proxeus-core/main/handlers/helpers"
 	"github.com/ProxeusApp/proxeus-core/main/www"
 	"github.com/ProxeusApp/proxeus-core/sys/model"
@@ -210,7 +210,8 @@ func ListCustomNodeHandler(e echo.Context) error {
 	nodeType := c.Param("type")
 	sess := c.Session(false)
 	if sess != nil {
-		dat := customNode.List(c, nodeType)
+		externalnode.ProbeExternalNodes(c.System())
+		dat := externalnode.List(c, nodeType)
 		if dat != nil {
 			return c.JSON(http.StatusOK, dat)
 		}

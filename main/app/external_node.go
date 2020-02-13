@@ -112,32 +112,3 @@ func (ex externalNode) putData(r io.Reader) error {
 	ex.ctx2.data = d
 	return nil
 }
-
-func ProbeExternalNodes(s *sys.System) {
-	for _, node := range s.DB.Workflow.ListExternalNodes() {
-		log.Printf("[nodeservice] checking external node %s \n", node.Name)
-		err := healthCheck(node.HealthUrl())
-		if err != nil {
-			log.Printf("[nodeservice] removing external node err %s \n", err)
-			s.DB.Workflow.DeleteExternalNode(new(model.User), node.ID)
-		}
-	}
-}
-
-func healthCheck(url string) error {
-	client := http.Client{Timeout: 5 * time.Second}
-	var err error
-	var r *http.Response
-	for i := 0; i < 3; i++ {
-		r, err = client.Get(url)
-		if err == nil && r.StatusCode == http.StatusOK {
-			return nil
-		}
-		time.Sleep(2 * time.Second)
-	}
-	var code int
-	if r != nil {
-		code = r.StatusCode
-	}
-	return fmt.Errorf("%s [code %d]", err.Error(), code)
-}

@@ -1,11 +1,8 @@
 package model
 
 import (
-	"fmt"
 	"os"
 	"time"
-
-	"github.com/dgrijalva/jwt-go"
 
 	"github.com/ProxeusApp/proxeus-core/sys/model/compatability"
 
@@ -135,25 +132,6 @@ type (
 	}
 
 	TokenType string
-
-	ExternalNode struct {
-		ID     string `json:"id" storm:"id"`
-		Name   string `json:"name"`
-		Detail string `json:"detail"`
-		Url    string `json:"url"`
-		Secret string `json:"secret"`
-	}
-
-	ExternalNodeInstance struct {
-		Permissions
-		ID       string `json:"id" storm:"id"`
-		NodeName string `json:"nodeName"`
-	}
-
-	ExternalQuery struct {
-		*ExternalNode
-		*ExternalNodeInstance
-	}
 )
 
 const (
@@ -231,43 +209,4 @@ func (me *WorkflowItem) LoopNodes(looper *workflow.Looper, cb func(l *workflow.L
 		}
 		me.Data.Loop(looper, cb)
 	}
-}
-
-func (e *ExternalNode) HealthUrl() string {
-	return fmt.Sprintf("%s/health", e.Url)
-}
-
-func (e ExternalQuery) jwtToken() string {
-	claims := jwt.StandardClaims{
-		Id:        e.ExternalNodeInstance.ID,
-		ExpiresAt: time.Now().Add(time.Hour * 24).Unix(),
-	}
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	t, _ := token.SignedString([]byte(e.Secret))
-	return t
-}
-
-func (e ExternalQuery) nodeUrl(method string) string {
-	return fmt.Sprintf("%s/node/%s/%s?auth=%s",
-		e.Url,
-		e.ExternalNodeInstance.ID,
-		method,
-		e.jwtToken(),
-	)
-}
-
-func (e ExternalQuery) ConfigUrl() string {
-	return e.nodeUrl("config")
-}
-
-func (e ExternalQuery) NextUrl() string {
-	return e.nodeUrl("next")
-}
-
-func (e ExternalQuery) RemoveUrl() string {
-	return e.nodeUrl("remove")
-}
-
-func (e ExternalQuery) CloseUrl() string {
-	return e.nodeUrl("close")
 }

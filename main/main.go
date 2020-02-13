@@ -7,10 +7,6 @@ import (
 	"os"
 	"path"
 
-	"github.com/ProxeusApp/proxeus-core/main/external/pricegetter"
-
-	"github.com/ProxeusApp/proxeus-core/main/app"
-
 	"github.com/labstack/echo"
 
 	"strings"
@@ -88,8 +84,6 @@ func main() {
 
 	// Main routes
 	handlers.MainHostedAPI(e, www.NewSecurity(), ServerVersion)
-	go app.ProbeExternalNodes(system)
-	go pricegetter.Run()
 
 	www.StartServer(e, cfg.Config.ServiceAddress, false)
 	system.Shutdown()
