@@ -11,6 +11,8 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/ProxeusApp/proxeus-core/service"
+
 	"github.com/golang/mock/gomock"
 	"github.com/gorilla/sessions"
 	"github.com/labstack/echo"
@@ -55,7 +57,6 @@ type paymentResponse struct {
 }
 
 func TestCreateWorkflowPayment(t *testing.T) {
-
 	mockCtrl, workflowPaymentsDB := up(t)
 	defer down(mockCtrl, workflowPaymentsDB)
 
@@ -74,6 +75,10 @@ func TestCreateWorkflowPayment(t *testing.T) {
 	system := &sys.System{}
 	system.DB = &storage.DBSet{WorkflowPayments: workflowPaymentsDB, User: userDBMock, Workflow: workflowDBMock}
 	www.SetSystem(system)
+
+	paymentService := service.NewPaymentService(system.DB.WorkflowPayments, system.DB.Workflow, nil)
+	userService := service.NewUserService()
+	Init(paymentService, userService)
 
 	t.Run("ShouldCreatePaymentItem", func(t *testing.T) {
 		if assert.NoError(t, CreateWorkflowPayment(wwwContext)) {
@@ -96,6 +101,10 @@ func TestCreateWorkflowPayment(t *testing.T) {
 func TestGetWorkflowPaymentById(t *testing.T) {
 	mockCtrl, workflowPaymentsDB := up(t)
 	defer down(mockCtrl, workflowPaymentsDB)
+
+	paymentService := service.NewPaymentService(workflowPaymentsDB, nil, nil)
+	userService := service.NewUserService()
+	Init(paymentService, userService)
 
 	t.Run("ShouldReturnPayment", func(t *testing.T) {
 		paymentId := "1"
@@ -171,6 +180,10 @@ func TestGetWorkflowPayment(t *testing.T) {
 	mockCtrl, workflowPaymentsDB := up(t)
 	defer down(mockCtrl, workflowPaymentsDB)
 
+	paymentService := service.NewPaymentService(workflowPaymentsDB, nil, nil)
+	userService := service.NewUserService()
+	Init(paymentService, userService)
+
 	t.Run("ShouldReturnPayment", func(t *testing.T) {
 		paymentId := "3"
 		txHash := "0x3"
@@ -182,7 +195,7 @@ func TestGetWorkflowPayment(t *testing.T) {
 			panic(err)
 		}
 
-		payment, err := getWorkflowPayment(workflowPaymentsDB, txHash, from, status)
+		payment, err := paymentService.GetWorkflowPayment(txHash, from, status)
 
 		assert.Nil(t, err)
 		assert.Equal(t, paymentId, payment.ID)
@@ -203,7 +216,7 @@ func TestGetWorkflowPayment(t *testing.T) {
 			panic(err)
 		}
 
-		payment, err := getWorkflowPayment(workflowPaymentsDB, txHash, from, status)
+		payment, err := paymentService.GetWorkflowPayment(txHash, from, status)
 
 		if !db.NotFound(err) {
 			t.Errorf("Expected to have not found but got: %v", err)
@@ -222,6 +235,10 @@ func TestUpdateWorkflowPaymentPending(t *testing.T) {
 	mockCtrl, workflowPaymentsDB := up(t)
 	defer down(mockCtrl, workflowPaymentsDB)
 
+	paymentService := service.NewPaymentService(workflowPaymentsDB, nil, nil)
+	userService := service.NewUserService()
+	Init(paymentService, userService)
+
 	t.Run("ShouldUpdatePayment", func(t *testing.T) {
 		paymentId := "3"
 		txHash := "0x3"
@@ -232,7 +249,7 @@ func TestUpdateWorkflowPaymentPending(t *testing.T) {
 			panic(err)
 		}
 
-		assert.NoError(t, updateWorkflowPaymentPending(workflowPaymentsDB, paymentId, txHash, from))
+		assert.NoError(t, paymentService.UpdateWorkflowPaymentPending(paymentId, txHash, from))
 
 		payment, err := workflowPaymentsDB.Get(paymentId)
 		if err != nil {
@@ -258,7 +275,7 @@ func TestUpdateWorkflowPaymentPending(t *testing.T) {
 			panic(err)
 		}
 
-		err = updateWorkflowPaymentPending(workflowPaymentsDB, paymentId, txHash, "0x6")
+		err = paymentService.UpdateWorkflowPaymentPending(paymentId, txHash, "0x6")
 		if !db.NotFound(err) {
 			t.Error("expected not found err, got", err)
 		}
@@ -283,6 +300,8 @@ func TestCancelWorkflowPayment(t *testing.T) {
 	mockCtrl, workflowPaymentsDB := up(t)
 	defer down(mockCtrl, workflowPaymentsDB)
 
+	paymentService := service.NewPaymentService(workflowPaymentsDB, nil, nil)
+
 	t.Run("ShouldCancelWorkflowPayment", func(t *testing.T) {
 		paymentId := "4"
 		txHash := "0x4"
@@ -294,7 +313,7 @@ func TestCancelWorkflowPayment(t *testing.T) {
 			panic(err)
 		}
 
-		assert.NoError(t, cancelWorkflowPayment(workflowPaymentsDB, paymentId, from))
+		assert.NoError(t, paymentService.CancelWorkflowPayment(paymentId, from))
 
 		payment, err := workflowPaymentsDB.Get(paymentId)
 		if err != nil {
@@ -320,7 +339,7 @@ func TestCancelWorkflowPayment(t *testing.T) {
 			panic(err)
 		}
 
-		assert.Error(t, cancelWorkflowPayment(workflowPaymentsDB, paymentId, from))
+		assert.Error(t, paymentService.CancelWorkflowPayment(paymentId, from))
 
 		payment, err := workflowPaymentsDB.Get(paymentId)
 		if err != nil {
@@ -346,7 +365,7 @@ func TestCancelWorkflowPayment(t *testing.T) {
 			panic(err)
 		}
 
-		assert.Error(t, cancelWorkflowPayment(workflowPaymentsDB, paymentId, "0x8"))
+		assert.Error(t, paymentService.CancelWorkflowPayment(paymentId, "0x8"))
 
 		payment, err := workflowPaymentsDB.Get(paymentId)
 		if err != nil {
@@ -366,6 +385,10 @@ func TestRedeemPayment(t *testing.T) {
 	mockCtrl, workflowPaymentsDB := up(t)
 	defer down(mockCtrl, workflowPaymentsDB)
 
+	paymentService := service.NewPaymentService(workflowPaymentsDB, nil, nil)
+	userService := service.NewUserService()
+	Init(paymentService, userService)
+
 	t.Run("ShouldRedeemWorkflowPayment", func(t *testing.T) {
 		paymentId := "7"
 		txHash := "0x7"
@@ -378,7 +401,7 @@ func TestRedeemPayment(t *testing.T) {
 			panic(err)
 		}
 
-		assert.NoError(t, RedeemPayment(workflowPaymentsDB, workflowId, from))
+		assert.NoError(t, paymentService.RedeemPayment(workflowId, from))
 
 		payment, err := workflowPaymentsDB.Get(paymentId)
 		if err != nil {
@@ -406,7 +429,7 @@ func TestRedeemPayment(t *testing.T) {
 			panic(err)
 		}
 
-		assert.NoError(t, RedeemPayment(workflowPaymentsDB, "01-03", "0x9"))
+		assert.NoError(t, paymentService.RedeemPayment("01-03", "0x9"))
 
 		firstPayment, err := workflowPaymentsDB.Get("8first")
 		if err != nil {
@@ -444,7 +467,7 @@ func TestRedeemPayment(t *testing.T) {
 			panic(err)
 		}
 
-		assert.Error(t, RedeemPayment(workflowPaymentsDB, workflowId, from))
+		assert.Error(t, paymentService.RedeemPayment(workflowId, from))
 
 		payment, err := workflowPaymentsDB.Get(paymentId)
 		if err != nil {
@@ -471,7 +494,7 @@ func TestRedeemPayment(t *testing.T) {
 			panic(err)
 		}
 
-		assert.Error(t, RedeemPayment(workflowPaymentsDB, workflowId, "0x12"))
+		assert.Error(t, paymentService.RedeemPayment(workflowId, "0x12"))
 
 		payment, err := workflowPaymentsDB.Get(paymentId)
 		if err != nil {
@@ -487,33 +510,7 @@ func TestRedeemPayment(t *testing.T) {
 	})
 }
 
-func TestCheckIfWorkflowPaymentRequired(t *testing.T) {
-	mockCtrl, workflowPaymentsDB := up(t)
-	defer down(mockCtrl, workflowPaymentsDB)
-
-	t.Run("ShouldRequirePaymentIfWorkflowNotForFree", func(t *testing.T) {
-		permissions := &model.Permissions{Owner: "1"}
-		workflow := &model.WorkflowItem{Price: 2, Permissions: *permissions}
-		assert.True(t, isPaymentRequired(false, workflow, "2"))
-	})
-	t.Run("ShouldNotRequirePaymentIfWorkflowNotForFreeButAlreadyStarted", func(t *testing.T) {
-		permissions := &model.Permissions{Owner: "1"}
-		workflow := &model.WorkflowItem{Price: 2, Permissions: *permissions}
-		assert.False(t, isPaymentRequired(true, workflow, "2"))
-	})
-	t.Run("ShouldNotRequirePaymentIfWorkflowIsFree", func(t *testing.T) {
-		permissions := &model.Permissions{Owner: "1"}
-		workflow := &model.WorkflowItem{Price: 0, Permissions: *permissions}
-		assert.False(t, isPaymentRequired(false, workflow, "2"))
-	})
-	t.Run("ShouldNotRequirePaymentForWorkflowOwner", func(t *testing.T) {
-		permissions := &model.Permissions{Owner: "1"}
-		workflow := &model.WorkflowItem{Price: 2, Permissions: *permissions}
-		assert.False(t, isPaymentRequired(false, workflow, "1"))
-	})
-}
-
-var errCleanupTestData = errors.New("db data has not been cleanup up after finishing tests")
+var errCleanupTestData = errors.New("dB data has not been cleanup up after finishing tests. try to remove `.test_data` folder")
 
 func up(t *testing.T) (*gomock.Controller, storage.WorkflowPaymentsIF) {
 	mockCtrl := gomock.NewController(t)

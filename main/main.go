@@ -7,6 +7,10 @@ import (
 	"os"
 	"path"
 
+	"github.com/ProxeusApp/proxeus-core/main/handlers/api"
+	"github.com/ProxeusApp/proxeus-core/main/handlers/payment"
+	"github.com/ProxeusApp/proxeus-core/service"
+
 	"github.com/labstack/echo"
 
 	"strings"
@@ -55,6 +59,11 @@ func main() {
 	fmt.Printf("system settings: %#v\n", system.GetSettings())
 	fmt.Println("#######################################################")
 	fmt.Println()
+
+	paymentService := service.NewPaymentService(system.DB.WorkflowPayments, system.DB.Workflow, system.DB.UserData)
+	userService := service.NewUserService()
+	payment.Init(paymentService, userService)
+	api.Init(paymentService)
 
 	www.SetSystem(system)
 

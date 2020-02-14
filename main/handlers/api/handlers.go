@@ -18,13 +18,14 @@ import (
 	"strings"
 	"time"
 
+	"github.com/ProxeusApp/proxeus-core/service"
+
 	"github.com/ProxeusApp/proxeus-core/externalnode"
 
 	"github.com/ProxeusApp/proxeus-core/main/app"
 	cfg "github.com/ProxeusApp/proxeus-core/main/config"
 	"github.com/ProxeusApp/proxeus-core/main/handlers/blockchain"
 	"github.com/ProxeusApp/proxeus-core/main/handlers/helpers"
-	"github.com/ProxeusApp/proxeus-core/main/handlers/payment"
 	"github.com/ProxeusApp/proxeus-core/main/www"
 	"github.com/ProxeusApp/proxeus-core/storage"
 	"github.com/ProxeusApp/proxeus-core/storage/database/db"
@@ -45,7 +46,15 @@ import (
 	uuid "github.com/satori/go.uuid"
 )
 
-var filenameRegex = regexp.MustCompile(`^[^\s][\p{L}\d.,_\-&: ]{3,}[^\s]$`)
+var (
+	paymentService service.PaymentService
+
+	filenameRegex = regexp.MustCompile(`^[^\s][\p{L}\d.,_\-&: ]{3,}[^\s]$`)
+)
+
+func Init(payment service.PaymentService) {
+	paymentService = payment
+}
 
 func html(c echo.Context, p string) error {
 	bts, err := sys.ReadAllFile(p)
@@ -934,7 +943,7 @@ func CheckForWorkflowPayment(e echo.Context) error {
 		return c.NoContent(http.StatusUnauthorized)
 	}
 
-	paymentRequired, err := payment.CheckIfWorkflowPaymentRequired(c, workflowId)
+	paymentRequired, err := paymentService.CheckIfWorkflowPaymentRequired(c.Session(false), workflowId)
 	if err != nil {
 		return c.NoContent(http.StatusBadRequest)
 	}
@@ -972,7 +981,7 @@ func DocumentHandler(e echo.Context) error {
 
 	docApp := getDocApp(c, sess, ID)
 	if docApp == nil {
-		paymentRequired, err := payment.CheckIfWorkflowPaymentRequired(c, ID)
+		paymentRequired, err := paymentService.CheckIfWorkflowPaymentRequired(c.Session(false), ID)
 		if err != nil {
 			return c.String(http.StatusNotFound, err.Error())
 		}
@@ -983,7 +992,7 @@ func DocumentHandler(e echo.Context) error {
 			if err != nil {
 				return c.NoContent(http.StatusBadRequest)
 			}
-			err = payment.RedeemPayment(c.System().DB.WorkflowPayments, wf.ID, user.EthereumAddr)
+			err = paymentService.RedeemPayment(wf.ID, user.EthereumAddr)
 			if err != nil {
 				log.Println("[redeemPayment] ", err.Error())
 				return c.String(http.StatusUnprocessableEntity, errNoPaymentFound.Error())
