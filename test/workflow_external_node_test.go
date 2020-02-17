@@ -8,12 +8,17 @@ import (
 	uuid "github.com/satori/go.uuid"
 )
 
+const(
+	fieldName_input = "XES"
+	fieldName_output = "USD_XES"
+)
+
 func testWorkflowExternalNode(s *session) {
 	u := registerTestUser(s)
 	login(s, u)
 
 	w1 := createWorkflow(s, u, "workflow-"+s.id)
-	f := createSimpleForm(s, u, "form-"+s.id, fieldName)
+	f := createSimpleForm(s, u, "form-"+s.id, fieldName_input)
 	externalNodeId := uuid.NewV4().String()
 
 	w1.Data = workflowExternalNodeData(s, f.ID, externalNodeId)
@@ -22,13 +27,11 @@ func testWorkflowExternalNode(s *session) {
 	configExternalNode(s, externalNodeId)
 
 	type configData struct {
-		FromCurrency string
-		ToCurrency   string
+		FiatCurrency string
 	}
 
 	config := &configData{
-		FromCurrency: "CHF",
-		ToCurrency:   "XES",
+		FiatCurrency: "USD",
 	}
 
 	node := externalnode.ExternalNodeInstance{
@@ -49,16 +52,17 @@ func executeWorkflowExternalNode(s *session, w *workflow) {
 	expectWorkflowInCleanState(s, w)
 	// filling a form
 	{
-		d := map[string]string{fieldName: "test 100 CHF"}
+		d := map[string]string{fieldName_input: "100"}
 		s.e.POST("/api/document/" + w.ID + "/data").WithJSON(d).Expect().Status(http.StatusOK)
 
 		r := s.e.POST("/api/document/" + w.ID + "/next").WithJSON(d).Expect().Status(http.StatusOK).
 			JSON().Path("$.status")
 		r.Path("$.steps").Array().Length().Equal(2)
-		r.Path("$.userData").Object().ContainsKey(fieldName)
-		str := r.Path("$.userData").Object().Path("$." + fieldName).String()
-		str.Contains("test")
-		str.Contains("XES")
+		r.Path("$.userData").Object().ContainsKey(fieldName_input)
+		r.Path("$.userData").Object().ContainsKey(fieldName_output)
+		str := r.Path("$.userData").Object().Path("$." + fieldName_output).String()
+		str.NotEmpty()
+
 		r.Path("$.data").NotNull()
 	}
 }
