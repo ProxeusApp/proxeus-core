@@ -48,7 +48,6 @@ services:
       - ${PROXEUS_DATA_DIR:-./data}/document-service/logs:/document-service/logs
       - ${PROXEUS_DATA_DIR:-./data}/document-service/fonts:/document-service/fonts
 
-
   node-crypto-forex-rates:
     image: proxeus/node-crypto-forex-rates:latest
     container_name: xes_node-crypto-forex-rates
@@ -56,6 +55,23 @@ services:
       - xes-platform-network
     restart: unless-stopped
     environment:
+      PROXEUS_INSTANCE_URL: http://xes-platform:1323
+      AUTH_KEY: secret
+      SERVICE_URL: http://node-crypto-forex-rates:1323
       TZ: Europe/Zurich
     ports:
       - "8011:8011"
+
+  node-balance-retriever:
+    image: proxeus/node-balance-retriever:latest
+    container_name: xes_node-node-balance-retriever
+    networks:
+      - xes-platform-network
+    restart: unless-stopped
+    environment:
+      PROXEUS_INSTANCE_URL: http://xes-platform:1323
+      AUTH_KEY: secret
+      SERVICE_URL: http://node-balance-retriever:1323
+      TZ: Europe/Zurich
+    ports:
+      - "8012:8012"
