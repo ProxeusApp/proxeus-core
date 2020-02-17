@@ -303,6 +303,9 @@ func (me *System) Import(reader io.Reader, s *Session, skipExisting bool) (porta
 
 func (me *System) GetSession(sid string) (*Session, error) {
 	s, err := me.DB.Session.Get(sid)
+	if err != nil {
+		return nil, err
+	}
 	return &Session{S: s, db: me.DB, cache: me.cache}, err
 }
 
