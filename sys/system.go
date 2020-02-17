@@ -11,6 +11,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/ProxeusApp/proxeus-core/service"
+
 	"github.com/ethereum/go-ethereum/accounts/abi"
 	"github.com/patrickmn/go-cache"
 
@@ -53,10 +55,10 @@ type (
 	}
 )
 
-func NewWithSettings(settingsFile string, initialSettings *model.Settings) (*System, error) {
+func NewWithSettings(settingsFile string, initialSettings *model.Settings) (*System, service.PaymentService, service.UserService, error) {
 	stngsDB, err := database.NewSettingsDB(settingsFile, initialSettings)
 	if err != nil {
-		return nil, err
+		return nil, nil, nil, err
 	}
 	me := &System{settingsDB: stngsDB}
 
@@ -69,14 +71,14 @@ func NewWithSettings(settingsFile string, initialSettings *model.Settings) (*Sys
 		me.AllowHttp = true
 	}
 
-	err = me.init(me.GetSettings())
+	paymentService, userService, err := me.init(me.GetSettings())
 	if err != nil {
-		return nil, err
+		return nil, nil, nil, err
 	}
-	return me, err
+	return me, paymentService, userService, err
 }
 
-func (me *System) init(stngs *model.Settings) error {
+func (me *System) init(stngs *model.Settings) (service.PaymentService, service.UserService, error) {
 	stngs.DataDir, _ = filepath.Abs(stngs.DataDir)
 
 	me.DS = &eio.DocumentServiceClient{Url: stngs.DocumentServiceUrl}
@@ -85,7 +87,7 @@ func (me *System) init(stngs *model.Settings) error {
 	var err error
 	me.EmailSender, err = email.NewSparkPostEmailSender(stngs.SparkpostApiKey, stngs.EmailFrom)
 	if err != nil {
-		return err
+		return nil, nil, err
 	}
 	me.settingsInUse.SparkpostApiKey = stngs.SparkpostApiKey
 
@@ -109,18 +111,18 @@ func (me *System) init(stngs *model.Settings) error {
 
 	err = os.MkdirAll(stngs.DataDir, 0755)
 	if err != nil {
-		return err
+		return nil, nil, err
 	}
 
 	me.DB, err = database.NewDBSet(me.settingsDB, stngs.DataDir)
 	if err != nil {
-		return err
+		return nil, nil, err
 	}
 	me.settingsInUse.DataDir = stngs.DataDir
 
 	cacheExpiry, err := time.ParseDuration(stngs.SessionExpiry)
 	if err != nil {
-		return err
+		return nil, nil, err
 	}
 	me.cache = cache.New(cacheExpiry, 10*time.Minute)
 
@@ -133,6 +135,9 @@ func (me *System) init(stngs *model.Settings) error {
 	log.Println("blockchain config ethWebSocketURL: ", cfg.Config.EthWebSocketURL)
 
 	xesAdapter := blockchain.NewAdapter(cfg.Config.XESContractAddress, XESABI)
+
+	paymentService := service.NewPaymentService(me.DB.WorkflowPayments, me.DB.Workflow, me.DB.UserData)
+	userService := service.NewUserService(me.DB.User)
 
 	bcListenerPayment := blockchain.NewPaymentListener(xesAdapter, cfg.Config.EthWebSocketURL,
 		cfg.Config.EthClientURL, me.DB.WorkflowPayments)
@@ -165,7 +170,7 @@ func (me *System) init(stngs *model.Settings) error {
 	me.tick = time.NewTicker(time.Hour * 6)
 	go me.scheduledCleanup(me.tick)
 
-	return nil
+	return paymentService, userService, nil
 }
 
 func (me *System) scheduledCleanup(tick *time.Ticker) {
@@ -204,10 +209,10 @@ func (me *System) GetSettings() *model.Settings {
 	return stngs
 }
 
-func (me *System) PutSettings(stngs *model.Settings) error {
+func (me *System) PutSettings(stngs *model.Settings) (service.PaymentService, service.UserService, error) {
 	err := me.settingsDB.Put(stngs)
 	if err != nil {
-		return err
+		return nil, nil, err
 	}
 	return me.init(stngs)
 }

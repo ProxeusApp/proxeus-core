@@ -9,7 +9,6 @@ import (
 
 	"github.com/ProxeusApp/proxeus-core/main/handlers/api"
 	"github.com/ProxeusApp/proxeus-core/main/handlers/payment"
-	"github.com/ProxeusApp/proxeus-core/service"
 
 	"github.com/labstack/echo"
 
@@ -32,7 +31,7 @@ var embedded *www.Embedded
 
 func main() {
 	cfg.Init()
-	system, err := sys.NewWithSettings(cfg.Config.SettingsFile, &cfg.Config.Settings)
+	system, paymentService, userService, err := sys.NewWithSettings(cfg.Config.SettingsFile, &cfg.Config.Settings)
 	if err != nil {
 		panic(err)
 	}
@@ -60,8 +59,6 @@ func main() {
 	fmt.Println("#######################################################")
 	fmt.Println()
 
-	paymentService := service.NewPaymentService(system.DB.WorkflowPayments, system.DB.Workflow, system.DB.UserData)
-	userService := service.NewUserService()
 	payment.Init(paymentService, userService)
 	api.Init(paymentService)
 

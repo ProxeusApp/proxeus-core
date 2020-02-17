@@ -18,6 +18,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/ProxeusApp/proxeus-core/main/handlers/payment"
+
 	"github.com/ProxeusApp/proxeus-core/service"
 
 	"github.com/ProxeusApp/proxeus-core/externalnode"
@@ -52,8 +54,8 @@ var (
 	filenameRegex = regexp.MustCompile(`^[^\s][\p{L}\d.,_\-&: ]{3,}[^\s]$`)
 )
 
-func Init(payment service.PaymentService) {
-	paymentService = payment
+func Init(paymentS service.PaymentService) {
+	paymentService = paymentS
 }
 
 func html(c echo.Context, p string) error {
@@ -270,13 +272,13 @@ func PostInit(e echo.Context) error {
 		Password string     `json:"password" validate:"required=false,matches=^.{6}"`
 		Role     model.Role `json:"role"`
 	}
-	type Init struct {
+	type InitStruct struct {
 		Settings *model.Settings `json:"settings"`
 		User     *usr            `json:"user"`
 	}
 	var err error
 	yes, _ := c.System().Configured()
-	d := &Init{User: &usr{}}
+	d := &InitStruct{User: &usr{}}
 	_ = c.Bind(d)
 	if yes {
 		d.User = nil
@@ -285,11 +287,15 @@ func PostInit(e echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusUnprocessableEntity, err)
 	}
-	err = c.System().PutSettings(d.Settings)
+	workflowPaymentService, userService, err := c.System().PutSettings(d.Settings)
 	if err != nil {
 		fmt.Println("Error during PostInit settings: ", err)
 		return c.NoContent(http.StatusInternalServerError)
 	}
+
+	Init(workflowPaymentService)
+	payment.Init(workflowPaymentService, userService)
+
 	if !yes {
 		u := &model.User{Email: d.User.Email, Role: d.User.Role}
 		uex, _ := c.System().DB.User.GetByEmail(u.Email)

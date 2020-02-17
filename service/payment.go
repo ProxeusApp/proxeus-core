@@ -37,8 +37,8 @@ var (
 	ErrTxHashEmpty          = errors.New("no txHash given")
 )
 
-func NewPaymentService(workflowPaymentsDB storage.WorkflowPaymentsIF, workflowDB storage.WorkflowIF, userDB storage.UserDataIF) *DefaultPaymentService {
-	return &DefaultPaymentService{paymentsDB: workflowPaymentsDB, workflowDB: workflowDB, userDB: userDB}
+func NewPaymentService(paymentsDB storage.WorkflowPaymentsIF, workflowDB storage.WorkflowIF, userDB storage.UserDataIF) *DefaultPaymentService {
+	return &DefaultPaymentService{paymentsDB: paymentsDB, workflowDB: workflowDB, userDB: userDB}
 }
 
 func (me *DefaultPaymentService) CreateWorkflowPayment(auth model.Auth, workflowId, ethAddressess string) (*model.WorkflowPaymentItem, error) {

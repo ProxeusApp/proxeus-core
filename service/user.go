@@ -1,23 +1,23 @@
 package service
 
 import (
-	"github.com/ProxeusApp/proxeus-core/main/www"
+	"github.com/ProxeusApp/proxeus-core/storage"
 	"github.com/ProxeusApp/proxeus-core/sys/model"
 )
 
 type (
 	UserService interface {
-		GetUser(c *www.Context) (*model.User, error)
+		GetUser(auth model.Auth) (*model.User, error)
 	}
 	defaultUserService struct {
+		userDB storage.UserIF
 	}
 )
 
-func NewUserService() *defaultUserService {
-	return &defaultUserService{}
+func NewUserService(userDB storage.UserIF) *defaultUserService {
+	return &defaultUserService{userDB: userDB}
 }
 
-func (me *defaultUserService) GetUser(c *www.Context) (*model.User, error) {
-	sess := c.Session(false)
-	return c.System().DB.User.Get(sess, sess.UserID())
+func (me *defaultUserService) GetUser(auth model.Auth) (*model.User, error) {
+	return me.userDB.Get(auth, auth.UserID())
 }

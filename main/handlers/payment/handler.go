@@ -34,16 +34,16 @@ type (
 	}
 )
 
-func Init(payment service.PaymentService, user service.UserService) {
-	paymentService = payment
-	userService = user
+func Init(paymentS service.PaymentService, userS service.UserService) {
+	paymentService = paymentS
+	userService = userS
 }
 
 //create a payment for a workflow
 func CreateWorkflowPayment(e echo.Context) error {
 	c := e.(*www.Context)
 
-	user, err := userService.GetUser(c)
+	user, err := userService.GetUser(c.Session(false))
 	if err != nil {
 		return c.NoContent(http.StatusUnauthorized)
 	}
@@ -75,7 +75,7 @@ func GetWorkflowPaymentById(e echo.Context) error {
 	c := e.(*www.Context)
 	paymentId := c.Param("paymentId")
 
-	user, err := userService.GetUser(c)
+	user, err := userService.GetUser(c.Session(false))
 	if err != nil {
 		return c.NoContent(http.StatusUnauthorized)
 	}
@@ -100,7 +100,7 @@ func GetWorkflowPayment(e echo.Context) error {
 	txHash := c.QueryParam("txHash")
 	status := c.QueryParam("status")
 
-	user, err := userService.GetUser(c)
+	user, err := userService.GetUser(c.Session(false))
 	if err != nil {
 		return c.NoContent(http.StatusUnauthorized)
 	}
@@ -122,7 +122,7 @@ func UpdateWorkflowPaymentPending(e echo.Context) error {
 	c := e.(*www.Context)
 	paymentId := strings.TrimSpace(c.Param("paymentId"))
 
-	user, err := userService.GetUser(c)
+	user, err := userService.GetUser(c.Session(false))
 	if err != nil {
 		return c.NoContent(http.StatusUnauthorized)
 	}
@@ -151,7 +151,7 @@ func CancelWorkflowPayment(e echo.Context) error {
 	c := e.(*www.Context)
 	paymentId := strings.TrimSpace(c.Param("paymentId"))
 
-	user, err := userService.GetUser(c)
+	user, err := userService.GetUser(c.Session(false))
 	if err != nil {
 		return errNotAuthorized
 	}
