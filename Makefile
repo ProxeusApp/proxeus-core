@@ -36,6 +36,9 @@ coverpkg=$(subst $(space),$(comma), $(filter-out %/mock %/assets, $(shell go lis
 
 startproxeus=artifacts/proxeus
 stopproxeus=pkill proxeus
+startds=curl -s http://localhost:2115 > /dev/null || ( docker-compose up -d document-service && touch $(testdir)/ds-started )
+startnodes=curl -s http://localhost:8011 > /dev/null || (PROXEUS_PLATFORM_DOMAIN=http://172.17.0.1:1323 SERVICE_DOMAIN=http://localhost:8011 docker-compose up -d node-crypto-forex-rates && touch $(testdir)/node-started )
+
 ifeq ($(coverage),true)
 	COVERAGE_OPTS=-coverprofile artifacts/$@.coverage -coverpkg="$(coverpkg)"
 	startproxeus=go test -v -tags coverage -coverprofile artifacts/$@-$(PROXEUS_DATABASE_ENGINE).coverage -coverpkg="$(coverpkg)" ./main
@@ -113,9 +116,8 @@ test-integration:
 test-api: server
 	$(eval testdir := $(shell mktemp -d /tmp/proxeus-test-api.XXXXX ))
 	mkdir -p $(testdir)
-	curl -s http://localhost:2115 > /dev/null || ( docker-compose up -d document-service && touch $(testdir)/ds-started )
-	curl -s http://localhost:8011 > /dev/null || (PROXEUS_PLATFORM_DOMAIN=http://172.17.0.1:1323 SERVICE_DOMAIN=http://localhost:8011 docker-compose up -d node-crypto-forex-rates && touch $(testdir)/node-started )
-
+	$(startds)
+	$(startnodes)
 	echo starting test main ; \
 					 PROXEUS_DATA_DIR=$(testdir)/data \
 					 PROXEUS_SETTINGS_FILE=$(testdir)/settings/main.json \
@@ -126,6 +128,24 @@ test-api: server
 		[ -e  $(testdir)/ds-started ] && docker-compose down; \
 		rm -fr $(testdir); \
 		exit $$ret
+
+.PHONY: test-ui
+test-ui: server ui
+	$(eval testdir := $(shell mktemp -d /tmp/proxeus-test-api.XXXXX ))
+	mkdir -p $(testdir)
+	$(startds)
+	$(startnodes)
+
+	echo starting UI test ; \
+					 PROXEUS_DATA_DIR=$(testdir)/data \
+					 PROXEUS_SETTINGS_FILE=$(testdir)/settings/main.json \
+					 PROXEUS_TEST_MODE=true \
+					 $(startproxeus) &
+	$(MAKE) -C test/e2e test; ret=$$? && docker-compose down -v; \
+		$(stopproxeus); \
+		rm -fr $(testdir); \
+		exit $$ret
+
 
 .PHONY: coverage
 coverage:

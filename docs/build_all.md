@@ -19,7 +19,7 @@ Here is the list of dependencies:
 
 #### Linux (Debian)
 ```
-sudo apt-get install make golang curl npm git
+sudo apt-get install make golang curl npm git license-finder-pip
 ```
 
 #### OSX
