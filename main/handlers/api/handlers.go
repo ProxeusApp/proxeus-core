@@ -50,12 +50,14 @@ import (
 
 var (
 	paymentService service.PaymentService
+	userService    service.UserService
 
 	filenameRegex = regexp.MustCompile(`^[^\s][\p{L}\d.,_\-&: ]{3,}[^\s]$`)
 )
 
-func Init(paymentS service.PaymentService) {
+func Init(paymentS service.PaymentService, userS service.UserService) {
 	paymentService = paymentS
+	userService = userS
 }
 
 func html(c echo.Context, p string) error {
@@ -293,7 +295,7 @@ func PostInit(e echo.Context) error {
 		return c.NoContent(http.StatusInternalServerError)
 	}
 
-	Init(workflowPaymentService)
+	Init(workflowPaymentService, userService)
 	payment.Init(workflowPaymentService, userService)
 
 	if !yes {
@@ -365,7 +367,7 @@ func UpdateAddress(e echo.Context) error {
 	if item != nil {
 		return c.JSON(http.StatusUnprocessableEntity, map[string]interface{}{"etherPK": []map[string]interface{}{{"msg": "Please choose another account."}}})
 	}
-	item, err = c.System().DB.User.Get(sess, sess.UserID())
+	item, err = userService.GetUser(sess)
 	if err != nil {
 		return c.NoContent(http.StatusInternalServerError)
 	}
@@ -751,7 +753,7 @@ func ChangeEmailRequest(e echo.Context) (err error) {
 	}
 	if usr, err := c.System().DB.User.GetByEmail(m.Email); usr == nil {
 		var token model.TokenRequest
-		usr, _ = c.System().DB.User.Get(sess, sess.UserID())
+		usr, _ = userService.GetUser(sess)
 		if usr == nil {
 			return c.NoContent(http.StatusUnauthorized)
 		}
@@ -873,7 +875,7 @@ func MeUpdateHandler(e echo.Context) error {
 		return err
 	}
 	if sess.UserID() == item.ID {
-		u, err := c.System().DB.User.Get(sess, sess.UserID())
+		u, err := userService.GetUser(sess)
 		if err != nil {
 			return c.String(http.StatusUnprocessableEntity, err.Error())
 		}
@@ -944,23 +946,12 @@ func CheckForWorkflowPayment(e echo.Context) error {
 		return c.NoContent(http.StatusBadRequest)
 	}
 
-	user, err := c.System().DB.User.Get(sess, sess.UserID())
+	err := paymentService.CheckForWorkflowPayment(sess, workflowId)
 	if err != nil {
-		return c.NoContent(http.StatusUnauthorized)
-	}
-
-	paymentRequired, err := paymentService.CheckIfWorkflowPaymentRequired(c.Session(false), workflowId)
-	if err != nil {
-		return c.NoContent(http.StatusBadRequest)
-	}
-	if paymentRequired {
-		_, err := c.System().DB.WorkflowPayments.GetByWorkflowIdAndFromEthAddress(workflowId, user.EthereumAddr, []string{model.PaymentStatusConfirmed})
-		if err != nil {
-			if db.NotFound(err) {
-				return c.NoContent(http.StatusNotFound)
-			}
-			return c.NoContent(http.StatusBadRequest)
+		if db.NotFound(err) {
+			return c.NoContent(http.StatusNotFound)
 		}
+		return c.NoContent(http.StatusBadRequest)
 	}
 
 	return c.NoContent(http.StatusOK)
@@ -994,7 +985,7 @@ func DocumentHandler(e echo.Context) error {
 
 		if paymentRequired {
 			sess := c.Session(false)
-			user, err := c.System().DB.User.Get(sess, sess.UserID())
+			user, err := userService.GetUser(sess)
 			if err != nil {
 				return c.NoContent(http.StatusBadRequest)
 			}
@@ -1364,7 +1355,7 @@ func UserDocumentSignatureRequestGetCurrentUserHandler(e echo.Context) error {
 		return c.NoContent(http.StatusUnauthorized)
 	}
 
-	user, err := c.System().DB.User.Get(sess, sess.UserID())
+	user, err := userService.GetUser(sess)
 	if err != nil {
 		return c.NoContent(http.StatusInternalServerError)
 	}
@@ -1605,7 +1596,7 @@ func UserDocumentSignatureRequestAddHandler(e echo.Context) error {
 
 	fileObj, _ = c.System().DB.UserData.Get(sess, id)
 
-	requestor, err := c.System().DB.User.Get(sess, sess.UserID())
+	requestor, err := userService.GetUser(sess)
 	if err != nil {
 		return c.NoContent(http.StatusInternalServerError)
 	}
@@ -1670,7 +1661,7 @@ func UserDocumentSignatureRequestRejectHandler(e echo.Context) error {
 	docId := c.Param("docID")
 	id := c.Param("ID")
 
-	item, err := c.System().DB.User.Get(sess, sess.UserID())
+	item, err := userService.GetUser(sess)
 	if err != nil {
 		return c.NoContent(http.StatusInternalServerError)
 	}
@@ -1728,7 +1719,7 @@ func UserDocumentSignatureRequestRevokeHandler(e echo.Context) error {
 		return c.String(http.StatusNotFound, err.Error())
 	}
 
-	requestor, err := c.System().DB.User.Get(sess, sess.UserID())
+	requestor, err := userService.GetUser(sess)
 	if err != nil {
 		return c.NoContent(http.StatusInternalServerError)
 	}

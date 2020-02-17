@@ -60,7 +60,7 @@ func main() {
 	fmt.Println()
 
 	payment.Init(paymentService, userService)
-	api.Init(paymentService)
+	api.Init(paymentService, userService)
 
 	www.SetSystem(system)
 

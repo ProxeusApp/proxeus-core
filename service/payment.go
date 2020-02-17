@@ -13,22 +13,23 @@ import (
 
 type (
 	PaymentService interface {
-		CreateWorkflowPayment(auth model.Auth, workflowId, ethAddressess string) (*model.WorkflowPaymentItem, error)
+		CreateWorkflowPayment(auth model.Auth, workflowId, ethAddress string) (*model.WorkflowPaymentItem, error)
 		GetWorkflowPaymentById(paymentId string) (*model.WorkflowPaymentItem, error)
-		GetWorkflowPayment(txHash, ethAddressess, status string) (*model.WorkflowPaymentItem, error)
+		GetWorkflowPayment(txHash, ethAddresses, status string) (*model.WorkflowPaymentItem, error)
 		UpdateWorkflowPaymentPending(paymentId, txHash, ethAddress string) error
 		CancelWorkflowPayment(paymentId, ethAddress string) error
 		RedeemPayment(workflowId, ethAddr string) error
 		CheckIfWorkflowPaymentRequired(auth model.Auth, workflowId string) (bool, error)
+		CheckForWorkflowPayment(auth model.Auth, workflowId string) error
 		Delete(paymentId string) error
 		All() ([]*model.WorkflowPaymentItem, error)
-		//Save(payment *model.WorkflowPaymentItem) error
 	}
 
 	DefaultPaymentService struct {
-		paymentsDB storage.WorkflowPaymentsIF
-		workflowDB storage.WorkflowIF
-		userDB     storage.UserDataIF
+		paymentsDB  storage.WorkflowPaymentsIF
+		workflowDB  storage.WorkflowIF
+		userDB      storage.UserDataIF
+		userService UserService
 	}
 )
 
@@ -37,11 +38,11 @@ var (
 	ErrTxHashEmpty          = errors.New("no txHash given")
 )
 
-func NewPaymentService(paymentsDB storage.WorkflowPaymentsIF, workflowDB storage.WorkflowIF, userDB storage.UserDataIF) *DefaultPaymentService {
-	return &DefaultPaymentService{paymentsDB: paymentsDB, workflowDB: workflowDB, userDB: userDB}
+func NewPaymentService(userService UserService, paymentsDB storage.WorkflowPaymentsIF, workflowDB storage.WorkflowIF, userDB storage.UserDataIF) *DefaultPaymentService {
+	return &DefaultPaymentService{userService: userService, paymentsDB: paymentsDB, workflowDB: workflowDB, userDB: userDB}
 }
 
-func (me *DefaultPaymentService) CreateWorkflowPayment(auth model.Auth, workflowId, ethAddressess string) (*model.WorkflowPaymentItem, error) {
+func (me *DefaultPaymentService) CreateWorkflowPayment(auth model.Auth, workflowId, ethAddress string) (*model.WorkflowPaymentItem, error) {
 	workflow, err := me.workflowDB.Get(auth, workflowId)
 	if err != nil {
 		return nil, err
@@ -50,7 +51,7 @@ func (me *DefaultPaymentService) CreateWorkflowPayment(auth model.Auth, workflow
 	payment := &model.WorkflowPaymentItem{
 		ID:         uuid.NewV4().String(),
 		Xes:        workflow.Price,
-		From:       ethAddressess,
+		From:       ethAddress,
 		To:         workflow.OwnerEthAddress,
 		Status:     model.PaymentStatusCreated,
 		CreatedAt:  time.Now(),
@@ -119,6 +120,24 @@ func (me *DefaultPaymentService) CheckIfWorkflowPaymentRequired(auth model.Auth,
 	}
 
 	return isPaymentRequired(alreadyStarted, workflow, auth.UserID()), nil
+}
+
+func (me *DefaultPaymentService) CheckForWorkflowPayment(auth model.Auth, workflowId string) error {
+	user, err := me.userService.GetUser(auth)
+	if err != nil {
+		return err
+	}
+
+	paymentRequired, err := me.CheckIfWorkflowPaymentRequired(auth, workflowId)
+	if err != nil {
+		return err
+	}
+
+	if paymentRequired {
+		_, err = me.paymentsDB.GetByWorkflowIdAndFromEthAddress(workflowId, user.EthereumAddr, []string{model.PaymentStatusConfirmed})
+	}
+
+	return err
 }
 
 func (me *DefaultPaymentService) Delete(paymentId string) error {

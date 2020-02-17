@@ -136,8 +136,8 @@ func (me *System) init(stngs *model.Settings) (service.PaymentService, service.U
 
 	xesAdapter := blockchain.NewAdapter(cfg.Config.XESContractAddress, XESABI)
 
-	paymentService := service.NewPaymentService(me.DB.WorkflowPayments, me.DB.Workflow, me.DB.UserData)
 	userService := service.NewUserService(me.DB.User)
+	paymentService := service.NewPaymentService(userService, me.DB.WorkflowPayments, me.DB.Workflow, me.DB.UserData)
 
 	bcListenerPayment := blockchain.NewPaymentListener(xesAdapter, cfg.Config.EthWebSocketURL,
 		cfg.Config.EthClientURL, me.DB.WorkflowPayments)
