@@ -11,8 +11,8 @@ import (
 	"io/ioutil"
 	"net/http"
 
-	"time"
 	"fmt"
+	"time"
 )
 
 type (
@@ -36,13 +36,11 @@ type (
 	}
 )
 
-const proxeusUrl = "http://localhost:1323"
-
 func Health(c echo.Context) error {
 	return c.String(http.StatusOK, "I'm ok")
 }
 
-func Register(name, serviceUrl, jwtSecret, description string) error {
+func Register(proxeusUrl, name, serviceUrl, jwtSecret, description string) error {
 	client := http.Client{Timeout: 5 * time.Second}
 	var err error
 	for {
@@ -86,7 +84,7 @@ func NodeID(c echo.Context) (string, error) {
 	return id, nil
 }
 
-func SetStoredConfig(c echo.Context, conf interface{}) error {
+func SetStoredConfig(c echo.Context, proxeusUrl string, conf interface{}) error {
 	id, err := NodeID(c)
 	if err != nil {
 		return err
@@ -113,7 +111,7 @@ func SetStoredConfig(c echo.Context, conf interface{}) error {
 	return nil
 }
 
-func GetStoredConfig(c echo.Context) ([]byte, error) {
+func GetStoredConfig(c echo.Context, proxeusUrl string) ([]byte, error) {
 	id, err := NodeID(c)
 	if err != nil {
 		return nil, err
@@ -127,7 +125,6 @@ func GetStoredConfig(c echo.Context) ([]byte, error) {
 	return nil, errors.New("no valid config received")
 }
 
-
 func (e *ExternalNode) HealthUrl() string {
 	return fmt.Sprintf("%s/health", e.Url)
 }
@@ -139,7 +136,7 @@ func (e ExternalQuery) jwtToken() string {
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	t, err := token.SignedString([]byte(e.Secret))
-	if err !=nil{
+	if err != nil {
 		log.Println("Could not sign token with secret", token.Raw)
 		return ""
 	}
