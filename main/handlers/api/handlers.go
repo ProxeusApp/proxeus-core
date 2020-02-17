@@ -2077,10 +2077,6 @@ func ExternalConfigurationPage(e echo.Context) error {
 }
 
 func ExternalRegister(e echo.Context) error {
-	if e.RealIP() != "127.0.0.1" && e.RealIP() != "::1" {
-		log.Println("Caller: " + e.RealIP())
-		return errors.New("only local ip allowed")
-	}
 	c := e.(*www.Context)
 	var node externalnode.ExternalNode
 	err := c.Bind(&node)
@@ -2091,10 +2087,6 @@ func ExternalRegister(e echo.Context) error {
 }
 
 func ExternalConfigStore(e echo.Context) error {
-	if e.RealIP() != "127.0.0.1" && e.RealIP() != "::1" {
-		log.Println("Caller: " + e.RealIP())
-		return errors.New("only local ip allowed")
-	}
 	c := e.(*www.Context)
 
 	var node externalnode.ExternalNodeInstance
@@ -2121,10 +2113,6 @@ func ExternalConfigStore(e echo.Context) error {
 }
 
 func ExternalConfigRetrieve(e echo.Context) error {
-	if e.RealIP() != "127.0.0.1" && e.RealIP() != "::1" {
-		log.Println("Caller: " + e.RealIP())
-		return errors.New("only local ip allowed")
-	}
 	c := e.(*www.Context)
 	id := c.Param("id")
 	q, err := c.System().DB.Workflow.QueryFromInstanceID(new(model.User), id)

@@ -8,8 +8,8 @@ import (
 	uuid "github.com/satori/go.uuid"
 )
 
-const(
-	fieldName_input = "XES"
+const (
+	fieldName_input  = "XES"
 	fieldName_output = "USD_XES"
 )
 
