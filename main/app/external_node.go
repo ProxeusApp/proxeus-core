@@ -38,6 +38,7 @@ func (ex externalNode) Execute(n *workflow.Node) (proceed bool, err error) {
 	}
 	r, err := client.Post(q.NextUrl(), "application/json", bytes.NewBuffer(buf))
 	if err != nil {
+		log.Printf("ERROR node response: %s", err)
 		return false, err
 	}
 	defer r.Body.Close()
