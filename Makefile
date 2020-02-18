@@ -114,7 +114,7 @@ test-api: server
 	$(eval testdir := $(shell mktemp -d /tmp/proxeus-test-api.XXXXX ))
 	mkdir -p $(testdir)
 	curl -s http://localhost:2115 > /dev/null || ( docker-compose up -d document-service && touch $(testdir)/ds-started )
-	curl -s http://localhost:8011 > /dev/null || (PROXEUS_PLATFORM_DOMAIN=http://172.17.0.1:1323 SERVICE_DOMAIN=localhost docker-compose up -d node-crypto-forex-rates && touch $(testdir)/node-started )
+	curl -s http://localhost:8011 > /dev/null || (PROXEUS_PLATFORM_DOMAIN=http://172.17.0.1:1323 SERVICE_DOMAIN=http://localhost:8011 docker-compose up -d node-crypto-forex-rates && touch $(testdir)/node-started )
 
 	echo starting test main ; \
 					 PROXEUS_DATA_DIR=$(testdir)/data \
