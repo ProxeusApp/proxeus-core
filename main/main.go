@@ -67,10 +67,11 @@ func main() {
 	userService := service.NewUserService(system)
 	paymentService := service.NewPaymentService(system, userService)
 	workflowService := service.NewWorkflowService(system, userService)
+	nodeService := service.NewNodeService(system, workflowService)
 
 	payment.Init(paymentService, userService)
 	api.Init(paymentService, userService)
-	workflow.Init(workflowService, userService)
+	workflow.Init(workflowService, userService, nodeService)
 
 	www.SetSystem(system)
 

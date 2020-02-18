@@ -16,7 +16,6 @@ import (
 
 	"github.com/ProxeusApp/proxeus-core/main/handlers/api"
 
-	"github.com/ProxeusApp/proxeus-core/main/handlers/externalnode"
 	"github.com/ProxeusApp/proxeus-core/main/handlers/helpers"
 	"github.com/ProxeusApp/proxeus-core/main/www"
 	"github.com/ProxeusApp/proxeus-core/sys/model"
@@ -25,11 +24,13 @@ import (
 var (
 	workflowService service.WorkflowService
 	userService     service.UserService
+	nodeService     service.NodeService
 )
 
-func Init(workflowS service.WorkflowService, userS service.UserService) {
+func Init(workflowS service.WorkflowService, userS service.UserService, nodeS service.NodeService) {
 	workflowService = workflowS
 	userService = userS
+	nodeService = nodeS
 }
 
 func ExportWorkflow(e echo.Context) error {
@@ -205,5 +206,11 @@ func ListCustomNodeHandler(e echo.Context) error {
 			return c.JSON(http.StatusOK, dat)
 		}
 	}
-	return c.NoContent(http.StatusNotFound)
+
+	nodeService.ProbeExternalNodes()
+	nodes := nodeService.List(nodeType)
+	if nodes == nil {
+		return c.NoContent(http.StatusNotFound)
+	}
+	return c.JSON(http.StatusOK, nodes)
 }
