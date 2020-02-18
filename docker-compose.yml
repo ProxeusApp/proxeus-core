@@ -58,7 +58,7 @@ services:
       PROXEUS_INSTANCE_URL: "${PROXEUS_PLATFORM_DOMAIN:-http://xes-platform:1323}"
       SERVICE_SECRET: secret
       SERVICE_PORT: 8011
-      SERVICE_URL: "${SERVICE_DOMAIN:-http://node-crypto-forex-rates:8011}"
+      SERVICE_URL: "${SERVICE_DOMAIN:-https://crypto-forex-rates.ci.proxeus.com:443}"
       TZ: Europe/Zurich
     ports:
       - "8011:8011"
