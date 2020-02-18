@@ -8,12 +8,11 @@ import (
 
 	"github.com/ProxeusApp/proxeus-core/storage/portable"
 
-	"github.com/ProxeusApp/proxeus-core/storage"
-	"github.com/ProxeusApp/proxeus-core/sys/workflow"
-
 	"github.com/labstack/echo"
 
 	extNode "github.com/ProxeusApp/proxeus-core/externalnode"
+
+	"github.com/ProxeusApp/proxeus-core/storage"
 
 	"github.com/ProxeusApp/proxeus-core/main/handlers/api"
 
@@ -81,15 +80,15 @@ func UpdateHandler(e echo.Context) error {
 		return c.NoContent(http.StatusBadRequest)
 	}
 
-	item := &model.WorkflowItem{}
-	if err := c.Bind(&item); err != nil {
+	workflowItem := &model.WorkflowItem{}
+	if err := c.Bind(&workflowItem); err != nil {
 		//WorkflowItem.Price int overflow will return in bind error
 		log.Println("[workflowHandler][UpdateHandler] ", err.Error())
 		return c.String(http.StatusBadRequest, "unable to bind request")
 	}
 
-	item.ID = ID
-	if item.Price < 0 {
+	workflowItem.ID = ID
+	if workflowItem.Price < 0 {
 		return c.String(http.StatusBadRequest, "price should be 0 or higher")
 	}
 
@@ -97,63 +96,12 @@ func UpdateHandler(e echo.Context) error {
 	if err != nil && user == nil {
 		return c.String(http.StatusBadRequest, "unable to get user")
 	}
-	if item.Price > 0 && user.EthereumAddr == "" {
+	if workflowItem.Price > 0 && user.EthereumAddr == "" {
 		return c.String(http.StatusBadRequest, "can not set price without eth addr")
 	}
 
 	if publish {
-		errs := map[string]interface{}{}
-		collectError := func(err error, node *workflow.Node) {
-			errs[node.ID] = struct {
-				Error string
-				Item  interface{}
-			}{Error: err.Error(), Item: node}
-		}
-		//loop recursively and change permissions on all children
-		item.LoopNodes(nil, func(l *workflow.Looper, node *workflow.Node) bool {
-			if node.Type == "form" {
-				it, er := c.System().DB.Form.Get(sess, node.ID)
-				if er != nil {
-					collectError(er, node)
-					return true //continue
-				}
-				if !it.Published {
-					it.Published = true
-					er = c.System().DB.Form.Put(sess, it)
-					if er != nil {
-						collectError(er, node)
-					}
-				}
-			} else if node.Type == "template" {
-				it, er := c.System().DB.Template.Get(sess, node.ID)
-				if er != nil {
-					collectError(er, node)
-					return true //continue
-				}
-				if !it.Published {
-					it.Published = true
-					er = c.System().DB.Template.Put(sess, it)
-					if er != nil {
-						collectError(er, node)
-					}
-				}
-			} else if node.Type == "workflow" { // deep dive...
-				it, er := c.System().DB.Workflow.Get(sess, node.ID)
-				if er != nil {
-					collectError(er, node)
-					return true //continue
-				}
-				if !it.Published {
-					it.Published = true
-					er = c.System().DB.Workflow.Put(sess, it)
-					if er != nil {
-						collectError(er, node)
-					}
-				}
-				it.LoopNodes(l, nil)
-			}
-			return true //continue
-		})
+		errs := workflowService.Publish(sess, workflowItem)
 		if len(errs) > 0 {
 			return c.JSON(http.StatusMultiStatus, errs)
 		}
@@ -161,7 +109,7 @@ func UpdateHandler(e echo.Context) error {
 
 	instantiateExternalNode(c, sess, item)
 
-	err = c.System().DB.Workflow.Put(sess, item)
+	err = workflowService.Put(sess, workflowItem)
 	if err != nil {
 		if err == model.ErrAuthorityMissing {
 			return c.NoContent(http.StatusUnauthorized)
@@ -169,7 +117,7 @@ func UpdateHandler(e echo.Context) error {
 		return c.NoContent(http.StatusNotFound)
 	}
 
-	return c.JSON(http.StatusOK, item)
+	return c.JSON(http.StatusOK, workflowItem)
 }
 
 func instantiateExternalNode(c *www.Context, auth model.Auth, item *model.WorkflowItem) {
@@ -208,7 +156,7 @@ func DeleteHandler(e echo.Context) error {
 	ID := c.Param("ID")
 	sess := c.Session(false)
 	if sess != nil {
-		err := c.System().DB.Workflow.Delete(sess, ID)
+		err := workflowService.Delete(sess, ID)
 		if err != nil {
 			return c.String(http.StatusBadRequest, err.Error())
 		}
@@ -218,29 +166,23 @@ func DeleteHandler(e echo.Context) error {
 }
 
 func ListPublishedHandler(e echo.Context) error {
-	return listHandler(e.(*www.Context), true)
+	return listHandler(e.(*www.Context), true, e.QueryParam("c"), helpers.RequestOptions(e))
 }
 
 func ListHandler(e echo.Context) error {
-	return listHandler(e.(*www.Context), false)
+	return listHandler(e.(*www.Context), false, e.QueryParam("c"), helpers.RequestOptions(e))
 }
 
-func listHandler(c *www.Context, publishedOnly bool) error {
-	var sess model.Auth
-	if s := c.Session(false); s != nil {
-		sess = s
-	}
-	contains := c.QueryParam("c")
-	settings := helpers.RequestOptions(c)
-	var dat []*model.WorkflowItem
-	var err error
-
-	if publishedOnly {
-		dat, err = c.System().DB.Workflow.ListPublished(sess, contains, settings)
+func listHandler(c *www.Context, published bool, contains string, settings storage.Options) error {
+	var (
+		err           error
+		workflowItems []*model.WorkflowItem
+	)
+	if published {
+		workflowItems, err = workflowService.ListPublished(c.Session(false), contains, settings)
 	} else {
-		dat, err = c.System().DB.Workflow.List(sess, contains, settings)
+		workflowItems, err = workflowService.List(c.Session(false), contains, settings)
 	}
-
 	if err != nil {
 		if err == model.ErrAuthorityMissing {
 			log.Println("Can't list workflows: " + err.Error())
@@ -248,7 +190,8 @@ func listHandler(c *www.Context, publishedOnly bool) error {
 		}
 		return c.NoContent(http.StatusNotFound)
 	}
-	return c.JSON(http.StatusOK, dat)
+
+	return c.JSON(http.StatusOK, workflowItems)
 }
 
 func ListCustomNodeHandler(e echo.Context) error {

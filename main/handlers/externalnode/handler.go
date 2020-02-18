@@ -65,7 +65,7 @@ func ProbeExternalNodes(s *sys.System) {
 			log.Printf("[nodeservice] removing external node err %s \n", err)
 			err = s.DB.Workflow.DeleteExternalNode(new(model.User), node.ID)
 			if err != nil {
-				log.Printf("[nodeservice] unable to remove external node err %s", err)
+				log.Printf("[nodeservice] unable to remove external node err %s", err.Error())
 			}
 		}
 	}
