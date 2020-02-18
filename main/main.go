@@ -7,6 +7,8 @@ import (
 	"os"
 	"path"
 
+	"github.com/ProxeusApp/proxeus-core/main/handlers/workflow"
+
 	"github.com/ProxeusApp/proxeus-core/service"
 
 	"github.com/ProxeusApp/proxeus-core/main/handlers/api"
@@ -63,10 +65,12 @@ func main() {
 
 	//Important: Pass system to services (and not e.g. system.DB.WorkflowPayments because system.DB variable is replaced on calling api/handlers.PostInit()
 	userService := service.NewUserService(system)
-	paymentService := service.NewPaymentService(userService, system)
+	paymentService := service.NewPaymentService(system, userService)
+	workflowService := service.NewWorkflowService(system, userService)
 
 	payment.Init(paymentService, userService)
 	api.Init(paymentService, userService)
+	workflow.Init(workflowService, userService)
 
 	www.SetSystem(system)
 

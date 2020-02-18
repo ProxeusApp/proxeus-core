@@ -4,6 +4,8 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/ProxeusApp/proxeus-core/service"
+
 	"github.com/ProxeusApp/proxeus-core/storage/portable"
 
 	"github.com/ProxeusApp/proxeus-core/storage"
@@ -21,22 +23,32 @@ import (
 	"github.com/ProxeusApp/proxeus-core/sys/model"
 )
 
+var (
+	workflowService service.WorkflowService
+	userService     service.UserService
+)
+
+func Init(workflowS service.WorkflowService, userS service.UserService) {
+	workflowService = workflowS
+	userService = userS
+}
+
 func ExportWorkflow(e echo.Context) error {
 	c := e.(*www.Context)
 	sess := c.Session(false)
 	if sess == nil {
 		return c.NoContent(http.StatusUnauthorized)
 	}
-	var id []string
+	var (
+		id  []string
+		err error
+	)
 	if c.QueryParam("id") != "" {
 		id = []string{c.QueryParam("id")}
 	} else if c.QueryParam("contains") != "" {
-		items, _ := c.System().DB.Workflow.List(sess, c.QueryParam("contains"), storage.Options{Limit: 1000})
-		if len(items) > 0 {
-			id = make([]string, len(items))
-			for i, item := range items {
-				id[i] = item.ID
-			}
+		id, err = workflowService.ListIds(sess, c.QueryParam("contains"), storage.Options{Limit: 1000})
+		if err != nil {
+			return c.String(http.StatusBadRequest, err.Error())
 		}
 	}
 	return api.Export(sess, []portable.EntityType{portable.Workflow}, c, id...)
@@ -46,18 +58,15 @@ func GetHandler(e echo.Context) error {
 	c := e.(*www.Context)
 	ID := c.Param("ID")
 	sess := c.Session(true)
-	if sess != nil {
-		item, err := c.System().DB.Workflow.Get(sess, ID)
-		if err == nil {
-			workflowOwner, err := c.System().DB.User.Get(sess, item.Owner)
-			if err != nil {
-				return c.NoContent(http.StatusNotFound)
-			}
-			item.OwnerEthAddress = workflowOwner.EthereumAddr
-			return c.JSON(http.StatusOK, item)
-		}
+	if sess == nil {
+		return c.NoContent(http.StatusNotFound)
 	}
-	return c.NoContent(http.StatusNotFound)
+
+	workflow, err := workflowService.GetAndPopulateOwner(sess, ID)
+	if err != nil {
+		return c.NoContent(http.StatusNotFound)
+	}
+	return c.JSON(http.StatusOK, workflow)
 }
 
 func UpdateHandler(e echo.Context) error {
@@ -68,97 +77,99 @@ func UpdateHandler(e echo.Context) error {
 		publish = true
 	}
 	sess := c.Session(false)
-	if sess != nil {
-		item := &model.WorkflowItem{}
-		if err := c.Bind(&item); err != nil {
-			//WorkflowItem.Price int overflow will return in bind error
-			log.Println("[workflowHandler][UpdateHandler] ", err.Error())
-			return c.String(http.StatusBadRequest, "unable to bind request")
-		}
-		item.ID = ID
-		if item.Price < 0 {
-			return c.String(http.StatusBadRequest, "price should be 0 or higher")
-		}
-
-		user, err := c.System().DB.User.Get(sess, sess.UserID())
-		if err != nil && user == nil {
-			return c.String(http.StatusBadRequest, "unable to get user")
-		}
-		if item.Price > 0 && user.EthereumAddr == "" {
-			return c.String(http.StatusBadRequest, "can not set price without eth addr")
-		}
-
-		if publish {
-			errs := map[string]interface{}{}
-			collectError := func(err error, node *workflow.Node) {
-				errs[node.ID] = struct {
-					Error string
-					Item  interface{}
-				}{Error: err.Error(), Item: node}
-			}
-			//loop recursively and change permissions on all children
-			item.LoopNodes(nil, func(l *workflow.Looper, node *workflow.Node) bool {
-				if node.Type == "form" {
-					it, er := c.System().DB.Form.Get(sess, node.ID)
-					if er != nil {
-						collectError(er, node)
-						return true //continue
-					}
-					if !it.Published {
-						it.Published = true
-						er = c.System().DB.Form.Put(sess, it)
-						if er != nil {
-							collectError(er, node)
-						}
-					}
-				} else if node.Type == "template" {
-					it, er := c.System().DB.Template.Get(sess, node.ID)
-					if er != nil {
-						collectError(er, node)
-						return true //continue
-					}
-					if !it.Published {
-						it.Published = true
-						er = c.System().DB.Template.Put(sess, it)
-						if er != nil {
-							collectError(er, node)
-						}
-					}
-				} else if node.Type == "workflow" { // deep dive...
-					it, er := c.System().DB.Workflow.Get(sess, node.ID)
-					if er != nil {
-						collectError(er, node)
-						return true //continue
-					}
-					if !it.Published {
-						it.Published = true
-						er = c.System().DB.Workflow.Put(sess, it)
-						if er != nil {
-							collectError(er, node)
-						}
-					}
-					it.LoopNodes(l, nil)
-				}
-				return true //continue
-			})
-			if len(errs) > 0 {
-				return c.JSON(http.StatusMultiStatus, errs)
-			}
-		}
-
-		instantiateExternalNode(c, sess, item)
-
-		err = c.System().DB.Workflow.Put(sess, item)
-		if err != nil {
-			if err == model.ErrAuthorityMissing {
-				return c.NoContent(http.StatusUnauthorized)
-			}
-			return c.NoContent(http.StatusNotFound)
-		}
-
-		return c.JSON(http.StatusOK, item)
+	if sess == nil {
+		return c.NoContent(http.StatusBadRequest)
 	}
-	return c.NoContent(http.StatusBadRequest)
+
+	item := &model.WorkflowItem{}
+	if err := c.Bind(&item); err != nil {
+		//WorkflowItem.Price int overflow will return in bind error
+		log.Println("[workflowHandler][UpdateHandler] ", err.Error())
+		return c.String(http.StatusBadRequest, "unable to bind request")
+	}
+
+	item.ID = ID
+	if item.Price < 0 {
+		return c.String(http.StatusBadRequest, "price should be 0 or higher")
+	}
+
+	user, err := userService.GetUser(sess)
+	if err != nil && user == nil {
+		return c.String(http.StatusBadRequest, "unable to get user")
+	}
+	if item.Price > 0 && user.EthereumAddr == "" {
+		return c.String(http.StatusBadRequest, "can not set price without eth addr")
+	}
+
+	if publish {
+		errs := map[string]interface{}{}
+		collectError := func(err error, node *workflow.Node) {
+			errs[node.ID] = struct {
+				Error string
+				Item  interface{}
+			}{Error: err.Error(), Item: node}
+		}
+		//loop recursively and change permissions on all children
+		item.LoopNodes(nil, func(l *workflow.Looper, node *workflow.Node) bool {
+			if node.Type == "form" {
+				it, er := c.System().DB.Form.Get(sess, node.ID)
+				if er != nil {
+					collectError(er, node)
+					return true //continue
+				}
+				if !it.Published {
+					it.Published = true
+					er = c.System().DB.Form.Put(sess, it)
+					if er != nil {
+						collectError(er, node)
+					}
+				}
+			} else if node.Type == "template" {
+				it, er := c.System().DB.Template.Get(sess, node.ID)
+				if er != nil {
+					collectError(er, node)
+					return true //continue
+				}
+				if !it.Published {
+					it.Published = true
+					er = c.System().DB.Template.Put(sess, it)
+					if er != nil {
+						collectError(er, node)
+					}
+				}
+			} else if node.Type == "workflow" { // deep dive...
+				it, er := c.System().DB.Workflow.Get(sess, node.ID)
+				if er != nil {
+					collectError(er, node)
+					return true //continue
+				}
+				if !it.Published {
+					it.Published = true
+					er = c.System().DB.Workflow.Put(sess, it)
+					if er != nil {
+						collectError(er, node)
+					}
+				}
+				it.LoopNodes(l, nil)
+			}
+			return true //continue
+		})
+		if len(errs) > 0 {
+			return c.JSON(http.StatusMultiStatus, errs)
+		}
+	}
+
+	instantiateExternalNode(c, sess, item)
+
+	err = c.System().DB.Workflow.Put(sess, item)
+	if err != nil {
+		if err == model.ErrAuthorityMissing {
+			return c.NoContent(http.StatusUnauthorized)
+		}
+		return c.NoContent(http.StatusNotFound)
+	}
+
+	return c.JSON(http.StatusOK, item)
 }
 
 func instantiateExternalNode(c *www.Context, auth model.Auth, item *model.WorkflowItem) {

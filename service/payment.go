@@ -26,6 +26,7 @@ type (
 	}
 
 	DefaultPaymentService struct {
+		//Important: Pass system to service (and not e.g. system.DB.WorkflowPayments because system.DB variable is replaced on calling api/handlers.PostInit()
 		userService UserService
 		*baseService
 	}
@@ -37,7 +38,7 @@ var (
 )
 
 //Important: Pass system to service (and not e.g. system.DB.WorkflowPayments because system.DB variable is replaced on calling api/handlers.PostInit()
-func NewPaymentService(userService UserService, system *sys.System) *DefaultPaymentService {
+func NewPaymentService(system *sys.System, userService UserService) *DefaultPaymentService {
 	return &DefaultPaymentService{userService: userService, baseService: &baseService{system: system}}
 }
 
