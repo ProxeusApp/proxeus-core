@@ -72,7 +72,7 @@ generate: $(bindata) $(mocks) storage/database/mock/mocks.go
 
 .PHONY: server
 server: generate
-	go build $(GO_OPTS) -tags nocgo -o ./artifacts/proxeus ./main 
+	go build $(GO_OPTS) -tags nocgo -o ./artifacts/proxeus ./main
 
 .PHONY: server-docker
 server-docker: generate
@@ -95,7 +95,7 @@ fmt:
 	goimports -w -local $(golocalimport) main sys
 
 .PHONY: test
-test: generate 
+test: generate
 	go test $(COVERAGE_OPTS)  ./main/... ./sys/... ./storage/...
 
 .PHONY: test-integration
@@ -114,6 +114,8 @@ test-api: server
 	$(eval testdir := $(shell mktemp -d /tmp/proxeus-test-api.XXXXX ))
 	mkdir -p $(testdir)
 	curl -s http://localhost:2115 > /dev/null || ( docker-compose up -d document-service && touch $(testdir)/ds-started )
+	curl -s http://localhost:8011 > /dev/null || (PROXEUS_PLATFORM_DOMAIN=http://172.17.0.1:1323 SERVICE_DOMAIN=localhost docker-compose up -d node-crypto-forex-rates && touch $(testdir)/node-started )
+
 	echo starting test main ; \
 					 PROXEUS_DATA_DIR=$(testdir)/data \
 					 PROXEUS_SETTINGS_FILE=$(testdir)/settings/main.json \
@@ -138,13 +140,13 @@ clean:
 
 .PHONY: run
 run: server
-	artifacts/proxeus -DataDir $(PROXEUS_DATA_DIR)/proxeus-platform/data 
+	artifacts/proxeus -DataDir $(PROXEUS_DATA_DIR)/proxeus-platform/data
 
 main/handlers/assets/bindata.go: $(wildcard ./ui/core/dist/**)
 	go-bindata ${BINDATA_OPTS} -pkg assets -o ./main/handlers/assets/bindata.go -prefix ./ui/core/dist ./ui/core/dist/...
 	goimports -w $@
 
-test/bindata.go: $(shell find ./test/assets/) 
+test/bindata.go: $(shell find ./test/assets/)
 	go-bindata ${BINDATA_OPTS} -pkg test -o ./test/bindata.go ./test/assets/...
 	goimports -w $@
 
