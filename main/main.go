@@ -2,11 +2,12 @@ package main
 
 import (
 	"fmt"
-	"github.com/ProxeusApp/proxeus-core/service"
 	"net/http"
 	_ "net/http/pprof"
 	"os"
 	"path"
+
+	"github.com/ProxeusApp/proxeus-core/service"
 
 	"github.com/ProxeusApp/proxeus-core/main/handlers/api"
 	"github.com/ProxeusApp/proxeus-core/main/handlers/payment"

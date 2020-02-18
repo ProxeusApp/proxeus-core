@@ -76,8 +76,8 @@ func TestCreateWorkflowPayment(t *testing.T) {
 	system.DB = &storage.DBSet{WorkflowPayments: workflowPaymentsDB, User: userDBMock, Workflow: workflowDBMock}
 	www.SetSystem(system)
 
-	userService := service.NewUserService(userDBMock)
-	paymentService := service.NewPaymentService(userService, system.DB.WorkflowPayments, system.DB.Workflow, nil)
+	userService := service.NewUserService(system)
+	paymentService := service.NewPaymentService(userService, system)
 	Init(paymentService, userService)
 
 	t.Run("ShouldCreatePaymentItem", func(t *testing.T) {
@@ -102,8 +102,6 @@ func TestGetWorkflowPaymentById(t *testing.T) {
 	mockCtrl, workflowPaymentsDB := up(t)
 	defer down(mockCtrl, workflowPaymentsDB)
 
-	paymentService := service.NewPaymentService(nil, workflowPaymentsDB, nil, nil)
-
 	t.Run("ShouldReturnPayment", func(t *testing.T) {
 		paymentId := "1"
 
@@ -116,12 +114,13 @@ func TestGetWorkflowPaymentById(t *testing.T) {
 		userDBMock := sm.NewMockUserIF(mockCtrl)
 		userDBMock.EXPECT().Get(gomock.Any(), gomock.Eq("1")).Return(user, nil).Times(1)
 
-		userService := service.NewUserService(userDBMock)
-		Init(paymentService, userService)
-
 		system := &sys.System{}
 		system.DB = &storage.DBSet{WorkflowPayments: workflowPaymentsDB, User: userDBMock}
 		www.SetSystem(system)
+
+		userService := service.NewUserService(system)
+		paymentService := service.NewPaymentService(userService, system)
+		Init(paymentService, userService)
 
 		err := workflowPaymentsDB.Save(&model.WorkflowPaymentItem{ID: paymentId, From: user.EthereumAddr})
 		if err != nil {
@@ -156,12 +155,13 @@ func TestGetWorkflowPaymentById(t *testing.T) {
 		userDBMock := sm.NewMockUserIF(mockCtrl)
 		userDBMock.EXPECT().Get(gomock.Any(), gomock.Eq("1")).Return(user, nil).Times(1)
 
-		userService := service.NewUserService(userDBMock)
-		Init(paymentService, userService)
-
 		system := &sys.System{}
 		system.DB = &storage.DBSet{WorkflowPayments: workflowPaymentsDB, User: userDBMock}
 		www.SetSystem(system)
+
+		userService := service.NewUserService(system)
+		paymentService := service.NewPaymentService(userService, system)
+		Init(paymentService, userService)
 
 		//here pass "userOwner" instead of "user"
 		err := workflowPaymentsDB.Save(&model.WorkflowPaymentItem{ID: paymentId, From: userOwner.EthereumAddr})
@@ -184,8 +184,11 @@ func TestGetWorkflowPayment(t *testing.T) {
 	mockCtrl, workflowPaymentsDB := up(t)
 	defer down(mockCtrl, workflowPaymentsDB)
 
-	userService := service.NewUserService(nil)
-	paymentService := service.NewPaymentService(userService, workflowPaymentsDB, nil, nil)
+	system := &sys.System{}
+	system.DB = &storage.DBSet{WorkflowPayments: workflowPaymentsDB}
+
+	userService := service.NewUserService(system)
+	paymentService := service.NewPaymentService(userService, system)
 	Init(paymentService, userService)
 
 	t.Run("ShouldReturnPayment", func(t *testing.T) {
@@ -239,8 +242,11 @@ func TestUpdateWorkflowPaymentPending(t *testing.T) {
 	mockCtrl, workflowPaymentsDB := up(t)
 	defer down(mockCtrl, workflowPaymentsDB)
 
-	userService := service.NewUserService(nil)
-	paymentService := service.NewPaymentService(userService, workflowPaymentsDB, nil, nil)
+	system := &sys.System{}
+	system.DB = &storage.DBSet{WorkflowPayments: workflowPaymentsDB}
+
+	userService := service.NewUserService(system)
+	paymentService := service.NewPaymentService(userService, system)
 	Init(paymentService, userService)
 
 	t.Run("ShouldUpdatePayment", func(t *testing.T) {
@@ -304,7 +310,10 @@ func TestCancelWorkflowPayment(t *testing.T) {
 	mockCtrl, workflowPaymentsDB := up(t)
 	defer down(mockCtrl, workflowPaymentsDB)
 
-	paymentService := service.NewPaymentService(nil, workflowPaymentsDB, nil, nil)
+	system := &sys.System{}
+	system.DB = &storage.DBSet{WorkflowPayments: workflowPaymentsDB}
+
+	paymentService := service.NewPaymentService(nil, system)
 
 	t.Run("ShouldCancelWorkflowPayment", func(t *testing.T) {
 		paymentId := "4"
@@ -389,8 +398,11 @@ func TestRedeemPayment(t *testing.T) {
 	mockCtrl, workflowPaymentsDB := up(t)
 	defer down(mockCtrl, workflowPaymentsDB)
 
-	userService := service.NewUserService(nil)
-	paymentService := service.NewPaymentService(userService, workflowPaymentsDB, nil, nil)
+	system := &sys.System{}
+	system.DB = &storage.DBSet{WorkflowPayments: workflowPaymentsDB}
+
+	userService := service.NewUserService(system)
+	paymentService := service.NewPaymentService(userService, system)
 	Init(paymentService, userService)
 
 	t.Run("ShouldRedeemWorkflowPayment", func(t *testing.T) {
@@ -514,7 +526,7 @@ func TestRedeemPayment(t *testing.T) {
 	})
 }
 
-var errCleanupTestData = errors.New("dB data has not been cleanup up after finishing tests. try to remove `.test_data` folder")
+var errCleanupTestData = errors.New("dB data has not been cleanup up after finishing tests. try to remove `.test_data` folder in main/handlers/payment")
 
 func up(t *testing.T) (*gomock.Controller, storage.WorkflowPaymentsIF) {
 	mockCtrl := gomock.NewController(t)
