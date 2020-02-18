@@ -56,8 +56,9 @@ services:
     restart: unless-stopped
     environment:
       PROXEUS_INSTANCE_URL: http://xes-platform:1323
-      AUTH_KEY: secret
-      SERVICE_URL: http://node-crypto-forex-rates:8011
+      SERVICE_SECRET: secret
+      SERVICE_PORT: 8011
+      SERVICE_URL: node-crypto-forex-rates
       TZ: Europe/Zurich
     ports:
       - "8011:8011"
@@ -70,8 +71,9 @@ services:
     restart: unless-stopped
     environment:
       PROXEUS_INSTANCE_URL: http://xes-platform:1323
-      AUTH_KEY: secret
-      SERVICE_URL: http://node-balance-retriever:8012
+      SERVICE_SECRET: secret
+      SERVICE_PORT: 8012
+      SERVICE_URL: node-balance-retriever
       TZ: Europe/Zurich
     ports:
       - "8012:8012"

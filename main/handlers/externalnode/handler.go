@@ -7,6 +7,8 @@ import (
 	"os"
 	"time"
 
+	uuid "github.com/satori/go.uuid"
+
 	"github.com/ProxeusApp/proxeus-core/sys"
 	"github.com/ProxeusApp/proxeus-core/sys/model"
 
@@ -43,9 +45,9 @@ func List(c *www.Context, nodeType string) []*workflow.Node {
 		}
 	case "externalNode":
 		for _, node := range c.System().DB.Workflow.ListExternalNodes() {
-			//id := uuid.NewV4().String()
+			id := uuid.NewV4().String()
 			nodes = append(nodes, &workflow.Node{
-				ID:     node.ID,
+				ID:     id,
 				Name:   node.Name,
 				Detail: node.Detail,
 				Type:   "externalNode",

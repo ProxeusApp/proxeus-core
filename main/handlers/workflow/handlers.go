@@ -210,7 +210,7 @@ func ListCustomNodeHandler(e echo.Context) error {
 	nodeType := c.Param("type")
 	sess := c.Session(false)
 	if sess != nil {
-		externalnode.ProbeExternalNodes(c.System())
+		go externalnode.ProbeExternalNodes(c.System())
 		dat := externalnode.List(c, nodeType)
 		if dat != nil {
 			return c.JSON(http.StatusOK, dat)
