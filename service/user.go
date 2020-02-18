@@ -1,7 +1,7 @@
 package service
 
 import (
-	"github.com/ProxeusApp/proxeus-core/storage"
+	"github.com/ProxeusApp/proxeus-core/sys"
 	"github.com/ProxeusApp/proxeus-core/sys/model"
 )
 
@@ -10,14 +10,14 @@ type (
 		GetUser(auth model.Auth) (*model.User, error)
 	}
 	defaultUserService struct {
-		userDB storage.UserIF
+		*baseService
 	}
 )
 
-func NewUserService(userDB storage.UserIF) *defaultUserService {
-	return &defaultUserService{userDB: userDB}
+func NewUserService(system *sys.System) *defaultUserService {
+	return &defaultUserService{&baseService{system: system}}
 }
 
 func (me *defaultUserService) GetUser(auth model.Auth) (*model.User, error) {
-	return me.userDB.Get(auth, auth.UserID())
+	return me.userDB().Get(auth, auth.UserID())
 }

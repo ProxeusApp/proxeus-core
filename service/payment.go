@@ -2,8 +2,8 @@ package service
 
 import (
 	"errors"
-	"github.com/ProxeusApp/proxeus-core/storage"
 	"github.com/ProxeusApp/proxeus-core/storage/database/db"
+	"github.com/ProxeusApp/proxeus-core/sys"
 	"github.com/ProxeusApp/proxeus-core/sys/model"
 	uuid "github.com/satori/go.uuid"
 	"log"
@@ -26,10 +26,9 @@ type (
 	}
 
 	DefaultPaymentService struct {
-		paymentsDB  storage.WorkflowPaymentsIF
-		workflowDB  storage.WorkflowIF
-		userDB      storage.UserDataIF
+		//Important: Pass system to service (and not e.g. system.DB.WorkflowPayments because system.DB variable is replaced on calling api/handlers.PostInit()
 		userService UserService
+		*baseService
 	}
 )
 
@@ -38,12 +37,12 @@ var (
 	ErrTxHashEmpty          = errors.New("no txHash given")
 )
 
-func NewPaymentService(userService UserService, paymentsDB storage.WorkflowPaymentsIF, workflowDB storage.WorkflowIF, userDB storage.UserDataIF) *DefaultPaymentService {
-	return &DefaultPaymentService{userService: userService, paymentsDB: paymentsDB, workflowDB: workflowDB, userDB: userDB}
+func NewPaymentService(userService UserService, system *sys.System) *DefaultPaymentService {
+	return &DefaultPaymentService{userService: userService, baseService: &baseService{system: system}}
 }
 
 func (me *DefaultPaymentService) CreateWorkflowPayment(auth model.Auth, workflowId, ethAddress string) (*model.WorkflowPaymentItem, error) {
-	workflow, err := me.workflowDB.Get(auth, workflowId)
+	workflow, err := me.workflowDB().Get(auth, workflowId)
 	if err != nil {
 		return nil, err
 	}
@@ -58,11 +57,11 @@ func (me *DefaultPaymentService) CreateWorkflowPayment(auth model.Auth, workflow
 		WorkflowID: workflowId,
 	}
 
-	return payment, me.paymentsDB.Save(payment)
+	return payment, me.paymentsDB().Save(payment)
 }
 
 func (me *DefaultPaymentService) GetWorkflowPaymentById(paymentId string) (*model.WorkflowPaymentItem, error) {
-	return me.paymentsDB.Get(paymentId)
+	return me.paymentsDB().Get(paymentId)
 }
 
 func (me *DefaultPaymentService) GetWorkflowPayment(txHash, ethAddressess, status string) (*model.WorkflowPaymentItem, error) {
@@ -71,7 +70,7 @@ func (me *DefaultPaymentService) GetWorkflowPayment(txHash, ethAddressess, statu
 		return nil, errRequiredParamMissing
 	}
 
-	payment, err := me.paymentsDB.GetByTxHashAndStatusAndFromEthAddress(txHash, status, ethAddressess)
+	payment, err := me.paymentsDB().GetByTxHashAndStatusAndFromEthAddress(txHash, status, ethAddressess)
 	if err != nil {
 		log.Println("[GetWorkflowPayment] GetByTxHashAndStatusAndFromethAddressess err: ", err.Error())
 		return nil, err
@@ -88,7 +87,7 @@ func (me *DefaultPaymentService) UpdateWorkflowPaymentPending(paymentId, txHash,
 		return ErrTxHashEmpty
 	}
 
-	err := me.paymentsDB.Update(paymentId, model.PaymentStatusPending, txHash, ethAddress)
+	err := me.paymentsDB().Update(paymentId, model.PaymentStatusPending, txHash, ethAddress)
 	if err != nil {
 		log.Printf("[UpdateWorkflowPayment] WorkflowPayments.Update err: %s", err.Error())
 	}
@@ -96,22 +95,22 @@ func (me *DefaultPaymentService) UpdateWorkflowPaymentPending(paymentId, txHash,
 }
 
 func (me *DefaultPaymentService) CancelWorkflowPayment(paymentId, ethAddress string) error {
-	return me.paymentsDB.Cancel(paymentId, ethAddress)
+	return me.paymentsDB().Cancel(paymentId, ethAddress)
 }
 
 // Set the payment status from confirmed to redeemed
 func (me *DefaultPaymentService) RedeemPayment(workflowId, ethAddr string) error {
-	return me.paymentsDB.Redeem(workflowId, ethAddr)
+	return me.paymentsDB().Redeem(workflowId, ethAddr)
 }
 
 //returns a bool indicating whether a payment is required for the user for a workflow
 func (me *DefaultPaymentService) CheckIfWorkflowPaymentRequired(auth model.Auth, workflowId string) (bool, error) {
-	workflow, err := me.workflowDB.Get(auth, workflowId)
+	workflow, err := me.workflowDB().Get(auth, workflowId)
 	if err != nil {
 		return true, err
 	}
 
-	_, alreadyStarted, err := me.userDB.GetByWorkflow(auth, workflow, false)
+	_, alreadyStarted, err := me.userDataDB().GetByWorkflow(auth, workflow, false)
 	if err != nil {
 		if !db.NotFound(err) {
 			return true, nil
@@ -134,18 +133,18 @@ func (me *DefaultPaymentService) CheckForWorkflowPayment(auth model.Auth, workfl
 	}
 
 	if paymentRequired {
-		_, err = me.paymentsDB.GetByWorkflowIdAndFromEthAddress(workflowId, user.EthereumAddr, []string{model.PaymentStatusConfirmed})
+		_, err = me.paymentsDB().GetByWorkflowIdAndFromEthAddress(workflowId, user.EthereumAddr, []string{model.PaymentStatusConfirmed})
 	}
 
 	return err
 }
 
 func (me *DefaultPaymentService) Delete(paymentId string) error {
-	return me.paymentsDB.Delete(paymentId)
+	return me.paymentsDB().Delete(paymentId)
 }
 
 func (me *DefaultPaymentService) All() ([]*model.WorkflowPaymentItem, error) {
-	return me.paymentsDB.All()
+	return me.paymentsDB().All()
 }
 
 func isPaymentRequired(alreadyStarted bool, workflow *model.WorkflowItem, userId string) bool {

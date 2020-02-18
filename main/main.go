@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/ProxeusApp/proxeus-core/service"
 	"net/http"
 	_ "net/http/pprof"
 	"os"
@@ -31,7 +32,7 @@ var embedded *www.Embedded
 
 func main() {
 	cfg.Init()
-	system, paymentService, userService, err := sys.NewWithSettings(cfg.Config.SettingsFile, &cfg.Config.Settings)
+	system, err := sys.NewWithSettings(cfg.Config.SettingsFile, &cfg.Config.Settings)
 	if err != nil {
 		panic(err)
 	}
@@ -58,6 +59,10 @@ func main() {
 	fmt.Printf("system settings: %#v\n", system.GetSettings())
 	fmt.Println("#######################################################")
 	fmt.Println()
+
+	//Important: Pass system to services (and not e.g. system.DB.WorkflowPayments because system.DB variable is replaced on calling api/handlers.PostInit()
+	userService := service.NewUserService(system)
+	paymentService := service.NewPaymentService(userService, system)
 
 	payment.Init(paymentService, userService)
 	api.Init(paymentService, userService)

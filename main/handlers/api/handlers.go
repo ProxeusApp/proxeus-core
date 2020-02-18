@@ -18,8 +18,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/ProxeusApp/proxeus-core/main/handlers/payment"
-
 	"github.com/ProxeusApp/proxeus-core/service"
 
 	"github.com/ProxeusApp/proxeus-core/externalnode"
@@ -289,14 +287,11 @@ func PostInit(e echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusUnprocessableEntity, err)
 	}
-	workflowPaymentService, userService, err := c.System().PutSettings(d.Settings)
+	err = c.System().PutSettings(d.Settings)
 	if err != nil {
 		fmt.Println("Error during PostInit settings: ", err)
 		return c.NoContent(http.StatusInternalServerError)
 	}
-
-	Init(workflowPaymentService, userService)
-	payment.Init(workflowPaymentService, userService)
 
 	if !yes {
 		u := &model.User{Email: d.User.Email, Role: d.User.Role}
