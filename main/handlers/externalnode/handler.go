@@ -2,11 +2,12 @@ package externalnode
 
 import (
 	"fmt"
-	"github.com/satori/go.uuid"
 	"log"
 	"net/http"
 	"os"
 	"time"
+
+	uuid "github.com/satori/go.uuid"
 
 	"github.com/ProxeusApp/proxeus-core/sys"
 	"github.com/ProxeusApp/proxeus-core/sys/model"
