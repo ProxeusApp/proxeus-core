@@ -63,7 +63,10 @@ func ProbeExternalNodes(s *sys.System) {
 		err := healthCheck(node.HealthUrl())
 		if err != nil {
 			log.Printf("[nodeservice] removing external node err %s \n", err)
-			s.DB.Workflow.DeleteExternalNode(new(model.User), node.ID)
+			err = s.DB.Workflow.DeleteExternalNode(new(model.User), node.ID)
+			if err != nil {
+				log.Printf("[nodeservice] unable to remove external node err %s", err)
+			}
 		}
 	}
 }
