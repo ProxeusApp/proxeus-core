@@ -55,10 +55,10 @@ services:
       - xes-platform-network
     restart: unless-stopped
     environment:
-      PROXEUS_INSTANCE_URL: http://xes-platform:1323
+      PROXEUS_INSTANCE_URL: "${PROXEUS_PLATFORM_DOMAIN:-http://xes-platform:1323}"
       SERVICE_SECRET: secret
       SERVICE_PORT: 8011
-      SERVICE_URL: node-crypto-forex-rates
+      SERVICE_URL: "${SERVICE_DOMAIN:-https://crypto-forex-rates.ci.proxeus.com:443}"
       TZ: Europe/Zurich
     ports:
       - "8011:8011"
@@ -70,10 +70,10 @@ services:
       - xes-platform-network
     restart: unless-stopped
     environment:
-      PROXEUS_INSTANCE_URL: http://xes-platform:1323
+      PROXEUS_INSTANCE_URL: "${PROXEUS_PLATFORM_DOMAIN:-http://xes-platform:1323}"
       SERVICE_SECRET: secret
       SERVICE_PORT: 8012
-      SERVICE_URL: node-balance-retriever
+      SERVICE_URL: "${SERVICE_DOMAIN:-http://node-balance-retriever:8012}"
       TZ: Europe/Zurich
     ports:
       - "8012:8012"
