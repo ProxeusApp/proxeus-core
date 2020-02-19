@@ -75,5 +75,6 @@ services:
       SERVICE_PORT: 8012
       SERVICE_URL: "${SERVICE_DOMAIN:-http://node-balance-retriever:8012}"
       TZ: Europe/Zurich
+      PROXEUS_ETH_CLIENT_URL: ${PROXEUS_ETH_CLIENT_URL}
     ports:
       - "8012:8012"
