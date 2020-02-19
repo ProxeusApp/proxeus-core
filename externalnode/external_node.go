@@ -48,7 +48,7 @@ func Register(proxeusUrl, name, serviceUrl, jwtSecret, description string) error
 			ID:     name,
 			Name:   name,
 			Detail: description,
-			Url:    "http://" + serviceUrl,
+			Url:    serviceUrl,
 			Secret: jwtSecret,
 		}
 		buf, err := json.Marshal(n)
