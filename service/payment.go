@@ -26,7 +26,6 @@ type (
 	}
 
 	DefaultPaymentService struct {
-		//Important: Pass system to service (and not e.g. system.DB.WorkflowPayments because system.DB variable is replaced on calling api/handlers.PostInit()
 		userService UserService
 		*baseService
 	}
@@ -37,6 +36,7 @@ var (
 	ErrTxHashEmpty          = errors.New("no txHash given")
 )
 
+//Important: Pass system to service (and not e.g. system.DB.WorkflowPayments because system.DB variable is replaced on calling api/handlers.PostInit()
 func NewPaymentService(userService UserService, system *sys.System) *DefaultPaymentService {
 	return &DefaultPaymentService{userService: userService, baseService: &baseService{system: system}}
 }
