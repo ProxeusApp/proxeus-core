@@ -19,6 +19,7 @@ import (
 	"github.com/ProxeusApp/proxeus-core/main/handlers/helpers"
 	"github.com/ProxeusApp/proxeus-core/main/www"
 	"github.com/ProxeusApp/proxeus-core/sys/model"
+	"github.com/ProxeusApp/proxeus-core/sys/workflow"
 )
 
 var (
@@ -108,7 +109,7 @@ func UpdateHandler(e echo.Context) error {
 		}
 	}
 
-	instantiateExternalNode(c, sess, item)
+	instantiateExternalNode(c, sess, workflowItem)
 
 	err = workflowService.Put(sess, workflowItem)
 	if err != nil {
@@ -200,8 +201,8 @@ func ListCustomNodeHandler(e echo.Context) error {
 	nodeType := c.Param("type")
 	sess := c.Session(false)
 	if sess != nil {
-		go externalnode.ProbeExternalNodes(c.System())
-		dat := externalnode.List(c, nodeType)
+		go nodeService.ProbeExternalNodes()
+		dat := nodeService.List(nodeType)
 		if dat != nil {
 			return c.JSON(http.StatusOK, dat)
 		}
