@@ -1,5 +1,3 @@
-// +build integration
-
 package eio
 
 import (
@@ -15,6 +13,7 @@ var success int
 var errCount int
 
 func TestDocumentServiceClient_Compile(t *testing.T) {
+	t.Skip("Skip document service compilation test")
 	ds := &DocumentServiceClient{Url: "http://localhost:2115/"}
 	start := time.Now()
 	for c := 0; c < 80; c++ {

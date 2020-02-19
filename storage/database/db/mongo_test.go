@@ -1,34 +1,35 @@
+// +build integration
+
 package db
 
 import (
+	"os"
 	"testing"
 )
 
 func openMongoDB(t *testing.T) DB {
-	t.Skip("needs mongo setup")
-	db, err := OpenDatabase("mongo", "mongodb://localhost:27017", "db00")
+	db, err := OpenDatabase("mongo", os.Getenv("PROXEUS_DATABASE_URI"), "db00")
 	if err != nil {
 		t.Fatal(err)
 	}
 	return db
 }
-
-func TestCRUDMongo(t *testing.T) {
+func TestMongoCRUD(t *testing.T) {
 	testCRUD(t, openMongoDB(t))
 }
 
-func TestGetQuirksMongo(t *testing.T) {
+func TestMongoGetQuirks(t *testing.T) {
 	testGetQuirks(t, openMongoDB(t))
 }
 
-func TestTTLMongo(t *testing.T) {
+func TestMongoTTL(t *testing.T) {
 	testTTL(t, openMongoDB(t))
 }
 
-func TestAdvancedFetchingMongo(t *testing.T) {
+func TestMongoAdvancedFetching(t *testing.T) {
 	testAdvancedFetching(t, openMongoDB(t))
 }
 
-func TestTransactionsMongo(t *testing.T) {
+func TestMongoTransactions(t *testing.T) {
 	testTransactions(t, openMongoDB(t))
 }

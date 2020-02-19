@@ -7,9 +7,10 @@ import (
 	"os"
 	"path"
 
-	"github.com/ProxeusApp/proxeus-core/main/external/pricegetter"
+	"github.com/ProxeusApp/proxeus-core/service"
 
-	"github.com/ProxeusApp/proxeus-core/main/app"
+	"github.com/ProxeusApp/proxeus-core/main/handlers/api"
+	"github.com/ProxeusApp/proxeus-core/main/handlers/payment"
 
 	"github.com/labstack/echo"
 
@@ -38,9 +39,19 @@ func main() {
 	}
 
 	if system.TestMode {
+		fmt.Println()
 		fmt.Println("#######################################################")
 		fmt.Println("# STARTING PROXEUS IN TEST MODE - NOT FOR PRODUCTION #")
 		fmt.Println("#######################################################")
+		fmt.Println()
+	}
+
+	if system.AllowHttp {
+		fmt.Println()
+		fmt.Println("#######################################################")
+		fmt.Println("# ALLOWING HTTP - NOT FOR PRODUCTION                  #")
+		fmt.Println("#######################################################")
+		fmt.Println()
 	}
 
 	fmt.Println()
@@ -48,6 +59,14 @@ func main() {
 	fmt.Printf("Configuration: %#v\n", cfg.Config)
 	fmt.Printf("system settings: %#v\n", system.GetSettings())
 	fmt.Println("#######################################################")
+	fmt.Println()
+
+	//Important: Pass system to services (and not e.g. system.DB.WorkflowPayments because system.DB variable is replaced on calling api/handlers.PostInit()
+	userService := service.NewUserService(system)
+	paymentService := service.NewPaymentService(userService, system)
+
+	payment.Init(paymentService, userService)
+	api.Init(paymentService, userService)
 
 	www.SetSystem(system)
 
@@ -77,8 +96,6 @@ func main() {
 
 	// Main routes
 	handlers.MainHostedAPI(e, www.NewSecurity(), ServerVersion)
-	go app.ProbeExternalNodes(system)
-	go pricegetter.Run()
 
 	www.StartServer(e, cfg.Config.ServiceAddress, false)
 	system.Shutdown()

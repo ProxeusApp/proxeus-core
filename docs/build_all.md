@@ -34,10 +34,13 @@ PATH=$PATH:$(go env GOPATH)/bin
 ```
 
 ### Clone repository
-Clone the repository to the right location below your GOPATH:
+The project uses go modules.
+
+Clone the repository outside your GOPATH:
 ```
-git clone git@github.com:ProxeusApp/proxeus-core.git $(go env GOPATH)/src/git.proxeus.com/core/central
-cd $(go env GOPATH)/src/git.proxeus.com/core/central
+cd <your workspace>
+git clone https://github.com/ProxeusApp/proxeus-core.git 
+cd proxeus-core
 ```
 
 ### Build
@@ -56,7 +59,7 @@ make all
 ### Start
 Run `server`
 ```
-./artifacts/server
+./artifacts/proxeus
 ```
 
 The platform will be available at the following URL: http://localhost:1323

@@ -21,7 +21,8 @@ type Settings struct {
 	AirdropAmountEther        string `json:"airdropAmountEther" default:"0" usage:"Amount of Ether to airdrop to newly registered users."`
 	DatabaseEngine            string `json:"databaseEngine" default:"storm" usage:"Selects database engine, supported values: storm, mongo."`
 	DatabaseURI               string `json:"DatabaseURI" default:"" usage:"Sets database connection string, not required for embedded databases."`
-	TestMode                  string `json:"testMode" default:"false" usage:"Run the server in test mode -NOT FOR PRODUCTION=."`
+	TestMode                  string `json:"testMode" default:"false" usage:"Run the server in test mode =NOT FOR PRODUCTION=."`
+	AllowHttp                 string `json:"allowHttp" default:"false" usage:"Allow the use of HTTP =NOT FOR PRODUCTION=."`
 }
 
 func NewDefaultSettings() *Settings {

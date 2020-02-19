@@ -18,11 +18,14 @@ import (
 	"strings"
 	"time"
 
+	"github.com/ProxeusApp/proxeus-core/service"
+
+	"github.com/ProxeusApp/proxeus-core/externalnode"
+
 	"github.com/ProxeusApp/proxeus-core/main/app"
 	cfg "github.com/ProxeusApp/proxeus-core/main/config"
 	"github.com/ProxeusApp/proxeus-core/main/handlers/blockchain"
 	"github.com/ProxeusApp/proxeus-core/main/handlers/helpers"
-	"github.com/ProxeusApp/proxeus-core/main/handlers/payment"
 	"github.com/ProxeusApp/proxeus-core/main/www"
 	"github.com/ProxeusApp/proxeus-core/storage"
 	"github.com/ProxeusApp/proxeus-core/storage/database/db"
@@ -43,7 +46,17 @@ import (
 	uuid "github.com/satori/go.uuid"
 )
 
-var filenameRegex = regexp.MustCompile(`^[^\s][\p{L}\d.,_\-&: ]{3,}[^\s]$`)
+var (
+	paymentService service.PaymentService
+	userService    service.UserService
+
+	filenameRegex = regexp.MustCompile(`^[^\s][\p{L}\d.,_\-&: ]{3,}[^\s]$`)
+)
+
+func Init(paymentS service.PaymentService, userS service.UserService) {
+	paymentService = paymentS
+	userService = userS
+}
 
 func html(c echo.Context, p string) error {
 	bts, err := sys.ReadAllFile(p)
@@ -259,13 +272,13 @@ func PostInit(e echo.Context) error {
 		Password string     `json:"password" validate:"required=false,matches=^.{6}"`
 		Role     model.Role `json:"role"`
 	}
-	type Init struct {
+	type InitStruct struct {
 		Settings *model.Settings `json:"settings"`
 		User     *usr            `json:"user"`
 	}
 	var err error
 	yes, _ := c.System().Configured()
-	d := &Init{User: &usr{}}
+	d := &InitStruct{User: &usr{}}
 	_ = c.Bind(d)
 	if yes {
 		d.User = nil
@@ -279,6 +292,7 @@ func PostInit(e echo.Context) error {
 		fmt.Println("Error during PostInit settings: ", err)
 		return c.NoContent(http.StatusInternalServerError)
 	}
+
 	if !yes {
 		u := &model.User{Email: d.User.Email, Role: d.User.Role}
 		uex, _ := c.System().DB.User.GetByEmail(u.Email)
@@ -348,7 +362,7 @@ func UpdateAddress(e echo.Context) error {
 	if item != nil {
 		return c.JSON(http.StatusUnprocessableEntity, map[string]interface{}{"etherPK": []map[string]interface{}{{"msg": "Please choose another account."}}})
 	}
-	item, err = c.System().DB.User.Get(sess, sess.UserID())
+	item, err = userService.GetUser(sess)
 	if err != nil {
 		return c.NoContent(http.StatusInternalServerError)
 	}
@@ -734,7 +748,7 @@ func ChangeEmailRequest(e echo.Context) (err error) {
 	}
 	if usr, err := c.System().DB.User.GetByEmail(m.Email); usr == nil {
 		var token model.TokenRequest
-		usr, _ = c.System().DB.User.Get(sess, sess.UserID())
+		usr, _ = userService.GetUser(sess)
 		if usr == nil {
 			return c.NoContent(http.StatusUnauthorized)
 		}
@@ -856,7 +870,7 @@ func MeUpdateHandler(e echo.Context) error {
 		return err
 	}
 	if sess.UserID() == item.ID {
-		u, err := c.System().DB.User.Get(sess, sess.UserID())
+		u, err := userService.GetUser(sess)
 		if err != nil {
 			return c.String(http.StatusUnprocessableEntity, err.Error())
 		}
@@ -927,23 +941,12 @@ func CheckForWorkflowPayment(e echo.Context) error {
 		return c.NoContent(http.StatusBadRequest)
 	}
 
-	user, err := c.System().DB.User.Get(sess, sess.UserID())
+	err := paymentService.CheckForWorkflowPayment(sess, workflowId)
 	if err != nil {
-		return c.NoContent(http.StatusUnauthorized)
-	}
-
-	paymentRequired, err := payment.CheckIfWorkflowPaymentRequired(c, workflowId)
-	if err != nil {
-		return c.NoContent(http.StatusBadRequest)
-	}
-	if paymentRequired {
-		_, err := c.System().DB.WorkflowPayments.GetByWorkflowIdAndFromEthAddress(workflowId, user.EthereumAddr, []string{model.PaymentStatusConfirmed})
-		if err != nil {
-			if db.NotFound(err) {
-				return c.NoContent(http.StatusNotFound)
-			}
-			return c.NoContent(http.StatusBadRequest)
+		if db.NotFound(err) {
+			return c.NoContent(http.StatusNotFound)
 		}
+		return c.NoContent(http.StatusBadRequest)
 	}
 
 	return c.NoContent(http.StatusOK)
@@ -970,18 +973,18 @@ func DocumentHandler(e echo.Context) error {
 
 	docApp := getDocApp(c, sess, ID)
 	if docApp == nil {
-		paymentRequired, err := payment.CheckIfWorkflowPaymentRequired(c, ID)
+		paymentRequired, err := paymentService.CheckIfWorkflowPaymentRequired(c.Session(false), ID)
 		if err != nil {
 			return c.String(http.StatusNotFound, err.Error())
 		}
 
 		if paymentRequired {
 			sess := c.Session(false)
-			user, err := c.System().DB.User.Get(sess, sess.UserID())
+			user, err := userService.GetUser(sess)
 			if err != nil {
 				return c.NoContent(http.StatusBadRequest)
 			}
-			err = payment.RedeemPayment(c.System().DB.WorkflowPayments, wf.ID, user.EthereumAddr)
+			err = paymentService.RedeemPayment(wf.ID, user.EthereumAddr)
 			if err != nil {
 				log.Println("[redeemPayment] ", err.Error())
 				return c.String(http.StatusUnprocessableEntity, errNoPaymentFound.Error())
@@ -1347,7 +1350,7 @@ func UserDocumentSignatureRequestGetCurrentUserHandler(e echo.Context) error {
 		return c.NoContent(http.StatusUnauthorized)
 	}
 
-	user, err := c.System().DB.User.Get(sess, sess.UserID())
+	user, err := userService.GetUser(sess)
 	if err != nil {
 		return c.NoContent(http.StatusInternalServerError)
 	}
@@ -1588,7 +1591,7 @@ func UserDocumentSignatureRequestAddHandler(e echo.Context) error {
 
 	fileObj, _ = c.System().DB.UserData.Get(sess, id)
 
-	requestor, err := c.System().DB.User.Get(sess, sess.UserID())
+	requestor, err := userService.GetUser(sess)
 	if err != nil {
 		return c.NoContent(http.StatusInternalServerError)
 	}
@@ -1653,7 +1656,7 @@ func UserDocumentSignatureRequestRejectHandler(e echo.Context) error {
 	docId := c.Param("docID")
 	id := c.Param("ID")
 
-	item, err := c.System().DB.User.Get(sess, sess.UserID())
+	item, err := userService.GetUser(sess)
 	if err != nil {
 		return c.NoContent(http.StatusInternalServerError)
 	}
@@ -1711,7 +1714,7 @@ func UserDocumentSignatureRequestRevokeHandler(e echo.Context) error {
 		return c.String(http.StatusNotFound, err.Error())
 	}
 
-	requestor, err := c.System().DB.User.Get(sess, sess.UserID())
+	requestor, err := userService.GetUser(sess)
 	if err != nil {
 		return c.NoContent(http.StatusInternalServerError)
 	}
@@ -2049,11 +2052,17 @@ func ExternalConfigurationPage(e echo.Context) error {
 	id := c.Param("id")
 	name := c.Param("name")
 
+	//QueryFromInstanceID -> instance
+	q, err := c.System().DB.Workflow.QueryFromInstanceID(sess, id)
+	if err == nil {
+		return c.Redirect(http.StatusFound, q.ConfigUrl())
+	}
+
 	node, err := c.System().DB.Workflow.NodeByName(sess, name)
 	if err != nil {
 		return err
 	}
-	i := &model.ExternalNodeInstance{
+	i := &externalnode.ExternalNodeInstance{
 		ID:       id,
 		NodeName: name,
 	}
@@ -2061,7 +2070,7 @@ func ExternalConfigurationPage(e echo.Context) error {
 	if err != nil {
 		return err
 	}
-	q := model.ExternalQuery{
+	q = externalnode.ExternalQuery{
 		ExternalNode:         node,
 		ExternalNodeInstance: i,
 	}
@@ -2069,14 +2078,52 @@ func ExternalConfigurationPage(e echo.Context) error {
 }
 
 func ExternalRegister(e echo.Context) error {
-	if e.RealIP() != "127.0.0.1" {
-		return errors.New("only local ip allowed")
-	}
 	c := e.(*www.Context)
-	var node model.ExternalNode
+	var node externalnode.ExternalNode
 	err := c.Bind(&node)
 	if err != nil {
 		return err
 	}
 	return c.System().DB.Workflow.RegisterExternalNode(new(model.User), &node)
+}
+
+func ExternalConfigStore(e echo.Context) error {
+	c := e.(*www.Context)
+
+	var node externalnode.ExternalNodeInstance
+	err := c.Bind(&node)
+	if err != nil {
+		return err
+	}
+
+	//QueryFromInstanceID -> instance
+	q, err := c.System().DB.Workflow.QueryFromInstanceID(new(model.User), node.ID)
+	if err != nil {
+		return c.String(http.StatusBadRequest, err.Error())
+	}
+
+	//Add config to instance
+	q.Config = node.Config
+
+	//PutExternalNodeInstance
+	err = c.System().DB.Workflow.PutExternalNodeInstance(new(model.User), q.ExternalNodeInstance)
+	if err != nil {
+		return c.String(http.StatusBadRequest, err.Error())
+	}
+	return c.NoContent(http.StatusOK)
+}
+
+func ExternalConfigRetrieve(e echo.Context) error {
+	c := e.(*www.Context)
+	id := c.Param("id")
+	q, err := c.System().DB.Workflow.QueryFromInstanceID(new(model.User), id)
+	if err != nil {
+		return c.String(http.StatusBadRequest, err.Error())
+	}
+
+	if q.Config == nil {
+		c.NoContent(http.StatusNotFound)
+	}
+
+	return c.JSON(http.StatusOK, q.Config)
 }

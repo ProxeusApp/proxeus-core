@@ -1,6 +1,7 @@
 package database
 
 import (
+	"github.com/ProxeusApp/proxeus-core/externalnode"
 	"os"
 	"path/filepath"
 	"time"
@@ -35,7 +36,7 @@ func NewWorkflowDB(c DBConfig) (*WorkflowDB, error) {
 	udb.db.Init(workflowHeavyData)
 
 	udb.db.Init(externalNodeInstance)
-	udb.db.Init(new(model.ExternalNode))
+	udb.db.Init(new(externalnode.ExternalNode))
 
 	example := &model.WorkflowItem{}
 	udb.db.Init(example)
@@ -240,36 +241,36 @@ func (me *WorkflowDB) saveOnly(item *model.WorkflowItem, tx db.DB) error {
 	return tx.Save(&cp)
 }
 
-func (me *WorkflowDB) RegisterExternalNode(auth model.Auth, n *model.ExternalNode) error {
+func (me *WorkflowDB) RegisterExternalNode(auth model.Auth, n *externalnode.ExternalNode) error {
 	return me.db.Save(n)
 }
 
-func (me *WorkflowDB) NodeByName(auth model.Auth, name string) (*model.ExternalNode, error) {
-	var i model.ExternalNode
+func (me *WorkflowDB) NodeByName(auth model.Auth, name string) (*externalnode.ExternalNode, error) {
+	var i externalnode.ExternalNode
 	err := me.db.One("Name", name, &i)
 	return &i, err
 }
 
-func (me *WorkflowDB) QueryFromInstanceID(auth model.Auth, id string) (model.ExternalQuery, error) {
-	var i model.ExternalNodeInstance
+func (me *WorkflowDB) QueryFromInstanceID(auth model.Auth, id string) (externalnode.ExternalQuery, error) {
+	var i externalnode.ExternalNodeInstance
 	err := me.db.Get(externalNodeInstance, id, &i)
 	if err != nil {
-		return model.ExternalQuery{}, err
+		return externalnode.ExternalQuery{}, err
 	}
 	n, err := me.NodeByName(auth, i.NodeName)
 	if err != nil {
-		return model.ExternalQuery{}, err
+		return externalnode.ExternalQuery{}, err
 	}
-	return model.ExternalQuery{
+	return externalnode.ExternalQuery{
 		ExternalNode:         n,
 		ExternalNodeInstance: &i,
 	}, nil
 }
 
-func (me *WorkflowDB) ListExternalNodes() []*model.ExternalNode {
-	var l []*model.ExternalNode
-	me.db.Select().Each(new(model.ExternalNode), func(record interface{}) error {
-		item := record.(*model.ExternalNode)
+func (me *WorkflowDB) ListExternalNodes() []*externalnode.ExternalNode {
+	var l []*externalnode.ExternalNode
+	me.db.Select().Each(new(externalnode.ExternalNode), func(record interface{}) error {
+		item := record.(*externalnode.ExternalNode)
 		l = append(l, item)
 		return nil
 	})
@@ -277,28 +278,23 @@ func (me *WorkflowDB) ListExternalNodes() []*model.ExternalNode {
 }
 
 func (me *WorkflowDB) DeleteExternalNode(auth model.Auth, id string) error {
-	return me.db.DeleteStruct(model.ExternalNode{ID: id})
+	return me.db.DeleteStruct(&externalnode.ExternalNode{ID: id})
 }
 
-func (me *WorkflowDB) PutExternalNodeInstance(auth model.Auth, item *model.ExternalNodeInstance) error {
+func (me *WorkflowDB) PutExternalNodeInstance(auth model.Auth, item *externalnode.ExternalNodeInstance) error {
 	tx, err := me.db.Begin(true)
 	if err != nil {
 		return err
 	}
 	defer tx.Rollback()
-	var i model.ExternalNodeInstance
+	var i externalnode.ExternalNodeInstance
 	err = tx.Get(externalNodeInstance, item.ID, &i)
 	if db.NotFound(err) {
 		if !auth.AccessRights().AllowedToCreateEntities() {
 			return model.ErrAuthorityMissing
 		}
-		item.Permissions = model.Permissions{Owner: auth.UserID()}
-		i.Permissions = item.Permissions
 	} else if err != nil {
 		return err
-	}
-	if !i.Permissions.IsWriteGrantedFor(auth) {
-		return model.ErrAuthorityMissing
 	}
 	err = tx.Set(externalNodeInstance, item.ID, item)
 	if err != nil {
