@@ -1,0 +1,205 @@
+---
+- - :whitelist
+  - MIT
+  - :who: emeka.mosanya@blockfactory.com
+    :why:
+    :versions: []
+    :when: 2019-12-19 14:16:38.686330000 Z
+- - :whitelist
+  - LGPL
+  - :who: emeka.mosanya@blockfactory.com
+    :why:
+    :versions: []
+    :when: 2019-12-19 14:16:45.566464000 Z
+- - :whitelist
+  - Apache 2.0
+  - :who: emeka.mosanya@blockfactory.com
+    :why:
+    :versions: []
+    :when: 2019-12-19 14:17:05.284448000 Z
+- - :whitelist
+  - Simplified BSD
+  - :who: emeka.mosanya@blockfactory.com
+    :why:
+    :versions: []
+    :when: 2019-12-19 14:17:25.210728000 Z
+- - :whitelist
+  - ISC
+  - :who: emeka.mosanya@blockfactory.com
+    :why:
+    :versions: []
+    :when: 2019-12-19 14:18:06.703932000 Z
+- - :whitelist
+  - New BSD
+  - :who: emeka.mosanya@blockfactory.com
+    :why:
+    :versions: []
+    :when: 2019-12-19 14:19:20.919779000 Z
+- - :whitelist
+  - BSD-3-Clause OR MIT
+  - :who: emeka.mosanya@blockfactory.com
+    :why:
+    :versions: []
+    :when: 2019-12-19 14:19:46.615833000 Z
+- - :whitelist
+  - Public Domain
+  - :who: emeka.mosanya@blockfactory.com
+    :why:
+    :versions: []
+    :when: 2019-12-19 14:19:57.385131000 Z
+- - :whitelist
+  - "(OFL-1.1 OR MIT)"
+  - :who: emeka.mosanya@blockfactory.com
+    :why:
+    :versions: []
+    :when: 2019-12-19 14:20:20.057948000 Z
+- - :whitelist
+  - "(BSD-3-Clause OR GPL-2.0)"
+  - :who: emeka.mosanya@blockfactory.com
+    :why:
+    :versions: []
+    :when: 2019-12-19 14:20:34.772580000 Z
+- - :whitelist
+  - "(Apache-2.0 OR MIT)"
+  - :who: emeka.mosanya@blockfactory.com
+    :why:
+    :versions: []
+    :when: 2019-12-19 14:21:14.773449000 Z
+- - :whitelist
+  - BSD
+  - :who: emeka.mosanya@blockfactory.com
+    :why:
+    :versions: []
+    :when: 2019-12-19 14:21:36.572187000 Z
+- - :whitelist
+  - Unlicense
+  - :who: emeka.mosanya@blockfactory.com
+    :why:
+    :versions: []
+    :when: 2019-12-19 14:22:14.114183000 Z
+- - :whitelist
+  - "(MIT OR Apache-2.0)"
+  - :who: emeka.mosanya@blockfactory.com
+    :why:
+    :versions: []
+    :when: 2019-12-19 14:22:29.317124000 Z
+- - :whitelist
+  - MIT*
+  - :who: emeka.mosanya@blockfactory.com
+    :why:
+    :versions: []
+    :when: 2019-12-19 14:23:34.262814000 Z
+- - :whitelist
+  - BSD*
+  - :who: emeka.mosanya@blockfactory.com
+    :why:
+    :versions: []
+    :when: 2019-12-19 14:23:39.103801000 Z
+- - :whitelist
+  - "(OFL-1.1 AND MIT)"
+  - :who: emeka.mosanya@blockfactory.com
+    :why:
+    :versions: []
+    :when: 2019-12-19 14:23:58.734956000 Z
+- - :whitelist
+  - "(MIT AND BSD-3-Clause)"
+  - :who: emeka.mosanya@blockfactory.com
+    :why:
+    :versions: []
+    :when: 2019-12-19 14:24:08.204582000 Z
+- - :whitelist
+  - CC-BY-4.0
+  - :who: emeka.mosanya@blockfactory.com
+    :why:
+    :versions: []
+    :when: 2019-12-19 14:25:08.458220000 Z
+- - :whitelist
+  - CC-BY-4.0
+  - :who: emeka.mosanya@blockfactory.com
+    :why:
+    :versions: []
+    :when: 2019-12-19 14:26:00.008703000 Z
+- - :whitelist
+  - CC0-1.0
+  - :who: emeka.mosanya@blockfactory.com
+    :why:
+    :versions: []
+    :when: 2019-12-19 14:26:12.132670000 Z
+- - :whitelist
+  - "(WTFPL OR MIT)"
+  - :who: emeka.mosanya@blockfactory.com
+    :why:
+    :versions: []
+    :when: 2019-12-19 14:27:43.248875000 Z
+- - :whitelist
+  - "(BSD-2-Clause OR MIT OR Apache-2.0)"
+  - :who: emeka.mosanya@blockfactory.com
+    :why:
+    :versions: []
+    :when: 2019-12-19 14:27:55.500521000 Z
+- - :whitelist
+  - CC-BY-3.0
+  - :who: emeka.mosanya@blockfactory.com
+    :why:
+    :versions: []
+    :when: 2019-12-19 14:28:09.118796000 Z
+- - :whitelist
+  - DBAD
+  - :who: emeka.mosanya@blockfactory.com
+    :why:
+    :versions: []
+    :when: 2019-12-19 14:30:00.339159000 Z
+- - :whitelist
+  - "(MIT AND Zlib)"
+  - :who: emeka.mosanya@blockfactory.com
+    :why:
+    :versions: []
+    :when: 2019-12-19 14:31:44.693379000 Z
+- - :whitelist
+  - zlib
+  - :who: emeka.mosanya@blockfactory.com
+    :why:
+    :versions: []
+    :when: 2019-12-19 14:31:48.652671000 Z
+- - :whitelist
+  - "(MIT OR CC0-1.0)"
+  - :who: emeka.mosanya@blockfactory.com
+    :why:
+    :versions: []
+    :when: 2019-12-19 14:32:00.402066000 Z
+- - :whitelist
+  - MIT or GPL-2.0
+  - :who: emeka.mosanya@blockfactory.com
+    :why:
+    :versions: []
+    :when: 2019-12-19 14:32:07.576551000 Z
+- - :approve
+  - emitter-component
+  - :who: emeka.mosanya@blockfactory.com
+    :why: MIT
+    :versions: []
+    :when: 2019-12-19 14:59:42.638900000 Z
+- - :approve
+  - ethereumjs-tx
+  - :who: emeka.mosanya@blockfactory.com
+    :why: LibreOffice MPL 2.0
+    :versions: []
+    :when: 2019-12-20 14:38:58.480950000 Z
+- - :whitelist
+  - Mozilla Public License 2.0
+  - :who: emeka.mosanya@blockfactory.com
+    :why:
+    :versions: []
+    :when: 2019-12-20 14:40:07.006667000 Z
+- - :approve
+  - "@proxeus/core"
+  - :who: emeka.mosanya@blockfactory.com
+    :why: GPL-3.0
+    :versions: []
+    :when: 2020-02-05 23:03:30.233195000 Z
+- - :approve
+  - "@proxeus/wallet"
+  - :who: emeka.mosanya@blockfactory.com
+    :why: GPL-3.0
+    :versions: []
+    :when: 2020-02-05 23:03:46.824693000 Z

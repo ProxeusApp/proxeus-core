@@ -1,0 +1,541 @@
+---
+- - :approve
+  - github.com/DataDog/zstd
+  - :who: emeka.mosanya@blockfactory.com
+    :why: Simplified BSD
+    :versions: []
+    :when: 2019-12-19 15:02:25.033891000 Z
+- - :approve
+  - github.com/SparkPost/gosparkpost
+  - :who: emeka.mosanya@blockfactory.com
+    :why: Apache-2.0
+    :versions: []
+    :when: 2019-12-19 15:03:16.014264000 Z
+- - :approve
+  - github.com/ajg/form
+  - :who: emeka.mosanya@blockfactory.com
+    :why: BSD-3-Clause
+    :versions: []
+    :when: 2019-12-19 15:03:56.116777000 Z
+- - :approve
+  - github.com/aristanetworks/goarista
+  - :who: emeka.mosanya@blockfactory.com
+    :why: Apache-2.0
+    :versions: []
+    :when: 2019-12-19 15:04:39.656443000 Z
+- - :approve
+  - github.com/asdine/storm
+  - :who: emeka.mosanya@blockfactory.com
+    :why: MIT
+    :versions: []
+    :when: 2019-12-19 15:05:02.286789000 Z
+- - :approve
+  - github.com/asticode/go-bindata
+  - :who: emeka.mosanya@blockfactory.com
+    :why: CC0-1.0
+    :versions: []
+    :when: 2019-12-19 15:05:45.780416000 Z
+- - :approve
+  - github.com/btcsuite/btcd
+  - :who: emeka.mosanya@blockfactory.com
+    :why: ISC
+    :versions: []
+    :when: 2019-12-19 15:06:19.789505000 Z
+- - :approve
+  - github.com/c2h5oh/datasize
+  - :who: emeka.mosanya@blockfactory.com
+    :why: MIT
+    :versions: []
+    :when: 2019-12-19 15:06:45.502871000 Z
+- - :approve
+  - github.com/cespare/cp
+  - :who: emeka.mosanya@blockfactory.com
+    :why: MIT
+    :versions: []
+    :when: 2019-12-19 15:07:01.790639000 Z
+- - :approve
+  - github.com/davecgh/go-spew
+  - :who: emeka.mosanya@blockfactory.com
+    :why: ISC
+    :versions: []
+    :when: 2019-12-19 15:07:21.002639000 Z
+- - :approve
+  - github.com/deckarep/golang-set
+  - :who: emeka.mosanya@blockfactory.com
+    :why: MIT
+    :versions: []
+    :when: 2019-12-19 15:07:46.783918000 Z
+- - :approve
+  - github.com/disintegration/imaging
+  - :who: emeka.mosanya@blockfactory.com
+    :why: MIT
+    :versions: []
+    :when: 2019-12-19 15:08:03.262863000 Z
+- - :approve
+  - github.com/dlclark/regexp2
+  - :who: emeka.mosanya@blockfactory.com
+    :why: MIT
+    :versions: []
+    :when: 2019-12-19 15:08:29.848111000 Z
+- - :approve
+  - github.com/dop251/goja
+  - :who: emeka.mosanya@blockfactory.com
+    :why: MIT
+    :versions: []
+    :when: 2019-12-19 15:08:46.684752000 Z
+- - :approve
+  - github.com/edsrzf/mmap-go
+  - :who: emeka.mosanya@blockfactory.com
+    :why: BSD-3-Clause
+    :versions: []
+    :when: 2019-12-19 15:09:18.552845000 Z
+- - :approve
+  - github.com/ethereum/go-ethereum
+  - :who: emeka.mosanya@blockfactory.com
+    :why: LGPL-3.0
+    :versions: []
+    :when: 2019-12-19 15:09:49.595490000 Z
+- - :approve
+  - github.com/fasthttp-contrib/websocket
+  - :who: emeka.mosanya@blockfactory.com
+    :why: Cloned from a BSD-2-Clause project
+    :versions: []
+    :when: 2019-12-19 15:11:03.430872000 Z
+- - :approve
+  - github.com/fatih/structs
+  - :who: emeka.mosanya@blockfactory.com
+    :why: MIT
+    :versions: []
+    :when: 2019-12-19 15:11:23.058361000 Z
+- - :approve
+  - github.com/fjl/memsize
+  - :who: emeka.mosanya@blockfactory.com
+    :why: MIT
+    :versions: []
+    :when: 2019-12-19 15:11:48.050379000 Z
+- - :approve
+  - github.com/go-sourcemap/sourcemap
+  - :who: emeka.mosanya@blockfactory.com
+    :why: BSD-2-Clause
+    :versions: []
+    :when: 2019-12-19 15:12:27.398231000 Z
+- - :approve
+  - github.com/golang/mock
+  - :who: emeka.mosanya@blockfactory.com
+    :why: Apache-2.0
+    :versions: []
+    :when: 2019-12-19 15:12:54.482588000 Z
+- - :approve
+  - github.com/google/go-querystring
+  - :who: emeka.mosanya@blockfactory.com
+    :why: BSD-3-Clause
+    :versions: []
+    :when: 2019-12-19 15:13:22.051005000 Z
+- - :approve
+  - github.com/google/uuid
+  - :who: emeka.mosanya@blockfactory.com
+    :why: BSD-3-Clause
+    :versions: []
+    :when: 2019-12-19 15:13:42.579396000 Z
+- - :approve
+  - github.com/gorilla/sessions
+  - :who: emeka.mosanya@blockfactory.com
+    :why: BSD-3-Clause
+    :versions: []
+    :when: 2019-12-19 15:14:02.182799000 Z
+- - :approve
+  - github.com/gorilla/websocket
+  - :who: emeka.mosanya@blockfactory.com
+    :why: BSD-2-Clause
+    :versions: []
+    :when: 2019-12-19 15:14:26.845969000 Z
+- - :approve
+  - github.com/h2non/filetype
+  - :who: emeka.mosanya@blockfactory.com
+    :why: MIT
+    :versions: []
+    :when: 2019-12-19 15:14:46.662367000 Z
+- - :approve
+  - github.com/huin/goupnp
+  - :who: emeka.mosanya@blockfactory.com
+    :why: BSD-2-Clause
+    :versions: []
+    :when: 2019-12-19 15:16:37.997931000 Z
+- - :approve
+  - github.com/imkira/go-interpol
+  - :who: emeka.mosanya@blockfactory.com
+    :why: MIT
+    :versions: []
+    :when: 2019-12-19 15:17:00.942636000 Z
+- - :approve
+  - github.com/jackpal/go-nat-pmp
+  - :who: emeka.mosanya@blockfactory.com
+    :why: Apache-2.0
+    :versions: []
+    :when: 2019-12-19 15:17:30.373047000 Z
+- - :approve
+  - github.com/k0kubun/colorstring
+  - :who: emeka.mosanya@blockfactory.com
+    :why: MIT
+    :versions: []
+    :when: 2019-12-19 15:17:54.149667000 Z
+- - :approve
+  - github.com/klauspost/compress
+  - :who: emeka.mosanya@blockfactory.com
+    :why: BSD-3-Clause
+    :versions: []
+    :when: 2019-12-19 15:18:16.325665000 Z
+- - :approve
+  - github.com/klauspost/cpuid
+  - :who: emeka.mosanya@blockfactory.com
+    :why: MIT
+    :versions: []
+    :when: 2019-12-19 15:18:32.929615000 Z
+- - :approve
+  - github.com/labstack/echo
+  - :who: emeka.mosanya@blockfactory.com
+    :why: MIT
+    :versions: []
+    :when: 2019-12-19 15:18:56.929544000 Z
+- - :approve
+  - github.com/labstack/echo-contrib
+  - :who: emeka.mosanya@blockfactory.com
+    :why: MIT
+    :versions: []
+    :when: 2019-12-19 15:19:14.362005000 Z
+- - :approve
+  - github.com/labstack/gommon
+  - :who: emeka.mosanya@blockfactory.com
+    :why: MIT
+    :versions: []
+    :when: 2019-12-19 15:19:28.739783000 Z
+- - :approve
+  - ithub.com/mattn/go-colorable
+  - :who: emeka.mosanya@blockfactory.com
+    :why: MIT
+    :versions: []
+    :when: 2019-12-19 15:19:45.808702000 Z
+- - :approve
+  - ithub.com/mattn/go-colorable
+  - :who: emeka.mosanya@blockfactory.com
+    :why: MIT
+    :versions: []
+    :when: 2019-12-19 15:56:49.848863000 Z
+- - :approve
+  - github.com/moul/http2curl
+  - :who: emeka.mosanya@blockfactory.com
+    :why: MIT
+    :versions: []
+    :when: 2019-12-19 15:57:16.624672000 Z
+- - :approve
+  - github.com/mattn/go-colorable
+  - :who: emeka.mosanya@blockfactory.com
+    :why: MIT
+    :versions: []
+    :when: 2019-12-19 15:57:22.273185000 Z
+- - :approve
+  - github.com/pborman/uuid
+  - :who: emeka.mosanya@blockfactory.com
+    :why: BSD-3-Clause
+    :versions: []
+    :when: 2019-12-19 15:57:48.656847000 Z
+- - :approve
+  - github.com/pkg/errors
+  - :who: emeka.mosanya@blockfactory.com
+    :why: BSD-2-Clause
+    :versions: []
+    :when: 2019-12-19 15:58:07.845575000 Z
+- - :approve
+  - github.com/robertkrimen/otto
+  - :who: emeka.mosanya@blockfactory.com
+    :why: MIT
+    :versions: []
+    :when: 2019-12-19 15:58:27.498429000 Z
+- - :approve
+  - github.com/rs/cors
+  - :who: emeka.mosanya@blockfactory.com
+    :why: MIT
+    :versions: []
+    :when: 2019-12-19 15:59:29.266892000 Z
+- - :approve
+  - github.com/satori/go.uuid
+  - :who: emeka.mosanya@blockfactory.com
+    :why: MIT
+    :versions: []
+    :when: 2019-12-19 15:59:56.361084000 Z
+- - :approve
+  - github.com/sergi/go-diff
+  - :who: emeka.mosanya@blockfactory.com
+    :why: Apache-2.0
+    :versions: []
+    :when: 2019-12-19 16:00:27.336679000 Z
+- - :approve
+  - github.com/smartystreets/goconvey
+  - :who: emeka.mosanya@blockfactory.com
+    :why: MIT like
+    :versions: []
+    :when: 2019-12-19 16:01:12.754890000 Z
+- - :approve
+  - github.com/stretchr/testify
+  - :who: emeka.mosanya@blockfactory.com
+    :why: MIT
+    :versions: []
+    :when: 2019-12-19 16:02:45.862843000 Z
+- - :approve
+  - github.com/valyala/fasthttp
+  - :who: emeka.mosanya@blockfactory.com
+    :why: MIT
+    :versions: []
+    :when: 2019-12-19 16:03:02.168820000 Z
+- - :approve
+  - github.com/valyala/fasttemplate
+  - :who: emeka.mosanya@blockfactory.com
+    :why: MIT
+    :versions: []
+    :when: 2019-12-19 16:03:16.085937000 Z
+- - :approve
+  - github.com/vmihailenco/msgpack
+  - :who: emeka.mosanya@blockfactory.com
+    :why: BSD-2-Clause
+    :versions: []
+    :when: 2019-12-19 16:03:34.555545000 Z
+- - :approve
+  - github.com/wadey/gocovmerge
+  - :who: emeka.mosanya@blockfactory.com
+    :why: BSD-2-Clause
+    :versions: []
+    :when: 2019-12-19 16:03:50.404247000 Z
+- - :approve
+  - github.com/xeipuuv/gojsonpointer
+  - :who: emeka.mosanya@blockfactory.com
+    :why: Apache-2.0
+    :versions: []
+    :when: 2019-12-19 16:04:10.174850000 Z
+- - :approve
+  - github.com/xeipuuv/gojsonreference
+  - :who: emeka.mosanya@blockfactory.com
+    :why: Apache-2.0
+    :versions: []
+    :when: 2019-12-19 16:04:32.993909000 Z
+- - :approve
+  - github.com/xeipuuv/gojsonschema
+  - :who: emeka.mosanya@blockfactory.com
+    :why: Apache-2.0
+    :versions: []
+    :when: 2019-12-19 16:04:47.449129000 Z
+- - :approve
+  - github.com/yalp/jsonpath
+  - :who: emeka.mosanya@blockfactory.com
+    :why: BSD-3-Clause
+    :versions: []
+    :when: 2019-12-19 16:05:12.116962000 Z
+- - :approve
+  - github.com/yudai/gojsondiff
+  - :who: emeka.mosanya@blockfactory.com
+    :why: MIT
+    :versions: []
+    :when: 2019-12-19 16:05:34.836831000 Z
+- - :approve
+  - github.com/yudai/golcs
+  - :who: emeka.mosanya@blockfactory.com
+    :why: MIT
+    :versions: []
+    :when: 2019-12-19 16:05:51.119016000 Z
+- - :approve
+  - go.etcd.io/bbolt
+  - :who: emeka.mosanya@blockfactory.com
+    :why: MIT
+    :versions: []
+    :when: 2019-12-19 16:07:54.871542000 Z
+- - :approve
+  - golang.org/x/crypto
+  - :who: emeka.mosanya@blockfactory.com
+    :why: MIT like and system lib
+    :versions: []
+    :when: 2019-12-19 16:08:39.763881000 Z
+- - :approve
+  - golang.org/x/image
+  - :who: emeka.mosanya@blockfactory.com
+    :why: MIT like and system lib
+    :versions: []
+    :when: 2019-12-19 16:09:23.178679000 Z
+- - :approve
+  - google.golang.org/appengine
+  - :who: emeka.mosanya@blockfactory.com
+    :why: Apache-2.0
+    :versions: []
+    :when: 2019-12-19 16:10:07.583370000 Z
+- - :approve
+  - gopkg.in/gavv/httpexpect.v2
+  - :who: emeka.mosanya@blockfactory.com
+    :why: MIT
+    :versions: []
+    :when: 2019-12-19 16:10:34.591361000 Z
+- - :approve
+  - github.com/allegro/bigcache
+  - :who: emeka.mosanya@blockfactory.com
+    :why: Apache-2.0
+    :versions: []
+    :when: 2020-02-05 22:37:16.417170000 Z
+- - :approve
+  - github.com/cosiner/argv
+  - :who: emeka.mosanya@blockfactory.com
+    :why: MIT
+    :versions: []
+    :when: 2020-02-05 22:37:52.232920000 Z
+- - :approve
+  - github.com/dgrijalva/jwt-go
+  - :who: emeka.mosanya@blockfactory.com
+    :why: MIT
+    :versions: []
+    :when: 2020-02-05 22:38:11.848246000 Z
+- - :approve
+  - github.com/go-delve/delve
+  - :who: emeka.mosanya@blockfactory.com
+    :why: MIT
+    :versions: []
+    :when: 2020-02-05 22:38:29.919250000 Z
+- - :approve
+  - github.com/google/renameio
+  - :who: emeka.mosanya@blockfactory.com
+    :why: Apache-2.0
+    :versions: []
+    :when: 2020-02-05 22:38:53.679376000 Z
+- - :approve
+  - github.com/konsorten/go-windows-terminal-sequences
+  - :who: emeka.mosanya@blockfactory.com
+    :why: MIT
+    :versions: []
+    :when: 2020-02-05 22:39:13.837574000 Z
+- - :approve
+  - github.com/mattn/go-isatty
+  - :who: emeka.mosanya@blockfactory.com
+    :why: MIT
+    :versions: []
+    :when: 2020-02-05 22:39:35.001250000 Z
+- - :approve
+  - github.com/mattn/go-runewidth
+  - :who: emeka.mosanya@blockfactory.com
+    :why: MIT
+    :versions: []
+    :when: 2020-02-05 22:40:00.735458000 Z
+- - :approve
+  - github.com/onsi/gomega
+  - :who: emeka.mosanya@blockfactory.com
+    :why: MIT
+    :versions: []
+    :when: 2020-02-05 22:40:21.767545000 Z
+- - :approve
+  - github.com/patrickmn/go-cache
+  - :who: emeka.mosanya@blockfactory.com
+    :why: MIT
+    :versions: []
+    :when: 2020-02-05 22:40:43.844425000 Z
+- - :approve
+  - github.com/sirupsen/logrus
+  - :who: emeka.mosanya@blockfactory.com
+    :why: MIT
+    :versions: []
+    :when: 2020-02-05 22:41:00.697982000 Z
+- - :approve
+  - github.com/spf13/cobra
+  - :who: emeka.mosanya@blockfactory.com
+    :why: Apache-2.0
+    :versions: []
+    :when: 2020-02-05 22:41:26.313708000 Z
+- - :approve
+  - github.com/spf13/pflag
+  - :who: emeka.mosanya@blockfactory.com
+    :why: BSD-3-Clause
+    :versions: []
+    :when: 2020-02-05 22:41:58.539879000 Z
+- - :approve
+  - github.com/stamblerre/gocode
+  - :who: emeka.mosanya@blockfactory.com
+    :why: MIT
+    :versions: []
+    :when: 2020-02-05 22:42:19.225203000 Z
+- - :approve
+  - github.com/tidwall/pretty
+  - :who: emeka.mosanya@blockfactory.com
+    :why: MIT
+    :versions: []
+    :when: 2020-02-05 22:42:37.311437000 Z
+- - :approve
+  - github.com/xdg/scram
+  - :who: emeka.mosanya@blockfactory.com
+    :why: Apache-2.0
+    :versions: []
+    :when: 2020-02-05 22:42:57.725288000 Z
+- - :approve
+  - github.com/xdg/stringprep
+  - :who: emeka.mosanya@blockfactory.com
+    :why: Apache-2.0
+    :versions: []
+    :when: 2020-02-05 22:43:16.492249000 Z
+- - :approve
+  - go.mongodb.org/mongo-driver
+  - :who: emeka.mosanya@blockfactory.com
+    :why: Apache-2.0
+    :versions: []
+    :when: 2020-02-05 22:49:08.108074000 Z
+- - :approve
+  - go.starlark.net
+  - :who: emeka.mosanya@blockfactory.com
+    :why: BSD-3-Clause
+    :versions: []
+    :when: 2020-02-05 22:49:31.220832000 Z
+- - :approve
+  - golang.org/x/arch
+  - :who: emeka.mosanya@blockfactory.com
+    :why: BSD-3-Clause
+    :versions: []
+    :when: 2020-02-05 22:49:59.825841000 Z
+- - :approve
+  - golang.org/x/net
+  - :who: emeka.mosanya@blockfactory.com
+    :why: BSD-3-Clause
+    :versions: []
+    :when: 2020-02-05 22:50:22.130379000 Z
+- - :approve
+  - golang.org/x/sys
+  - :who: emeka.mosanya@blockfactory.com
+    :why: BSD-3-Clause
+    :versions: []
+    :when: 2020-02-05 22:50:37.257479000 Z
+- - :approve
+  - golang.org/x/tools
+  - :who: emeka.mosanya@blockfactory.com
+    :why: BSD-3-Clause
+    :versions: []
+    :when: 2020-02-05 22:51:04.874539000 Z
+- - :approve
+  - github.com/yudai/pp
+  - :who: emeka.mosanya@blockfactory.com
+    :why: MIT through github.com/k0kubun/pp
+    :versions: []
+    :when: 2020-02-05 22:58:09.776358000 Z
+- - :approve
+  - gopkg.in/yaml.v2
+  - :who: emeka.mosanya@blockfactory.com
+    :why: Apache-2.0
+    :versions: []
+    :when: 2020-02-05 22:58:17.585431000 Z
+- - :approve
+  - github.com/jteeuwen/go-bindata
+  - :who: 
+    :why: CCO-1.0
+    :versions: []
+    :when: 2020-02-18 08:19:30.184133000 Z
+- - :approve
+  - github.com/hashicorp/golang-lru
+  - :who: 
+    :why: MPL-2.0 ExhB dependency of LGPL-3.0 library
+    :versions: []
+    :when: 2020-02-18 08:20:21.193487000 Z
+- - :approve
+  - github.com/ProxeusApp/proxeus-core/externalnode
+  - :who: 
+    :why: GPL-3.0
+    :versions: []
+    :when: 2020-02-18 08:20:54.597848000 Z

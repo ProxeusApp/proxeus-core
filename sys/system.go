@@ -39,6 +39,7 @@ var (
 type (
 	System struct {
 		TestMode    bool
+		AllowHttp   bool
 		DB          *storage.DBSet
 		DS          *eio.DocumentServiceClient
 		EmailSender email.EmailSender
@@ -64,6 +65,10 @@ func NewWithSettings(settingsFile string, initialSettings *model.Settings) (*Sys
 		email.TestMode = true
 	}
 
+	if strings.ToLower(initialSettings.AllowHttp) == "true" {
+		me.AllowHttp = true
+	}
+
 	err = me.init(me.GetSettings())
 	if err != nil {
 		return nil, err
@@ -73,7 +78,6 @@ func NewWithSettings(settingsFile string, initialSettings *model.Settings) (*Sys
 
 func (me *System) init(stngs *model.Settings) error {
 	stngs.DataDir, _ = filepath.Abs(stngs.DataDir)
-	log.Printf("Init with settings: %#v\n", stngs)
 
 	me.DS = &eio.DocumentServiceClient{Url: stngs.DocumentServiceUrl}
 	me.settingsInUse.DocumentServiceUrl = stngs.DocumentServiceUrl
@@ -299,6 +303,9 @@ func (me *System) Import(reader io.Reader, s *Session, skipExisting bool) (porta
 
 func (me *System) GetSession(sid string) (*Session, error) {
 	s, err := me.DB.Session.Get(sid)
+	if err != nil {
+		return nil, err
+	}
 	return &Session{S: s, db: me.DB, cache: me.cache}, err
 }
 

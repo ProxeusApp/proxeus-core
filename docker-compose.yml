@@ -8,7 +8,7 @@ networks:
 services:
   platform:
     image: proxeus/proxeus-core:latest
-    container_name: xes_platform
+    container_name: xes-platform
     depends_on:
       - document-service
     networks:
@@ -16,14 +16,18 @@ services:
     restart: unless-stopped
     environment:
       TZ: Europe/Zurich
-      DataDir: "/data/hosted"
-      DocumentServiceUrl: "http://document-service:2115/"
-      BlockchainContractAddress: "${PROXEUS_BLOCKCHAIN_CONTRACT_ADDRESS}"
-      InfuraApiKey: "${PROXEUS_INFURA_API_KEY}"
-      SparkpostApiKey: "${PROXEUS_SPARKPOST_API_KEY}"
-      EmailFrom: "${PROXEUS_EMAIL_FROM:-no-reply@proxeus.com}"
-      AirdropWalletfile: "${PROXEUS_AIRDROP_WALLET_FILE:-/root/.proxeus/settings/airdropwallet.json}"
-      AirdropWalletkey: "${PROXEUS_AIRDROP_WALLET_KEY:-/root/.proxeus/settings/airdropwallet.key}"
+      PROXEUS_PLATFORM_DOMAIN: "${PROXEUS_PLATFORM_DOMAIN:-http://xes-platform:1323}"
+      PROXEUS_DOCUMENT_SERVICE_URL: "http://document-service:2115/"
+      PROXEUS_BLOCKCHAIN_CONTRACT_ADDRESS: "${PROXEUS_BLOCKCHAIN_CONTRACT_ADDRESS}"
+      PROXEUS_INFURA_API_KEY: "${PROXEUS_INFURA_API_KEY}"
+      PROXEUS_SPARKPOST_API_KEY: "${PROXEUS_SPARKPOST_API_KEY}"
+      PROXEUS_EMAIL_FROM: "${PROXEUS_EMAIL_FROM:-no-reply@example.com}"
+      PROXEUS_AIRDROP_WALLET_FILE: "${PROXEUS_AIRDROP_WALLET_FILE:-/root/.proxeus/settings/airdropwallet.json}"
+      PROXEUS_AIRDROP_WALLET_KEY: "${PROXEUS_AIRDROP_WALLET_KEY:-/root/.proxeus/settings/airdropwallet.key}"
+      PROXEUS_DATABASE_ENGINE: "${PROXEUS_DATABASE_ENGINE:-storm}"
+      PROXEUS_DATABASE_URI: "${PROXEUS_DATABASE_URI:-mongodb://root:root@mongo:27017}"
+      PROXEUS_TEST_MODE: "${PROXEUS_TEST_MODE:-false}"
+      PROXEUS_ALLOW_HTTP: "${PROXEUS_ALLOW_HTTP:-false}"
     ports:
       - "1323:1323"
     volumes:
@@ -43,3 +47,35 @@ services:
     volumes:
       - ${PROXEUS_DATA_DIR:-./data}/document-service/logs:/document-service/logs
       - ${PROXEUS_DATA_DIR:-./data}/document-service/fonts:/document-service/fonts
+
+  node-crypto-forex-rates:
+    image: proxeus/node-crypto-forex-rates:latest
+    container_name: xes_node-crypto-forex-rates
+    networks:
+      - xes-platform-network
+    restart: unless-stopped
+    environment:
+      PROXEUS_INSTANCE_URL: "${PROXEUS_PLATFORM_DOMAIN:-http://xes-platform:1323}"
+      SERVICE_SECRET: secret
+      SERVICE_PORT: 8011
+      SERVICE_URL: "${SERVICE_DOMAIN:-https://crypto-forex-rates.ci.proxeus.com:443}"
+      TZ: Europe/Zurich
+    ports:
+      - "8011:8011"
+
+  node-balance-retriever:
+    image: proxeus/node-balance-retriever:latest
+    container_name: xes_node-node-balance-retriever
+    networks:
+      - xes-platform-network
+    restart: unless-stopped
+    environment:
+      PROXEUS_INSTANCE_URL: "${PROXEUS_PLATFORM_DOMAIN:-http://xes-platform:1323}"
+      PROXEUS_ETH_CLIENT_URL: "${PROXEUS_ETH_CLIENT_URL:-https://ropsten.infura.io/v3/}"
+      PROXEUS_INFURA_API_KEY: ${PROXEUS_INFURA_API_KEY}
+      SERVICE_SECRET: secret
+      SERVICE_PORT: 8012
+      SERVICE_URL: "${SERVICE_DOMAIN:-http://node-balance-retriever:8012}"
+      TZ: Europe/Zurich
+    ports:
+      - "8012:8012"

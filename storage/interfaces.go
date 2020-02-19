@@ -2,6 +2,7 @@ package storage
 
 import (
 	"bytes"
+	"github.com/ProxeusApp/proxeus-core/externalnode"
 	"io"
 	"time"
 
@@ -93,12 +94,12 @@ type WorkflowIF interface {
 }
 
 type ExternalNodeIF interface {
-	RegisterExternalNode(auth model.Auth, n *model.ExternalNode) error
-	ListExternalNodes() []*model.ExternalNode
+	RegisterExternalNode(auth model.Auth, n *externalnode.ExternalNode) error
+	ListExternalNodes() []*externalnode.ExternalNode
 	DeleteExternalNode(auth model.Auth, id string) error
-	NodeByName(auth model.Auth, name string) (*model.ExternalNode, error)
-	QueryFromInstanceID(auth model.Auth, id string) (model.ExternalQuery, error)
-	PutExternalNodeInstance(auth model.Auth, i *model.ExternalNodeInstance) error
+	NodeByName(auth model.Auth, name string) (*externalnode.ExternalNode, error)
+	QueryFromInstanceID(auth model.Auth, id string) (externalnode.ExternalQuery, error)
+	PutExternalNodeInstance(auth model.Auth, i *externalnode.ExternalNodeInstance) error
 }
 
 type TemplateIF interface {

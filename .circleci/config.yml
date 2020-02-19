@@ -7,12 +7,14 @@ executors:
       PROJECT_ROOT_FOLDER: ~/project
     docker:
       - image: circleci/golang:1.13
-  docker-image-golang-test-api:
+  docker-image-golang-dependencies:
     environment:
       PROJECT_ROOT_FOLDER: ~/project
     docker:
       - image: circleci/golang:1.13
-      - image: proxeus/document-service:latest
+      - image: proxeus/node-crypto-forex-rates
+      - image: proxeus/document-service
+      - image: proxeus/mongo-dev-cluster
   docker-publisher:
     environment:
       PROJECT_ROOT_FOLDER: ~/project
@@ -87,25 +89,24 @@ jobs:
       - persist_to_workspace:
           root: .
           paths:
-            - ./artifacts/server
+            - ./artifacts/proxeus
 
-  coverage-go:
-    executor: docker-image-golang-test-api
+  test-integration-go:
+    executor: docker-image-golang-dependencies
     resource_class: large
     steps:
       - checkout
       - attach_workspace:
           at: ~/project/
-      - setup_remote_docker
       - restore_cache:
           keys:
             - go-mod-v2-{{ checksum "go.sum" }}
       - run:
-          name: Test
-          command: make init coverage
+          name: Test integration
+          command: make init test-integration
 
   test-api-go:
-    executor: docker-image-golang-test-api
+    executor: docker-image-golang-dependencies
     resource_class: large
     steps:
       - checkout
@@ -116,8 +117,28 @@ jobs:
           keys:
             - go-mod-v2-{{ checksum "go.sum" }}
       - run:
-          name: Test
+          name: Test API
           command: make init test-api
+
+  coverage-go:
+    executor: docker-image-golang-dependencies
+    resource_class: large
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ~/project/
+      - setup_remote_docker
+      - restore_cache:
+          keys:
+            - go-mod-v2-{{ checksum "go.sum" }}
+      - run:
+          name: Run tests with coverage
+          command: make init test test-integration test-api coverage=true
+      - run:
+          name: Generage coverage files
+          command: make coverage
+      - store_artifacts:
+          path: artifacts/coverage.*
 
   build-server-docker:
     executor: docker-image-golang
@@ -134,7 +155,7 @@ jobs:
       - persist_to_workspace:
           root: .
           paths:
-            - ./artifacts/server-docker
+            - ./artifacts/proxeus-docker
 
   build-docker-image:
     executor: docker-publisher
@@ -237,15 +258,18 @@ workflows:
       - build-go:
           requires:
             - test-go
-      - coverage-go:
+      - test-integration-go:
           requires:
             - build-go
       - test-api-go:
           requires:
+            - test-integration-go
+      - coverage-go:
+          requires:
             - build-go
       - build-server-docker:
           requires:
-            - test-api-go
+            - coverage-go
       - build-docker-image:
           requires:
             - build-server-docker

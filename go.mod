@@ -4,6 +4,7 @@ go 1.13
 
 require (
 	github.com/DataDog/zstd v1.4.4 // indirect
+	github.com/ProxeusApp/proxeus-core/externalnode v0.0.0-00010101000000-000000000000
 	github.com/SparkPost/gosparkpost v0.0.0-20170825125937-4c6d2a3be658
 	github.com/ajg/form v1.5.1 // indirect
 	github.com/allegro/bigcache v1.2.1 // indirect
@@ -23,7 +24,7 @@ require (
 	github.com/edsrzf/mmap-go v1.0.0 // indirect
 	github.com/ethereum/go-ethereum v1.9.9
 	github.com/fasthttp-contrib/websocket v0.0.0-20160511215533-1f3b11f56072 // indirect
-	github.com/fatih/structs v1.1.0 // indirect
+	github.com/fatih/structs v1.1.0
 	github.com/fjl/memsize v0.0.0-20190710130421-bcb5799ab5e5 // indirect
 	github.com/go-delve/delve v1.3.2 // indirect
 	github.com/go-sourcemap/sourcemap v2.1.2+incompatible // indirect
@@ -38,13 +39,14 @@ require (
 	github.com/huin/goupnp v1.0.0 // indirect
 	github.com/imkira/go-interpol v1.1.0 // indirect
 	github.com/jackpal/go-nat-pmp v1.0.2 // indirect
+	github.com/jteeuwen/go-bindata v3.0.7+incompatible // indirect
 	github.com/k0kubun/colorstring v0.0.0-20150214042306-9440f1994b88 // indirect
 	github.com/klauspost/compress v1.8.2 // indirect
 	github.com/klauspost/cpuid v1.2.1 // indirect
 	github.com/konsorten/go-windows-terminal-sequences v1.0.2 // indirect
 	github.com/labstack/echo v3.3.10+incompatible
 	github.com/labstack/echo-contrib v0.0.0-20180222075343-7d9d9632a4aa
-	github.com/labstack/gommon v0.2.8
+	github.com/labstack/gommon v0.3.0
 	github.com/mattn/go-colorable v0.1.4 // indirect
 	github.com/mattn/go-isatty v0.0.12 // indirect
 	github.com/mattn/go-runewidth v0.0.8 // indirect
@@ -65,7 +67,6 @@ require (
 	github.com/stretchr/testify v1.4.0
 	github.com/tidwall/pretty v1.0.0 // indirect
 	github.com/valyala/fasthttp v0.0.0-20171207120941-e5f51c11919d // indirect
-	github.com/valyala/fasttemplate v1.0.1 // indirect
 	github.com/vmihailenco/msgpack v4.0.4+incompatible // indirect
 	github.com/wadey/gocovmerge v0.0.0-20160331181800-b5bfa59ec0ad // indirect
 	github.com/xdg/scram v0.0.0-20180814205039-7eeb5667e42c // indirect
@@ -81,7 +82,7 @@ require (
 	go.mongodb.org/mongo-driver v1.2.0
 	go.starlark.net v0.0.0-20200126005305-451bf671df23 // indirect
 	golang.org/x/arch v0.0.0-20191126211547-368ea8f32fff // indirect
-	golang.org/x/crypto v0.0.0-20200117160349-530e935923ad
+	golang.org/x/crypto v0.0.0-20200210222208-86ce3cb69678
 	golang.org/x/image v0.0.0-20190523035834-f03afa92d3ff // indirect
 	golang.org/x/net v0.0.0-20191003171128-d98b1b443823 // indirect
 	golang.org/x/sys v0.0.0-20200124204421-9fbb57f87de9 // indirect
@@ -92,3 +93,5 @@ require (
 )
 
 replace github.com/ProxeusApp/proxeus-core => ./
+
+replace github.com/ProxeusApp/proxeus-core/externalnode => ./externalnode
