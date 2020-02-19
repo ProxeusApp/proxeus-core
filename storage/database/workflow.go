@@ -278,7 +278,7 @@ func (me *WorkflowDB) ListExternalNodes() []*externalnode.ExternalNode {
 }
 
 func (me *WorkflowDB) DeleteExternalNode(auth model.Auth, id string) error {
-	return me.db.DeleteStruct(externalnode.ExternalNode{ID: id})
+	return me.db.DeleteStruct(&externalnode.ExternalNode{ID: id})
 }
 
 func (me *WorkflowDB) PutExternalNodeInstance(auth model.Auth, item *externalnode.ExternalNodeInstance) error {
