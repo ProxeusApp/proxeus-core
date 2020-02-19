@@ -521,3 +521,21 @@
     :why: Apache-2.0
     :versions: []
     :when: 2020-02-05 22:58:17.585431000 Z
+- - :approve
+  - github.com/jteeuwen/go-bindata
+  - :who: 
+    :why: CCO-1.0
+    :versions: []
+    :when: 2020-02-18 08:19:30.184133000 Z
+- - :approve
+  - github.com/hashicorp/golang-lru
+  - :who: 
+    :why: MPL-2.0 ExhB dependency of LGPL-3.0 library
+    :versions: []
+    :when: 2020-02-18 08:20:21.193487000 Z
+- - :approve
+  - github.com/ProxeusApp/proxeus-core/externalnode
+  - :who: 
+    :why: GPL-3.0
+    :versions: []
+    :when: 2020-02-18 08:20:54.597848000 Z
