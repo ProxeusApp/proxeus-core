@@ -17,7 +17,7 @@
       <!--</button>-->
       <div class="ml-auto">
         <slot name="buttons"></slot>
-<!--        <top-right-profile/>-->
+        <top-right-profile/>
       </div>
     </div>
   </nav>
