@@ -5,8 +5,8 @@
   <div class="main-container">
     <list-group :deleteElementFunc="provideDeleteFunc" :defaultName="$t('Unnamed')" :linkResolver="getDocRoute"
                 :iconFa="'mdi mdi-view-carousel'" :fixedPath="'/api/user/document'" nodeType="UserData">
-      <router-link slot="addBtn" :to="{name:'document-create'}" class="btn btn-primary btn-round plus-btn">
-        <i class="material-icons">add</i>
+      <router-link slot="addBtn" :to="{name:'document-create'}" class="btn btn-primary">
+        Create document
       </router-link>
       <template scope="element">
       <td class="tdmin">
