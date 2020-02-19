@@ -211,7 +211,8 @@ export default {
 
   .trp-photo {
     width: 45px;
-    border-radius: 50%;
+    height: 45px;
+    border-radius: 100%;
     border: 2px solid #f3f3f3;
     cursor: pointer;
     background: white;
