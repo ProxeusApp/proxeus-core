@@ -1959,6 +1959,7 @@ function condition(){
     }
 
     .flow-chart-finder-input {
+      border-top: none !important;
       //border: 1px solid $gray-200 !important;
       /*text-indent: 8px;*/
     }
