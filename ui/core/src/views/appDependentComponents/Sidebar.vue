@@ -85,21 +85,6 @@
               class="nav-link-title">{{$t('Menu Frontend','User View')}}</span>
             </a>
           </li>
-          <li class="nav-item dropright">
-          <span data-toggle="dropdown">
-              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                 aria-haspopup="true" aria-expanded="false" data-toggle="tooltip" data-placement="right"
-                 data-boundary="body" title="Account">
-                  <span class="material-icons">account_circle</span><span
-                class="nav-link-title">Account</span>
-              </a>
-          </span>
-            <div class="dropdown-menu ml-5" aria-labelledby="navbarDropdown">
-              <router-link :to="{name:'AdminSettings'}" class="dropdown-item" href="#">Settings</router-link>
-              <!--<router-link :to="{name:'AdminSettings'}" class="dropdown-item" href="#">Wallet</router-link>-->
-              <button class="dropdown-item btn-link" @click="logout">Logout</button>
-            </div>
-          </li>
         </ul>
       </td>
     </tr>

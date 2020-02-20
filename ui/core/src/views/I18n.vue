@@ -1,118 +1,111 @@
 <template>
-<div>
-  <vue-headful :title="$t('Internationalization title', 'Proxeus - Internationalization')"/>
-  <top-nav :title="$t('Internationalization')">
-    <td slot="buttons" class="tdmin" v-if="app.userIsUserOrHigher()">
-      <button style="height: 40px;" @click="app.exportData('', null, '/api/i18n/export', 'i18n')" type="button"
-              class="btn btn-primary ml-2">
-        <i style="font-style: normal;font-size: 18px;">&#8659;</i>
-        <span>{{$t('Export')}}</span></button>
-    </td>
-    <div slot="buttons" style="display: inline-block;" id="collapsingNavbar3">
-      <ul class="nav navbar-nav ml-auto">
-        <li class="nav-item">
-          <language-drop-down style="margin-top: 3px;"/>
-        </li>
-      </ul>
-    </div>
-  </top-nav>
-  <div ref="scrollable" class="container-fluid" style="overflow: auto;">
-    <div v-if="hasLangs()">
-      <h2 style="margin-top:20px;">{{ $t('Translations') }}</h2>
-      <div style="position:relative;">
-        <div style="width: 100%;height: 100px;background: rgb(251, 251, 251);border: 1px solid #efefef;"></div>
-        <div ref="listGroup" class="mlist-group mbottominset" style="width:100%;">
-          <table class="i18n-tbl nicetbl tblspacing">
-            <thead>
-            <tr class="bg-light">
-              <th>
-                <div>
-                  <animated-input ref="search" :label="$t('Search code...')" autofocus v-model="langKey"/>
-                </div>
-              </th>
-              <th :colspan="meta.langListSize" style="min-width: 200px;">
-                <div>
-                  <animated-input :label="$t('Search text...')" autofocus v-model="langValue"/>
-                </div>
-              </th>
-              <th class="tdmin">
-                <div>
+  <div>
+    <vue-headful :title="$t('Internationalization title', 'Proxeus - Internationalization')"/>
+    <top-nav :title="$t('Internationalization')">
+      <button slot="buttons" v-if="app.userIsUserOrHigher()"
+              @click="app.exportData('', null, '/api/i18n/export', 'i18n')" type="button"
+              class="btn btn-primary mr-3">
+        <span>{{$t('Export')}}</span>
+      </button>
+      <div slot="buttons" id="collapsingNavbar3">
+        <ul class="nav navbar-nav ml-auto">
+          <li class="nav-item">
+            <language-drop-down style="margin-top: 3px;"/>
+          </li>
+        </ul>
+      </div>
+    </top-nav>
+    <div ref="scrollable" class="container-fluid main-container" style="overflow: auto;">
+      <div v-if="hasLangs()">
+        <h2 style="margin-top:20px;">{{ $t('Translations') }}</h2>
+        <div style="position:relative;">
+          <div ref="listGroup" class="mlist-group mbottominset" style="width:100%;">
+            <table class="table table-bordered">
+              <thead>
+              <tr>
+                <th v-bind:class="{'tdmin':cols.length>0}">
+                  <div><strong>{{$t('Code')}}</strong></div>
+                </th>
+                <th v-for="(lang, key) in meta.langList"
+                    v-bind:key="lang.Code"
+                    v-bind:class="{active:cols.indexOf(key) > -1,'tdmin tdmoremin':cols.indexOf(key) === -1}"
+                    v-on:click="toggleLangCol(key,$event)">
+                  <div>
+                    <span class="btn btn-info"
+                          :class="{'btn-info-active': cols.indexOf(key) > -1}">{{ lang.Code }}</span>
+                  </div>
+                </th>
+                <th class="tdmin action_col">
+                  <div></div>
+                </th>
+              </tr>
+              <tr class="bg-light">
+                <th>
+                  <input autofocus ref="search" v-model="langKey" class="form-control" type="text" placeholder="WAT">
+                </th>
+                <th :colspan="meta.langListSize" style="min-width: 200px;">
+                  <input autofocus v-model="langValue" class="form-control" type="text" placeholder="WAT">
+                </th>
+                <th class="tdmin">
                   <button type="button" class="btn btn-primary btn-round"
                           @click="addTranslation"
                           :disabled="langKey.length === 0 || langValue.length === 0 || translations[langKey]">
                     <span class="material-icons">add</span>
                   </button>
-                </div>
-              </th>
-            </tr>
+                </th>
+              </tr>
+              </thead>
+              <tbody>
+              <translation :activateLangCol="activateLangCol" :cols="cols" :update="transUpdate"
+                           :translations="translations"
+                           :langList="meta.langList" :lk="lk"
+                           v-for="(translation, lk) in translations" v-bind:key="lk"/>
+              </tbody>
+            </table>
+            <trigger :init="triggerInit" @trigger="bottomTrigger"/>
+          </div>
+        </div>
+      </div>
+      <h2 class="mt-3">{{ $t('Languages') }}</h2>
+      <div class="row">
+        <div class="col">
+          <table class="table table-bordered langstbl" v-if="meta">
+            <thead>
             <tr>
-              <th v-bind:class="{'tdmin':cols.length>0}">
-                <div>{{$t('Code')}}</div>
-              </th>
-              <th v-for="(lang, key) in meta.langList"
-                  v-bind:key="lang.Code"
-                  v-bind:class="{active:cols.indexOf(key) > -1,'tdmin tdmoremin':cols.indexOf(key) === -1}"
-                  v-on:click="toggleLangCol(key,$event)">
-                <div>
-                  <span class="btn btn-info" :class="{'btn-info-active': cols.indexOf(key) > -1}">{{ lang.Code }}</span>
-                </div>
-              </th>
-              <th class="tdmin action_col">
-                <div></div>
-              </th>
+              <th class="cntr">{{$t('Code')}}</th>
+              <th class="cntr">{{$t('Label')}}</th>
+              <th class="cntr">{{$t('Active')}}</th>
             </tr>
             </thead>
             <tbody>
-            <translation :activateLangCol="activateLangCol" :cols="cols" :update="transUpdate"
-                         :translations="translations"
-                         :langList="meta.langList" :lk="lk"
-                         v-for="(translation, lk) in translations" v-bind:key="lk"/>
+            <tr v-for="(lang, key) in meta.langList" :key="key">
+              <td class="cntr">{{ lang.Code }}</td>
+              <td class="cntr impcnt" style="max-width: 100px;">{{ $t(lang.Code) }}</td>
+              <td class="cntr">
+                <i18n-lang-cell :lang="lang"></i18n-lang-cell>
+              </td>
+            </tr>
             </tbody>
+            <tfoot>
+            <tr>
+              <td colspan="2">
+                <animated-input :label="$t('Language code')" name="i18n_text"
+                                v-model="newLangKey"></animated-input>
+                <small class="text-muted">{{ $t('For example: en, de, fr, it ...') }}</small>
+              </td>
+              <td class="cntr">
+                <button :disabled="newLangKey.length !== 2" @click="addLanguage"
+                        type="button" class="btn btn-primary btn-round">
+                  <span class="material-icons">add</span>
+                </button>
+              </td>
+            </tr>
+            </tfoot>
           </table>
-          <trigger :init="triggerInit" @trigger="bottomTrigger"/>
         </div>
       </div>
     </div>
-    <h2 class="mt-3">{{ $t('Languages') }}</h2>
-    <div class="row">
-      <div class="col">
-        <table class="table table-bordered langstbl" v-if="meta">
-          <thead>
-          <tr>
-            <th class="cntr">{{$t('Code')}}</th>
-            <th class="cntr">{{$t('Label')}}</th>
-            <th class="cntr">{{$t('Active')}}</th>
-          </tr>
-          </thead>
-          <tbody>
-          <tr v-for="(lang, key) in meta.langList" :key="key">
-            <td class="cntr">{{ lang.Code }}</td>
-            <td class="cntr impcnt" style="max-width: 100px;">{{ $t(lang.Code) }}</td>
-            <td class="cntr">
-              <i18n-lang-cell :lang="lang"></i18n-lang-cell>
-            </td>
-          </tr>
-          </tbody>
-          <tfoot>
-          <tr>
-            <td colspan="2">
-              <animated-input :label="$t('Language code')" name="i18n_text"
-                              v-model="newLangKey"></animated-input>
-              <small class="text-muted">{{ $t('For example: en, de, fr, it ...') }}</small>
-            </td>
-            <td class="cntr">
-              <button :disabled="newLangKey.length !== 2" @click="addLanguage"
-                      type="button" class="btn btn-primary btn-round">
-                <span class="material-icons">add</span>
-              </button>
-            </td>
-          </tr>
-          </tfoot>
-        </table>
-      </div>
-    </div>
   </div>
-</div>
 </template>
 
 <script>
@@ -138,10 +131,8 @@ export default {
     LanguageDropDown
   },
   created () {
-    window.addEventListener('resize', this.setListGroupHeight)
   },
   mounted () {
-    this.setListGroupHeight()
     this.$nextTick(() => this.$refs.search && this.$refs.search.field && this.$refs.search.field.focus())
     this.find()
   },
@@ -154,10 +145,8 @@ export default {
     }
   },
   beforeDestroy () {
-    window.removeEventListener('resize', this.setListGroupHeight)
   },
   updated () {
-    this.setListGroupHeight()
   },
   methods: {
     triggerInit (startFunc, stopFunc, hideFunc) {
@@ -170,14 +159,6 @@ export default {
       this.translations = { '-': { 'en': '' } }
       if (this.triggerApi.start) {
         this.triggerApi.start()
-      }
-    },
-    setListGroupHeight () {
-      if (this.$refs.scrollable) {
-        this.$refs.scrollable.style.height = (window.innerHeight - 58) + 'px'
-      }
-      if (this.$refs.listGroup) {
-        this.$refs.listGroup.style.height = (window.innerHeight - 300) + 'px'
       }
     },
     getReqLink () {
@@ -236,7 +217,6 @@ export default {
       return { k: this.langKey, v: this.langValue, l: this.listLimit, i: this.listIndex }
     },
     find () {
-      this.setListGroupHeight()
       this.listIndex = 0
       this.reachedTheEnd = false
       if (this.triggerApi.start) {
@@ -320,7 +300,8 @@ export default {
         this.$notify({
           group: 'app',
           title: this.$t('Error'),
-          text: this.$t('Could not save translation. Please try again or if the error persists contact the platform operator.'),
+          text: this.$t(
+            'Could not save translation. Please try again or if the error persists contact the platform operator.'),
           type: 'error'
         })
       })
@@ -342,7 +323,8 @@ export default {
         this.$notify({
           group: 'app',
           title: this.$t('Error'),
-          text: this.$t('Could not add language. Please try again or if the error persists contact the platform operator.'),
+          text: this.$t(
+            'Could not add language. Please try again or if the error persists contact the platform operator.'),
           type: 'error'
         })
       })

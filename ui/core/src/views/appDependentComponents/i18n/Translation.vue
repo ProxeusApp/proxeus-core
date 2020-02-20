@@ -7,7 +7,6 @@
     <div class="iwd" style="position:relative;">
       <i18n-trans-cell v-model="translation" :translations="translations" :langKey="lk" :langCode="lang.Code"
                        @input="handleTranslationChange"></i18n-trans-cell>
-      <span class="bg-txt i18n-bg-txt">{{lang.Code}}</span>
     </div>
   </td>
   <td class="tdmin tcntr">
