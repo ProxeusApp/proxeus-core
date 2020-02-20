@@ -16,6 +16,44 @@
       </div>
     </top-nav>
     <div ref="scrollable" class="container-fluid main-container" style="overflow: auto;">
+      <h2 class="mt-3">{{ $t('Languages') }}</h2>
+      <div class="row">
+        <div class="col">
+          <table class="table table-bordered langstbl" v-if="meta">
+            <thead>
+            <tr>
+              <th class="cntr">{{$t('Code')}}</th>
+              <th class="cntr">{{$t('Label')}}</th>
+              <th class="cntr">{{$t('Active')}}</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr v-for="(lang, key) in meta.langList" :key="key">
+              <td class="cntr">{{ lang.Code }}</td>
+              <td class="cntr impcnt" style="max-width: 100px;">{{ $t(lang.Code) }}</td>
+              <td class="cntr">
+                <i18n-lang-cell :lang="lang"></i18n-lang-cell>
+              </td>
+            </tr>
+            </tbody>
+            <tfoot>
+            <tr class="bg-light">
+              <td colspan="2" class="pt-3 px-3">
+                <animated-input :label="$t('Language code')" name="i18n_text"
+                                v-model="newLangKey" :helptext="$t('For example: en, de, fr, it ...')"></animated-input>
+              </td>
+              <td class="cntr px-3">
+                <button :disabled="newLangKey.length !== 2" @click="addLanguage"
+                        type="button" class="btn btn-primary btn-round">
+                  <span class="material-icons">add</span>
+                </button>
+              </td>
+            </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+
       <div v-if="hasLangs()">
         <h2 style="margin-top:20px;">{{ $t('Translations') }}</h2>
         <div style="position:relative;">
@@ -23,7 +61,7 @@
             <table class="table table-bordered">
               <thead>
               <tr>
-                <th v-bind:class="{'tdmin':cols.length>0}">
+                <th v-bind:class="{'w-25':cols.length>0}">
                   <div><strong>{{$t('Code')}}</strong></div>
                 </th>
                 <th v-for="(lang, key) in meta.langList"
@@ -64,44 +102,6 @@
             </table>
             <trigger :init="triggerInit" @trigger="bottomTrigger"/>
           </div>
-        </div>
-      </div>
-      <h2 class="mt-3">{{ $t('Languages') }}</h2>
-      <div class="row">
-        <div class="col">
-          <table class="table table-bordered langstbl" v-if="meta">
-            <thead>
-            <tr>
-              <th class="cntr">{{$t('Code')}}</th>
-              <th class="cntr">{{$t('Label')}}</th>
-              <th class="cntr">{{$t('Active')}}</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr v-for="(lang, key) in meta.langList" :key="key">
-              <td class="cntr">{{ lang.Code }}</td>
-              <td class="cntr impcnt" style="max-width: 100px;">{{ $t(lang.Code) }}</td>
-              <td class="cntr">
-                <i18n-lang-cell :lang="lang"></i18n-lang-cell>
-              </td>
-            </tr>
-            </tbody>
-            <tfoot>
-            <tr>
-              <td colspan="2">
-                <animated-input :label="$t('Language code')" name="i18n_text"
-                                v-model="newLangKey"></animated-input>
-                <small class="text-muted">{{ $t('For example: en, de, fr, it ...') }}</small>
-              </td>
-              <td class="cntr">
-                <button :disabled="newLangKey.length !== 2" @click="addLanguage"
-                        type="button" class="btn btn-primary btn-round">
-                  <span class="material-icons">add</span>
-                </button>
-              </td>
-            </tr>
-            </tfoot>
-          </table>
         </div>
       </div>
     </div>

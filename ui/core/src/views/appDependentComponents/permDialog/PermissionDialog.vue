@@ -6,7 +6,7 @@
     {{$t('share warning','This feature is for advanced users. Make sure you understand how the sharing mechanisms work before you change anything.  Consult the handbook for more information.')}}
   </div>
   <div class="perm-change-wrapper" style="margin-bottom: 15px;position:relative;">
-    <div class="fregular sub-title">Owner</div>
+    <div class="sub-title">Owner</div>
     <div v-if="owner" class="perm-change-parent">
       <user-selector v-show="changeOwnerClicked"
                      :excludes="getMapOfExistingUsersInPermItem"
@@ -25,7 +25,7 @@
             <i v-else class="mlist-group-icon material-icons">person</i>
           </td>
           <td class="tdmax impcnt" style="padding-left:10px;">
-            <span class="fregular">{{ owner.name }}</span>
+            <span>{{ owner.name }}</span>
             <small class="light-text easy-read" v-if="owner.email">{{ owner.email }}</small>
             <small class="light-text easy-read" v-if="owner.etherPK">{{ owner.etherPK }}</small>
             <small class="light-text easy-read" v-else-if="owner.detail">{{ owner.detail }}</small>
@@ -45,53 +45,42 @@
     <div v-else class="py-1 light-text" style="font-size: 0.85em;">{{$t('This entity doesn\'t have an owner.')}}</div>
   </div>
   <div v-show="publicLink" style="position:relative;margin-bottom: 15px;">
-    <div class="perm-change-wrapper" style="position:relative">
-      <span class="perm-link-btn mr-1" style="position: absolute;white-space: nowrap;right: 0;margin-top: 4px;"
-            @click="copyLink">{{$t('copy link')}}</span>
-      <div class="fregular sub-title">{{$t('Share by link')}}</div>
-      <div class="perm-subtitle">
-        {{$t('Share with everyone who has the link.')}}
+    <div class="perm-change-wrapper">
+      <div class="sub-title d-flex align-items-center">
+        <div>{{$t('Share by link')}}</div>
+      </div>
+      <div class="perm-subtitle mb-1">
+        <small>{{$t('Share with everyone who has the link.')}}</small>
       </div>
       <div ref="publicInput" class="perm-change-parent">
         <table class="nicetbl">
           <tr v-show="publicLink2" class="share-lnk-row">
             <td>
-              <button type="button" class="btn btn-default" :class="{focus:exeLink}"
-                      @click="toggleExeLink"
-                      style="padding: 0;width: 100%;margin: 0 5px;border: 1px solid #cccccc;">
+              <button type="button" class="btn btn-default" :class="{focus:exeLink}" @click="toggleExeLink">
                 <i class="material-icons">
                   play_arrow
                 </i>
                 {{$t('execute link')}}
               </button>
             </td>
-            <td style="padding-right: 6px;">
+            <td>
               <button type="button" class="btn btn-default" :class="{focus:buildLink}"
-                      @click="toggleBuildLink"
-                      style="padding: 0;width: 100%;margin: 0 5px;border: 1px solid #cccccc;">
+                      @click="toggleBuildLink">
                 <i class="material-icons">
                   build
                 </i>
                 {{$t('build link')}}
               </button>
             </td>
-            <td class="tdmin">
-              <button type="button" class="btn btn-default" @click="copyLink"
-                      style="padding: 0;width: 100%;margin: 0 5px;">
-                <i class="material-icons">
-                  file_copy
-                </i>
-              </button>
-            </td>
           </tr>
           <tr>
             <td colspan="2">
-              <input ref="publicLinkInput" class="share-link" v-model="publicLinkReadOnly" readonly
+              <input ref="publicLinkInput" class="share-link form-control" v-model="publicLinkReadOnly" readonly
                      :disabled="publicReadWriteSelect===0"
                      onclick="this.setSelectionRange(0, this.value.length)"
                      onfocus="this.setSelectionRange(0, this.value.length)" type="text" :placeholder="$t('Link...')">
             </td>
-            <td class="tdmin">
+            <td>
               <read-write-selector :unselect="false" class="perm-grant-selector" :disableWithVisibleLayer="false"
                                    :disabled="!publicEnabled" :provideNone="true"
                                    v-model="publicReadWriteSelect"
@@ -99,6 +88,11 @@
             </td>
           </tr>
         </table>
+        <div class="text-center">
+          <button type="button" class="btn btn-default" @click="copyLink">
+              Copy to clipboard
+          </button>
+        </div>
         <div v-show="!publicEnabled" class="perm-disabled" data-toggle="tooltip" data-placement="top"
              title="You don't have permissions to share by link."></div>
       </div>
@@ -112,10 +106,10 @@
   </div>
   <div v-else>
     <div v-show="groupEnabled" class="perm-change-wrapper" style="margin-bottom: 15px;position:relative;">
-      <div class="mt-1 mr-1" style="position: absolute;top:0;right:0;text-align: right;"><span class="perm-link-btn"
-                                                                                               @click="advancedClicked = false;changeGroupClicked=false;">{{$t('hide')}}</span>
+      <div class="sub-title d-flex align-items-center">
+        <div>{{$t('Group and others')}}</div>
+        <div class="perm-link-btn ml-auto" @click="advancedClicked = false;changeGroupClicked=false;">{{$t('hide')}}</div>
       </div>
-      <div class="fregular sub-title">{{$t('Group and others')}}</div>
       <div v-if="changeGroupClicked" class="perm-subtitle">
         {{$t('Group and others explanation', 'Define write and read rights for a group or any other people. Other people are authorized users with a different group.')}}
       </div>
@@ -152,9 +146,11 @@
     </div>
     <div style="position:relative;">
       <div class="perm-change-wrapper" style="position:relative">
-        <div class="fregular sub-title">{{$t('Grant people')}}</div>
-        <div class="perm-subtitle">
-          {{$t('Grant people explanation', 'Grant access to a specific person by entering a name, email or blockchain address and selecting read or write rights.')}}
+        <div class="sub-title">{{$t('Grant people')}}</div>
+        <div class="perm-subtitle mb-1">
+          <small>
+            {{$t('Grant people explanation', 'Grant access to a specific person by entering a name, email or blockchain address and selecting read or write rights.')}}
+          </small>
         </div>
         <div ref="grantInput" class="perm-change-parent">
           <table class="nicetbl">
@@ -551,14 +547,17 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss">
+  @import "../../../assets/styles/variables";
+
   input.share-link {
     width: 100%;
     height: 40px;
     padding: 3px 5px;
-    margin: 2px;
     border: 1px solid #e0e0e0;
     color: #062a85;
+    border-top-right-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
   }
 
   input[disabled].share-link {
@@ -578,8 +577,13 @@ export default {
   .share-lnk-row .btn:focus, .btn.focus {
       outline: 0;
       box-shadow: 0 0 0 0.05rem #062a85;
-      background: #062a85;
-      color: white;
+      background: transparent;
+      border: 1px solid $primary;
+  }
+
+  .share-lnk-row .btn {
+    padding-left: 5px;
+    padding-right: 5px;
   }
 
   .perm-modal .modal-footer .btn-secondary {
@@ -590,18 +594,14 @@ export default {
     width: 100%;
   }
 
-  .perm-subtitle {
-    padding-left: 10px;
-  }
-
   .perm-change-wrapper {
     padding: 2px;
   }
 
   .perm-change-parent {
-    background: #b3b3b30d;
+    background: $gray-100;
     border: 1px solid #f5f5f5;
-    padding: 6px 6px;
+    padding: $spacer / 2;
   }
 
   .perm-input input {

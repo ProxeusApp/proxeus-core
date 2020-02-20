@@ -1,5 +1,5 @@
 <template>
-<div class="field-parent mb-3">
+<div class="field-parent mb-3" v-bind="$attrs">
   <div class="form-group mb-0">
     <label>{{label}}</label>
     <input :maxlength="max" :autofocus="autofocus" :disabled="disabled" @input="change" :name="name" ref="field"
@@ -10,6 +10,7 @@
     </a>
     <a v-if="action.Link && action.Name" class="faction" :target="action.Target" :href="action.Link">{{action.Name}}</a>
   </div>
+  <div class="helptext text-muted" v-if="helptext"><small>{{ helptext }}</small></div>
   <div class="errors"></div>
   <slot></slot>
 </div>
@@ -53,7 +54,8 @@ export default {
     },
     input: {
       type: Function
-    }
+    },
+    helptext: {}
   },
   data () {
     return {

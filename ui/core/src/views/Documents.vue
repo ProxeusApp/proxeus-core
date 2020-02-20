@@ -11,7 +11,7 @@
       <template scope="element">
           <div v-if="element.finished === false" class="easy-read"><span
             class="badge badge-info">{{$t('inline draft badge','Draft')}}</span></div>
-          <div v-else class="fregular"></div>
+          <div v-else></div>
           <small class="light-text"></small>
           <button v-if="element && app.amIWriteGrantedFor(element)" :title="$t('delete this item')" @click="areYouSureDialog($event, element)" type="button"
                   class="btn btn-primary btn-round ml-3" style="z-index: 1;padding: 6px;display: inline-block;">
@@ -23,8 +23,8 @@
     </list-group>
     <list-item-dialog :setup="setupDeleteDialog" :sureFunc="deleteDialogAction" :iconFa="'mdi mdi-view-carousel'">
       <div class="d-block mb-2">{{$t('Are you sure, you want to delete?')}}</div>
-      <div class="d-block fregular mb-2">{{$t('workflow delete xes alert', 'If you have paid XES for this workflow, you will not be able to start the workflow again, unless you make another payment.')}}</div>
-      <div class="d-block fregular mb-2">{{$t('This action can\'t be undone.')}}</div>
+      <div class="d-block mb-2">{{$t('workflow delete xes alert', 'If you have paid XES for this workflow, you will not be able to start the workflow again, unless you make another payment.')}}</div>
+      <div class="d-block mb-2">{{$t('This action can\'t be undone.')}}</div>
     </list-item-dialog>
   </div>
   <first-login-overlay keyz="documents"

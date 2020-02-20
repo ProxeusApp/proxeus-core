@@ -32,12 +32,12 @@
                   v-model="me.etherPK" :action="{Name:$t('inline change badge','change'), Func:updateEthereumAddress}"/>
   <span v-show="walletErrorMessage" class="error">{{walletErrorMessage}}</span>
   <br>
-  <div class="fregular sub-title">{{$t('Privacy settings')}}</div>
+  <div class="sub-title">{{$t('Privacy settings')}}</div>
   <checkbox :label="$t('Want to be found')" v-model="me.wantToBeFound"/>
   <span class="text-muted"
         style="white-space: normal;">{{$t('Want to be found explanation','Uncheck this property if you want to be found only by your blockchain address.')}}</span>
     <br><br>
-    <div class="fregular sub-title">{{$t('Delete account')}}</div>
+    <div class="sub-title">{{$t('Delete account')}}</div>
     <div v-if="showConfirm">
       <button @click="showConfirm = false" class="btn btn-secondary mt-1 ml-1">{{$t('Cancel')}}</button>
       <button class="btn btn-danger mt-1 float-right mr-1" @click="deleteAccount">{{$t('Confirm account deletion')}}</button>

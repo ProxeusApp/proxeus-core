@@ -210,7 +210,7 @@
         <permission-dialog v-if="workflow" :save="save" :publicLink="app.makeURL('/p/workflow/'+id)"
                            :publicLink2="app.makeURL('/document/'+id)" v-model="workflow" :setup="setupDialog"/>
         <list-item-dialog :_blank="true" :title="$t('Couldn\'t publish')" :setup="setupPublishResponseDialog" :timestamp="false" :noBtns="true" >
-            <div class="d-block fregular">{{$t('Some entities couldn\'t be changed.')}}</div>
+            <div class="d-block">{{$t('Some entities couldn\'t be changed.')}}</div>
             <div class="d-block">{{$t('Please review the following entities carefully in order to publish.')}}</div>
         </list-item-dialog>
     </div>
