@@ -135,7 +135,7 @@ func (me *System) init(stngs *model.Settings) error {
 	xesAdapter := blockchain.NewAdapter(cfg.Config.XESContractAddress, XESABI)
 
 	bcListenerPayment := blockchain.NewPaymentListener(xesAdapter, cfg.Config.EthWebSocketURL,
-		cfg.Config.EthClientURL, me.DB.WorkflowPayments)
+		cfg.Config.EthClientURL, me.DB.WorkflowPayments, me.TestMode)
 	ctxPay := context.Background()
 	ctxPay, cancelPay := context.WithCancel(ctxPay)
 	if me.paymentListenerCancelFunc != nil {
@@ -150,7 +150,7 @@ func (me *System) init(stngs *model.Settings) error {
 	}
 
 	bcListenerSignature := blockchain.NewSignatureListener(cfg.Config.EthWebSocketURL,
-		cfg.Config.EthClientURL, stngs.BlockchainContractAddress, me.DB.SignatureRequests, me.DB.User, me.EmailSender, ProxeusFSABI, cfg.Config.PlatformDomain)
+		cfg.Config.EthClientURL, stngs.BlockchainContractAddress, me.DB.SignatureRequests, me.DB.User, me.EmailSender, ProxeusFSABI, cfg.Config.PlatformDomain, me.TestMode)
 	ctxSig := context.Background()
 	ctxSig, cancelSig := context.WithCancel(ctxPay)
 	if me.signatureListenerCancelFunc != nil {

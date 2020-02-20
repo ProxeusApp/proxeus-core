@@ -5,14 +5,11 @@ import (
 	"errors"
 	"log"
 	"math/big"
-	"time"
 
-	"github.com/ProxeusApp/proxeus-core/main/handlers/blockchain/ethglue"
 	"github.com/ProxeusApp/proxeus-core/storage"
 	"github.com/ProxeusApp/proxeus-core/storage/database/db"
 
 	"github.com/ethereum/go-ethereum"
-	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
 )
 
@@ -27,11 +24,12 @@ type PaymentListener struct {
 	listener
 	workflowPaymentsDB storage.WorkflowPaymentsIF
 	xesAdapter         Adapter
+	testMode           bool
 }
 
 var TestChannelPayment chan types.Log
 
-func NewPaymentListener(xesAdapter Adapter, ethWebSocketURL, ethURL string, workflowPaymentsDB storage.WorkflowPaymentsIF) *PaymentListener {
+func NewPaymentListener(xesAdapter Adapter, ethWebSocketURL, ethURL string, workflowPaymentsDB storage.WorkflowPaymentsIF, testMode bool) *PaymentListener {
 	me := &PaymentListener{}
 	me.xesAdapter = xesAdapter
 	me.ethWebSocketURL = ethWebSocketURL
@@ -39,16 +37,25 @@ func NewPaymentListener(xesAdapter Adapter, ethWebSocketURL, ethURL string, work
 	me.workflowPaymentsDB = workflowPaymentsDB
 	me.logs = make(chan types.Log, 200)
 	TestChannelPayment = me.logs
+
+	me.testMode = testMode
+
 	return me
 }
 
 func (me *PaymentListener) Listen(ctx context.Context) {
-	var readyCh <-chan struct{}
+	subscription := make(chan ethereum.Subscription)
 
 	for {
-		readyCh = me.ethConnectWebSocketsAsync(ctx)
+		if me.testMode {
+			go dummyEthConnect(subscription)
+		} else {
+			go ethConnectWebSocketsAsync(ctx, me.ethWebSocketURL, me.xesAdapter.GetContractAddress(), me.logs, subscription)
+		}
 		select {
-		case <-readyCh:
+		case sub := <-subscription:
+			log.Println("DEBUG SUBSCRIPTION", sub)
+			me.sub = sub
 			log.Println("[paymentlistener] listen on contract started. contract address: ", me.xesAdapter.GetContractAddress())
 			reconnect := me.listenLoop(ctx)
 			if !reconnect {
@@ -75,6 +82,7 @@ func (me *PaymentListener) listenLoop(ctx context.Context) (shouldReconnect bool
 			log.Println("ERROR sub", err)
 			return true
 		case vLog, ok := <-me.logs:
+			log.Println("DEBUG LOG", vLog)
 			if !ok {
 				return true
 			}
@@ -82,44 +90,6 @@ func (me *PaymentListener) listenLoop(ctx context.Context) (shouldReconnect bool
 			me.eventsHandler(&vLog, event)
 		}
 	}
-}
-
-func (me *PaymentListener) ethConnectWebSocketsAsync(ctx context.Context) <-chan struct{} {
-
-	filterAddresses := []common.Address{common.HexToAddress(me.xesAdapter.GetContractAddress())}
-
-	readyCh := make(chan struct{})
-	go func() {
-		for {
-			select {
-			case <-ctx.Done():
-				return
-			default:
-				var err error
-				ethwsconn, err := ethglue.DialContext(ctx, me.ethWebSocketURL)
-				if err != nil {
-					log.Printf("failed to dial for eth events, will retry (%s)\n", err)
-					time.Sleep(time.Second * 4)
-					continue
-				}
-				query := ethereum.FilterQuery{
-					Addresses: filterAddresses,
-				}
-				ctx, cancel := context.WithTimeout(ctx, time.Duration(10*time.Second))
-				me.sub, err = ethwsconn.SubscribeFilterLogs(ctx, query, me.logs)
-				cancel()
-				if err != nil {
-					log.Printf("failed to subscribe for eth events, will retry (%s)\n", err)
-					time.Sleep(time.Second * 4)
-					continue
-				}
-				// success!
-				readyCh <- struct{}{}
-				return
-			}
-		}
-	}()
-	return readyCh
 }
 
 var xesOverflowError = errors.New("overflow on xes event")

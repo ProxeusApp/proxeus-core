@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/hex"
 	"log"
-	"time"
 
 	"github.com/ProxeusApp/proxeus-core/storage"
 
@@ -14,7 +13,6 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
 
-	"github.com/ProxeusApp/proxeus-core/main/handlers/blockchain/ethglue"
 	"github.com/ProxeusApp/proxeus-core/sys/email"
 )
 
@@ -27,12 +25,13 @@ type Signaturelistener struct {
 	BlockchainContractAddress string
 	ProxeusFSABI              abi.ABI
 	emailFrom                 string
+	testMode                  bool
 }
 
 var TestChannelSignature chan types.Log
 
 func NewSignatureListener(ethWebSocketURL, ethURL, BlockchainContractAddress string, SignatureRequestsDB storage.SignatureRequestsIF,
-	UserDB storage.UserIF, EmailSender email.EmailSender, ProxeusFSABI abi.ABI, domain string) *Signaturelistener {
+	UserDB storage.UserIF, EmailSender email.EmailSender, ProxeusFSABI abi.ABI, domain string, testMode bool) *Signaturelistener {
 
 	me := &Signaturelistener{}
 	me.BlockchainContractAddress = BlockchainContractAddress
@@ -44,18 +43,26 @@ func NewSignatureListener(ethWebSocketURL, ethURL, BlockchainContractAddress str
 	me.userDB = UserDB
 	me.domain = domain
 	me.logs = make(chan types.Log, 200)
+	me.testMode = testMode
+
 	TestChannelSignature = me.logs
+
 	return me
 }
 
 func (me *Signaturelistener) Listen(ctx context.Context) {
 
-	var readyCh <-chan struct{}
+	subscription := make(chan ethereum.Subscription)
 
 	for {
-		readyCh = me.ethConnectWebSocketsAsync(ctx)
+		if me.testMode {
+			go dummyEthConnect(subscription)
+		} else {
+			go ethConnectWebSocketsAsync(ctx, me.ethWebSocketURL, me.BlockchainContractAddress, me.logs, subscription)
+		}
 		select {
-		case <-readyCh:
+		case sub := <-subscription:
+			me.sub = sub
 			log.Println("[signaturelistener] listen on contract started. contract address: ", me.BlockchainContractAddress)
 			reconnect := me.listenLoop(ctx)
 			if !reconnect {
@@ -88,43 +95,6 @@ func (me *Signaturelistener) listenLoop(ctx context.Context) (shouldReconnect bo
 			me.eventsHandler(&vLog)
 		}
 	}
-}
-
-func (me *Signaturelistener) ethConnectWebSocketsAsync(ctx context.Context) <-chan struct{} {
-
-	filterAddresses := []common.Address{common.HexToAddress(me.BlockchainContractAddress)}
-
-	readyCh := make(chan struct{})
-	go func() {
-		for {
-			select {
-			case <-ctx.Done():
-				return
-			default:
-				var err error
-				ethwsconn, err := ethglue.DialContext(ctx, me.ethWebSocketURL)
-				if err != nil {
-					log.Printf("failed to dial for eth events, will retry (%s)\n", err)
-					continue
-				}
-				query := ethereum.FilterQuery{
-					Addresses: filterAddresses,
-				}
-				ctx, cancel := context.WithTimeout(ctx, time.Duration(10*time.Second))
-				me.sub, err = ethwsconn.SubscribeFilterLogs(ctx, query, me.logs)
-				cancel()
-				if err != nil {
-					log.Printf("failed to subscribe for eth events, will retry (%s)\n", err)
-					time.Sleep(time.Second * 4)
-					continue
-				}
-				// success!
-				readyCh <- struct{}{}
-				return
-			}
-		}
-	}()
-	return readyCh
 }
 
 func (me *Signaturelistener) eventsHandler(lg *types.Log) {

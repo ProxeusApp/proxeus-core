@@ -53,6 +53,7 @@ func TestApi(t *testing.T) {
 		{"Form", testForm},
 		{"Payment", testPayment},
 		{"UnattendedWorkflow", testUnattendedWorkflow},
+
 		{"UnattendedWorkflowAdvanced", testUnattendedWorkflowAdvanced},
 		{"Workflow", testWorkflow},
 		{"WorkflowAdvanced", testWorkflowAdvanced},
