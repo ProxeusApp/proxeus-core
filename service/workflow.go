@@ -1,10 +1,12 @@
 package service
 
 import (
+	extNode "github.com/ProxeusApp/proxeus-core/externalnode"
 	"github.com/ProxeusApp/proxeus-core/storage"
 	"github.com/ProxeusApp/proxeus-core/sys"
 	"github.com/ProxeusApp/proxeus-core/sys/model"
 	"github.com/ProxeusApp/proxeus-core/sys/workflow"
+	"log"
 )
 
 type (
@@ -17,6 +19,7 @@ type (
 		Publish(auth model.Auth, wfItem *model.WorkflowItem) map[string]interface{}
 		Put(auth model.Auth, wfItem *model.WorkflowItem) error
 		Delete(auth model.Auth, id string) error
+		InstantiateExternalNode(auth model.Auth, nodeId, nodeName string) (*extNode.ExternalQuery, error)
 	}
 
 	DefaultWorkflowService struct {
@@ -133,4 +136,37 @@ func (me *DefaultWorkflowService) Put(auth model.Auth, wfItem *model.WorkflowIte
 
 func (me *DefaultWorkflowService) Delete(auth model.Auth, id string) error {
 	return me.workflowDB().Delete(auth, id)
+}
+
+func (me *DefaultWorkflowService) InstantiateExternalNode(auth model.Auth, nodeId, nodeName string) (*extNode.ExternalQuery, error) {
+	externalQuery, err := me.workflowDB().QueryFromInstanceID(auth, nodeId)
+	if err == nil {
+		log.Println("UpdateHandler externalNode instance exists, will not create new instance")
+		return &externalQuery, nil
+	}
+
+	newExternalNode, err := me.workflowDB().NodeByName(auth, nodeName)
+	if err != nil {
+		log.Println("UpdateHandler instantiateExternalNode NodeByName err: ", err.Error())
+		return nil, err
+	}
+
+	newExternalNodeInstance := &extNode.ExternalNodeInstance{
+		ID:       nodeId,
+		NodeName: newExternalNode.Name,
+	}
+
+	//PutExternalNodeInstance
+	err = me.workflowDB().PutExternalNodeInstance(auth, newExternalNodeInstance)
+	if err != nil {
+		log.Println("UpdateHandler externalNode PutExternalNodeInstance error: ", err.Error())
+		return nil, err
+	}
+
+	newExternalQuery := extNode.ExternalQuery{
+		ExternalNode:         newExternalNode,
+		ExternalNodeInstance: newExternalNodeInstance,
+	}
+
+	return &newExternalQuery, nil
 }

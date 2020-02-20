@@ -4,13 +4,13 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/ProxeusApp/proxeus-core/sys/workflow"
+
 	"github.com/ProxeusApp/proxeus-core/service"
 
 	"github.com/ProxeusApp/proxeus-core/storage/portable"
 
 	"github.com/labstack/echo"
-
-	extNode "github.com/ProxeusApp/proxeus-core/externalnode"
 
 	"github.com/ProxeusApp/proxeus-core/storage"
 
@@ -19,7 +19,6 @@ import (
 	"github.com/ProxeusApp/proxeus-core/main/handlers/helpers"
 	"github.com/ProxeusApp/proxeus-core/main/www"
 	"github.com/ProxeusApp/proxeus-core/sys/model"
-	"github.com/ProxeusApp/proxeus-core/sys/workflow"
 )
 
 var (
@@ -109,7 +108,18 @@ func UpdateHandler(e echo.Context) error {
 		}
 	}
 
-	instantiateExternalNode(c, sess, workflowItem)
+	workflowItem.LoopNodes(nil, func(l *workflow.Looper, node *workflow.Node) bool {
+		if node.Type == "externalNode" {
+
+			externalNodeQuery, err := workflowService.InstantiateExternalNode(sess, node.ID, node.Name)
+			if err != nil || externalNodeQuery == nil {
+				log.Printf("[workflowHandler][UpdateHandler] instantiateExternalNode err: %s | externalNodeQuery is nil: %t",
+					err, externalNodeQuery == nil)
+				return false
+			}
+		}
+		return true
+	})
 
 	err = workflowService.Put(sess, workflowItem)
 	if err != nil {
@@ -120,37 +130,6 @@ func UpdateHandler(e echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, workflowItem)
-}
-
-func instantiateExternalNode(c *www.Context, auth model.Auth, item *model.WorkflowItem) {
-	item.LoopNodes(nil, func(l *workflow.Looper, node *workflow.Node) bool {
-		if node.Type == "externalNode" {
-			_, er := c.System().DB.Workflow.QueryFromInstanceID(auth, node.ID)
-			if er == nil {
-				log.Println("UpdateHandler externalNode instance exists, will not create new instance")
-				return true
-			}
-
-			newExternalNode, err := c.System().DB.Workflow.NodeByName(auth, node.Name)
-			if err != nil {
-				log.Println("UpdateHandler instantiateExternalNode NodeByName err: ", err.Error())
-				return true
-			}
-
-			i := &extNode.ExternalNodeInstance{
-				ID:       node.ID,
-				NodeName: newExternalNode.Name,
-			}
-
-			//PutExternalNodeInstance
-			er = c.System().DB.Workflow.PutExternalNodeInstance(auth, i)
-			if er != nil {
-				log.Println("UpdateHandler externalNode PutExternalNodeInstance error: ", er.Error())
-				return true //continue
-			}
-		}
-		return true
-	})
 }
 
 func DeleteHandler(e echo.Context) error {
