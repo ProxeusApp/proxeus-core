@@ -35,7 +35,7 @@
           <button v-if="app.me && (app.me.id === user.id)" :disabled="createNew" style="padding:4px;position:absolute;right:0;top:-5px;" :title="$t('Create a API key')" type="button" @click="add" class="btn btn-sm btn-primary">
               Add key
           </button>
-          <div class="fregular sub-title">{{$t('API keys')}}</div>
+          <div class="sub-title">{{$t('API keys')}}</div>
           <table class="table hidden-api-keys" style="width: 100%;margin: 4px;">
               <tr v-for="item in user.apiKeys" >
                   <td style="text-align: left;">

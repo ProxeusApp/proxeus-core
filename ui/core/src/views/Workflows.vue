@@ -21,10 +21,10 @@
       </template>
     </list-group>
     <list-item-dialog :setup="setupCopyDialog" :sureFunc="copyDialogSureAction" :iconFa="iconFa">
-      <div class="d-block fregular">{{$t('Are you sure, you want to copy this item?')}}</div>
+      <div class="d-block">{{$t('Are you sure, you want to copy this item?')}}</div>
     </list-item-dialog>
     <list-item-dialog :setup="setupDeleteDialog" :sureFunc="deleteDialogSureAction" :iconFa="iconFa">
-      <div class="d-block fregular">{{$t('This action can\'t be undone.')}}</div>
+      <div class="d-block">{{$t('This action can\'t be undone.')}}</div>
       <div class="d-block">{{$t('Are you sure, you want to delete?')}}</div>
     </list-item-dialog>
   </div>

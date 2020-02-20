@@ -25,7 +25,7 @@
             <animated-input :max="100" :disabled="true" :label="$t('Email')" v-model="user.email"/>
             <animated-input :max="100" :disabled="true" :label="$t('Ethereum Address')" v-model="user.etherPK"/>
             <br>
-            <div class="fregular sub-title">{{$t('Privacy settings')}}</div>
+            <div class="sub-title">{{$t('Privacy settings')}}</div>
             <checkbox :label="$t('Want to be found')" :disabled="true" v-model="user.wantToBeFound"/>
             <span class="text-muted"
                   style="white-space: normal;">{{$t('Want to be found explanation','Uncheck this property if you want to be found only by your blockchain address.')}}</span>

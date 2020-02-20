@@ -6,10 +6,10 @@
       <i v-else class="mlist-group-icon material-icons" :class="[iconFa ? iconFa : '']">{{ icon || ''}}</i>
     </td>
     <td>
-      <div style="display:block;" class="fregular">{{ element.name||defaultName||'-' }}
+      <div style="display:block;">{{ element.name||defaultName||'-' }}
         <slot name="nameExtra"/>
       </div>
-      <small style="display:block;" class="light-text fregular" v-if="element.email">{{element.email}}</small>
+      <small style="display:block;" class="light-text" v-if="element.email">{{element.email}}</small>
       <small style="display:block;" class="light-text" v-if="element.etherPK">{{ element.etherPK }}</small>
       <small style="display:block;" class="light-text" v-else-if="element.detail">{{ element.detail }}</small>
       <small style="display:block;" class="light-text" v-else>-</small>

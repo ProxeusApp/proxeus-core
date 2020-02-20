@@ -48,12 +48,16 @@ $leftSideSpacingFromBrowserFrame: 20px;
   z-index: 200000000 !important;
 }
 
+.modal-header {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+}
 .modal-header .close {
   font-size: 40px;
   padding: 0;
   margin: 0;
   line-height: 1;
-  margin-top: -16px;
   margin-right: -2px;
 }
 
@@ -208,9 +212,8 @@ body {
 }
 
 .sub-title {
-  border-bottom: 1px solid #d8d8d8;
-  margin-bottom: 6px;
-  padding-left: 5px;
+  border-bottom: 2px solid $gray-300;
+  margin-bottom: $spacer / 4;
 }
 
 .mlist-group {

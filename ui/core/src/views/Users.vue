@@ -83,7 +83,7 @@
       </div>
       <template scope="element">
       <td class="tdmax impcnt" style="width:10%">
-        <div class="fregular">{{humanizeRole(element.role)}}</div>
+        <div>{{humanizeRole(element.role)}}</div>
         <small class="light-text">{{$t('Role')}}</small>
       </td>
       </template>
