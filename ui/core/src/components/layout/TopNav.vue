@@ -1,7 +1,6 @@
 <template>
   <nav class="navbar navbar-expand-lg py-0 topnav d-flex flex-row"
        v-bind="$attrs"
-       :class="{'bg-light':bg == null, 'border-bottom':bg==='white', 'border-bottom-0':bg!=='white'}"
        :style="{background:bg ? bg : ''}">
     <router-link class="topnav-back btn btn-sm btn-light mr-3" :to="returnToRoute"
                  v-if="returnToRoute && isShareLinkAndUserOrHigher">
