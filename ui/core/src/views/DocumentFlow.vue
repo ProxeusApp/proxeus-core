@@ -1,7 +1,7 @@
 <template>
 <div class="document-view">
   <vue-headful :title="$t('Flow title prefix','Proxeus - ')+(name || $t('Document title','Document'))"/>
-  <top-nav :returnToRoute="{name:'Documents'}" :title="name" :sidebarToggler="false" class="border-bottom-0 bg-white">
+  <top-nav :returnToRoute="{name:'Documents'}" bg="#ffffff" :title="name" :sidebarToggler="false" class="border-bottom-0 bg-white">
     <language-drop-down slot="buttons" style="margin-top: 3px;"/>
   </top-nav>
   <div class="container-fluid document-inner-view bg-light" v-if="status && name">
