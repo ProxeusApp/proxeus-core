@@ -54,7 +54,6 @@ func (me *PaymentListener) Listen(ctx context.Context) {
 		}
 		select {
 		case sub := <-subscription:
-			log.Println("DEBUG SUBSCRIPTION", sub)
 			me.sub = sub
 			log.Println("[paymentlistener] listen on contract started. contract address: ", me.xesAdapter.GetContractAddress())
 			reconnect := me.listenLoop(ctx)
@@ -82,7 +81,6 @@ func (me *PaymentListener) listenLoop(ctx context.Context) (shouldReconnect bool
 			log.Println("ERROR sub", err)
 			return true
 		case vLog, ok := <-me.logs:
-			log.Println("DEBUG LOG", vLog)
 			if !ok {
 				return true
 			}
