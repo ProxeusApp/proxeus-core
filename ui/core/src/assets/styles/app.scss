@@ -23,8 +23,10 @@ $mdi-font-path: "~@mdi/font/fonts";
 }
 
 .app-main {
-  height: auto;
   //min-width: 900px;
+  > div > .container-fluid, > div > .main-container {
+    height: calc(100vh - 60px);
+  }
 }
 
 .layout-fixed-scroll-container {
@@ -45,6 +47,9 @@ $mdi-font-path: "~@mdi/font/fonts";
 .table {
   td {
     vertical-align: middle;
+    td {
+      border-top: none;
+    }
   }
 }
 

@@ -9,20 +9,16 @@
         Create document
       </router-link>
       <template scope="element">
-      <td class="tdmin">
-        <div v-if="element.finished === false" class="easy-read"><span
-          class="badge badge-info">{{$t('inline draft badge','Draft')}}</span></div>
-        <div v-else class="fregular"></div>
-        <small class="light-text"></small>
-      </td>
-      <td class="tdmin">
-        <button v-if="element && app.amIWriteGrantedFor(element)" :title="$t('delete this item')" @click="areYouSureDialog($event, element)" type="button"
-                class="btn btn-primary btn-round" style="z-index: 1;padding: 6px;display: inline-block;">
-          <i class="material-icons">
-            delete_forever
-          </i>
-        </button>
-      </td>
+          <div v-if="element.finished === false" class="easy-read"><span
+            class="badge badge-info">{{$t('inline draft badge','Draft')}}</span></div>
+          <div v-else class="fregular"></div>
+          <small class="light-text"></small>
+          <button v-if="element && app.amIWriteGrantedFor(element)" :title="$t('delete this item')" @click="areYouSureDialog($event, element)" type="button"
+                  class="btn btn-primary btn-round ml-3" style="z-index: 1;padding: 6px;display: inline-block;">
+            <i class="material-icons">
+              delete_forever
+            </i>
+          </button>
       </template>
     </list-group>
     <list-item-dialog :setup="setupDeleteDialog" :sureFunc="deleteDialogAction" :iconFa="'mdi mdi-view-carousel'">

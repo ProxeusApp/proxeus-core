@@ -1,5 +1,5 @@
 <template>
-<textarea @input="onInput" class="tt-style easy-read" style="background: #ffffff00;" v-model="translation"></textarea>
+<textarea @input="onInput" class="form-control" style="background: #ffffff00;" v-model="translation"></textarea>
 </template>
 
 <script>

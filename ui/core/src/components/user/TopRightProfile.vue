@@ -1,6 +1,6 @@
 <template>
-<span v-if="showSignInBtn()||hasContent()" ref="myroot" class="trp-main"
-      style="display: inline-block;margin-left: 15px;position:relative;margin-right:-15px;">
+<span v-if="showSignInBtn()||hasContent()" ref="myroot" class="ml-3 trp-main"
+      style="display: inline-block;position:relative;">
         <div v-if="hasContent()">
              <div v-if="path() === '/'" class="return-workflows">
                <a href="/user/document" class="btn btn-primary text-white">{{$t('Return to Workflows', 'Return to Workflows')}}</a>

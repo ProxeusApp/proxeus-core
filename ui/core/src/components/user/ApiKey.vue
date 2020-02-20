@@ -6,7 +6,7 @@
                 <animated-input :max="80" :label="$t('Name')" v-model="newName"/>
                 <span class="text-muted" style="white-space: normal;">{{$t('Create a API key')}}</span>
                 <button type="button" style="position: absolute;right: 0;top: -3px;" @click="createNewApiKey" :disabled="!newName" class="btn btn-primary">
-                    <i class="material-icons">save</i>
+                    Save
                 </button>
             </form>
         </div>
@@ -32,8 +32,8 @@
         </div>
     </div>
       <div style="position:relative;">
-          <button v-if="app.me && (app.me.id === user.id)" :disabled="createNew" style="padding:4px;position:absolute;right:0;top:-5px;" :title="$t('Create a API key')" type="button" @click="add" class="btn btn-primary btn-round">
-              <i class="material-icons">add</i>
+          <button v-if="app.me && (app.me.id === user.id)" :disabled="createNew" style="padding:4px;position:absolute;right:0;top:-5px;" :title="$t('Create a API key')" type="button" @click="add" class="btn btn-sm btn-primary">
+              Add key
           </button>
           <div class="fregular sub-title">{{$t('API keys')}}</div>
           <table class="table hidden-api-keys" style="width: 100%;margin: 4px;">
@@ -45,8 +45,8 @@
                       <span>{{item.Key}}</span>
                   </td>
                   <td v-if="app.me && (app.me.role >= 100 || app.me.id === user.id)" style="text-align: right;padding-right: 10px;">
-                      <button style="float:right;padding:2px;" :title="$t('Delete API key')" type="button" @click="deleteApiKey(item.Key);" class="btn btn-danger btn-round">
-                          <i class="material-icons">delete</i>
+                      <button style="float:right;padding:2px;" :title="$t('Delete API key')" type="button" @click="deleteApiKey(item.Key);" class="btn btn-danger btn-sm">
+                          Remove
                       </button>
                   </td>
               </tr>

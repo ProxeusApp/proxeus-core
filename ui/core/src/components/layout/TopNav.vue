@@ -3,7 +3,8 @@
        v-bind="$attrs"
        :class="{'bg-light':bg == null, 'border-bottom':bg==='white', 'border-bottom-0':bg!=='white'}"
        :style="{background:bg ? bg : ''}">
-    <router-link class="topnav-back btn btn-sm btn-light mr-3" :to="returnToRoute" v-if="returnToRoute && isShareLinkAndUserOrHigher">
+    <router-link class="topnav-back btn btn-sm btn-light mr-3" :to="returnToRoute"
+                 v-if="returnToRoute && isShareLinkAndUserOrHigher">
       <span class="material-icons mdi md-36 mdi-chevron-left"></span>
     </router-link>
 
@@ -11,11 +12,7 @@
       {{ title }}
     </h1>
     <div class="topnav-buttons ml-auto">
-      <!--<button class="navbar-toggler ml-auto" type="button" data-toggle="collapse" data-target="#sidebar"-->
-      <!--aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">-->
-      <!--<span class="navbar-toggler-icon"></span>-->
-      <!--</button>-->
-      <div class="ml-auto">
+      <div class="ml-auto d-flex align-items-center">
         <slot name="buttons"></slot>
         <top-right-profile/>
       </div>

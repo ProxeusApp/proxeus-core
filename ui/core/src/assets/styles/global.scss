@@ -184,7 +184,7 @@ body {
   padding: $spacer $spacer * 1.5;
 }
 
-.btn > i.material-icons {
+.btn > .material-icons {
   vertical-align: middle;
 }
 
@@ -218,14 +218,12 @@ body {
   height: 100%;
   overflow: auto;
   border: none;
-  padding-left: 8px;
-  margin-right: 6px;
 }
 
 .mlist-item {
   cursor: pointer;
   &:last-child {
-    border-bottom: 1px solid $gray-200;
+    border-bottom: 1px solid $gray-300;
   }
 }
 
@@ -257,6 +255,13 @@ i.mlist-group-icon {
 table.nicetbl {
   width: 100%;
   max-width: 100%;
+}
+
+// visual fix for weird table markup
+.table td td {
+  border-top: none;
+  padding-top: 0;
+  padding-bottom: 0;
 }
 
 table.tblspacing {

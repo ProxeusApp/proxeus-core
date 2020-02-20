@@ -35,7 +35,7 @@
     <td class="pl-2" style="text-align: right;">
       <div v-if="price" class="easy-read stime">{{ this.price }} XES</div>
     </td>
-    <td class="tdmin align-items-center">
+    <td class="align-items-center">
       <div class="d-flex align-items-center">
         <slot/>
       </div>

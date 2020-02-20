@@ -1,59 +1,57 @@
 <template>
-<div v-if="user">
-  <vue-headful :title="$t('User title prefix','Proxeus - ')+(user.name || $t('User title', 'User'))"/>
-  <top-nav :title="user.name || $t('User title', 'User')" :returnToRoute="{name:'Users'}">
-    <td slot="buttons" class="tdmin" v-if="app.userIsUserOrHigher()">
-      <button v-if="user" style="height: 40px;"
+  <div v-if="user">
+    <vue-headful :title="$t('User title prefix','Proxeus - ')+(user.name || $t('User title', 'User'))"/>
+    <top-nav :title="user.name || $t('User title', 'User')" :returnToRoute="{name:'Users'}">
+      <button slot="buttons" v-if="user && app.userIsUserOrHigher()" style="height: 40px;"
               @click="app.exportData('&id='+user.id, null, '/api/user/export', 'User_'+user.id)" type="button"
               class="btn btn-primary ml-2">
         <span>Export</span></button>
-    </td>
-  </top-nav>
-  <div class="container-fluid">
-    <div class="row mb-3">
-      <div class="col-md-5">
-        <div class="profile-img-main" style="width: 100%;" :style="[topRightInnerFallback?{'opacity':0.2}:'']">
-          <div class="trp-pchange mt-2" style="display: inline-block;border: 2px solid whitesmoke;width: 100%;">
-            <img v-show="topRightInnerFallback === false" @error="errorForTopRightInner" :src="rawSrc+profilePhotoSrc"
-                 style="width: 100%;"/>
-            <i v-show="topRightInnerFallback" class="material-icons" style="font-size: 25vw;color: grey;">person</i>
+    </top-nav>
+    <div class="container-fluid">
+      <div class="row mb-3">
+        <div class="col-md-5">
+          <div class="profile-img-main" style="width: 100%;" :style="[topRightInnerFallback?{'opacity':0.2}:'']">
+            <div class="trp-pchange mt-2" style="display: inline-block;border: 2px solid whitesmoke;width: 100%;">
+              <img v-show="topRightInnerFallback === false" @error="errorForTopRightInner" :src="rawSrc+profilePhotoSrc"
+                   style="width: 100%;"/>
+              <i v-show="topRightInnerFallback" class="material-icons" style="font-size: 25vw;color: grey;">person</i>
+            </div>
           </div>
         </div>
-        <animated-input :max="80" :label="$t('Name')" v-model="user.name"/>
+        <div class="col-md-7">
+          <div class="form-group mt-3">
+            <animated-input :max="80" :label="$t('Name')" v-model="user.name"/>
+            <animated-input :max="100" :label="$t('More about me')" v-model="user.detail"/>
+            <animated-input :max="100" :disabled="true" :label="$t('Email')" v-model="user.email"/>
+            <animated-input :max="100" :disabled="true" :label="$t('Ethereum Address')" v-model="user.etherPK"/>
+            <br>
+            <div class="fregular sub-title">{{$t('Privacy settings')}}</div>
+            <checkbox :label="$t('Want to be found')" :disabled="true" v-model="user.wantToBeFound"/>
+            <span class="text-muted"
+                  style="white-space: normal;">{{$t('Want to be found explanation','Uncheck this property if you want to be found only by your blockchain address.')}}</span>
+          </div>
+          <div class="form-group">
+            <label>Role</label>
+            <simple-select v-model="user.role" :idProp="'role'" :labelProp="'name'" :options="roles"/>
+            <small id="roleHelp" class="form-text light-text">{{$t('Select the users Role')}}</small>
+          </div>
+          <div class="form-group">
+            <api-key :user="user"/>
+          </div>
+          <!-- Legacy markup (real row/col features not applicable here) -->
+          <div class="col-sm-12">
+            <hr>
+          </div>
+          <form id="userForm" class="form-compiled" v-append="userForm" v-if="userForm"></form>
+          <button type="button" class="btn btn-primary" :class="{saving:saving}"
+                  @click="saveUserForm" v-if="user">
+            Save
+          </button>
+        </div>
       </div>
-      <div class="col-md-7">
-        <div class="form-group">
-          <animated-input :max="100" :label="$t('More about me')" v-model="user.detail"/>
-          <animated-input :max="100" :disabled="true" :label="$t('Email')" v-model="user.email"/>
-          <animated-input :max="100" :disabled="true" :label="$t('Ethereum Address')" v-model="user.etherPK"/>
-          <br>
-          <div class="fregular sub-title">{{$t('Privacy settings')}}</div>
-          <checkbox :label="$t('Want to be found')" :disabled="true" v-model="user.wantToBeFound"/>
-          <span class="text-muted"
-                style="white-space: normal;">{{$t('Want to be found explanation','Uncheck this property if you want to be found only by your blockchain address.')}}</span>
-        </div>
-        <div class="form-group">
-          <label>Role</label>
-          <simple-select v-model="user.role" :idProp="'role'" :labelProp="'name'" :options="roles"/>
-          <small id="roleHelp" class="form-text light-text">{{$t('Select the users Role')}}</small>
-        </div>
-        <div class="form-group">
-          <api-key :user="user" />
-        </div>
-        <!-- Legacy markup (real row/col features not applicable here) -->
-        <div class="col-sm-12">
-          <hr>
-        </div>
-        <form id="userForm" class="form-compiled" v-append="userForm" v-if="userForm"></form>
-        <button type="button" class="btn btn-primary btn-round plus-btn" :class="{saving:saving}"
-                @click="saveUserForm" v-if="user">
-          <i class="material-icons">save</i>
-        </button>
-      </div>
+      <!--      <user-settings-modal :userSrc="user.data.userSrc" v-if="user" @saved="updateUserForm"></user-settings-modal>-->
     </div>
-    <!--      <user-settings-modal :userSrc="user.data.userSrc" v-if="user" @saved="updateUserForm"></user-settings-modal>-->
   </div>
-</div>
 </template>
 
 <script>

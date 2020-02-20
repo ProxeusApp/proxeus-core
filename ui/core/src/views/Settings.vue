@@ -1,17 +1,17 @@
 <template>
-<div>
-  <vue-headful :title="$t('Settings title', 'Proxeus - Settings')"/>
-  <top-nav :title="$t('Settings')">
-    <td slot="buttons" class="tdmin" v-if="app.userIsUserOrHigher()">
-      <button @click="app.exportData('', null, '/api/settings/export', 'Settings')" type="button"
+  <div>
+    <vue-headful :title="$t('Settings title', 'Proxeus - Settings')"/>
+    <top-nav :title="$t('Settings')">
+      <button slot="buttons" v-if="app.userIsUserOrHigher()"
+              @click="app.exportData('', null, '/api/settings/export', 'Settings')" type="button"
               class="btn btn-link ml-2">
-        <span>{{$t('Export')}}</span></button>
-    </td>
-  </top-nav>
-  <div ref="scrollable" class="main-container layout-fixed-scroll-container" style="overflow: auto;">
-    <settings-inner/>
+        <span>{{$t('Export')}}</span>
+      </button>
+    </top-nav>
+    <div ref="scrollable" class="main-container layout-fixed-scroll-container" style="overflow: auto;">
+      <settings-inner/>
+    </div>
   </div>
-</div>
 </template>
 
 <script>
