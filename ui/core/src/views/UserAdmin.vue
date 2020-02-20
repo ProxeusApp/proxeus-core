@@ -43,11 +43,3 @@ export default {
   }
 }
 </script>
-<style>
-  .app-main-holder {
-    overflow-y: scroll;
-  }
-  .app-main {
-    overflow-x: auto;
-  }
-</style>

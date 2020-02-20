@@ -1,5 +1,5 @@
 <template>
-<div id="document-app" style="height: 100%;overflow: hidden;">
+<div id="document-app">
   <notifications group="app" classes="alert" position="top center" :duration="4000" style="z-index: 500000000;"/>
   <router-view></router-view>
   <blocker :text1="$t('Common blocker text 1','JUST A MOMENT')" :text2="$t('Common blocker text 2','PROCESSING')"
@@ -95,6 +95,7 @@ export default {
   @import "assets/styles/global.scss";
 
   @import "assets/styles/flatpickr.scss";
+  @import "assets/styles/nav-tabs.scss";
 
   ::-moz-selection {
     background: $info;
@@ -115,6 +116,22 @@ export default {
       max-width: 100% !important;
     }
   }
+
+  .app-main {
+    //min-width: 900px;
+    > div > .container-fluid, > div > .main-container {
+      height: calc(100vh - 62px);
+      overflow-y: scroll;
+    }
+    .topnav {
+      box-shadow: 0 0 7px rgba(0,0,0,.1);
+    }
+  }
+
+  #document-app .sidebar {
+     position: relative;
+     z-index: 999999999 !important;
+   }
 
   .btn.btn-sm.topnav-back {
     border: 0;

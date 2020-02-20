@@ -1,7 +1,7 @@
 <template>
 <div class="doc-create">
   <vue-headful :title="$t('New Document title', 'Proxeus - New Document')"/>
-  <top-nav :title="$t('New Document')" bg="#f7f8f9" :returnToRoute="{name:'Documents'}">
+  <top-nav :title="$t('New Document')" bg="#ffffff" :returnToRoute="{name:'Documents'}">
   </top-nav>
   <div class="main-container">
     <list-group icon="description" :select="false" :timestamps="false"

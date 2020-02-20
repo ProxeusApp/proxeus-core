@@ -37,8 +37,3 @@ export default {
   }
 }
 </script>
-<style>
-  .app-main {
-    overflow-x: auto;
-  }
-</style>

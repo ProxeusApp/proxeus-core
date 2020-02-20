@@ -102,6 +102,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+  .table td {
+    vertical-align: middle !important;
+  }
+
   .list-group-item {
     border-left: 0;
     border-right: 0;
