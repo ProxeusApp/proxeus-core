@@ -79,10 +79,10 @@
               </tr>
               <tr class="bg-light">
                 <th>
-                  <input autofocus ref="search" v-model="langKey" class="form-control" type="text" placeholder="WAT">
+                  <input autofocus ref="search" v-model="langKey" class="form-control" type="text" placeholder="Search in codes">
                 </th>
                 <th :colspan="meta.langListSize" style="min-width: 200px;">
-                  <input autofocus v-model="langValue" class="form-control" type="text" placeholder="WAT">
+                  <input autofocus v-model="langValue" class="form-control" type="text" placeholder="Search in translations">
                 </th>
                 <th class="tdmin">
                   <button type="button" class="btn btn-primary btn-round"
