@@ -118,6 +118,11 @@ $leftSideSpacingFromBrowserFrame: 20px;
   position: relative;
   line-height: 1;
   background: $gray-100;
+
+  .ss-select {
+    background: transparent;
+    border: none;
+  }
 }
 
 .t-ellipsis {
