@@ -5,10 +5,11 @@ import (
 	"log"
 	"time"
 
-	"github.com/ProxeusApp/proxeus-core/main/handlers/blockchain/ethglue"
 	"github.com/ethereum/go-ethereum"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
+
+	"github.com/ProxeusApp/proxeus-core/main/handlers/blockchain/ethglue"
 )
 
 func ethConnectWebSocketsAsync(ctx context.Context, webSocketURL, contract string, logs chan<- types.Log, sub chan<- ethereum.Subscription) {
