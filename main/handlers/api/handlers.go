@@ -2057,9 +2057,11 @@ func ExternalConfigurationPage(e echo.Context) error {
 	name := c.Param("name")
 
 	externalNodeQuery, err := workflowService.InstantiateExternalNode(sess, id, name)
-
-	if err != nil || externalNodeQuery == nil {
+	if err != nil {
 		return err
+	}
+	if externalNodeQuery == nil {
+		return c.NoContent(http.StatusNotFound)
 	}
 
 	return c.Redirect(http.StatusFound, externalNodeQuery.ConfigUrl())
