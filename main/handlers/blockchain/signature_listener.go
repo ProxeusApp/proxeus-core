@@ -18,32 +18,28 @@ import (
 
 type Signaturelistener struct {
 	listener
-	signatureRequestsDB       storage.SignatureRequestsIF
-	userDB                    storage.UserIF
-	emailSender               email.EmailSender
-	domain                    string
-	BlockchainContractAddress string
-	ProxeusFSABI              abi.ABI
-	emailFrom                 string
-	testMode                  bool
+	signatureRequestsDB storage.SignatureRequestsIF
+	userDB              storage.UserIF
+	emailSender         email.EmailSender
+	domain              string
+	ProxeusFSABI        abi.ABI
+	emailFrom           string
+	logSubscriber       LogSubscriber
 }
 
 var TestChannelSignature chan types.Log
 
-func NewSignatureListener(ethWebSocketURL, ethURL, BlockchainContractAddress string, SignatureRequestsDB storage.SignatureRequestsIF,
-	UserDB storage.UserIF, EmailSender email.EmailSender, ProxeusFSABI abi.ABI, domain string, testMode bool) *Signaturelistener {
+func NewSignatureListener(SignatureRequestsDB storage.SignatureRequestsIF,
+	UserDB storage.UserIF, EmailSender email.EmailSender, ProxeusFSABI abi.ABI, domain string, logSubscriber LogSubscriber) *Signaturelistener {
 
 	me := &Signaturelistener{}
-	me.BlockchainContractAddress = BlockchainContractAddress
-	me.ethWebSocketURL = ethWebSocketURL
-	me.ethURL = ethURL
 	me.ProxeusFSABI = ProxeusFSABI
 	me.signatureRequestsDB = SignatureRequestsDB
 	me.emailSender = EmailSender
 	me.userDB = UserDB
 	me.domain = domain
 	me.logs = make(chan types.Log, 200)
-	me.testMode = testMode
+	me.logSubscriber = logSubscriber
 
 	TestChannelSignature = me.logs
 
@@ -55,15 +51,11 @@ func (me *Signaturelistener) Listen(ctx context.Context) {
 	subscription := make(chan ethereum.Subscription)
 
 	for {
-		if me.testMode {
-			go dummyEthConnect(subscription)
-		} else {
-			go ethConnectWebSocketsAsync(ctx, me.ethWebSocketURL, me.BlockchainContractAddress, me.logs, subscription)
-		}
+		go me.logSubscriber.Subscribe(ctx, me.logs, subscription)
 		select {
 		case sub := <-subscription:
 			me.sub = sub
-			log.Println("[signaturelistener] listen on contract started. contract address: ", me.BlockchainContractAddress)
+			log.Println("[signaturelistener] listen on contract started on: ", me.logSubscriber)
 			reconnect := me.listenLoop(ctx)
 			if !reconnect {
 				log.Printf("[signaturelistener][eventHandler] finished")
@@ -127,7 +119,7 @@ func (me *Signaturelistener) eventsHandler(lg *types.Log) {
 }
 
 func (me *Signaturelistener) eventFromLog(out interface{}, lg *types.Log, eventType string) error {
-	pfsLogUnpacker := bind.NewBoundContract(common.HexToAddress(me.BlockchainContractAddress), me.ProxeusFSABI,
+	pfsLogUnpacker := bind.NewBoundContract(common.HexToAddress(me.logSubscriber.GetContractAddress()), me.ProxeusFSABI,
 		nil, nil, nil)
 
 	err := pfsLogUnpacker.UnpackLog(out, eventType, *lg)

@@ -14,31 +14,27 @@ import (
 )
 
 type listener struct {
-	logs            chan types.Log
-	ethWebSocketURL string
-	ethURL          string
-	sub             ethereum.Subscription
+	logs chan types.Log
+	sub  ethereum.Subscription
 }
 
 type PaymentListener struct {
 	listener
 	workflowPaymentsDB storage.WorkflowPaymentsIF
 	xesAdapter         Adapter
-	testMode           bool
+	logSubscriber      LogSubscriber
 }
 
 var TestChannelPayment chan types.Log
 
-func NewPaymentListener(xesAdapter Adapter, ethWebSocketURL, ethURL string, workflowPaymentsDB storage.WorkflowPaymentsIF, testMode bool) *PaymentListener {
+func NewPaymentListener(xesAdapter Adapter, workflowPaymentsDB storage.WorkflowPaymentsIF, logSubscriber LogSubscriber) *PaymentListener {
 	me := &PaymentListener{}
 	me.xesAdapter = xesAdapter
-	me.ethWebSocketURL = ethWebSocketURL
-	me.ethURL = ethURL
 	me.workflowPaymentsDB = workflowPaymentsDB
 	me.logs = make(chan types.Log, 200)
 	TestChannelPayment = me.logs
 
-	me.testMode = testMode
+	me.logSubscriber = logSubscriber
 
 	return me
 }
@@ -47,15 +43,11 @@ func (me *PaymentListener) Listen(ctx context.Context) {
 	subscription := make(chan ethereum.Subscription)
 
 	for {
-		if me.testMode {
-			go dummyEthConnect(subscription)
-		} else {
-			go ethConnectWebSocketsAsync(ctx, me.ethWebSocketURL, me.xesAdapter.GetContractAddress(), me.logs, subscription)
-		}
+		go me.logSubscriber.Subscribe(ctx, me.logs, subscription)
 		select {
 		case sub := <-subscription:
 			me.sub = sub
-			log.Println("[paymentlistener] listen on contract started. contract address: ", me.xesAdapter.GetContractAddress())
+			log.Println("[paymentlistener] listen on contract started on: ", me.logSubscriber)
 			reconnect := me.listenLoop(ctx)
 			if !reconnect {
 				log.Printf("[paymentlistener][eventHandler] finished")
