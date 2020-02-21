@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/hex"
 	"log"
-	"time"
 
 	"github.com/ProxeusApp/proxeus-core/storage"
 
@@ -14,49 +13,49 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
 
-	"github.com/ProxeusApp/proxeus-core/main/handlers/blockchain/ethglue"
 	"github.com/ProxeusApp/proxeus-core/sys/email"
 )
 
 type Signaturelistener struct {
 	listener
-	signatureRequestsDB       storage.SignatureRequestsIF
-	userDB                    storage.UserIF
-	emailSender               email.EmailSender
-	domain                    string
-	BlockchainContractAddress string
-	ProxeusFSABI              abi.ABI
-	emailFrom                 string
+	signatureRequestsDB storage.SignatureRequestsIF
+	userDB              storage.UserIF
+	emailSender         email.EmailSender
+	domain              string
+	ProxeusFSABI        abi.ABI
+	emailFrom           string
+	logSubscriber       LogSubscriber
 }
 
 var TestChannelSignature chan types.Log
 
-func NewSignatureListener(ethWebSocketURL, ethURL, BlockchainContractAddress string, SignatureRequestsDB storage.SignatureRequestsIF,
-	UserDB storage.UserIF, EmailSender email.EmailSender, ProxeusFSABI abi.ABI, domain string) *Signaturelistener {
+func NewSignatureListener(SignatureRequestsDB storage.SignatureRequestsIF,
+	UserDB storage.UserIF, EmailSender email.EmailSender, ProxeusFSABI abi.ABI, domain string, logSubscriber LogSubscriber) *Signaturelistener {
 
 	me := &Signaturelistener{}
-	me.BlockchainContractAddress = BlockchainContractAddress
-	me.ethWebSocketURL = ethWebSocketURL
-	me.ethURL = ethURL
 	me.ProxeusFSABI = ProxeusFSABI
 	me.signatureRequestsDB = SignatureRequestsDB
 	me.emailSender = EmailSender
 	me.userDB = UserDB
 	me.domain = domain
 	me.logs = make(chan types.Log, 200)
+	me.logSubscriber = logSubscriber
+
 	TestChannelSignature = me.logs
+
 	return me
 }
 
 func (me *Signaturelistener) Listen(ctx context.Context) {
 
-	var readyCh <-chan struct{}
+	subscription := make(chan ethereum.Subscription)
 
 	for {
-		readyCh = me.ethConnectWebSocketsAsync(ctx)
+		go me.logSubscriber.Subscribe(ctx, me.logs, subscription)
 		select {
-		case <-readyCh:
-			log.Println("[signaturelistener] listen on contract started. contract address: ", me.BlockchainContractAddress)
+		case sub := <-subscription:
+			me.sub = sub
+			log.Println("[signaturelistener] listen on contract started on: ", me.logSubscriber)
 			reconnect := me.listenLoop(ctx)
 			if !reconnect {
 				log.Printf("[signaturelistener][eventHandler] finished")
@@ -90,43 +89,6 @@ func (me *Signaturelistener) listenLoop(ctx context.Context) (shouldReconnect bo
 	}
 }
 
-func (me *Signaturelistener) ethConnectWebSocketsAsync(ctx context.Context) <-chan struct{} {
-
-	filterAddresses := []common.Address{common.HexToAddress(me.BlockchainContractAddress)}
-
-	readyCh := make(chan struct{})
-	go func() {
-		for {
-			select {
-			case <-ctx.Done():
-				return
-			default:
-				var err error
-				ethwsconn, err := ethglue.DialContext(ctx, me.ethWebSocketURL)
-				if err != nil {
-					log.Printf("failed to dial for eth events, will retry (%s)\n", err)
-					continue
-				}
-				query := ethereum.FilterQuery{
-					Addresses: filterAddresses,
-				}
-				ctx, cancel := context.WithTimeout(ctx, time.Duration(10*time.Second))
-				me.sub, err = ethwsconn.SubscribeFilterLogs(ctx, query, me.logs)
-				cancel()
-				if err != nil {
-					log.Printf("failed to subscribe for eth events, will retry (%s)\n", err)
-					time.Sleep(time.Second * 4)
-					continue
-				}
-				// success!
-				readyCh <- struct{}{}
-				return
-			}
-		}
-	}()
-	return readyCh
-}
-
 func (me *Signaturelistener) eventsHandler(lg *types.Log) {
 	log.Printf("[signaturelistener][eventHandler] txHash: %s, %v", lg.TxHash.String(), lg)
 	event := new(ProxeusFSFileSignedEvent)
@@ -157,7 +119,7 @@ func (me *Signaturelistener) eventsHandler(lg *types.Log) {
 }
 
 func (me *Signaturelistener) eventFromLog(out interface{}, lg *types.Log, eventType string) error {
-	pfsLogUnpacker := bind.NewBoundContract(common.HexToAddress(me.BlockchainContractAddress), me.ProxeusFSABI,
+	pfsLogUnpacker := bind.NewBoundContract(common.HexToAddress(me.logSubscriber.GetContractAddress()), me.ProxeusFSABI,
 		nil, nil, nil)
 
 	err := pfsLogUnpacker.UnpackLog(out, eventType, *lg)
