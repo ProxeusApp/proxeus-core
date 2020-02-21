@@ -131,7 +131,7 @@ test-api: server
 
 .PHONY: test-ui
 test-ui: server ui
-	$(eval testdir := $(shell mktemp -d /tmp/proxeus-test-api.XXXXX ))
+	$(eval testdir := $(shell mktemp -d /tmp/proxeus-test-ui.XXXXX ))
 	mkdir -p $(testdir)
 	$(startds)
 	$(startnodes)
