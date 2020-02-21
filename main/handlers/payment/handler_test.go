@@ -178,7 +178,7 @@ func initSystemAndServices(workflowPaymentsDB storage.WorkflowPaymentsIF, userDB
 
 	system.DB = dbSet
 	userService := service.NewUserService(system)
-	paymentService := service.NewPaymentService(userService, system)
+	paymentService := service.NewPaymentService(system, userService)
 	Init(paymentService, userService)
 }
 

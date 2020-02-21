@@ -47,15 +47,19 @@ import (
 )
 
 var (
-	paymentService service.PaymentService
-	userService    service.UserService
+	paymentService  service.PaymentService
+	userService     service.UserService
+	workflowService service.WorkflowService
 
 	filenameRegex = regexp.MustCompile(`^[^\s][\p{L}\d.,_\-&: ]{3,}[^\s]$`)
 )
 
-func Init(paymentS service.PaymentService, userS service.UserService) {
+func Init(paymentS service.PaymentService, userS service.UserService,
+	workflowS service.WorkflowService) {
+
 	paymentService = paymentS
 	userService = userS
+	workflowService = workflowS
 }
 
 func html(c echo.Context, p string) error {
@@ -2052,29 +2056,15 @@ func ExternalConfigurationPage(e echo.Context) error {
 	id := c.Param("id")
 	name := c.Param("name")
 
-	//QueryFromInstanceID -> instance
-	q, err := c.System().DB.Workflow.QueryFromInstanceID(sess, id)
-	if err == nil {
-		return c.Redirect(http.StatusFound, q.ConfigUrl())
+	externalNodeQuery, err := workflowService.InstantiateExternalNode(sess, id, name)
+	if err != nil {
+		return err
+	}
+	if externalNodeQuery == nil {
+		return c.NoContent(http.StatusNotFound)
 	}
 
-	node, err := c.System().DB.Workflow.NodeByName(sess, name)
-	if err != nil {
-		return err
-	}
-	i := &externalnode.ExternalNodeInstance{
-		ID:       id,
-		NodeName: name,
-	}
-	err = c.System().DB.Workflow.PutExternalNodeInstance(sess, i)
-	if err != nil {
-		return err
-	}
-	q = externalnode.ExternalQuery{
-		ExternalNode:         node,
-		ExternalNodeInstance: i,
-	}
-	return c.Redirect(http.StatusFound, q.ConfigUrl())
+	return c.Redirect(http.StatusFound, externalNodeQuery.ConfigUrl())
 }
 
 func ExternalRegister(e echo.Context) error {
