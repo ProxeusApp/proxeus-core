@@ -1,3 +1,4 @@
+// HTTP layer
 package handlers
 
 import (
@@ -10,34 +11,19 @@ import (
 	"github.com/ProxeusApp/proxeus-core/main/handlers/template_ide"
 	"github.com/ProxeusApp/proxeus-core/main/handlers/workflow"
 	"github.com/ProxeusApp/proxeus-core/main/www"
-	"github.com/ProxeusApp/proxeus-core/sys/model"
+	. "github.com/ProxeusApp/proxeus-core/sys/model"
 
-	"github.com/labstack/echo"
+	. "github.com/labstack/echo"
 )
 
-func MainHostedAPI(e *echo.Echo, s *www.Security, version string) {
-	const (
-		GET    = echo.GET
-		POST   = echo.POST
-		PUT    = echo.PUT
-		DELETE = echo.DELETE
-	)
-
-	const (
-		PUBLIC     = model.PUBLIC
-		GUEST      = model.GUEST
-		USER       = model.USER
-		CREATOR    = model.CREATOR
-		ADMIN      = model.ADMIN
-		SUPERADMIN = model.SUPERADMIN
-		ROOT       = model.ROOT
-	)
+// Maps all endpoints to a function. Functions are stored in api package
+func MainHostedAPI(e *Echo, s *www.Security, version string) {
 
 	type r struct {
-		m string     // http method
-		a model.Role // access level
-		p string     // path
-		h func(echo.Context) error
+		m string // http method
+		a Role   // access level
+		p string // path
+		h func(Context) error
 	}
 
 	routes := []r{
@@ -211,8 +197,8 @@ func MainHostedAPI(e *echo.Echo, s *www.Security, version string) {
 		{PUT, PUBLIC, "/api/test/signatures", api.PutTestSignature},
 	}
 
-	addEndpoint := func(r r, ms ...echo.MiddlewareFunc) {
-		if r.a > model.PUBLIC {
+	addEndpoint := func(r r, ms ...MiddlewareFunc) {
+		if r.a > PUBLIC {
 			ms = append(ms, s.With(r.a))
 		}
 		e.Add(r.m, strings.TrimSpace(r.p), r.h, ms...)
@@ -226,8 +212,8 @@ func MainHostedAPI(e *echo.Echo, s *www.Security, version string) {
 	}
 }
 
-func noCache(next echo.HandlerFunc) echo.HandlerFunc {
-	return func(c echo.Context) error {
+func noCache(next HandlerFunc) HandlerFunc {
+	return func(c Context) error {
 		header := c.Response().Header()
 		header.Set("Cache-Control", "no-store")
 		return next(c)

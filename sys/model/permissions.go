@@ -7,6 +7,7 @@ import (
 	"os"
 )
 
+// Returned whenever there's no write access to a resource
 var ErrAuthorityMissing = fmt.Errorf("authority missing")
 
 //Permission holds an byte slice for the pattern --/rw or ----/r-r- and so on

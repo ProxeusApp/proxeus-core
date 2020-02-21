@@ -1,3 +1,4 @@
+// System package
 package sys
 
 import (
@@ -38,13 +39,18 @@ var (
 
 type (
 	System struct {
-		TestMode    bool
-		AllowHttp   bool
+		// Used to remove or inject different implementations when running tests
+		TestMode bool
+		// Will reflect when setting the cookie if your system runs on HTTP rather than HTTPS. HTTP usage is discouraged
+		AllowHttp bool
+
 		DB          *storage.DBSet
 		DS          *eio.DocumentServiceClient
 		EmailSender email.EmailSender
 
-		settingsDB                  storage.SettingsIF
+		// Settings database/repository
+		settingsDB storage.SettingsIF
+		// Current settings
 		settingsInUse               model.Settings
 		paymentListenerCancelFunc   context.CancelFunc
 		signatureListenerCancelFunc context.CancelFunc
@@ -53,6 +59,8 @@ type (
 	}
 )
 
+// Initializes the System by passing the settings file location and initial settings you want to have.
+// Will try to create file if non existing
 func NewWithSettings(settingsFile string, initialSettings *model.Settings) (*System, error) {
 	stngsDB, err := database.NewSettingsDB(settingsFile, initialSettings)
 	if err != nil {
@@ -181,6 +189,7 @@ func (me *System) scheduledCleanup(tick *time.Ticker) {
 	}
 }
 
+// Checks whether the system is configured and the first "power up" have succeeded
 func (me *System) Configured() (bool, error) {
 	count, err := me.DB.User.Count()
 	if err != nil {

@@ -5,15 +5,22 @@ import (
 	"strings"
 )
 
+// User's roles. From less permissions to a full access to every function
 const (
+	// Non-logged
 	PUBLIC Role = -1
-	//Unset/Zero value Role = 0
-	GUEST      Role = 1
-	USER       Role = 5
-	CREATOR    Role = 7
-	ADMIN      Role = 10
+	// Only with shared link or only workflow execution
+	GUEST Role = 1
+	// User view
+	USER Role = 5
+	// Admin view without config & translations
+	CREATOR Role = 7
+	// Like creator + permissions to invite
+	ADMIN Role = 10
+	// Almost full access, with only minimal limitations like not able to switch user by address
 	SUPERADMIN Role = 50
-	ROOT       Role = 100
+	// Full access to everything
+	ROOT Role = 100
 
 	Title NameFormat = 1
 	Lower NameFormat = 2
