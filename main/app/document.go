@@ -89,7 +89,7 @@ func NewDocumentApp(usrData *model.UserDataItem, auth model.Auth, system *sys.Sy
 			Started:          true,
 			auth:             auth,
 		}
-		if len(usrData.Data) > 0 { // TODO REMOVE COMMENT
+		if len(usrData.Data) > 0 {
 			doc.unorderedData = usrData.Data["input"].(map[string]interface{})
 		}
 		return doc, doc.init(workflowItem.Data, nil)
