@@ -30,6 +30,7 @@ type ttlAttribute struct {
 	Key     interface{}
 }
 
+// OpenStorm opens a connection to the Storm database at the location specified by its path and returns a handle
 func OpenStorm(path string) (*StormShim, error) {
 	dir := filepath.Dir(path)
 	err := os.MkdirAll(dir, 0750)
@@ -109,12 +110,14 @@ func (s *StormShim) WithBatch(enabled bool) DB {
 	return s
 }
 
+// Rollback reverts the current transaction
 func (s *StormShim) Rollback() error {
 	err := s.tx.Rollback()
 	s.tx = s.db
 	return err
 }
 
+// Commit commits the current transaction
 func (s *StormShim) Commit() error {
 	err := s.tx.Commit()
 	s.tx = s.db

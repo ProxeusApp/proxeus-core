@@ -40,10 +40,12 @@ func NewDocTemplateDB(c DBConfig) (*DocTemplateDB, error) {
 	return udb, nil
 }
 
+// AssetsKeys return the base filepath of the document templates
 func (me *DocTemplateDB) AssetsKey() string {
 	return me.baseFilePath
 }
 
+// List fetches template items from the database based on the supplied filter options
 func (me *DocTemplateDB) List(auth model.Auth, contains string, options storage.Options) ([]*model.TemplateItem, error) {
 	params := makeSimpleQuery(options)
 	items := make([]*model.TemplateItem, 0)
@@ -78,6 +80,8 @@ func (me *DocTemplateDB) List(auth model.Auth, contains string, options storage.
 	return items, nil
 }
 
+
+// Get retrieves a sinlge template item using its key
 func (me *DocTemplateDB) Get(auth model.Auth, id string) (*model.TemplateItem, error) {
 	var item model.TemplateItem
 	err := me.db.One("ID", id, &item)

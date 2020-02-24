@@ -273,7 +273,7 @@ func (me *UserDB) List(auth model.Auth, contains string, options storage.Options
 				//error handling not needed
 				_ = tx.Get(userHeavyDataBucket, item.ID, &item.Data)
 
-				//	//error handling not needed
+				//error handling not needed
 				_ = me.setTinyUserIconBase64(item)
 			}
 		}
