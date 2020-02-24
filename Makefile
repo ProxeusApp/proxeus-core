@@ -10,8 +10,10 @@ ifdef BUILD_ID
     GO_OPTS=-ldflags="-X main.ServerVersion=build-$(BUILD_ID)"
 endif
 
+DOCKER_GATEWAY=172.17.0.1
 ifeq ($(shell uname), Darwin)
 	DOCKER_LINUX=docker run --rm -v "$(PWD):/usr/src" -w /usr/src golang:$(GO_VERSION)
+	DOCKER_GATEWAY=host.docker.internal
 endif
 
 # Default proxeus environment
@@ -37,7 +39,7 @@ coverpkg=$(subst $(space),$(comma), $(filter-out %/mock %/assets, $(shell go lis
 startproxeus=artifacts/proxeus
 stopproxeus=pkill proxeus
 startds=curl -s http://localhost:2115 > /dev/null || ( docker-compose up -d document-service && touch $(testdir)/ds-started )
-startnodes=curl -s http://localhost:8011 > /dev/null || (PROXEUS_PLATFORM_DOMAIN=http://172.17.0.1:1323 SERVICE_DOMAIN=http://localhost:8011 docker-compose up -d node-crypto-forex-rates && touch $(testdir)/node-started )
+startnodes=curl -s http://localhost:8011 > /dev/null || (PROXEUS_PLATFORM_DOMAIN=http://$(DOCKER_GATEWAY):1323 SERVICE_DOMAIN=http://localhost:8011 docker-compose up -d node-crypto-forex-rates && touch $(testdir)/node-started )
 
 ifeq ($(coverage),true)
 	COVERAGE_OPTS=-coverprofile artifacts/$@.coverage -coverpkg="$(coverpkg)"
