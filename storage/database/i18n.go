@@ -35,6 +35,7 @@ type i18nInternal struct {
 	Text string //the Text of the Code 'max.exceeded' with the Lang 'en' could be 'max length exceeded'
 }
 
+// NewI18nDB returns a handle to the translation database
 func NewI18nDB(c DBConfig) (*I18nDB, error) {
 	database, err := db.OpenDatabase(c.Engine, c.URI, filepath.Join(c.Dir, "i18n"))
 	if err != nil {
@@ -68,6 +69,7 @@ func NewI18nDB(c DBConfig) (*I18nDB, error) {
 	return udb, nil
 }
 
+// Find retrieves a list of translations matching the supplied filter criteria
 func (me *I18nDB) Find(keyContains string, valueContains string, options storage.Options) (map[string]map[string]string, error) {
 	sQuery := makeSimpleQuery(options)
 	tx, err := me.db.Begin(false)
@@ -108,6 +110,7 @@ func (me *I18nDB) Find(keyContains string, valueContains string, options storage
 	return m, nil
 }
 
+// Get retrieves a specific translation item
 func (me *I18nDB) Get(lang string, key string, args ...string) (string, error) {
 	var i18nInt i18nInternal
 	err := me.db.One("ID", lang+"_"+key, &i18nInt)
@@ -117,6 +120,7 @@ func (me *I18nDB) Get(lang string, key string, args ...string) (string, error) {
 	return me.resolver.Resolve(i18nInt.Text, args...), nil
 }
 
+// GetAll returns the full set of translations
 func (me *I18nDB) GetAll(lang string) (map[string]string, error) {
 	me.allCacheLock.RLock()
 	if m, ok := me.allCache[lang]; ok {
@@ -139,6 +143,7 @@ func (me *I18nDB) GetAll(lang string) (map[string]string, error) {
 	return m, nil
 }
 
+// PutAll saves the supplied translations into the database
 func (me *I18nDB) PutAll(lang string, translations map[string]string) error {
 	for key, text := range translations {
 		//prevent from any javascript or global css hacks
@@ -184,6 +189,7 @@ func (me *I18nDB) PutAll(lang string, translations map[string]string) error {
 	return tx.Commit()
 }
 
+// Put saves a single translation into the database
 func (me *I18nDB) Put(lang string, key string, text string) error {
 	tx, err := me.db.Begin(true)
 	if err != nil {
@@ -222,6 +228,7 @@ func (me *I18nDB) put(lang *string, key *string, text *string, tx db.DB) error {
 	})
 }
 
+// PutLang adds a new language to the translation database
 func (me *I18nDB) PutLang(lang string, enabled bool) error {
 	if !me.langReg.MatchString(lang) {
 		return os.ErrInvalid
@@ -269,6 +276,7 @@ func (me *I18nDB) PutLang(lang string, enabled bool) error {
 	return me.db.Save(l)
 }
 
+// GetLangs returns a list of languages
 func (me *I18nDB) GetLangs(enabled bool) ([]*model.Lang, error) {
 	var langs []*model.Lang
 	err := me.db.Select(q.Eq("Enabled", enabled)).OrderBy("Code").Find(&langs)
@@ -278,6 +286,7 @@ func (me *I18nDB) GetLangs(enabled bool) ([]*model.Lang, error) {
 	return langs, nil
 }
 
+// HasLang checks indicates if a language exists
 func (me *I18nDB) HasLang(lang string) bool {
 	me.allCacheLock.RLock()
 	var exists bool
@@ -288,6 +297,7 @@ func (me *I18nDB) HasLang(lang string) bool {
 	return exists
 }
 
+// GetAllLangs returns the full list of all languages defined
 func (me *I18nDB) GetAllLangs() ([]*model.Lang, error) {
 	me.allCacheLock.RLock()
 	if len(me.langSlice) > 0 {
@@ -305,6 +315,7 @@ func (me *I18nDB) GetAllLangs() ([]*model.Lang, error) {
 
 const fallback = "fallback"
 
+// PutFallback sets a spcificic language as default/fallback
 func (me *I18nDB) PutFallback(lang string) error {
 	if !me.langReg.MatchString(lang) {
 		return os.ErrInvalid
@@ -313,6 +324,7 @@ func (me *I18nDB) PutFallback(lang string) error {
 	return me.db.Set(fallback, fallback, lang)
 }
 
+// GetFallback returns the currently defined default/fallback language
 func (me *I18nDB) GetFallback() (string, error) {
 	if me.fallbackLang != "" {
 		return me.fallbackLang, nil

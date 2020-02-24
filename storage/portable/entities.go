@@ -49,6 +49,7 @@ func StringToEntityType(str string) EntityType {
 	return ""
 }
 
+// Export writes the data from the import export configuration for the specified entity type
 func (ie *ImportExport) Export(t EntityType, ids ...string) error {
 	switch t {
 	case Settings:
@@ -69,6 +70,7 @@ func (ie *ImportExport) Export(t EntityType, ids ...string) error {
 	return fmt.Errorf("type '%s' Not Found", t)
 }
 
+// Import reads the data from the import export configuration for the specified entity type
 func (ie *ImportExport) Import(t EntityType) error {
 	switch t {
 	case Settings:

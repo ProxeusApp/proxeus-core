@@ -18,6 +18,7 @@ const signatureVersion = "sig_vers"
 const signatureDBDir = "signaturerequests"
 const signatureDB = "signaturerequestsdb"
 
+// NewSignatureDB return a handle to the signature request database
 func NewSignatureDB(c DBConfig) (*SignatureRequestsDB, error) {
 	baseDir := filepath.Join(c.Dir, signatureDBDir)
 	db, err := db.OpenDatabase(c.Engine, c.URI, filepath.Join(baseDir, signatureDB))
@@ -39,6 +40,7 @@ func NewSignatureDB(c DBConfig) (*SignatureRequestsDB, error) {
 	return udb, err
 }
 
+// GetBySignatory returns the list of signature requests for a specific signatory
 func (me *SignatureRequestsDB) GetBySignatory(ethAddr string) (*[]model.SignatureRequestItem, error) {
 	var items []model.SignatureRequestItem
 	err := me.db.Select(
@@ -47,6 +49,7 @@ func (me *SignatureRequestsDB) GetBySignatory(ethAddr string) (*[]model.Signatur
 	return &items, err
 }
 
+// GetByID returns the signature request item by its id
 func (me *SignatureRequestsDB) GetByID(docid string, docpath string) (*[]model.SignatureRequestItem, error) {
 	var items []model.SignatureRequestItem
 	err := me.db.Select(q.And(
@@ -56,6 +59,7 @@ func (me *SignatureRequestsDB) GetByID(docid string, docpath string) (*[]model.S
 	return &items, err
 }
 
+// GetByHashAndSigner returns a list of signture requests for a specific file hash and signatory
 func (me *SignatureRequestsDB) GetByHashAndSigner(hash string, signatory string) (*[]model.SignatureRequestItem, error) {
 	var items []model.SignatureRequestItem
 	err := me.db.Select(q.And(
@@ -65,11 +69,13 @@ func (me *SignatureRequestsDB) GetByHashAndSigner(hash string, signatory string)
 	return &items, err
 }
 
+// Add saves a signature request into the database
 func (me *SignatureRequestsDB) Add(item *model.SignatureRequestItem) error {
 	err := me.db.Save(item)
 	return err
 }
 
+// SetRejected alters the status of a signature request to rejected
 func (me *SignatureRequestsDB) SetRejected(docid string, docpath string, signatory string) error {
 	var items []model.SignatureRequestItem
 	err := me.db.Select(q.And(
@@ -88,6 +94,7 @@ func (me *SignatureRequestsDB) SetRejected(docid string, docpath string, signato
 	return err
 }
 
+// SetRevoked alters the status of a signature request to revoked
 func (me *SignatureRequestsDB) SetRevoked(docid string, docpath string, signatory string) error {
 	var items []model.SignatureRequestItem
 	err := me.db.Select(q.And(

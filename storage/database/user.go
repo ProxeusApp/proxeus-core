@@ -42,6 +42,7 @@ const userVersion = "user_version"
 //it is only needed for login and password reset
 const passwordBucket = "pw_bucket"
 
+// NewUserDB returns a handle to the user database, containing the user object, incl. their credentials for login and API access
 func NewUserDB(c DBConfig, fileDB storage.FilesIF) (*UserDB, error) {
 	baseDir := filepath.Join(c.Dir, "user")
 	db, err := db.OpenDatabase(c.Engine, c.URI, filepath.Join(baseDir, "users"))
@@ -70,8 +71,9 @@ func (me *UserDB) GetBaseFilePath() string {
 	return me.baseFilePath
 }
 
-//TODO refactor login into two methods and move the validation of the signature in here
+// Login tries to authenticate a user with the supplied credentials and returns the user object or an error
 func (me *UserDB) Login(name, pw string) (*model.User, error) {
+	//TODO refactor login into two methods and move the validation of the signature in here
 	if name == "" || pw == "" {
 		return nil, os.ErrInvalid
 	}
@@ -92,6 +94,7 @@ func (me *UserDB) Login(name, pw string) (*model.User, error) {
 	return &usr, nil
 }
 
+// APIKey tries to authenticate the user with the supplied API key and returns the user object or an error
 func (me *UserDB) APIKey(key string) (*model.User, error) {
 	if len(key) != model.ApiKeyLength {
 		return nil, model.ErrAuthorityMissing
@@ -109,6 +112,7 @@ func (me *UserDB) APIKey(key string) (*model.User, error) {
 	return &user, nil
 }
 
+// CreateApiKey saves and returns a newly created random api key for a user
 func (me *UserDB) CreateApiKey(auth model.Auth, userId, apiKeyName string) (string, error) {
 	userItem, err := me.Get(auth, userId)
 	if err != nil {
@@ -132,6 +136,7 @@ func (me *UserDB) CreateApiKey(auth model.Auth, userId, apiKeyName string) (stri
 	return initiallyReadableApiKey, nil
 }
 
+// DeleteApiKey removes an existing API key
 func (me *UserDB) DeleteApiKey(auth model.Auth, userId, hiddenApiKey string) error {
 	userItem, err := me.Get(auth, userId)
 	if err != nil {
@@ -204,6 +209,7 @@ func (me *UserDB) Count() (int, error) {
 	return me.db.Count(&model.User{})
 }
 
+// List returns references to all the user object matching the supplied filter criteria
 func (me *UserDB) List(auth model.Auth, contains string, options storage.Options) ([]*model.User, error) {
 	contains = containsCaseInsensitiveReg(contains)
 	params := makeSimpleQuery(options)
@@ -281,6 +287,7 @@ func (me *UserDB) List(auth model.Auth, contains string, options storage.Options
 	return items, nil
 }
 
+// Get return a specific user object by machting its id
 func (me *UserDB) Get(auth model.Auth, id string) (*model.User, error) {
 	var err error
 	var user model.User
@@ -295,6 +302,7 @@ func (me *UserDB) Get(auth model.Auth, id string) (*model.User, error) {
 	return userItem, nil
 }
 
+// GetByBCAddress return a specific user object by matching the ethereum address
 func (me *UserDB) GetByBCAddress(bcAddress string) (*model.User, error) {
 	var user model.User
 	//case insensitive as the address is stored as a string
@@ -306,6 +314,7 @@ func (me *UserDB) GetByBCAddress(bcAddress string) (*model.User, error) {
 	return &user, nil
 }
 
+// GetByEmail return a specific user object by matching the email address
 func (me *UserDB) GetByEmail(email string) (*model.User, error) {
 	var user model.User
 	err := me.db.One("Email", email, &user)
@@ -315,6 +324,7 @@ func (me *UserDB) GetByEmail(email string) (*model.User, error) {
 	return &user, nil
 }
 
+// UpdateEmail sets a new email address for a specific user id
 func (me *UserDB) UpdateEmail(id, email string) error {
 	tx, err := me.db.Begin(true)
 	if err != nil {
@@ -334,6 +344,7 @@ func (me *UserDB) UpdateEmail(id, email string) error {
 	return tx.Commit()
 }
 
+// PutPw sets a new password for a specific user id
 func (me *UserDB) PutPw(id, pass string) error {
 	pw := []byte(pass)
 	cost, err := bcrypt.Cost(pw)
@@ -347,6 +358,7 @@ func (me *UserDB) PutPw(id, pass string) error {
 	return me.db.Set(passwordBucket, id, &pass)
 }
 
+// Put saves a user object into the database
 func (me *UserDB) Put(auth model.Auth, item *model.User) error {
 	return me.put(auth, item, true)
 }
@@ -460,6 +472,7 @@ func (me *UserDB) setTinyUserIconBase64(item *model.User) error {
 	return err
 }
 
+// GetProfilePhoto returns a users photo
 func (me *UserDB) GetProfilePhoto(auth model.Auth, id string, writer io.Writer) error {
 	u, err := me.Get(auth, id)
 	if err != nil {
@@ -473,6 +486,7 @@ func (me *UserDB) fullPhotoPath(u *model.User) string {
 	return filepath.Join(me.GetBaseFilePath(), u.PhotoPath)
 }
 
+// PutProfilePhoto sets a new photo for a specific user
 func (me *UserDB) PutProfilePhoto(auth model.Auth, id string, reader io.Reader) error {
 	if id == "" {
 		return os.ErrInvalid
