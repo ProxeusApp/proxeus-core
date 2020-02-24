@@ -13,6 +13,7 @@ import (
 	"net/http"
 	"net/url"
 	"os"
+	"path/filepath"
 	"regexp"
 	"strconv"
 	"strings"
@@ -313,6 +314,33 @@ func PostInit(e echo.Context) error {
 			}
 		}
 	}
+	dat, err := c.System().DB.Form.List(root, "", storage.Options{})
+	if db.NotFound(err) || (err == nil && dat == nil) {
+		defaultFormcomponentents := []string{"HC1", "HC2", "HC3", "HC5", "HC7", "HC8", "HC9", "HC10", "HC11", "HC12"}
+		for _, formCompId := range defaultFormcomponentents {
+			jsonFile, err := os.Open(filepath.Join("test", "assets", "components", formCompId+".json"))
+			if err != nil {
+				fmt.Println(err)
+			}
+
+			body, _ := ioutil.ReadAll(jsonFile)
+			var comp model.FormComponentItem
+			err = json.Unmarshal(body, &comp)
+			if err != nil {
+				log.Println(err)
+				jsonFile.Close()
+				continue
+			}
+
+			err = c.System().DB.Form.PutComp(root, &comp)
+			if err != nil {
+				log.Println(err)
+				jsonFile.Close()
+				continue
+			}
+		}
+	}
+
 	return c.NoContent(http.StatusOK)
 }
 
