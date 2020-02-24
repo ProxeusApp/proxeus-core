@@ -40,7 +40,7 @@ func Health(c echo.Context) error {
 	return c.String(http.StatusOK, "I'm ok")
 }
 
-func Register(proxeusUrl, name, serviceUrl, jwtSecret, description string) error {
+func Register(proxeusUrl, name, serviceUrl, jwtSecret, description string, retryInterval int) error {
 	client := http.Client{Timeout: 5 * time.Second}
 	var err error
 	for {
@@ -63,7 +63,7 @@ func Register(proxeusUrl, name, serviceUrl, jwtSecret, description string) error
 		}
 
 		log.Print("[nodeservice] error registering ", n.Name, " err ", err)
-		time.Sleep(5 * time.Second)
+		time.Sleep(time.Duration(retryInterval) * time.Second)
 	}
 	return err
 }
