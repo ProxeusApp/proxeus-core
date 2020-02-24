@@ -34,3 +34,11 @@ func (me *baseService) formDB() storage.FormIF {
 func (me *baseService) templateDB() storage.TemplateIF {
 	return me.system.DB.Template
 }
+
+func (me *baseService) settingsDB() storage.SettingsIF {
+	return me.system.DB.Settings
+}
+
+func (me *baseService) filesDB() storage.FilesIF {
+	return me.system.DB.Files
+}
