@@ -14,7 +14,6 @@ import (
 	"net/url"
 	"os"
 	"path/filepath"
-	"regexp"
 	"strconv"
 	"strings"
 	"time"
@@ -34,11 +33,8 @@ import (
 	"github.com/ProxeusApp/proxeus-core/sys"
 	"github.com/ProxeusApp/proxeus-core/sys/eio"
 	"github.com/ProxeusApp/proxeus-core/sys/email"
-	"github.com/ProxeusApp/proxeus-core/sys/file"
 	"github.com/ProxeusApp/proxeus-core/sys/model"
-	"github.com/ProxeusApp/proxeus-core/sys/utils"
 	"github.com/ProxeusApp/proxeus-core/sys/validate"
-	workflow2 "github.com/ProxeusApp/proxeus-core/sys/workflow"
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
@@ -51,16 +47,18 @@ var (
 	paymentService  service.PaymentService
 	userService     service.UserService
 	workflowService service.WorkflowService
-
-	filenameRegex = regexp.MustCompile(`^[^\s][\p{L}\d.,_\-&: ]{3,}[^\s]$`)
+	documentService service.DocumentService
+	fileService     service.FileService
 )
 
-func Init(paymentS service.PaymentService, userS service.UserService,
-	workflowS service.WorkflowService) {
+func Init(paymentS service.PaymentService, userS service.UserService, workflowS service.WorkflowService,
+	documentS service.DocumentService, fileS service.FileService) {
 
 	paymentService = paymentS
 	userService = userS
 	workflowService = workflowS
+	documentService = documentS
+	fileService = fileS
 }
 
 func html(c echo.Context, p string) error {
@@ -510,7 +508,7 @@ func LoginWithWallet(c *www.Context, challenge, signature string) (bool, *model.
 		created = true
 		usr, err = c.System().DB.User.GetByBCAddress(address)
 		if err == nil {
-			copyWorkflows(c, usr)
+			workflowService.CopyWorkflows(root, usr)
 			if c.System().GetSettings().BlockchainNet == "ropsten" && c.System().GetSettings().AirdropEnabled == "true" {
 				go func() {
 					defer func() {
@@ -686,7 +684,7 @@ func Register(e echo.Context) error {
 		return c.NoContent(http.StatusExpectationFailed)
 	}
 
-	copyWorkflows(c, newUser)
+	workflowService.CopyWorkflows(root, newUser)
 
 	err = c.System().DB.User.PutPw(newUser.ID, p.Password)
 	if err != nil {
@@ -1003,7 +1001,7 @@ func DocumentHandler(e echo.Context) error {
 		return c.String(http.StatusNotFound, err.Error())
 	}
 
-	docApp := getDocApp(c, sess, ID)
+	docApp := documentService.GetDocApp(sess, ID)
 	if docApp == nil {
 		paymentRequired, err := paymentService.CheckIfWorkflowPaymentRequired(c.Session(false), ID)
 		if err != nil {
@@ -1065,53 +1063,38 @@ func DocumentDeleteHandler(e echo.Context) error {
 	c := e.(*www.Context)
 	ID := c.Param("ID")
 	sess := c.Session(false)
-	if sess != nil {
-		userDataItem, err := c.System().DB.UserData.Get(sess, ID)
-		if err != nil {
-			return c.String(http.StatusBadRequest, err.Error())
-		}
-		sess.DeleteMemory("docApp_" + userDataItem.WorkflowID)
-		err = c.System().DB.UserData.Delete(sess, c.System().DB.Files, ID)
-		if err != nil {
-			return c.String(http.StatusBadRequest, err.Error())
-		}
-		return c.NoContent(http.StatusOK)
+	if sess == nil {
+		return c.NoContent(http.StatusBadRequest)
 	}
-	return c.NoContent(http.StatusBadRequest)
+
+	err := documentService.Delete(sess, ID)
+	if err != nil {
+		return c.String(http.StatusBadRequest, err.Error())
+	}
+
+	return c.NoContent(http.StatusOK)
 }
 
 func DocumentEditHandler(e echo.Context) error {
 	c := e.(*www.Context)
 	ID := c.Param("ID")
 	sess := c.Session(false)
-	if sess != nil {
-		formInput, err := helpers.ParseDataFromReq(c)
-		if err != nil {
-			return err
-		}
-		if n, ok := formInput["name"]; ok {
-			if fname, ok := n.(string); ok {
-				if len(fname) < 80 && filenameRegex.MatchString(fname) {
-					usrDataItem, err := c.System().DB.UserData.Get(sess, ID)
-					if err != nil {
-						return c.String(http.StatusBadRequest, err.Error())
-					}
-					if n, ok := formInput["detail"]; ok {
-						if fdetail, ok := n.(string); ok {
-							usrDataItem.Detail = fdetail
-						}
-					}
-					usrDataItem.Name = fname
-					err = c.System().DB.UserData.Put(sess, usrDataItem)
-					if err != nil {
-						return c.String(http.StatusBadRequest, err.Error())
-					}
-					return c.NoContent(http.StatusOK)
-				}
-			}
-		}
+	if sess == nil {
+		return c.NoContent(http.StatusUnprocessableEntity)
 	}
-	return c.NoContent(http.StatusUnprocessableEntity)
+	formInput, err := helpers.ParseDataFromReq(c)
+	if err != nil {
+		return err
+	}
+	err = documentService.Edit(sess, ID, formInput)
+	if err != nil {
+		log.Println("[api][handlers] DocumentEditHandler Edit err: ", err.Error())
+		if err == service.ErrUnableToEdit {
+			return c.NoContent(http.StatusUnprocessableEntity)
+		}
+		return c.String(http.StatusBadRequest, err.Error())
+	}
+	return c.NoContent(http.StatusOK)
 }
 
 func getUserFromSession(c *www.Context, s *sys.Session) (user *model.User) {
@@ -1139,43 +1122,19 @@ func DocumentNextHandler(e echo.Context) error {
 	if sess == nil {
 		return c.NoContent(http.StatusUnauthorized)
 	}
-	docApp := getDocApp(c, sess, ID)
-	if docApp == nil {
-		return c.String(http.StatusBadRequest, "app does not exist")
-	}
+
 	formInput, err := helpers.ParseDataFromReq(c)
 	if err != nil {
 		return c.String(http.StatusBadRequest, err.Error())
 	}
-	status, err := docApp.Next(formInput)
-	if err == nil && !status.HasNext {
-		//done
-		_, _, status, err = docApp.Confirm(c.Lang(), formInput, c.System().DB.UserData)
-		if err != nil {
-			return c.String(http.StatusBadRequest, err.Error())
-		}
-		//after tx success
-		if _, ok := c.QueryParams()["final"]; ok {
-			dataID := docApp.DataID
-			sess.DeleteMemory("docApp_" + ID)
-			var item *model.UserDataItem
-			item, err = c.System().DB.UserData.Get(sess, dataID)
-			if err != nil {
-				return c.String(http.StatusBadRequest, err.Error())
-			}
-			item.Finished = true
-			err = c.System().DB.UserData.Put(sess, item)
-			if err != nil {
-				return c.String(http.StatusBadRequest, err.Error())
-			}
 
-			return c.JSON(http.StatusOK, map[string]interface{}{"id": dataID})
-		}
-	}
-
+	_, isFinal := c.QueryParams()["final"]
+	docApp, status, err := documentService.Next(sess, ID, c.Lang(), formInput, isFinal)
 	resData := map[string]interface{}{
 		"status": status,
-		"id":     docApp.DataID,
+	}
+	if docApp != nil {
+		resData["id"] = docApp.DataID
 	}
 	if err != nil {
 		if er, ok := err.(validate.ErrorMap); ok {
@@ -1187,116 +1146,119 @@ func DocumentNextHandler(e echo.Context) error {
 		}
 		return c.JSON(http.StatusBadRequest, err.Error())
 	}
+
+	if isFinal {
+		return c.JSON(http.StatusOK, map[string]interface{}{"id": docApp.DataID})
+	}
+
 	return c.JSON(http.StatusOK, resData)
 }
 
 func DocumentPrevHandler(e echo.Context) error {
 	c := e.(*www.Context)
 	ID := c.Param("ID")
-	if ID != "" {
-		sess := c.Session(false)
-		if sess != nil {
-			docApp := getDocApp(c, sess, ID)
-			if docApp != nil {
-				resData := map[string]interface{}{
-					"status": docApp.Previous(),
-				}
-				return c.JSON(http.StatusOK, resData)
-			}
-		}
+	if ID == "" {
+		return c.NoContent(http.StatusBadRequest)
 	}
-	return c.NoContent(http.StatusBadRequest)
+	sess := c.Session(false)
+	if sess == nil {
+		return c.NoContent(http.StatusBadRequest)
+	}
+
+	status, err := documentService.Prev(sess, ID)
+	if err != nil {
+		return c.NoContent(http.StatusBadRequest)
+	}
+
+	resData := map[string]interface{}{
+		"status": status,
+	}
+
+	return c.JSON(http.StatusOK, resData)
 }
 
 func DocumentDataHandler(e echo.Context) error {
 	c := e.(*www.Context)
 	ID := c.Param("ID")
 	sess := c.Session(false)
-	if sess != nil {
-		docApp := getDocApp(c, sess, ID)
-		if docApp != nil {
-			input, err := helpers.ParseDataFromReq(c)
-			if err != nil {
-				return c.String(http.StatusBadRequest, err.Error())
-			}
-			verrs, err := docApp.UpdateData(input, false)
-			if len(verrs) > 0 {
-				verrs.Translate(func(key string, args ...string) string {
-					return c.I18n().T(key, args)
-				})
-				return c.JSON(http.StatusUnprocessableEntity, map[string]interface{}{"errors": verrs})
-			} else if err == nil {
-				return c.NoContent(http.StatusOK)
-			} else {
-				return c.String(http.StatusBadRequest, err.Error())
-			}
-		}
+	inputData, err := helpers.ParseDataFromReq(c)
+	if err != nil {
+		return c.String(http.StatusBadRequest, err.Error())
 	}
-	return c.NoContent(http.StatusBadRequest)
+	if sess == nil {
+		return c.NoContent(http.StatusBadRequest)
+	}
+
+	verrs, err := documentService.Update(sess, ID, inputData)
+	if err != nil {
+		log.Println("[api][handler] DocumentDataHandler err: ", err.Error())
+		return c.String(http.StatusBadRequest, err.Error())
+	}
+
+	if len(verrs) > 0 {
+		verrs.Translate(func(key string, args ...string) string {
+			return c.I18n().T(key, args)
+		})
+		return c.JSON(http.StatusUnprocessableEntity, map[string]interface{}{"errors": verrs})
+	}
+
+	return c.NoContent(http.StatusOK)
 }
 
 func DocumentFileGetHandler(e echo.Context) error {
 	c := e.(*www.Context)
 	sess := c.Session(false)
-	if sess != nil {
-		ID := c.Param("ID")
-		docApp := getDocApp(c, sess, ID)
-		if docApp != nil {
-			finfo, err := docApp.GetFile(c.Param("inputName"))
-			if err == nil && finfo != nil {
-				c.Response().Header().Set("Content-Type", finfo.ContentType())
-				c.Response().Committed = true //prevents from-> http: multiple response.WriteHeader calls
-				err = c.System().DB.Files.Read(finfo.Path(), c.Response().Writer)
-				if err == nil {
-					return c.NoContent(http.StatusOK)
-				}
-			}
-			if docApp.DataID != "" {
-				dataPath := fmt.Sprintf("input.%s", c.Param("inputName"))
-				f, err := c.System().DB.UserData.GetDataFile(sess, docApp.DataID, dataPath)
-				if err == nil {
-					c.Response().Header().Set("Content-Type", f.ContentType())
-					c.Response().Committed = true //prevents from-> http: multiple response.WriteHeader calls
-					err = c.System().DB.Files.Read(f.Path(), c.Response().Writer)
-					if err == nil {
-						return c.NoContent(http.StatusOK)
-					}
-				}
-			}
-		}
+
+	if sess == nil {
+		return c.NoContent(http.StatusNotFound)
 	}
-	return c.NoContent(http.StatusNotFound)
+
+	ID := c.Param("ID")
+	finfo, err := documentService.GetFile(sess, ID, c.Param("inputName"))
+	if err != nil || finfo == nil {
+		return c.NoContent(http.StatusNotFound)
+	}
+
+	c.Response().Header().Set("Content-Type", finfo.ContentType())
+	c.Response().Committed = true //prevents from-> http: multiple response.WriteHeader calls
+
+	err = fileService.Read(finfo.Path(), c.Response().Writer)
+	if err != nil {
+		return c.NoContent(http.StatusNotFound)
+	}
+
+	return c.NoContent(http.StatusOK)
 }
 
 func DocumentFilePostHandler(e echo.Context) error {
 	c := e.(*www.Context)
 	fieldname := c.Param("inputName")
 	fileName, _ := url.QueryUnescape(c.Request().Header.Get("File-Name"))
-	if fieldname != "" {
-		sess := c.Session(false)
-		if sess != nil {
-			ID := c.Param("ID")
-			docApp := getDocApp(c, sess, ID)
-			if docApp != nil {
-				defer c.Request().Body.Close()
-				verrs, err := docApp.UpdateFile(fieldname, file.Meta{Name: fileName, ContentType: c.Request().Header.Get("Content-Type"), Size: 0}, c.Request().Body)
-				if len(verrs) > 0 {
-					verrs.Translate(func(key string, args ...string) string {
-						return c.I18n().T(key, args)
-					})
-					return c.JSON(http.StatusUnprocessableEntity, map[string]interface{}{"errors": verrs})
-				} else if err == nil {
-					var finfo *file.IO
-					finfo, err = docApp.GetFile(fieldname)
-					if err == nil && finfo != nil {
-						return c.JSON(http.StatusOK, finfo)
-					}
-					return c.NoContent(http.StatusNoContent)
-				}
-			}
-		}
+	if fieldname == "" {
+		return c.NoContent(http.StatusBadRequest)
 	}
-	return c.NoContent(http.StatusBadRequest)
+	sess := c.Session(false)
+	if sess == nil {
+		return c.NoContent(http.StatusBadRequest)
+	}
+	ID := c.Param("ID")
+
+	defer c.Request().Body.Close()
+	finfo, verrs, err := documentService.UpdateFile(sess, ID, fieldname, fileName, c.Request().Header.Get("Content-Type"), c.Request().Body)
+	if len(verrs) > 0 {
+		verrs.Translate(func(key string, args ...string) string {
+			return c.I18n().T(key, args)
+		})
+		return c.JSON(http.StatusUnprocessableEntity, map[string]interface{}{"errors": verrs})
+	}
+	if err != nil {
+		return c.NoContent(http.StatusBadRequest)
+	}
+	if finfo == nil {
+		return c.NoContent(http.StatusNoContent)
+	}
+
+	return c.JSON(http.StatusOK, finfo)
 }
 
 func DocumentPreviewHandler(e echo.Context) error {
@@ -1305,45 +1267,29 @@ func DocumentPreviewHandler(e echo.Context) error {
 	tmplID := c.Param("templateID")
 	lang := c.Param("lang")
 	format := c.Param("format")
-	if ID != "" && tmplID != "" && lang != "" {
-		sess := c.Session(false)
-		if sess != nil {
-			docApp := getDocApp(c, sess, ID)
-			if docApp != nil {
-				err := docApp.Preview(tmplID, lang, format, c.Response())
-				if err == nil {
-					return nil
-				} else if !os.IsNotExist(err) {
-					if err, ok := err.(net.Error); ok && err.Timeout() {
-						return c.NoContent(http.StatusServiceUnavailable)
-					}
-					return c.NoContent(http.StatusBadRequest)
-				}
-			}
-		}
-	}
-	return c.NoContent(http.StatusNotFound)
-}
 
-func getDocApp(c *www.Context, sess *sys.Session, ID string) *app.DocumentFlowInstance {
-	if sess != nil {
-		var docApp *app.DocumentFlowInstance
-		sessDocAppID := "docApp_" + ID
-		v, ok := sess.GetMemory(sessDocAppID)
-		if !ok {
-			return nil
+	previewResponse, err := documentService.Preview(c.Session(false), ID, tmplID, lang, format)
+	if os.IsNotExist(err) {
+		if err, ok := err.(net.Error); ok && err.Timeout() {
+			return c.NoContent(http.StatusServiceUnavailable)
 		}
-		docApp = v.(*app.DocumentFlowInstance)
-		if docApp != nil && docApp.NeedToBeInitialized() {
-			err := docApp.Init(sess, c.System())
-			if err != nil {
-				log.Println("Init err", err)
-				return nil
-			}
-		}
-		return docApp
+		return c.NoContent(http.StatusBadRequest)
 	}
-	return nil
+
+	resp := c.Response()
+	extension := previewResponse.File.NameWithExt(previewResponse.Format.String())
+	contentDisposition := fmt.Sprintf("%s;filename=\"%s\"", "attachment", extension)
+	resp.Header().Set("Content-Disposition", contentDisposition)
+	resp.Header().Set("Content-Type", previewResponse.ContentType)
+	resp.Header().Set("Content-Length", previewResponse.ContentLength)
+	resp.Committed = true //prevents from-> http: multiple response.WriteHeader calls
+	_, err = io.Copy(resp.Writer, previewResponse.Data)
+	if err != nil {
+		c.NoContent(http.StatusBadRequest)
+	}
+	defer previewResponse.Data.Close()
+
+	return c.NoContent(http.StatusOK)
 }
 
 func UserDocumentListHandler(e echo.Context) error {
@@ -1925,19 +1871,21 @@ func WorkflowSchema(e echo.Context) error {
 	if sess == nil {
 		return c.NoContent(http.StatusUnauthorized)
 	}
+
 	id := c.Param("ID")
-	wf, err := c.System().DB.Workflow.Get(sess, id)
+	workflowItem, fieldsAndRules, err := documentService.GetWorkflowSchema(sess, id)
 	if err != nil {
+		log.Println("[apiHandler][WorkflowSchema] GetWorkflowSchema err: ", err.Error())
 		return c.NoContent(http.StatusNotFound)
 	}
-	fieldsAndRules := utils.GetAllFormFieldsWithRulesOf(wf.Data, sess, c.System())
 	wfDetails := &struct {
 		*model.WorkflowItem
 		Data interface{} `json:"data"`
-	}{wf, fieldsAndRules}
+	}{workflowItem, fieldsAndRules}
 	result := &struct {
 		Workflow interface{} `json:"workflow"`
 	}{Workflow: wfDetails}
+
 	return c.JSON(http.StatusOK, result)
 }
 
@@ -1952,7 +1900,7 @@ func WorkflowExecuteAtOnce(e echo.Context) error {
 		return c.NoContent(http.StatusBadRequest)
 	}
 	id := c.Param("ID")
-	wItem, err := c.System().DB.Workflow.Get(sess, id)
+	wItem, err := workflowService.Get(sess, id)
 	if err != nil || wItem.Data == nil {
 		return c.NoContent(http.StatusNotFound)
 	}
@@ -1980,7 +1928,7 @@ func CreateApiKeyHandler(e echo.Context) error {
 	if name == "" {
 		return c.String(http.StatusBadRequest, "please provide a name for your key")
 	}
-	apiKey, err := c.System().DB.User.CreateApiKey(sess, id, name)
+	apiKey, err := userService.CreateApiKeyHandler(sess, id, name)
 	if err != nil {
 		return c.String(http.StatusBadRequest, err.Error())
 	}
@@ -1998,7 +1946,7 @@ func DeleteApiKeyHandler(e echo.Context) error {
 	}
 	id := c.Param("ID")
 	hiddenApiKey := c.QueryParam("hiddenApiKey")
-	err := c.System().DB.User.DeleteApiKey(sess, id, hiddenApiKey)
+	err := userService.DeleteApiKey(sess, id, hiddenApiKey)
 	if err != nil {
 		return c.String(http.StatusBadRequest, err.Error())
 	}
@@ -2006,73 +1954,6 @@ func DeleteApiKeyHandler(e echo.Context) error {
 		sess.Delete("user")
 	}
 	return c.NoContent(http.StatusOK)
-}
-
-func copyWorkflows(c *www.Context, newUser *model.User) {
-	log.Println("Copy workflows to new user, if any...")
-	// If some default workflows have to be assigned to the user, then clone them
-	workflowIds := strings.Split(c.System().GetSettings().DefaultWorkflowIds, ",")
-	workflows, err := c.System().DB.Workflow.GetList(root, workflowIds)
-	if err != nil {
-		log.Printf("Can't retrieve list of workflows (%v). Please check the ids exist. Error: %s", workflowIds, err.Error())
-	}
-	for _, workflow := range workflows {
-		w := workflow.Clone()
-		w.OwnerEthAddress = newUser.EthereumAddr
-		w.Owner = newUser.ID
-		newNodes := make(map[string]*workflow2.Node)
-		oldToNewIdsMap := make(map[string]string)
-		for oldId, node := range w.Data.Flow.Nodes {
-			if node.Type == "form" {
-				form, er := c.System().DB.Form.Get(root, node.ID)
-				if er != nil {
-					log.Println(err.Error())
-				}
-				f := form.Clone()
-				er = c.System().DB.Form.Put(newUser, &f)
-				if er != nil {
-					log.Println("can't put form" + err.Error())
-				}
-
-				oldToNewIdsMap[node.ID] = f.ID
-				node.ID = f.ID
-				newNodes[node.ID] = node
-				delete(w.Data.Flow.Nodes, oldId)
-
-			} else if node.Type == "template" {
-				template, er := c.System().DB.Template.Get(root, node.ID)
-				if er != nil {
-					log.Println(err.Error())
-				}
-				t := template.Clone()
-				er = c.System().DB.Template.Put(newUser, &t)
-				if er != nil {
-					log.Println("can't put template" + err.Error())
-				}
-				oldToNewIdsMap[node.ID] = t.ID
-				node.ID = t.ID
-				newNodes[node.ID] = node
-				delete(w.Data.Flow.Nodes, oldId)
-			} else {
-				newNodes[node.ID] = node
-			}
-		}
-		oldStartNodeId := w.Data.Flow.Start.NodeID
-		if _, ok := oldToNewIdsMap[oldStartNodeId]; ok {
-			w.Data.Flow.Start.NodeID = oldToNewIdsMap[oldStartNodeId]
-		}
-
-		// Now go through all connections and map them with the new ids
-		for _, node := range newNodes {
-			for _, connection := range node.Connections {
-				if _, ok := oldToNewIdsMap[connection.NodeID]; ok {
-					connection.NodeID = oldToNewIdsMap[connection.NodeID]
-				}
-			}
-		}
-		w.Data.Flow.Nodes = newNodes
-		c.System().DB.Workflow.Put(newUser, &w)
-	}
 }
 
 func ExternalConfigurationPage(e echo.Context) error {

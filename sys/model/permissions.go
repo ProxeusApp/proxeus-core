@@ -23,6 +23,12 @@ type Auth interface {
 	AccessRights() Role
 }
 
+type MemoryAuth interface {
+	Auth
+	GetMemory(k string) (interface{}, bool)
+	DeleteMemory(k string)
+}
+
 type AccessibleItem interface {
 	IsReadGrantedFor(auth Auth) bool
 	IsWriteGrantedFor(auth Auth) bool

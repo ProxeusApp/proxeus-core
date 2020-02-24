@@ -7,6 +7,7 @@ import (
 	"github.com/ProxeusApp/proxeus-core/sys/model"
 	"github.com/ProxeusApp/proxeus-core/sys/workflow"
 	"log"
+	"strings"
 )
 
 type (
@@ -20,6 +21,7 @@ type (
 		Put(auth model.Auth, wfItem *model.WorkflowItem) error
 		Delete(auth model.Auth, id string) error
 		InstantiateExternalNode(auth model.Auth, nodeId, nodeName string) (*extNode.ExternalQuery, error)
+		CopyWorkflows(rootUser, newUser *model.User)
 	}
 
 	DefaultWorkflowService struct {
@@ -169,4 +171,77 @@ func (me *DefaultWorkflowService) InstantiateExternalNode(auth model.Auth, nodeI
 	}
 
 	return &newExternalQuery, nil
+}
+
+func (me *DefaultWorkflowService) CopyWorkflows(rootUser, newUser *model.User) {
+	log.Println("Copy workflows to new user, if any...")
+	// If some default workflows have to be assigned to the user, then clone them
+	settings, err := me.settingsDB().Get()
+	if err != nil {
+		log.Printf("Unable to get settingsDB, retrieve list of workflows. Please check the ids exist. Error: %s", err.Error())
+		return
+	}
+	workflowIds := strings.Split(settings.DefaultWorkflowIds, ",")
+	workflows, err := me.workflowDB().GetList(rootUser, workflowIds)
+	if err != nil {
+		log.Printf("Can't retrieve list of workflows (%v). Please check the ids exist. Error: %s", workflowIds, err.Error())
+		return
+	}
+	for _, loopWorkflow := range workflows {
+		w := loopWorkflow.Clone()
+		w.OwnerEthAddress = newUser.EthereumAddr
+		w.Owner = newUser.ID
+		newNodes := make(map[string]*workflow.Node)
+		oldToNewIdsMap := make(map[string]string)
+		for oldId, node := range w.Data.Flow.Nodes {
+			if node.Type == "form" {
+				form, er := me.formDB().Get(rootUser, node.ID)
+				if er != nil {
+					log.Println(err.Error())
+				}
+				f := form.Clone()
+				er = me.formDB().Put(newUser, &f)
+				if er != nil {
+					log.Println("can't put form" + err.Error())
+				}
+
+				oldToNewIdsMap[node.ID] = f.ID
+				node.ID = f.ID
+				newNodes[node.ID] = node
+				delete(w.Data.Flow.Nodes, oldId)
+
+			} else if node.Type == "template" {
+				template, er := me.templateDB().Get(rootUser, node.ID)
+				if er != nil {
+					log.Println(err.Error())
+				}
+				t := template.Clone()
+				er = me.templateDB().Put(newUser, &t)
+				if er != nil {
+					log.Println("can't put template" + err.Error())
+				}
+				oldToNewIdsMap[node.ID] = t.ID
+				node.ID = t.ID
+				newNodes[node.ID] = node
+				delete(w.Data.Flow.Nodes, oldId)
+			} else {
+				newNodes[node.ID] = node
+			}
+		}
+		oldStartNodeId := w.Data.Flow.Start.NodeID
+		if _, ok := oldToNewIdsMap[oldStartNodeId]; ok {
+			w.Data.Flow.Start.NodeID = oldToNewIdsMap[oldStartNodeId]
+		}
+
+		// Now go through all connections and map them with the new ids
+		for _, node := range newNodes {
+			for _, connection := range node.Connections {
+				if _, ok := oldToNewIdsMap[connection.NodeID]; ok {
+					connection.NodeID = oldToNewIdsMap[connection.NodeID]
+				}
+			}
+		}
+		w.Data.Flow.Nodes = newNodes
+		me.workflowDB().Put(newUser, &w)
+	}
 }
