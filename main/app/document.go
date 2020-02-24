@@ -25,7 +25,6 @@ import (
 	"github.com/ProxeusApp/proxeus-core/sys/workflow"
 
 	"github.com/ethereum/go-ethereum/crypto"
-	"github.com/labstack/echo"
 )
 
 //TODO replace DataCluster with file.MapIO. DataCluster was meant to be used for guest users only to prevent from storing data that will be never used again after the session is expired
@@ -69,6 +68,14 @@ type (
 	}
 	DocTmplNodeImpl struct {
 		ctx *DocumentFlowInstance
+	}
+
+	PreviewResponse struct {
+		Data          io.ReadCloser
+		File          *file.IO
+		Format        eio.Format
+		ContentType   string
+		ContentLength string
 	}
 )
 
@@ -570,16 +577,20 @@ func (me *DocumentFlowInstance) getTemplate(id, lang string) (*file.IO, error) {
 	return nil, os.ErrNotExist
 }
 
-func (me *DocumentFlowInstance) Preview(id, lang, strFormat string, resp *echo.Response) error {
-	if available, err := me.isLangAvailable(lang); !available || err != nil {
-		return os.ErrNotExist
+func (me *DocumentFlowInstance) Preview(id, lang, strFormat string) (*PreviewResponse, error) {
+	available, err := me.isLangAvailable(lang)
+	if err != nil {
+		return nil, err
 	}
+	if !available {
+		return nil, os.ErrNotExist
+	}
+
 	tmpl, err := me.getTemplate(id, lang)
 	if err != nil {
-		return err
+		return nil, err
 	}
 	format := eio.Format(strFormat)
-	resp.Header().Set("Content-Disposition", fmt.Sprintf("%s;filename=\"%s\"", "attachment", tmpl.NameWithExt(format.String())))
 	dataMap, files := me.getDataWithFiles()
 	dsResp, err := me.system.DS.Compile(me.system.DB.Files,
 		eio.Template{
@@ -589,15 +600,18 @@ func (me *DocumentFlowInstance) Preview(id, lang, strFormat string, resp *echo.R
 			Assets:       files,
 		})
 	if err != nil {
-		return err
+		return nil, err
 	}
 	me.SelectedDocLangs[id] = lang
-	resp.Header().Set("Content-Type", dsResp.Header.Get("Content-Type"))
-	resp.Header().Set("Content-Length", dsResp.Header.Get("Content-Length"))
-	defer dsResp.Body.Close()
-	resp.Committed = true //prevents from-> http: multiple response.WriteHeader calls
-	_, err = io.Copy(resp.Writer, dsResp.Body)
-	return nil
+
+	previewResponse := &PreviewResponse{
+		Data:          dsResp.Body,
+		File:          tmpl,
+		Format:        format,
+		ContentType:   dsResp.Header.Get("Content-Type"),
+		ContentLength: dsResp.Header.Get("Content-Length"),
+	}
+	return previewResponse, nil
 }
 
 func (me *DocumentFlowInstance) currentStatus(n *workflow.Node) error {
