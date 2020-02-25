@@ -162,7 +162,7 @@ func StaticHandler(c echo.Context) error {
 	} else {
 		header.Set("Cache-Control", "public,max-age=72000")
 	}
-	b, err := embedded.FindAssetWithCT(url, &ct)
+	b, err := embedded.FindAssetWithContentType(url, &ct)
 	if err == nil {
 		return c.Blob(http.StatusOK, ct, b)
 	}
