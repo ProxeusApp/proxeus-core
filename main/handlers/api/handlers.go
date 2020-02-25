@@ -49,13 +49,12 @@ var (
 	userDocumentService     service.UserDocumentService
 	fileService             service.FileService
 	templateDocumentService service.TemplateDocumentService
-formService          service.FormService
-formComponentService service.FormComponentService
+	formService             service.FormService
+	formComponentService    service.FormComponentService
 )
 
-
 func Init(paymentS service.PaymentService, userS service.UserService, workflowS service.WorkflowService,
-	documentS service.DocumentService, fileS service.FileService,userDocumentS service.UserDocumentService, templateDocumentS service.TemplateDocumentService, formS service.FormService, formCompS service.FormComponentService) {
+	documentS service.DocumentService, fileS service.FileService, userDocumentS service.UserDocumentService, templateDocumentS service.TemplateDocumentService, formS service.FormService, formCompS service.FormComponentService) {
 
 	paymentService = paymentS
 	userService = userS
