@@ -7,6 +7,8 @@ import (
 	"os"
 	"path"
 
+	"github.com/ProxeusApp/proxeus-core/sys/email"
+
 	"github.com/ProxeusApp/proxeus-core/main/handlers/formbuilder"
 
 	"github.com/ProxeusApp/proxeus-core/main/handlers/workflow"
@@ -75,7 +77,9 @@ func main() {
 	documentService := service.NewDocumentService(userService, fileService)
 	templateDocumentService := service.NewTemplateDocumentService()
 	userDocumentService := service.NewUserDocumentService(userService, fileService, templateDocumentService)
-	emailService := service.NewEmailService()
+
+	emailSender, err := email.NewSparkPostEmailSender(system.GetSettings().SparkpostApiKey, system.GetSettings().EmailFrom)
+	emailService := service.NewEmailService(emailSender)
 	signatureService := service.NewSignatureService(fileService, userService, emailService)
 	formService := service.NewFormService()
 	formComponentService := service.NewFormComponentService()

@@ -38,11 +38,10 @@ var (
 
 type (
 	System struct {
-		TestMode    bool
-		AllowHttp   bool
-		DB          *storage.DBSet
-		DS          *eio.DocumentServiceClient
-		EmailSender email.EmailSender
+		TestMode  bool
+		AllowHttp bool
+		DB        *storage.DBSet
+		DS        *eio.DocumentServiceClient
 
 		settingsDB                  storage.SettingsIF
 		settingsInUse               model.Settings
@@ -83,7 +82,7 @@ func (me *System) init(stngs *model.Settings) error {
 	me.settingsInUse.DocumentServiceUrl = stngs.DocumentServiceUrl
 
 	var err error
-	me.EmailSender, err = email.NewSparkPostEmailSender(stngs.SparkpostApiKey, stngs.EmailFrom)
+	emailSender, err := email.NewSparkPostEmailSender(stngs.SparkpostApiKey, stngs.EmailFrom)
 	if err != nil {
 		return err
 	}
@@ -159,7 +158,7 @@ func (me *System) init(stngs *model.Settings) error {
 	} else {
 		logSubscriber = blockchain.NewWebSocketLogSubscriber(cfg.Config.EthWebSocketURL, stngs.BlockchainContractAddress)
 	}
-	bcListenerSignature := blockchain.NewSignatureListener(me.DB.SignatureRequests, me.DB.User, me.EmailSender, ProxeusFSABI, cfg.Config.PlatformDomain, logSubscriber)
+	bcListenerSignature := blockchain.NewSignatureListener(me.DB.SignatureRequests, me.DB.User, emailSender, ProxeusFSABI, cfg.Config.PlatformDomain, logSubscriber)
 	ctxSig := context.Background()
 	ctxSig, cancelSig := context.WithCancel(ctxPay)
 	if me.signatureListenerCancelFunc != nil {

@@ -10,11 +10,12 @@ type (
 		SendFrom(emailFrom, emailTo, subject, body string) error
 	}
 	DefaultEmailService struct {
+		emailSender email.EmailSender
 	}
 )
 
-func NewEmailService() EmailService {
-	return &DefaultEmailService{}
+func NewEmailService(emailS email.EmailSender) EmailService {
+	return &DefaultEmailService{emailSender: emailS}
 }
 
 func (me *DefaultEmailService) Send(emailTo, subject, body string) error {
@@ -29,5 +30,5 @@ func (me *DefaultEmailService) Send(emailTo, subject, body string) error {
 func (me *DefaultEmailService) SendFrom(emailFrom, emailTo, subject, body string) error {
 	mail := &email.Email{From: emailFrom, To: []string{emailTo}, Subject: subject, Body: body}
 
-	return system.EmailSender.Send(mail)
+	return me.emailSender.Send(mail)
 }

@@ -29,7 +29,6 @@ import (
 	"github.com/ProxeusApp/proxeus-core/storage/database/db"
 	"github.com/ProxeusApp/proxeus-core/storage/portable"
 	"github.com/ProxeusApp/proxeus-core/sys"
-	"github.com/ProxeusApp/proxeus-core/sys/email"
 	"github.com/ProxeusApp/proxeus-core/sys/model"
 	"github.com/ProxeusApp/proxeus-core/sys/validate"
 
@@ -623,15 +622,13 @@ func InviteRequest(e echo.Context) (err error) {
 			return c.NoContent(http.StatusInternalServerError)
 		}
 
-		err = c.System().EmailSender.Send(&email.Email{
-			From:    stngs.EmailFrom,
-			To:      []string{m.Email},
-			Subject: c.I18n().T("Invitation"),
-			Body: fmt.Sprintf(
-				"Hi there,\n\nyou have been invited to join Proxeus. If you would like to benefit from the invitation, please proceed by visiting this link:\n%s\n\nProxeus",
-				helpers.AbsoluteURL(c, "/register/", token.Token),
-			),
-		})
+		subject := c.I18n().T("Invitation")
+		body := fmt.Sprintf(
+			"Hi there,\n\nyou have been invited to join Proxeus. If you would like to benefit from the invitation, please proceed by visiting this link:\n%s\n\nProxeus",
+			helpers.AbsoluteURL(c, "/register/", token.Token),
+		)
+
+		err = emailService.Send(m.Email, subject, body)
 		if err != nil {
 			return c.String(http.StatusFailedDependency, c.I18n().T("couldn't send the email"))
 		}
@@ -689,15 +686,13 @@ func RegisterRequest(e echo.Context) (err error) {
 	if c.System().TestMode {
 		c.Response().Header().Set("X-Test-Token", token.Token)
 	}
-	err = c.System().EmailSender.Send(&email.Email{
-		From:    stngs.EmailFrom,
-		To:      []string{m.Email},
-		Subject: c.I18n().T("Register"),
-		Body: fmt.Sprintf(
-			"Hi there,\n\nplease proceed with your registration by visiting this link:\n%s\n\nIf you didn't request this, please ignore this email.\n\nProxeus",
-			helpers.AbsoluteURL(c, "/register/", token.Token),
-		),
-	})
+
+	subject := c.I18n().T("Register")
+	body := fmt.Sprintf(
+		"Hi there,\n\nplease proceed with your registration by visiting this link:\n%s\n\nIf you didn't request this, please ignore this email.\n\nProxeus",
+		helpers.AbsoluteURL(c, "/register/", token.Token),
+	)
+	err = emailService.Send(m.Email, subject, body)
 	if err != nil {
 		return c.NoContent(http.StatusExpectationFailed)
 	}
@@ -790,16 +785,15 @@ func ResetPasswordRequest(e echo.Context) (err error) {
 		if c.System().TestMode {
 			c.Response().Header().Set("X-Test-Token", token.Token)
 		}
-		err = c.System().EmailSender.Send(&email.Email{
-			From:    c.System().GetSettings().EmailFrom,
-			To:      []string{m.Email},
-			Subject: c.I18n().T("Reset Password"),
-			Body: fmt.Sprintf(
-				"Hi %s,\n\nif you requested a password reset, please go on and click on this link to reset your password\n%s\n\nIf you didn't request it, please ignore this email.\n\nProxeus",
-				usr.Name,
-				helpers.AbsoluteURL(c, "/reset/password/", token.Token),
-			),
-		})
+
+		subject := c.I18n().T("Reset Password")
+		body := fmt.Sprintf(
+			"Hi %s,\n\nif you requested a password reset, please go on and click on this link to reset your password\n%s\n\nIf you didn't request it, please ignore this email.\n\nProxeus",
+			usr.Name,
+			helpers.AbsoluteURL(c, "/reset/password/", token.Token),
+		)
+
+		err = emailService.Send(m.Email, subject, body)
 		if err != nil {
 			return c.NoContent(http.StatusExpectationFailed)
 		}
@@ -887,16 +881,13 @@ func ChangeEmailRequest(e echo.Context) (err error) {
 		if c.System().TestMode {
 			c.Response().Header().Set("X-Test-Token", token.Token)
 		}
-		err = c.System().EmailSender.Send(&email.Email{
-			From:    c.System().GetSettings().EmailFrom,
-			To:      []string{m.Email},
-			Subject: c.I18n().T("Change Email"),
-			Body: fmt.Sprintf(
-				"Hi %s,\n\nif you have requested an email change, please go on and click on this link to validate it:\n%s\n\nIf you didn't request it, please ignore this email.\n\nProxeus",
-				usr.Name,
-				helpers.AbsoluteURL(c, "/change/email/", token.Token),
-			),
-		})
+		subject := c.I18n().T("Change Email")
+		body := fmt.Sprintf(
+			"Hi %s,\n\nif you have requested an email change, please go on and click on this link to validate it:\n%s\n\nIf you didn't request it, please ignore this email.\n\nProxeus",
+			usr.Name,
+			helpers.AbsoluteURL(c, "/change/email/", token.Token),
+		)
+		err = emailService.Send(m.Email, subject, body)
 		if err != nil {
 			return c.NoContent(http.StatusExpectationFailed)
 		}
@@ -1656,8 +1647,15 @@ func UserDocumentSignatureRequestRejectHandler(e echo.Context) error {
 			You may send another request if you think this was by mistake.
 
 		*/
-		emailFrom := c.System().GetSettings().EmailFrom
-		c.System().EmailSender.Send(&email.Email{From: emailFrom, To: []string{requestorAddr.Email}, Subject: c.I18n().T("Signature request rejected"), Body: "<div>Your signature request for a document on " + c.Request().Host + " from " + signatureRequest.RequestedAt.Format("2.1.2006 15:04") + " <br />has been rejected by  " + item.Name + " (" + item.Email + ")<br />" + item.EthereumAddr + "<br /><br />You may send another request if you think this was by mistake.</div>"})
+
+		subject := c.I18n().T("Signature request rejected")
+		body := fmt.Sprintf("<div>Your signature request for a document on %s from %s <br />has been rejected by  %s (%s)<br />%s<br />"+
+			"<br />You may send another request if you think this was by mistake.</div>",
+			c.Request().Host, signatureRequest.RequestedAt.Format("2.1.2006 15:04"), item.Name, item.Email, item.EthereumAddr)
+		err = emailService.Send(requestorAddr.Email, subject, body)
+		if err != nil {
+			log.Println("UserDocumentSignatureRequestRejectHandler emailService.Send err: ", err.Error())
+		}
 	}
 
 	return c.NoContent(http.StatusOK)
@@ -1698,7 +1696,16 @@ func UserDocumentSignatureRequestRevokeHandler(e echo.Context) error {
 
 			To check your signature requests, please log in <here (link to requests, if logged in>
 		*/
-		c.System().EmailSender.Send(&email.Email{To: []string{signatoryEmail}, Subject: c.I18n().T("New signature request received"), Body: "<div>Earlier you may have received a signature request from " + c.Request().Host + " by " + requestor.Name + " (" + requestor.Email + ")<br />" + requestor.EthereumAddr + "<br /><br />The requestor has retracted the request. You may still log in and view the request, but can no longer sign the document.<br /><br />To check your signature requests, please log in <a href='" + helpers.AbsoluteURL(c, "/user/signature-requests") + "'>here</a></div>"})
+
+		subject := c.I18n().T("New signature request received")
+		body := fmt.Sprintf("<div>Earlier you may have received a signature request from %s by %s (%s)<br />%s<br /><br />"+
+			"The requestor has retracted the request. You may still log in and view the request, but can no longer sign the document."+
+			"<br /><br />To check your signature requests, please log in <a href='%s'>here</a></div>",
+			c.Request().Host, requestor.Name, requestor.Email, requestor.EthereumAddr, helpers.AbsoluteURL(c, "/user/signature-requests"))
+		err = emailService.Send(signatoryEmail, subject, body)
+		if err != nil {
+			log.Println("UserDocumentSignatureRequestRevokeHandler emailService.Send err: ", err.Error())
+		}
 	}
 
 	return c.NoContent(http.StatusOK)
