@@ -31,7 +31,6 @@ import (
 	"github.com/ProxeusApp/proxeus-core/storage/database/db"
 	"github.com/ProxeusApp/proxeus-core/storage/portable"
 	"github.com/ProxeusApp/proxeus-core/sys"
-	"github.com/ProxeusApp/proxeus-core/sys/eio"
 	"github.com/ProxeusApp/proxeus-core/sys/email"
 	"github.com/ProxeusApp/proxeus-core/sys/model"
 	"github.com/ProxeusApp/proxeus-core/sys/validate"
@@ -44,21 +43,26 @@ import (
 )
 
 var (
-	paymentService  service.PaymentService
-	userService     service.UserService
-	workflowService service.WorkflowService
-	documentService service.DocumentService
-	fileService     service.FileService
+	paymentService          service.PaymentService
+	userService             service.UserService
+	workflowService         service.WorkflowService
+	documentService         service.DocumentService
+	userDocumentService     service.UserDocumentService
+	fileService             service.FileService
+	templateDocumentService service.TemplateDocumentService
 )
 
 func Init(paymentS service.PaymentService, userS service.UserService, workflowS service.WorkflowService,
-	documentS service.DocumentService, fileS service.FileService) {
+	documentS service.DocumentService, userDocumentS service.UserDocumentService, fileS service.FileService,
+	templateDocumentS service.TemplateDocumentService) {
 
 	paymentService = paymentS
 	userService = userS
 	workflowService = workflowS
 	documentService = documentS
+	userDocumentService = userDocumentS
 	fileService = fileS
+	templateDocumentService = templateDocumentS
 }
 
 func html(c echo.Context, p string) error {
@@ -1300,11 +1304,11 @@ func UserDocumentListHandler(e echo.Context) error {
 	}
 	contains := c.QueryParam("c")
 	settings := helpers.RequestOptions(c)
-	items, err := c.System().DB.UserData.List(sess, contains, settings, false)
-	if err == nil && items != nil {
-		return c.JSON(http.StatusOK, items)
+	items, err := userDocumentService.List(sess, contains, settings)
+	if err != nil || items == nil {
+		return c.NoContent(http.StatusBadRequest)
 	}
-	return c.NoContent(http.StatusBadRequest)
+	return c.JSON(http.StatusOK, items)
 }
 
 func UserDocumentGetHandler(e echo.Context) error {
@@ -1314,11 +1318,12 @@ func UserDocumentGetHandler(e echo.Context) error {
 		return c.NoContent(http.StatusUnauthorized)
 	}
 	id := c.Param("ID")
-	items, err := c.System().DB.UserData.Get(sess, id)
-	if err == nil && items != nil {
-		return c.JSON(http.StatusOK, items)
+	item, err := userDocumentService.Get(sess, id)
+	if err != nil || item == nil {
+		return c.NoContent(http.StatusNotFound)
 	}
-	return c.NoContent(http.StatusNotFound)
+
+	return c.JSON(http.StatusOK, item)
 }
 
 func UserDocumentSignatureRequestGetCurrentUserHandler(e echo.Context) error {
@@ -1530,7 +1535,7 @@ func UserDocumentSignatureRequestAddHandler(e echo.Context) error {
 	id := c.Param("ID")
 
 	signatory := c.FormValue("signatory")
-	fileInfo, err := c.System().DB.UserData.GetDataFile(sess, id, docId)
+	fileInfo, err := fileService.GetDataFile(sess, id, docId)
 	if err != nil {
 		return c.String(http.StatusNotFound, err.Error())
 	}
@@ -1746,56 +1751,46 @@ func UserDocumentFileHandler(e echo.Context) error {
 
 	dataPath := c.Param("dataPath")
 	id := c.Param("ID")
-	fileInfo, err := c.System().DB.UserData.GetDataFile(sess, id, dataPath)
-	if err != nil {
-		return c.String(http.StatusNotFound, err.Error())
-	}
 
 	inlineOrAttachment := "attachment"
 	if _, ok := c.QueryParams()["inline"]; ok {
 		inlineOrAttachment = "inline"
 	}
 
-	if strings.HasPrefix(dataPath, "docs") {
-		//final doc
-		resp := c.Response()
-		if fileInfo.ContentType() != "" {
-			resp.Header().Set("Content-Type", fileInfo.ContentType())
-		}
+	resp := c.Response()
 
-		fileName := fileInfo.NameWithExt("pdf")
-		contentDisposition := fmt.Sprintf(`%s; filename="%s"`, inlineOrAttachment, fileName)
-		resp.Header().Set("Content-Disposition", contentDisposition)
-		resp.Header().Set("Content-Length", strconv.FormatInt(fileInfo.Size(), 10))
-		resp.Committed = true //prevents from-> http: multiple response.WriteHeader calls
-		err = c.System().DB.Files.Read(fileInfo.Path(), c.Response().Writer)
+	if strings.HasPrefix(dataPath, "docs") {
+		fileHeaderResponse, filePath, err := userDocumentService.GetDocFile(sess, id, dataPath, inlineOrAttachment)
 		if err != nil {
-			return c.NoContent(http.StatusNotFound)
+			return c.String(http.StatusBadRequest, err.Error())
+		}
+		setResponseHeader(resp, fileHeaderResponse)
+		err = fileService.Read(filePath, resp.Writer)
+		if err != nil {
+			return c.String(http.StatusBadRequest, err.Error())
 		}
 	} else {
-		//template with format
-		dat, files, _ := c.System().DB.UserData.GetDataAndFiles(sess, id, "input")
-		formt := eio.Format(format)
-		dsResp, err := c.System().DS.Compile(c.System().DB.Files,
-			eio.Template{
-				Format:       formt,
-				Data:         map[string]interface{}{"input": dat},
-				TemplatePath: fileInfo.Path(),
-				Assets:       files,
-			})
+		fileHeaderResponse, dsRespBody, err := userDocumentService.GetTemplateWithFormatFile(sess, id, dataPath, format, inlineOrAttachment)
 		if err != nil {
-			return c.String(http.StatusNotFound, err.Error())
+			return c.String(http.StatusBadRequest, err.Error())
 		}
-		resp := c.Response()
-		resp.Header().Set("Content-Type", dsResp.Header.Get("Content-Type"))
-		resp.Header().Set("Content-Length", dsResp.Header.Get("Content-Length"))
-		resp.Header().Set("Content-Pages", dsResp.Header.Get("Content-Pages"))
-		resp.Header().Set("Content-Disposition", fmt.Sprintf("%s;filename=\"%s\"", inlineOrAttachment, fileInfo.NameWithExt(formt.String())))
-		defer dsResp.Body.Close()
-		resp.Committed = true //prevents from-> http: multiple response.WriteHeader calls
-		_, err = io.Copy(resp.Writer, dsResp.Body)
+		setResponseHeader(resp, fileHeaderResponse)
+		defer dsRespBody.Close()
+		_, err = io.Copy(resp.Writer, dsRespBody)
+		if err != nil {
+			return c.String(http.StatusBadRequest, err.Error())
+		}
 	}
+
 	return c.NoContent(http.StatusOK)
+}
+
+func setResponseHeader(resp *echo.Response, fileHeaderResponse *service.FileHeaderResponse) {
+	resp.Header().Set("Content-Type", fileHeaderResponse.ContentType)
+	resp.Header().Set("Content-Length", fileHeaderResponse.ContentLength)
+	resp.Header().Set("Content-Pages", fileHeaderResponse.ContentPages)
+	resp.Header().Set("Content-Disposition", fileHeaderResponse.ContentDisposition)
+	resp.Committed = true //prevents from-> http: multiple response.WriteHeader calls
 }
 
 func AdminUserUpdateHandler(e echo.Context) error {
