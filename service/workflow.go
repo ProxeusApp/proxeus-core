@@ -3,7 +3,6 @@ package service
 import (
 	extNode "github.com/ProxeusApp/proxeus-core/externalnode"
 	"github.com/ProxeusApp/proxeus-core/storage"
-	"github.com/ProxeusApp/proxeus-core/sys"
 	"github.com/ProxeusApp/proxeus-core/sys/model"
 	"github.com/ProxeusApp/proxeus-core/sys/workflow"
 	"log"
@@ -26,28 +25,27 @@ type (
 
 	DefaultWorkflowService struct {
 		userService UserService
-		*baseService
 	}
 )
 
-func NewWorkflowService(system *sys.System, userService UserService) *DefaultWorkflowService {
-	return &DefaultWorkflowService{userService: userService, baseService: &baseService{system: system}}
+func NewWorkflowService(userService UserService) *DefaultWorkflowService {
+	return &DefaultWorkflowService{userService: userService}
 }
 
 func (me *DefaultWorkflowService) List(auth model.Auth, contains string, options storage.Options) ([]*model.WorkflowItem, error) {
-	return me.workflowDB().List(auth, contains, options)
+	return workflowDB().List(auth, contains, options)
 }
 
 func (me *DefaultWorkflowService) ListPublished(auth model.Auth, contains string, options storage.Options) ([]*model.WorkflowItem, error) {
-	return me.workflowDB().ListPublished(auth, contains, options)
+	return workflowDB().ListPublished(auth, contains, options)
 }
 
 func (me *DefaultWorkflowService) Get(auth model.Auth, id string) (*model.WorkflowItem, error) {
-	return me.workflowDB().Get(auth, id)
+	return workflowDB().Get(auth, id)
 }
 
 func (me *DefaultWorkflowService) GetAndPopulateOwner(auth model.Auth, id string) (*model.WorkflowItem, error) {
-	workflow, err := me.workflowDB().Get(auth, id)
+	workflow, err := workflowDB().Get(auth, id)
 	if err != nil {
 		return workflow, err
 	}
@@ -87,40 +85,40 @@ func (me *DefaultWorkflowService) Publish(auth model.Auth, wfItem *model.Workflo
 	//loop recursively and change permissions on all children
 	wfItem.LoopNodes(nil, func(l *workflow.Looper, node *workflow.Node) bool {
 		if node.Type == "form" {
-			it, er := me.formDB().Get(auth, node.ID)
+			it, er := formDB().Get(auth, node.ID)
 			if er != nil {
 				collectError(er, node)
 				return true //continue
 			}
 			if !it.Published {
 				it.Published = true
-				er = me.formDB().Put(auth, it)
+				er = formDB().Put(auth, it)
 				if er != nil {
 					collectError(er, node)
 				}
 			}
 		} else if node.Type == "template" {
-			it, er := me.templateDB().Get(auth, node.ID)
+			it, er := templateDB().Get(auth, node.ID)
 			if er != nil {
 				collectError(er, node)
 				return true //continue
 			}
 			if !it.Published {
 				it.Published = true
-				er = me.templateDB().Put(auth, it)
+				er = templateDB().Put(auth, it)
 				if er != nil {
 					collectError(er, node)
 				}
 			}
 		} else if node.Type == "workflow" { // deep dive...
-			it, er := me.workflowDB().Get(auth, node.ID)
+			it, er := workflowDB().Get(auth, node.ID)
 			if er != nil {
 				collectError(er, node)
 				return true //continue
 			}
 			if !it.Published {
 				it.Published = true
-				er = me.workflowDB().Put(auth, it)
+				er = workflowDB().Put(auth, it)
 				if er != nil {
 					collectError(er, node)
 				}
@@ -133,21 +131,21 @@ func (me *DefaultWorkflowService) Publish(auth model.Auth, wfItem *model.Workflo
 }
 
 func (me *DefaultWorkflowService) Put(auth model.Auth, wfItem *model.WorkflowItem) error {
-	return me.workflowDB().Put(auth, wfItem)
+	return workflowDB().Put(auth, wfItem)
 }
 
 func (me *DefaultWorkflowService) Delete(auth model.Auth, id string) error {
-	return me.workflowDB().Delete(auth, id)
+	return workflowDB().Delete(auth, id)
 }
 
 func (me *DefaultWorkflowService) InstantiateExternalNode(auth model.Auth, nodeId, nodeName string) (*extNode.ExternalQuery, error) {
-	externalQuery, err := me.workflowDB().QueryFromInstanceID(auth, nodeId)
+	externalQuery, err := workflowDB().QueryFromInstanceID(auth, nodeId)
 	if err == nil {
 		log.Println("UpdateHandler externalNode instance exists, will not create new instance")
 		return &externalQuery, nil
 	}
 
-	newExternalNode, err := me.workflowDB().NodeByName(auth, nodeName)
+	newExternalNode, err := workflowDB().NodeByName(auth, nodeName)
 	if err != nil {
 		log.Println("UpdateHandler instantiateExternalNode NodeByName err: ", err.Error())
 		return nil, err
@@ -159,7 +157,7 @@ func (me *DefaultWorkflowService) InstantiateExternalNode(auth model.Auth, nodeI
 	}
 
 	//PutExternalNodeInstance
-	err = me.workflowDB().PutExternalNodeInstance(auth, newExternalNodeInstance)
+	err = workflowDB().PutExternalNodeInstance(auth, newExternalNodeInstance)
 	if err != nil {
 		log.Println("UpdateHandler externalNode PutExternalNodeInstance error: ", err.Error())
 		return nil, err
@@ -176,13 +174,13 @@ func (me *DefaultWorkflowService) InstantiateExternalNode(auth model.Auth, nodeI
 func (me *DefaultWorkflowService) CopyWorkflows(rootUser, newUser *model.User) {
 	log.Println("Copy workflows to new user, if any...")
 	// If some default workflows have to be assigned to the user, then clone them
-	settings, err := me.settingsDB().Get()
+	settings, err := settingsDB().Get()
 	if err != nil {
 		log.Printf("Unable to get settingsDB, retrieve list of workflows. Please check the ids exist. Error: %s", err.Error())
 		return
 	}
 	workflowIds := strings.Split(settings.DefaultWorkflowIds, ",")
-	workflows, err := me.workflowDB().GetList(rootUser, workflowIds)
+	workflows, err := workflowDB().GetList(rootUser, workflowIds)
 	if err != nil {
 		log.Printf("Can't retrieve list of workflows (%v). Please check the ids exist. Error: %s", workflowIds, err.Error())
 		return
@@ -195,12 +193,12 @@ func (me *DefaultWorkflowService) CopyWorkflows(rootUser, newUser *model.User) {
 		oldToNewIdsMap := make(map[string]string)
 		for oldId, node := range w.Data.Flow.Nodes {
 			if node.Type == "form" {
-				form, er := me.formDB().Get(rootUser, node.ID)
+				form, er := formDB().Get(rootUser, node.ID)
 				if er != nil {
 					log.Println(err.Error())
 				}
 				f := form.Clone()
-				er = me.formDB().Put(newUser, &f)
+				er = formDB().Put(newUser, &f)
 				if er != nil {
 					log.Println("can't put form" + err.Error())
 				}
@@ -211,12 +209,12 @@ func (me *DefaultWorkflowService) CopyWorkflows(rootUser, newUser *model.User) {
 				delete(w.Data.Flow.Nodes, oldId)
 
 			} else if node.Type == "template" {
-				template, er := me.templateDB().Get(rootUser, node.ID)
+				template, er := templateDB().Get(rootUser, node.ID)
 				if er != nil {
 					log.Println(err.Error())
 				}
 				t := template.Clone()
-				er = me.templateDB().Put(newUser, &t)
+				er = templateDB().Put(newUser, &t)
 				if er != nil {
 					log.Println("can't put template" + err.Error())
 				}
@@ -242,6 +240,6 @@ func (me *DefaultWorkflowService) CopyWorkflows(rootUser, newUser *model.User) {
 			}
 		}
 		w.Data.Flow.Nodes = newNodes
-		me.workflowDB().Put(newUser, &w)
+		workflowDB().Put(newUser, &w)
 	}
 }

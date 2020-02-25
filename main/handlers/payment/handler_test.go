@@ -164,6 +164,7 @@ func TestGetWorkflowPaymentById(t *testing.T) {
 
 func initSystemAndServices(workflowPaymentsDB storage.WorkflowPaymentsIF, userDB *sm.MockUserIF, workflowDB *sm.MockWorkflowIF) {
 	system := &sys.System{}
+	service.Init(system)
 
 	dbSet := &storage.DBSet{}
 	if workflowPaymentsDB != nil {
@@ -177,8 +178,8 @@ func initSystemAndServices(workflowPaymentsDB storage.WorkflowPaymentsIF, userDB
 	}
 
 	system.DB = dbSet
-	userService := service.NewUserService(system)
-	paymentService := service.NewPaymentService(system, userService)
+	userService := service.NewUserService()
+	paymentService := service.NewPaymentService(userService)
 	Init(paymentService, userService)
 }
 
