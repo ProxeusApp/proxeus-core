@@ -27,39 +27,40 @@ func (emb *Embedded) Asset2(name string) ([]byte, error) {
 	return nil, os.ErrNotExist
 }
 
-func (emb *Embedded) FindAssetWithCT(name string, ct *string) ([]byte, error) {
+func (emb *Embedded) FindAssetWithContentType(name string, ct *string) ([]byte, error) {
 	if name != "" {
 		jj, err := emb.Asset2(name)
 		if err != nil {
 			return nil, err
 		}
+
+		contentTypeMutex.Lock()
+
 		if contentTypeCache == nil {
-			contentTypeMutex.Lock()
-			if contentTypeCache == nil {
-				contentTypeCache = make(map[string]string)
-			}
-			contentTypeMutex.Unlock()
+			contentTypeCache = make(map[string]string)
 		}
-		contentTypeMutex.RLock()
-		cnttype := contentTypeCache[name]
-		contentTypeMutex.RUnlock()
-		if cnttype == "" {
+
+		contentType := contentTypeCache[name]
+
+		contentTypeMutex.Unlock()
+
+		if contentType == "" {
 			li := strings.LastIndex(name, ".")
 			if li > 0 {
 				ext := name[li:]
-				cnttype = ctMap[ext]
+				contentType = ctMap[ext]
 			}
-			if cnttype == "" {
-				cnttype = http.DetectContentType(jj)
+			if contentType == "" {
+				contentType = http.DetectContentType(jj)
 			}
 			contentTypeMutex.Lock()
 			ct2 := contentTypeCache[name]
 			if ct2 == "" {
-				contentTypeCache[name] = cnttype
+				contentTypeCache[name] = contentType
 			}
 			contentTypeMutex.Unlock()
 		}
-		*ct = cnttype
+		*ct = contentType
 		return jj, nil
 	}
 	return nil, echo.ErrNotFound
