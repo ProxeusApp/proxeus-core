@@ -58,7 +58,7 @@ services:
       PROXEUS_INSTANCE_URL: "${PROXEUS_PLATFORM_DOMAIN:-http://xes-platform:1323}"
       SERVICE_SECRET: secret
       SERVICE_PORT: 8011
-      SERVICE_URL: "${SERVICE_DOMAIN:-https://crypto-forex-rates.ci.proxeus.com:443}"
+      SERVICE_URL: "${NODE_CRYPTO_RATES_URL:-http://node-crypto-forex-rates:8011}"
       TZ: Europe/Zurich
     ports:
       - "8011:8011"
@@ -75,7 +75,7 @@ services:
       PROXEUS_INFURA_API_KEY: ${PROXEUS_INFURA_API_KEY}
       SERVICE_SECRET: secret
       SERVICE_PORT: 8012
-      SERVICE_URL: "${SERVICE_DOMAIN:-http://node-balance-retriever:8012}"
+      SERVICE_URL: "${NODE_BALANCE_RETRIEVER_URL:-http://node-balance-retriever:8012}"
       TZ: Europe/Zurich
     ports:
       - "8012:8012"
