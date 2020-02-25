@@ -3,7 +3,6 @@ package service
 import (
 	"fmt"
 	"github.com/ProxeusApp/proxeus-core/storage"
-	"github.com/ProxeusApp/proxeus-core/sys"
 	"github.com/ProxeusApp/proxeus-core/sys/eio"
 	"github.com/ProxeusApp/proxeus-core/sys/model"
 	"io"
@@ -24,7 +23,6 @@ type (
 		userService             UserService
 		fileService             FileService
 		templateDocumentService TemplateDocumentService
-		*baseService
 	}
 
 	FileHeaderResponse struct {
@@ -35,19 +33,19 @@ type (
 	}
 )
 
-func NewUserDocumentService(system *sys.System, userS UserService, fileS FileService, templateDocumentS TemplateDocumentService) *DefaultUserDocumentService {
-	return &DefaultUserDocumentService{baseService: &baseService{system: system}, userService: userS, fileService: fileS, templateDocumentService: templateDocumentS}
+func NewUserDocumentService(userS UserService, fileS FileService, templateDocumentS TemplateDocumentService) *DefaultUserDocumentService {
+	return &DefaultUserDocumentService{userService: userS, fileService: fileS, templateDocumentService: templateDocumentS}
 }
 
 //returns a list of UserDataItem that contain the string passed in contain.
 //settings are used to modify the result list
 func (me *DefaultUserDocumentService) List(auth model.Auth, contains string, settings storage.Options) ([]*model.UserDataItem, error) {
-	return me.userDataDB().List(auth, contains, settings, false)
+	return userDataDB().List(auth, contains, settings, false)
 }
 
 //returns the UserDataItem with the id
 func (me *DefaultUserDocumentService) Get(auth model.Auth, id string) (*model.UserDataItem, error) {
-	return me.userDataDB().Get(auth, id)
+	return userDataDB().Get(auth, id)
 }
 
 //returns file info for a pdf file that was generated from a workflow

@@ -3,7 +3,6 @@ package service
 import (
 	"fmt"
 	"github.com/ProxeusApp/proxeus-core/externalnode"
-	"github.com/ProxeusApp/proxeus-core/sys"
 	"github.com/ProxeusApp/proxeus-core/sys/model"
 	"github.com/ProxeusApp/proxeus-core/sys/workflow"
 	"log"
@@ -21,12 +20,11 @@ type (
 	}
 	defaultNodeService struct {
 		workflowService WorkflowService
-		*baseService
 	}
 )
 
-func NewNodeService(system *sys.System, workflowService WorkflowService) *defaultNodeService {
-	return &defaultNodeService{workflowService: workflowService, baseService: &baseService{system: system}}
+func NewNodeService(workflowService WorkflowService) *defaultNodeService {
+	return &defaultNodeService{workflowService: workflowService}
 }
 
 func (me *defaultNodeService) ProbeExternalNodes() {
@@ -63,11 +61,11 @@ func (me *defaultNodeService) healthCheck(url string) error {
 }
 
 func (me *defaultNodeService) deleteExternalNode(auth model.Auth, id string) error {
-	return me.workflowDB().DeleteExternalNode(auth, id)
+	return workflowDB().DeleteExternalNode(auth, id)
 }
 
 func (me *defaultNodeService) listExternalNodes() []*externalnode.ExternalNode {
-	return me.workflowDB().ListExternalNodes()
+	return workflowDB().ListExternalNodes()
 }
 
 func (me *defaultNodeService) List(nodeType string) []*workflow.Node {

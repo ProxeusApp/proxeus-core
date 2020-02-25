@@ -6,7 +6,7 @@ import (
 
 func TestList(t *testing.T) {
 
-	nodeService := NewNodeService(nil, nil)
+	nodeService := NewNodeService(nil)
 
 	if nodeService.List("mailsender") == nil {
 		t.Fail()
