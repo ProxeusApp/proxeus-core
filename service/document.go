@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"github.com/ProxeusApp/proxeus-core/main/app"
-	"github.com/ProxeusApp/proxeus-core/sys"
 	"github.com/ProxeusApp/proxeus-core/sys/file"
 	"github.com/ProxeusApp/proxeus-core/sys/form"
 	"github.com/ProxeusApp/proxeus-core/sys/model"
@@ -32,7 +31,6 @@ type (
 	DefaultDocumentService struct {
 		userService UserService
 		fileService FileService
-		*baseService
 	}
 )
 
@@ -41,14 +39,14 @@ var (
 	ErrUnableToEdit   = errors.New("document edit failed")
 )
 
-func NewDocumentService(system *sys.System, userS UserService, fileS FileService) *DefaultDocumentService {
-	return &DefaultDocumentService{baseService: &baseService{system: system}, userService: userS, fileService: fileS}
+func NewDocumentService(userS UserService, fileS FileService) *DefaultDocumentService {
+	return &DefaultDocumentService{userService: userS, fileService: fileS}
 }
 
 // Return the workflow by id
 func (me *DefaultDocumentService) GetWorkflowSchema(auth model.Auth, workflowId string) (*model.WorkflowItem, map[string]interface{}, error) {
 
-	wf, err := me.workflowDB().Get(auth, workflowId)
+	wf, err := workflowDB().Get(auth, workflowId)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -71,7 +69,7 @@ func (me *DefaultDocumentService) Edit(auth model.Auth, userId string, formInput
 	if len(fName) >= 80 || !filenameRegex.MatchString(fName) {
 		return ErrUnableToEdit
 	}
-	usrDataItem, err := me.userDataDB().Get(auth, userId)
+	usrDataItem, err := userDataDB().Get(auth, userId)
 	if err != nil {
 		return err
 	}
@@ -86,7 +84,7 @@ func (me *DefaultDocumentService) Edit(auth model.Auth, userId string, formInput
 	usrDataItem.Name = fName
 	usrDataItem.Detail = fDetail
 
-	return me.userDataDB().Put(auth, usrDataItem)
+	return userDataDB().Put(auth, usrDataItem)
 }
 
 // Returns the DocumentFlowInstance with the passed id
@@ -102,7 +100,7 @@ func (me *DefaultDocumentService) GetDocApp(auth model.MemoryAuth, id string) *a
 	}
 	docApp = v.(*app.DocumentFlowInstance)
 	if docApp != nil && docApp.NeedToBeInitialized() {
-		err := docApp.Init(auth, me.system)
+		err := docApp.Init(auth, system)
 		if err != nil {
 			log.Println("Init err", err)
 			return nil //return nil to keep existing behavior
@@ -155,7 +153,7 @@ func (me *DefaultDocumentService) Next(auth model.MemoryAuth, id, lang string, d
 	}
 
 	//done
-	_, _, status, err = docApp.Confirm(lang, data, me.userDataDB())
+	_, _, status, err = docApp.Confirm(lang, data, userDataDB())
 	if err != nil {
 		return docApp, status, err
 	}
@@ -167,13 +165,13 @@ func (me *DefaultDocumentService) Next(auth model.MemoryAuth, id, lang string, d
 	dataID := docApp.DataID
 	me.removeWorkflowDocumentFromSession(auth, id)
 	var item *model.UserDataItem
-	item, err = me.userDataDB().Get(auth, dataID)
+	item, err = userDataDB().Get(auth, dataID)
 	if err != nil {
 		return docApp, status, err
 	}
 	item.Finished = true
 
-	err = me.userDataDB().Put(auth, item)
+	err = userDataDB().Put(auth, item)
 
 	return docApp, status, err
 }
@@ -252,14 +250,14 @@ func (me *DefaultDocumentService) marshaledFormsOf(wf *workflow.Workflow, a mode
 	wf.Loop(loop, func(l *workflow.Looper, node *workflow.Node) bool {
 		if node.Type == "form" {
 			if _, ok := marshaledForms[node.ID]; !ok {
-				it, er := me.formDB().Get(a, node.ID)
+				it, er := formDB().Get(a, node.ID)
 				if er != nil {
 					return true //continue
 				}
 				marshaledForms[it.ID] = it
 			}
 		} else if node.Type == "workflow" { // deep dive...
-			it, er := me.workflowDB().Get(a, node.ID)
+			it, er := workflowDB().Get(a, node.ID)
 			if er != nil {
 				return true //continue
 			}
