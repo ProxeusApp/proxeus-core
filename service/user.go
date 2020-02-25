@@ -12,6 +12,7 @@ type (
 		CreateApiKeyHandler(auth model.Auth, userId, apiKeyName string) (string, error)
 		DeleteApiKey(auth model.Auth, userId, hiddenApiKey string) error
 		DeleteUserData(auth model.Auth, id string) error
+		GetByBCAddress(blockchainAddress string) (*model.User, error)
 	}
 	defaultUserService struct {
 	}
@@ -42,4 +43,8 @@ func (me *defaultUserService) CreateApiKeyHandler(auth model.Auth, userId, apiKe
 
 func (me *defaultUserService) DeleteApiKey(auth model.Auth, userId, hiddenApiKey string) error {
 	return userDB().DeleteApiKey(auth, userId, hiddenApiKey)
+}
+
+func (me *defaultUserService) GetByBCAddress(blockchainAddress string) (*model.User, error) {
+	return userDB().GetByBCAddress(blockchainAddress)
 }

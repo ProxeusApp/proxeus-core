@@ -17,6 +17,10 @@ func AbsoluteURL(c echo.Context, uri ...string) string {
 	return c.Scheme() + "://" + path.Join(c.Request().Host, path.Join(uri...))
 }
 
+func AbsoluteURLWithScheme(scheme, host string, uri ...string) string {
+	return scheme + "://" + path.Join(host, path.Join(uri...))
+}
+
 func RequestOptions(c echo.Context) storage.Options {
 	if strings.ToLower(c.Request().Method) == "get" {
 		metaOnly := c.QueryParam("m")

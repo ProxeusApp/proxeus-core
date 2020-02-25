@@ -1,7 +1,6 @@
 package api
 
 import (
-	"bytes"
 	"encoding/base64"
 	"encoding/json"
 	"errors"
@@ -17,9 +16,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/ProxeusApp/proxeus-core/service"
-
 	"github.com/ProxeusApp/proxeus-core/externalnode"
+
+	"github.com/ProxeusApp/proxeus-core/service"
 
 	"github.com/ProxeusApp/proxeus-core/main/app"
 	cfg "github.com/ProxeusApp/proxeus-core/main/config"
@@ -36,7 +35,6 @@ import (
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
-	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/labstack/echo"
 	uuid "github.com/satori/go.uuid"
 )
@@ -49,12 +47,15 @@ var (
 	userDocumentService     service.UserDocumentService
 	fileService             service.FileService
 	templateDocumentService service.TemplateDocumentService
+	signatureService        service.SignatureService
+	emailService            service.EmailService
 	formService             service.FormService
 	formComponentService    service.FormComponentService
 )
 
 func Init(paymentS service.PaymentService, userS service.UserService, workflowS service.WorkflowService,
-	documentS service.DocumentService, fileS service.FileService, userDocumentS service.UserDocumentService, templateDocumentS service.TemplateDocumentService, formS service.FormService, formCompS service.FormComponentService) {
+	documentS service.DocumentService, userDocumentS service.UserDocumentService, fileS service.FileService,
+	templateDocumentS service.TemplateDocumentService, signatureS service.SignatureService, emailS service.EmailService, formS service.FormService, formCompS service.FormComponentService) {
 
 	paymentService = paymentS
 	userService = userS
@@ -63,6 +64,8 @@ func Init(paymentS service.PaymentService, userS service.UserService, workflowS 
 	userDocumentService = userDocumentS
 	fileService = fileS
 	templateDocumentService = templateDocumentS
+	signatureService = signatureS
+	emailService = emailS
 	formService = formS
 	formComponentService = formCompS
 }
@@ -1575,54 +1578,15 @@ func UserDocumentSignatureRequestGetByDocumentIDHandler(e echo.Context) error {
 	docId := c.Param("docID")
 	id := c.Param("ID")
 
-	signatureRequests, err := c.System().DB.SignatureRequests.GetByID(id, docId)
+	requests, err := signatureService.GetById(id, docId)
 	if err != nil {
-		return c.String(http.StatusNotFound, err.Error())
+		if os.IsNotExist(err) {
+			return c.NoContent(http.StatusNotFound)
+		}
+		log.Println("UserDocumentSignatureRequestGetByDocumentIDHandler signatureService.GetById err: ", err.Error())
+		return c.String(http.StatusBadRequest, err.Error())
 	}
 
-	type SignatureRequestItemMinimal struct {
-		SignatoryName string  `json:"signatoryName"`
-		SignatoryAddr string  `json:"signatoryAddr"`
-		RequestedAt   *string `json:"requestedAt,omitempty"`
-		Rejected      bool    `json:"rejected"`
-		RejectedAt    *string `json:"rejectedAt,omitempty"`
-		Revoked       bool    `json:"revoked"`
-		RevokedAt     *string `json:"revokedAt,omitempty"`
-	}
-
-	type SignatureRequests []SignatureRequestItemMinimal
-
-	var requests = *new(SignatureRequests)
-	for _, sigreq := range *signatureRequests {
-		signatoryName := *new(string)
-		item, err := c.System().DB.User.GetByBCAddress(sigreq.Signatory)
-		if err == nil {
-			signatoryName = item.Name
-		}
-		var reqAt string
-		reqAt = sigreq.RequestedAt.Format("2.1.2006 15:04")
-		var rejAt string
-		if sigreq.Rejected {
-			rejAt = sigreq.RejectedAt.Format("2.1.2006 15:04")
-		}
-		var revAt string
-		revAt = sigreq.RevokedAt.Format("2.1.2006 15:04")
-
-		reqitem := SignatureRequestItemMinimal{
-			signatoryName,
-			sigreq.Signatory,
-			&reqAt,
-			sigreq.Rejected,
-			&rejAt,
-			sigreq.Revoked,
-			&revAt,
-		}
-		if !sigreq.Rejected {
-			reqitem.RejectedAt = nil
-		}
-
-		requests = append(requests, reqitem)
-	}
 	return c.JSON(http.StatusOK, requests)
 }
 
@@ -1637,95 +1601,17 @@ func UserDocumentSignatureRequestAddHandler(e echo.Context) error {
 	id := c.Param("ID")
 
 	signatory := c.FormValue("signatory")
-	fileInfo, err := fileService.GetDataFile(sess, id, docId)
-	if err != nil {
-		return c.String(http.StatusNotFound, err.Error())
-	}
 
-	if !strings.HasPrefix(docId, "docs") {
-		return c.NoContent(http.StatusNotFound)
-	}
-
-	var documentBytes bytes.Buffer
-	err = c.System().DB.Files.Read(fileInfo.Path(), &documentBytes)
+	err := signatureService.AddAndNotify(sess, c.I18n(), id, docId, signatory, c.Request().Host, c.Scheme())
 	if err != nil {
-		return c.NoContent(http.StatusNotFound)
-	}
-	docHash := crypto.Keccak256Hash(documentBytes.Bytes()).String()
-
-	signatoryObj, err := c.System().DB.User.GetByBCAddress(signatory)
-	if err != nil {
-		return c.NoContent(http.StatusInternalServerError)
-	}
-	fileObj, err := c.System().DB.UserData.Get(sess, id)
-	if err != nil {
-		return c.String(http.StatusNotFound, err.Error())
-	}
-	if fileObj.Permissions.Grant == nil || !fileObj.Permissions.Grant[signatoryObj.UserID()].IsRead() {
-		if fileObj.Permissions.Grant == nil {
-			fileObj.Permissions.Grant = make(map[string]model.Permission)
+		if os.IsNotExist(err) {
+			return c.NoContent(http.StatusNotFound)
 		}
-		fileObj.Permissions.Grant[signatoryObj.UserID()] = model.Permission{byte(1)}
-		fileObj.Permissions.Change(sess, &fileObj.Permissions)
-
-		err = c.System().DB.UserData.Put(sess, fileObj)
-		if err != nil {
-			return c.NoContent(http.StatusInternalServerError)
+		if errors.Is(err, service.ErrSignatureRequestAlreadyExists) {
+			return c.String(http.StatusConflict, c.I18n().T(err.Error()))
 		}
-	}
-
-	fileObj, _ = c.System().DB.UserData.Get(sess, id)
-
-	requestor, err := userService.GetUser(sess)
-	if err != nil {
-		return c.NoContent(http.StatusInternalServerError)
-	}
-	requestorAddr := requestor.EthereumAddr
-
-	requestItem := model.SignatureRequestItem{
-		ID:          uuid.NewV4().String(),
-		DocId:       id,
-		DocPath:     docId,
-		Hash:        docHash,
-		Requestor:   requestorAddr,
-		RequestedAt: time.Now(),
-		Signatory:   signatory,
-		Rejected:    false,
-	}
-
-	signatureRequests, err := c.System().DB.SignatureRequests.GetByID(id, docId)
-
-	if err == nil {
-		for _, sigreq := range *signatureRequests {
-			if sigreq.Signatory == signatory &&
-				sigreq.Hash == docHash &&
-				sigreq.Rejected == false &&
-				sigreq.Revoked == false {
-				return c.String(http.StatusConflict, c.I18n().T("Request already exists"))
-			}
-		}
-	}
-
-	err = c.System().DB.SignatureRequests.Add(&requestItem)
-	if err != nil {
-		return c.String(http.StatusNotFound, err.Error())
-	}
-
-	sig, err := c.System().DB.User.GetByBCAddress(signatory)
-	if err != nil {
-		return c.NoContent(http.StatusInternalServerError)
-	}
-
-	if len(sig.Email) > 3 {
-		/*
-			Your signature was requested for a document on <platform base URL>by <Name> (<Email>)<Ethereum-Addr>
-
-			The requestor would like you to review and sign the document on the platform.
-
-			To check your pending signature requests, please log in <here (link to requests, if logged in>
-		*/
-		emailFrom := c.System().GetSettings().EmailFrom
-		c.System().EmailSender.Send(&email.Email{From: emailFrom, To: []string{sig.Email}, Subject: c.I18n().T("New signature request received"), Body: "<div>Your signature was requested for a document from " + c.Request().Host + " <br />by " + requestor.Name + " (" + requestor.Email + ")<br />" + requestorAddr + "<br /><br />The requestor would like you to review and sign the document on the platform.<br /><br />To check your pending signature requests, please log in <a href='" + helpers.AbsoluteURL(c, "/user/signature-requests") + "'>here</a></div>"})
+		log.Println("[UserDocumentSignatureRequestAddHandler] signatureService.Add err: ", err.Error())
+		return c.String(http.StatusBadRequest, err.Error())
 	}
 
 	return c.NoContent(http.StatusOK)

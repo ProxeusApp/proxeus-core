@@ -75,11 +75,13 @@ func main() {
 	documentService := service.NewDocumentService(userService, fileService)
 	templateDocumentService := service.NewTemplateDocumentService()
 	userDocumentService := service.NewUserDocumentService(userService, fileService, templateDocumentService)
+	emailService := service.NewEmailService()
+	signatureService := service.NewSignatureService(fileService, userService, emailService)
 	formService := service.NewFormService()
 	formComponentService := service.NewFormComponentService()
 
 	payment.Init(paymentService, userService)
-	api.Init(paymentService, userService, workflowService, documentService, fileService, userDocumentService, templateDocumentService, formService, formComponentService)
+	api.Init(paymentService, userService, workflowService, documentService, userDocumentService, fileService, templateDocumentService, signatureService, emailService, formService, formComponentService)
 	workflow.Init(workflowService, userService, nodeService)
 	formbuilder.Init(formComponentService, formService)
 
