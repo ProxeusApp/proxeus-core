@@ -31,6 +31,7 @@ type (
 
 	DefaultDocumentService struct {
 		userService UserService
+		fileService FileService
 		*baseService
 	}
 )
@@ -40,10 +41,11 @@ var (
 	ErrUnableToEdit   = errors.New("document edit failed")
 )
 
-func NewDocumentService(system *sys.System, userS UserService) *DefaultDocumentService {
-	return &DefaultDocumentService{baseService: &baseService{system: system}, userService: userS}
+func NewDocumentService(system *sys.System, userS UserService, fileS FileService) *DefaultDocumentService {
+	return &DefaultDocumentService{baseService: &baseService{system: system}, userService: userS, fileService: fileS}
 }
 
+// Return the workflow by id
 func (me *DefaultDocumentService) GetWorkflowSchema(auth model.Auth, workflowId string) (*model.WorkflowItem, map[string]interface{}, error) {
 
 	wf, err := me.workflowDB().Get(auth, workflowId)
@@ -55,6 +57,7 @@ func (me *DefaultDocumentService) GetWorkflowSchema(auth model.Auth, workflowId 
 	return wf, fieldsAndRules, nil
 }
 
+// Edit the document name and detail
 func (me *DefaultDocumentService) Edit(auth model.Auth, userId string, formInput map[string]interface{}) error {
 	filenameRegex := regexp.MustCompile(`^[^\s][\p{L}\d.,_\-&: ]{3,}[^\s]$`)
 	name, ok := formInput["name"]
@@ -86,6 +89,7 @@ func (me *DefaultDocumentService) Edit(auth model.Auth, userId string, formInput
 	return me.userDataDB().Put(auth, usrDataItem)
 }
 
+// Returns the DocumentFlowInstance with the passed id
 func (me *DefaultDocumentService) GetDocApp(auth model.MemoryAuth, id string) *app.DocumentFlowInstance {
 	if auth == nil {
 		return nil
@@ -107,6 +111,7 @@ func (me *DefaultDocumentService) GetDocApp(auth model.MemoryAuth, id string) *a
 	return docApp
 }
 
+// Update data of the workflow
 func (me *DefaultDocumentService) Update(auth model.MemoryAuth, id string, data map[string]interface{}) (validate.ErrorMap, error) {
 	docApp := me.GetDocApp(auth, id)
 	if docApp == nil {
@@ -116,6 +121,7 @@ func (me *DefaultDocumentService) Update(auth model.MemoryAuth, id string, data 
 	return docApp.UpdateData(data, false)
 }
 
+// Update the file of the current workflow
 func (me *DefaultDocumentService) UpdateFile(auth model.MemoryAuth, id, fieldName, fileName, contentType string, reader io.Reader) (*file.IO, validate.Errors, error) {
 	docApp := me.GetDocApp(auth, id)
 	if docApp == nil {
@@ -135,6 +141,7 @@ func (me *DefaultDocumentService) UpdateFile(auth model.MemoryAuth, id, fieldNam
 
 }
 
+// Go to next workflow step
 func (me *DefaultDocumentService) Next(auth model.MemoryAuth, id, lang string, data map[string]interface{}, final bool) (*app.DocumentFlowInstance, *app.Status, error) {
 	docApp := me.GetDocApp(auth, id)
 	if docApp == nil {
@@ -171,6 +178,7 @@ func (me *DefaultDocumentService) Next(auth model.MemoryAuth, id, lang string, d
 	return docApp, status, err
 }
 
+// Go to preview workflow step
 func (me *DefaultDocumentService) Prev(auth model.MemoryAuth, id string) (*app.Status, error) {
 	docApp := me.GetDocApp(auth, id)
 	if docApp == nil {
@@ -179,6 +187,7 @@ func (me *DefaultDocumentService) Prev(auth model.MemoryAuth, id string) (*app.S
 	return docApp.Previous(), nil
 }
 
+// Return a file by id and input name
 func (me *DefaultDocumentService) GetFile(auth model.MemoryAuth, id, inputName string) (*file.IO, error) {
 	docApp := me.GetDocApp(auth, id)
 	if docApp == nil {
@@ -187,16 +196,17 @@ func (me *DefaultDocumentService) GetFile(auth model.MemoryAuth, id, inputName s
 
 	finfo, err := docApp.GetFile(inputName)
 	if err == nil && finfo != nil {
+		return finfo, err //if file is found return here
+	}
+	if docApp.DataID == "" {
 		return finfo, err
 	}
-	if docApp.DataID != "" {
-		dataPath := fmt.Sprintf("input.%s", inputName)
-		return me.userDataDB().GetDataFile(auth, docApp.DataID, dataPath)
-	}
 
-	return finfo, err
+	dataPath := fmt.Sprintf("input.%s", inputName)
+	return me.fileService.GetDataFile(auth, docApp.DataID, dataPath)
 }
 
+// Get a file Preview for a template
 func (me *DefaultDocumentService) Preview(auth model.MemoryAuth, id, templateId, lang, format string) (*app.PreviewResponse, error) {
 	if id == "" || templateId == "" || lang == "" || auth == nil {
 		return nil, ErrDocAppNotFound
