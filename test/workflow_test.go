@@ -154,7 +154,6 @@ func hasUserWorkflow(s *session, containsW *workflow) {
 }
 
 func deleteWorkflow(s *session, id string, expectEmptyList bool) {
-	return
 	s.e.GET(fmt.Sprintf("/api/admin/workflow/%s/delete", id)).Expect().Status(http.StatusOK)
 	l := s.e.GET("/api/admin/workflow/list").Expect()
 
