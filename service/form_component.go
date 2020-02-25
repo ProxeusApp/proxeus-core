@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"github.com/ProxeusApp/proxeus-core/storage"
 	"github.com/ProxeusApp/proxeus-core/storage/database/db"
-	"github.com/ProxeusApp/proxeus-core/sys"
 	"github.com/ProxeusApp/proxeus-core/sys/model"
 	"io"
 
@@ -24,17 +23,16 @@ type (
 	}
 
 	DefaultFormComponentService struct {
-		*baseService
 	}
 )
 
-func NewFormComponentService(system *sys.System) *DefaultFormComponentService {
-	return &DefaultFormComponentService{&baseService{system: system}}
+func NewFormComponentService() *DefaultFormComponentService {
+	return &DefaultFormComponentService{}
 }
 
 
 func (me *DefaultFormComponentService) EnsureDefaultFormComponents(auth model.Auth){
-	dat, err := me.system.DB.Form.ListComp(auth, "", storage.Options{})
+	dat, err := formDB().ListComp(auth, "", storage.Options{})
 	if db.NotFound(err) || (err == nil && dat == nil) {
 		defaultFormcomponentents := []string{"HC1", "HC2", "HC3", "HC5", "HC7", "HC8", "HC9", "HC10", "HC11", "HC12"}
 		for _, formCompId := range defaultFormcomponentents {
@@ -52,7 +50,7 @@ func (me *DefaultFormComponentService) EnsureDefaultFormComponents(auth model.Au
 				continue
 			}
 
-			err = me.system.DB.Form.PutComp(auth, &comp)
+			err = formDB().PutComp(auth, &comp)
 			if err != nil {
 				log.Println(err)
 				jsonFile.Close()
@@ -63,7 +61,7 @@ func (me *DefaultFormComponentService) EnsureDefaultFormComponents(auth model.Au
 }
 
 func (me *DefaultFormComponentService) DelComp(auth model.Auth, id string) error {
-	return me.system.DB.Form.DelComp(auth, id)
+	return formDB().DelComp(auth, id)
 }
 
 func (me *DefaultFormComponentService) SetComp(auth model.Auth, reader io.ReadCloser) (*model.FormComponentItem, error){
@@ -73,13 +71,13 @@ func (me *DefaultFormComponentService) SetComp(auth model.Auth, reader io.ReadCl
 	if err != nil {
 		return nil, err
 	}
-	return &comp, me.system.DB.Form.PutComp(auth, &comp)
+	return &comp, formDB().PutComp(auth, &comp)
 }
 
 func (me *DefaultFormComponentService) GetComp(auth model.Auth, id string) (*model.FormComponentItem, error) {
-	return me.system.DB.Form.GetComp(auth, id)
+	return formDB().GetComp(auth, id)
 }
 
 func (me *DefaultFormComponentService) ListComp(auth model.Auth, contains string, options storage.Options) (map[string]*model.FormComponentItem, error) {
-	return me.system.DB.Form.ListComp(auth, contains, options)
+	return formDB().ListComp(auth, contains, options)
 }
