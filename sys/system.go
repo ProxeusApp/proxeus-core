@@ -134,8 +134,13 @@ func (me *System) init(stngs *model.Settings) error {
 
 	xesAdapter := blockchain.NewAdapter(cfg.Config.XESContractAddress, XESABI)
 
-	bcListenerPayment := blockchain.NewPaymentListener(xesAdapter, cfg.Config.EthWebSocketURL,
-		cfg.Config.EthClientURL, me.DB.WorkflowPayments)
+	var logSubscriber blockchain.LogSubscriber
+	if me.TestMode {
+		logSubscriber = blockchain.NewDummyLogSubscriber()
+	} else {
+		logSubscriber = blockchain.NewWebSocketLogSubscriber(cfg.Config.EthWebSocketURL, xesAdapter.GetContractAddress())
+	}
+	bcListenerPayment := blockchain.NewPaymentListener(xesAdapter, me.DB.WorkflowPayments, logSubscriber)
 	ctxPay := context.Background()
 	ctxPay, cancelPay := context.WithCancel(ctxPay)
 	if me.paymentListenerCancelFunc != nil {
@@ -149,8 +154,12 @@ func (me *System) init(stngs *model.Settings) error {
 		panic(err)
 	}
 
-	bcListenerSignature := blockchain.NewSignatureListener(cfg.Config.EthWebSocketURL,
-		cfg.Config.EthClientURL, stngs.BlockchainContractAddress, me.DB.SignatureRequests, me.DB.User, me.EmailSender, ProxeusFSABI, cfg.Config.PlatformDomain)
+	if me.TestMode {
+		logSubscriber = blockchain.NewDummyLogSubscriber()
+	} else {
+		logSubscriber = blockchain.NewWebSocketLogSubscriber(cfg.Config.EthWebSocketURL, stngs.BlockchainContractAddress)
+	}
+	bcListenerSignature := blockchain.NewSignatureListener(me.DB.SignatureRequests, me.DB.User, me.EmailSender, ProxeusFSABI, cfg.Config.PlatformDomain, logSubscriber)
 	ctxSig := context.Background()
 	ctxSig, cancelSig := context.WithCancel(ctxPay)
 	if me.signatureListenerCancelFunc != nil {

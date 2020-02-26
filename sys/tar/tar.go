@@ -9,6 +9,11 @@ import (
 	"strings"
 )
 
+// Given a folder (src), tar-gz' the content and writes it to writer
+// Example:
+// 	f, _ := os.Create(tmpFile)
+//
+//	err = Tar(dirToZip, f)
 func Tar(src string, writer io.Writer) error {
 	gzw := gzip.NewWriter(writer)
 	tw := tar.NewWriter(gzw)
@@ -49,8 +54,9 @@ func Tar(src string, writer io.Writer) error {
 	return err
 }
 
-func Untar(dst string, r io.Reader) (err error) {
-	err = os.MkdirAll(dst, 0750)
+// Given a .tar.gz file as Reader, decompress the files contained on it to specified destination folder
+func Untar(destination string, r io.Reader) (err error) {
+	err = os.MkdirAll(destination, 0750)
 	if err != nil {
 		return
 	}
@@ -77,7 +83,7 @@ func Untar(dst string, r io.Reader) (err error) {
 			continue
 		}
 
-		target := filepath.Join(dst, header.Name)
+		target := filepath.Join(destination, header.Name)
 		// the target location where the dir/file should be created
 
 		// check the file type

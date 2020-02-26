@@ -21,6 +21,7 @@ const workflowPaymentVersion = "payment_vers"
 const WorkflowPaymentDBDir = "workflowpayments"
 const WorkflowPaymentDB = "workflowpaymentsdb"
 
+// NewWorkflowPaymentDB return a handle to the workflow payment database
 func NewWorkflowPaymentDB(c DBConfig) (*WorkflowPaymentsDB, error) {
 	baseDir := filepath.Join(c.Dir, WorkflowPaymentDBDir)
 	db, err := db.OpenDatabase(c.Engine, c.URI, filepath.Join(baseDir, WorkflowPaymentDB))
@@ -47,6 +48,7 @@ func NewWorkflowPaymentDB(c DBConfig) (*WorkflowPaymentsDB, error) {
 	return udb, nil
 }
 
+// All returns a list of all workflow payment items from the database
 func (me *WorkflowPaymentsDB) All() ([]*model.WorkflowPaymentItem, error) {
 	var items []*model.WorkflowPaymentItem
 
@@ -54,6 +56,7 @@ func (me *WorkflowPaymentsDB) All() ([]*model.WorkflowPaymentItem, error) {
 	return items, err
 }
 
+// Get returns a specific Workflow payment item matching its id
 func (me *WorkflowPaymentsDB) Get(paymentId string) (*model.WorkflowPaymentItem, error) {
 	var item model.WorkflowPaymentItem
 
@@ -64,6 +67,8 @@ func (me *WorkflowPaymentsDB) Get(paymentId string) (*model.WorkflowPaymentItem,
 	err := query.First(&item)
 	return &item, err
 }
+
+// GetByTxHashAndStatusAndFromEthAddress returns a workflow payment item by matching the supplied filter parameters
 func (me *WorkflowPaymentsDB) GetByTxHashAndStatusAndFromEthAddress(txHash, status,
 	fromEthAddr string) (*model.WorkflowPaymentItem, error) {
 
@@ -83,6 +88,7 @@ func (me *WorkflowPaymentsDB) GetByTxHashAndStatusAndFromEthAddress(txHash, stat
 	return &item, nil
 }
 
+// GetByWorkflowIdAndFromEthAddress returns a workflow payment item by matching the supplied filter parameters
 func (me *WorkflowPaymentsDB) GetByWorkflowIdAndFromEthAddress(workflowID, fromEthAddr string,
 	statuses []string) (*model.WorkflowPaymentItem, error) {
 
@@ -113,6 +119,7 @@ func (me *WorkflowPaymentsDB) GetByWorkflowIdAndFromEthAddress(workflowID, fromE
 	return &item, nil
 }
 
+// SetAbandonedToTimeoutBeforeTime updates the status of all payment items created before the specified time to status timeout
 func (me *WorkflowPaymentsDB) SetAbandonedToTimeoutBeforeTime(beforeTime time.Time) error {
 	query := me.db.Select(
 		q.Or(
@@ -129,6 +136,7 @@ func (me *WorkflowPaymentsDB) SetAbandonedToTimeoutBeforeTime(beforeTime time.Ti
 	})
 }
 
+// Save add a workflow payment item to the database
 func (me *WorkflowPaymentsDB) Save(item *model.WorkflowPaymentItem) error {
 	if item.CreatedAt.IsZero() {
 		item.CreatedAt = time.Now()
@@ -136,6 +144,7 @@ func (me *WorkflowPaymentsDB) Save(item *model.WorkflowPaymentItem) error {
 	return me.db.Save(item)
 }
 
+// ConfirmPayment sets the status of a workflow payment item to confirmed by trying to find a matching transaction hash and searching for pending or created items matching the supplied criteria
 func (me *WorkflowPaymentsDB) ConfirmPayment(txHash, from, to string, xes uint64) error {
 	tx, err := me.db.Begin(true)
 	if err != nil {
@@ -202,6 +211,7 @@ func (me *WorkflowPaymentsDB) ConfirmPayment(txHash, from, to string, xes uint64
 	return tx.Commit()
 }
 
+// Redeem sets the status of a workflow payment item to redeemed for the item matching the supplied id and from address
 func (me *WorkflowPaymentsDB) Redeem(workflowId, from string) error {
 	tx, err := me.db.Begin(true)
 	if err != nil {
@@ -231,6 +241,7 @@ func (me *WorkflowPaymentsDB) Redeem(workflowId, from string) error {
 	return tx.Commit()
 }
 
+// Cancel sets the status of a workflow payment item to cancelled for the item matching the supplied id and from address
 func (me *WorkflowPaymentsDB) Cancel(paymentId, from string) error {
 	tx, err := me.db.Begin(true)
 	if err != nil {
@@ -259,6 +270,7 @@ func (me *WorkflowPaymentsDB) Cancel(paymentId, from string) error {
 	return tx.Commit()
 }
 
+// Delete sets the status of a workflow payment item to deleted by matching the supplied id
 func (me *WorkflowPaymentsDB) Delete(paymentId string) error {
 	tx, err := me.db.Begin(true)
 	if err != nil {
@@ -287,6 +299,7 @@ func (me *WorkflowPaymentsDB) Remove(payment *model.WorkflowPaymentItem) error {
 
 var errNothingToUpdate = errors.New("nothing to update")
 
+// Update sets the status and tx hash of created workflow items machting the supplied criteria to the supplied values
 func (me *WorkflowPaymentsDB) Update(paymentId, status, txHash, from string) error {
 	tx, err := me.db.Begin(true)
 	if err != nil {

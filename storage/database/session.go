@@ -21,6 +21,7 @@ const sessionBucket = "sessions"
 const tokenBucket = "tokens"
 const valueBucket = "values"
 
+// NewSessionDB returns a handle to the session & token database with the supplied expiration times
 func NewSessionDB(c DBConfig, sessionExpiration, tokenExpiration time.Duration) (*SessionDB, error) {
 	baseDir := path.Join(c.Dir, "session")
 	db, err := db.OpenDatabase(c.Engine, c.URI, filepath.Join(baseDir, "sessions"))

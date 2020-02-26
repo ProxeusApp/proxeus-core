@@ -24,6 +24,7 @@ type MongoShim struct {
 const initializedKey = "initialized"
 const ttlKey = "ttl"
 
+// OpenMongo connects to the database using the specified URI and database name and returns a handle for accessing it
 func OpenMongo(dbURI string, dbName string) (*MongoShim, error) {
 	spl := strings.Split(dbName, "/")
 	dbName = spl[len(spl)-1]
@@ -186,6 +187,7 @@ func (s *MongoShim) WithBatch(enabled bool) DB {
 	return s
 }
 
+// Rollback aborts the current session's uncommited transactions
 func (s *MongoShim) Rollback() error {
 	if s.sess == nil {
 		return nil
@@ -199,6 +201,7 @@ func (s *MongoShim) Rollback() error {
 	return nil
 }
 
+// Commit applies yet uncommited transactions of the current session
 func (s *MongoShim) Commit() error {
 	if s.sess == nil {
 		return nil
@@ -402,6 +405,7 @@ func (s *MongoShim) All(to interface{}) error {
 	return nil
 }
 
+// Close disconnects the db client from the database
 func (s *MongoShim) Close() error {
 	return s.db.Client().Disconnect(s.ctx())
 }

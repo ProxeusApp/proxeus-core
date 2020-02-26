@@ -6,6 +6,7 @@ import (
 	"github.com/ProxeusApp/proxeus-core/sys/model"
 )
 
+// IsReadGrantedFor returns a matcher used to compare permisions fields with specific values
 func IsReadGrantedFor(auth model.Auth, includeGrant bool) q.Matcher {
 	if auth.AccessRights().IsGrantedFor(model.SUPERADMIN) {
 		return q.True()
