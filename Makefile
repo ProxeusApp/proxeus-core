@@ -97,7 +97,7 @@ license:
 	license_finder
 
 .PHONY: doc
-doc: init
+doc: init server
 	$(eval serverurl=localhost:6060)
 	pwd
 	ls -la
