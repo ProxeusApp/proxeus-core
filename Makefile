@@ -99,6 +99,8 @@ license:
 .PHONY: doc
 doc: init
 	$(eval serverurl=localhost:6060)
+	pwd
+	ls -la
 	GO111MODULE=on godoc -http=$(serverurl) &
 	sleep 3
 	# Download css & js first
