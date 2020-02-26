@@ -323,6 +323,13 @@ func PostInit(e echo.Context) error {
 	return c.NoContent(http.StatusOK)
 }
 
+// Returns an object containing the following config parameters
+// {
+//   roles => string[] => Possible User Roles
+//   blockchainNet => string => Settings.BlockchainNet
+//   blockchainProxeusFSAddress => string => Settings.BlockchainContractAddress
+//   version => string => Proxeus version
+// }
 func ConfigHandler(version string) echo.HandlerFunc {
 	return func(e echo.Context) error {
 		c := e.(*www.Context)
