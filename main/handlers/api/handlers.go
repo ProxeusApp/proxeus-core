@@ -356,6 +356,21 @@ type loginForm struct {
 	Address   string `json:"address" form:"address"`
 }
 
+// Update a users' blockchain address
+//
+// @param loginForm => {
+//	Signature string
+//	Name      string `json:"name" form:"name"`
+//	Email     string `json:"email" form:"email"`
+//	Password  string `json:"password" form:"password"`
+//	Address   string `json:"address" form:"address"`
+// }
+// @returns
+//	200 => OK
+//	401 => Unauthorized
+//  422 => Challenge error/Signature error
+//  500 => User not found
+// }
 func UpdateAddress(e echo.Context) error {
 	c := e.(*www.Context)
 	loginForm := new(loginForm)
@@ -409,6 +424,22 @@ func SwitchUserHandler(e echo.Context) error {
 	return c.NoContent(http.StatusOK)
 }
 
+// Create an auth session
+//
+// @params => {
+//	Signature string
+//	Name      string `json:"name" form:"name"`
+//	Email     string `json:"email" form:"email"`
+//	Password  string `json:"password" form:"password"`
+//	Address   string `json:"address" form:"address"`
+//}
+// @returns
+//	200 => OK => {
+//		"location": redirectAfterLogin(user.Role, string(referer)),
+//		"created":  created,
+//	}
+//  400 => Auth error
+// }
 func LoginHandler(e echo.Context) (err error) {
 	c := e.(*www.Context)
 	loginForm := new(loginForm)
@@ -513,6 +544,10 @@ func LoginWithWallet(c *www.Context, challenge, signature string) (bool, *model.
 	return created, usr, err
 }
 
+// Returns an object containing
+// {
+//   token => string => Session ID
+// }
 func GetSessionTokenHandler(e echo.Context) (err error) {
 	c := e.(*www.Context)
 
@@ -549,6 +584,7 @@ func GetSessionTokenHandler(e echo.Context) (err error) {
 	})
 }
 
+// Ends the context's session and returns 200 => OK in any case
 func DeleteSessionTokenHandler(e echo.Context) (err error) {
 	c := e.(*www.Context)
 	c.EndSession()
@@ -600,6 +636,21 @@ func InviteRequest(e echo.Context) (err error) {
 	return c.NoContent(http.StatusOK)
 }
 
+// Handles a registration request
+//
+// @params => {
+//		Email  string    `json:"email" validate:"email=true,required=true"`
+//		Token  string    `json:"token"`
+//		UserID string    `json:"userID"`
+//		Role   Role      `json:"role"`
+//		Type   TokenType `json:"type"`
+//	}
+// @returns
+//	200 => OK
+//  417 => E-Mail error
+//  422 => Input validation error
+//  500 => Data layer error
+// }
 func RegisterRequest(e echo.Context) (err error) {
 	c := e.(*www.Context)
 	m := &model.TokenRequest{}
@@ -650,6 +701,17 @@ func RegisterRequest(e echo.Context) (err error) {
 	return c.NoContent(http.StatusOK)
 }
 
+// Persists a registration request
+//
+// @params => {
+//	 string => token
+//   string => password
+// }
+// @returns
+//	200 => OK
+//  417 => Token not found/User not found/Data Layer error
+//  422 => Input validation error
+// }
 func Register(e echo.Context) error {
 	c := e.(*www.Context)
 	tokenID := c.Param("token")
@@ -685,6 +747,22 @@ func Register(e echo.Context) error {
 	return c.NoContent(http.StatusOK)
 }
 
+// Start a user password change request
+//
+// @params => {
+//		Email  string    `json:"email" validate:"email=true,required=true"`
+//		Token  string    `json:"token"`
+//		UserID string    `json:"userID"`
+//		Role   Role      `json:"role"`
+//		Type   TokenType `json:"type"`
+//	}
+// @returns
+//	200 => OK
+//	400 => Token request not found
+//  417 => E-Mail error
+//  422 => Input validation error
+//  500 => Token error
+// }
 func ResetPasswordRequest(e echo.Context) (err error) {
 	c := e.(*www.Context)
 	m := &model.TokenRequest{}
@@ -728,6 +806,14 @@ func ResetPasswordRequest(e echo.Context) (err error) {
 	return c.NoContent(http.StatusOK)
 }
 
+// Reset a users' password
+//
+// @params => string => tokenID
+// @returns
+//	200 => OK
+//  417 => Data layer error
+//  422 => Input validation error
+// }
 func ResetPassword(e echo.Context) error {
 	c := e.(*www.Context)
 	tokenID := c.Param("token")
@@ -752,6 +838,22 @@ func ResetPassword(e echo.Context) error {
 	return c.NoContent(http.StatusOK)
 }
 
+// Start a users email change request
+//
+// @param tokenRequest => {
+//		Email  string    `json:"email" validate:"email=true,required=true"`
+//		Token  string    `json:"token"`
+//		UserID string    `json:"userID"`
+//		Role   Role      `json:"role"`
+//		Type   TokenType `json:"type"`
+//	}
+// @returns
+//	200 => OK
+//	401 => Unauthorized
+//  417 => E-Mail error
+//  422 => Input error
+//  500 => Token error
+// }
 func ChangeEmailRequest(e echo.Context) (err error) {
 	c := e.(*www.Context)
 	m := &model.TokenRequest{}
@@ -799,6 +901,14 @@ func ChangeEmailRequest(e echo.Context) (err error) {
 	return c.NoContent(http.StatusOK)
 }
 
+// Update a users' e-mail address
+//
+// @param tokenID => string => Request token
+// @returns
+//	200 => OK
+//	400 => Token request not found
+//  417 => Data layer error
+// }
 func ChangeEmail(e echo.Context) error {
 	c := e.(*www.Context)
 	tokenID := c.Param("token")
@@ -822,6 +932,13 @@ func ChangeEmail(e echo.Context) error {
 	return c.NoContent(http.StatusOK)
 }
 
+// Remove the users' auth session
+//
+// @params => nil
+// @returns
+//	200 => OK => {
+//		"location": "/"
+//	}
 func LogoutHandler(e echo.Context) error {
 	c := e.(*www.Context)
 	c.EndSession()
@@ -846,7 +963,8 @@ func redirectAfterLogin(role model.Role, referer string) string {
 	return suggestedByRole
 }
 
-// apiChallengeHandler replies with a message to be signed
+// Returns a string in plaintext, containing the message to be signed.
+// Returns 400 => Bad Request if no session is found
 func ChallengeHandler(e echo.Context) error {
 	c := e.(*www.Context)
 	langMessage := c.I18n().T("Account sign message")
@@ -1896,6 +2014,16 @@ func WorkflowExecuteAtOnce(e echo.Context) error {
 	return nil
 }
 
+// Remove the users' auth session
+//
+// @params => {
+//   name => string,
+//   ID => string,
+// }
+// @returns
+//	200 => apiKey string
+//  400 => Data layer error/Validation error
+//  401 => Unauthorized
 func CreateApiKeyHandler(e echo.Context) error {
 	c := e.(*www.Context)
 	sess := c.Session(false)
@@ -1917,6 +2045,15 @@ func CreateApiKeyHandler(e echo.Context) error {
 	return c.String(http.StatusOK, apiKey)
 }
 
+// Remove the users' auth session
+//
+// @params => {
+//   ID => string,
+// }
+// @returns
+//	200 => apiKey string
+//  400 => Data layer error
+//  401 => Unauthorized
 func DeleteApiKeyHandler(e echo.Context) error {
 	c := e.(*www.Context)
 	sess := c.Session(false)
