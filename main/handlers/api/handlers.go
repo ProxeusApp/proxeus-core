@@ -1448,50 +1448,7 @@ func UserDeleteHandler(e echo.Context) error {
 		return c.NoContent(http.StatusUnauthorized)
 	}
 
-	//remove documents / workflow instances of user
-	userDataDB := c.System().DB.UserData
-	workflowInstances, err := userDataDB.List(sess, "", storage.Options{}, false)
-	if err != nil && !db.NotFound(err) {
-		return c.NoContent(http.StatusInternalServerError)
-	}
-	for _, workflowInstance := range workflowInstances {
-		err = userDataDB.Delete(sess, c.System().DB.Files, workflowInstance.ID)
-		if err != nil {
-			return c.NoContent(http.StatusInternalServerError)
-		}
-	}
-
-	//set workflow templates to deactivated
-	workflowDB := c.System().DB.Workflow
-	workflows, err := workflowDB.List(sess, "", storage.Options{})
-	if err != nil && !db.NotFound(err) {
-		return c.NoContent(http.StatusInternalServerError)
-	}
-	for _, workflow := range workflows {
-		if workflow.OwnedBy(sess) {
-			workflow.Deactivated = true
-			err = workflowDB.Put(sess, workflow)
-			if err != nil {
-				return c.NoContent(http.StatusInternalServerError)
-			}
-		}
-	}
-
-	// unset user data and set inactive
-	userDB := c.System().DB.User
-	user, err := userDB.Get(sess, sess.UserID())
-	if err != nil {
-		return c.NoContent(http.StatusInternalServerError)
-	}
-	user.Active = false
-	user.EthereumAddr = "0x"
-	user.Email = ""
-	user.Name = ""
-	user.Photo = ""
-	user.PhotoPath = ""
-	user.WantToBeFound = false
-
-	err = userDB.Put(sess, user)
+	err := userService.DeleteUser(sess)
 	if err != nil {
 		return c.NoContent(http.StatusInternalServerError)
 	}
