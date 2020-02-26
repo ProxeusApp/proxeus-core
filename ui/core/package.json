@@ -6,7 +6,7 @@
   "private": true,
   "scripts": {
     "check-node-version": "check-node-version --package",
-    "serve": "vue-cli-service serve",
+    "serve": "node --max_old_space_size=4096 node_modules/.bin/vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
     "test:unit": "vue-cli-service test:unit",
