@@ -107,13 +107,11 @@ func MainHostedAPI(e *echo.Echo, s *www.Security, version string) {
 		{GET, GUEST, "/api/user/document", api.UserDocumentListHandler},
 		{GET, USER, "/api/user/document/:ID", api.UserDocumentGetHandler},
 		{GET, GUEST, "/api/user/document/file/:ID/:dataPath", api.UserDocumentFileHandler},
-
 		{GET, USER, "/api/user/document/signingRequests/:ID/:docID", api.UserDocumentSignatureRequestGetByDocumentIDHandler},
 		{POST, USER, "/api/user/document/signingRequests/:ID/:docID/add", api.UserDocumentSignatureRequestAddHandler},
 		{POST, USER, "/api/user/document/signingRequests/:ID/:docID/revoke", api.UserDocumentSignatureRequestRevokeHandler},
 		{POST, USER, "/api/user/document/signingRequests/:ID/:docID/reject", api.UserDocumentSignatureRequestRejectHandler},
 		{GET, USER, "/api/user/document/signingRequests", api.UserDocumentSignatureRequestGetCurrentUserHandler},
-
 		{POST, USER, "/api/user/delete", api.UserDeleteHandler},
 
 		// import export

@@ -13,10 +13,12 @@ import (
 	"github.com/labstack/echo"
 )
 
+// Gets the absolute url of a path (uri)
 func AbsoluteURL(c echo.Context, uri ...string) string {
-	return c.Scheme() + "://" + path.Join(c.Request().Host, path.Join(uri...))
+	return AbsoluteURLWithScheme(c.Scheme(), c.Request().Host, uri...)
 }
 
+// Gets the absolute url of a path (uri)
 func AbsoluteURLWithScheme(scheme, host string, uri ...string) string {
 	return scheme + "://" + path.Join(host, path.Join(uri...))
 }

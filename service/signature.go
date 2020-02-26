@@ -213,11 +213,11 @@ func (me *DefaultSignatureService) RevokeAndNotify(auth model.Auth, translator w
 	// The requestor has retracted the request. You may still log in and view the request, but can no longer sign the document.
 	// To check your signature requests, please log in <here (link to requests, if logged in>
 
-	subject := translator.T("New signature request received")
+	subject := translator.T("signature request revoked")
 	body := fmt.Sprintf("<div>Earlier you may have received a signature request from %s by %s (%s)<br />%s<br /><br />"+
 		"The requestor has retracted the request. You may still log in and view the request, but can no longer sign the document."+
 		"<br /><br />To check your signature requests, please log in <a href='%s'>here</a></div>",
-		host, requestor.Name, requestor.Email, requestor.EthereumAddr, helpers.AbsoluteURLWithScheme(scheme, "/user/signature-requests"))
+		host, requestor.Name, requestor.Email, requestor.EthereumAddr, helpers.AbsoluteURLWithScheme(scheme, host, "/user/signature-requests"))
 	err = me.emailService.Send(sig.Email, subject, body)
 	if err != nil {
 		log.Println("UserDocumentSignatureRequestRevokeHandler emailService.Send err: ", err.Error())
@@ -236,14 +236,13 @@ func (me *DefaultSignatureService) RejectAndNotify(auth model.Auth, translator w
 		return os.ErrNotExist
 	}
 	signatureRequest := (*signatureRequests)[0]
-	req := signatureRequest.Requestor
 
 	err = signatureRequestDB().SetRejected(id, docId, signatoryAddr)
 	if err != nil {
 		return os.ErrNotExist
 	}
 
-	requestorAddr, err := userDB().GetByBCAddress(req)
+	requestorAddr, err := userDB().GetByBCAddress(signatureRequest.Requestor)
 	if err != nil {
 		return err
 	}
@@ -256,7 +255,7 @@ func (me *DefaultSignatureService) RejectAndNotify(auth model.Auth, translator w
 	// You may send another request if you think this was by mistake.
 
 	subject := translator.T("Signature request rejected")
-	body := fmt.Sprintf("<div>Your signature request for a document on %s from %s <br />has been rejected by  %s (%s)<br />%s<br />"+
+	body := fmt.Sprintf("<div>Your signature request for a document on %s from %s <br />has been rejected by %s (%s)<br />%s<br />"+
 		"<br />You may send another request if you think this was by mistake.</div>",
 		host, signatureRequest.RequestedAt.Format("2.1.2006 15:04"), item.Name, item.Email, item.EthereumAddr)
 	err = me.emailService.Send(requestorAddr.Email, subject, body)
