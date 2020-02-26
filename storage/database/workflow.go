@@ -25,6 +25,7 @@ const workflowHeavyData = "wh_data"
 const workflowVersion = "wf_vers"
 const externalNodeInstance = "ExternalNodeInstance"
 
+// NewWorkflowDB returns a handle to the workflow database
 func NewWorkflowDB(c DBConfig) (*WorkflowDB, error) {
 	baseDir := filepath.Join(c.Dir, "workflow")
 	db, err := db.OpenDatabase(c.Engine, c.URI, filepath.Join(baseDir, "workflows"))
@@ -48,10 +49,12 @@ func NewWorkflowDB(c DBConfig) (*WorkflowDB, error) {
 	return udb, nil
 }
 
+// ListPublished returns all workflow items matching the supplied filter options that are flagged as published
 func (me *WorkflowDB) ListPublished(auth model.Auth, contains string, options storage.Options) ([]*model.WorkflowItem, error) {
 	return me.list(auth, contains, options, true)
 }
 
+// ListPublished returns all workflow items matching the supplied filter options
 func (me *WorkflowDB) List(auth model.Auth, contains string, options storage.Options) ([]*model.WorkflowItem, error) {
 	return me.list(auth, contains, options, false)
 }
@@ -97,6 +100,7 @@ func (me *WorkflowDB) list(auth model.Auth, contains string, options storage.Opt
 	return items, nil
 }
 
+// ListPublished returns a workflow item matching the supplied filter options that if it is flagged as published
 func (me *WorkflowDB) GetPublished(auth model.Auth, id string) (*model.WorkflowItem, error) {
 	var item model.WorkflowItem
 	err := me.db.One("ID", id, &item)
@@ -111,6 +115,7 @@ func (me *WorkflowDB) GetPublished(auth model.Auth, id string) (*model.WorkflowI
 	return itemRef, nil
 }
 
+// Get retrieves a worklfow item machting its id
 func (me *WorkflowDB) Get(auth model.Auth, id string) (*model.WorkflowItem, error) {
 	var item model.WorkflowItem
 	err := me.db.One("ID", id, &item)
@@ -125,7 +130,7 @@ func (me *WorkflowDB) Get(auth model.Auth, id string) (*model.WorkflowItem, erro
 	return itemRef, nil
 }
 
-// Retrieve multiple workflows. If one is not found, an error is returned
+// GetList retrieves multiple workflows by matching their id
 func (me *WorkflowDB) GetList(auth model.Auth, ids []string) ([]*model.WorkflowItem, error) {
 	var workflows []*model.WorkflowItem
 	for _, id := range ids {
@@ -141,6 +146,7 @@ func (me *WorkflowDB) GetList(auth model.Auth, ids []string) ([]*model.WorkflowI
 	return workflows, nil
 }
 
+//Put adds a workflow item into the database
 func (me *WorkflowDB) Put(auth model.Auth, item *model.WorkflowItem) error {
 	return me.put(auth, item, true)
 }
@@ -204,6 +210,7 @@ func (me *WorkflowDB) updateWF(auth model.Auth, item *model.WorkflowItem, tx db.
 	return tx.Commit()
 }
 
+// Delete removes a workflow item from the database by matching its id
 func (me *WorkflowDB) Delete(auth model.Auth, id string) error {
 	tx, err := me.db.Begin(true)
 	if err != nil {
@@ -241,16 +248,19 @@ func (me *WorkflowDB) saveOnly(item *model.WorkflowItem, tx db.DB) error {
 	return tx.Save(&cp)
 }
 
+// RegisterExternalNode saves an external node definition
 func (me *WorkflowDB) RegisterExternalNode(auth model.Auth, n *externalnode.ExternalNode) error {
 	return me.db.Save(n)
 }
 
+// NodeByName retrieves an external node definition matching the supplied name
 func (me *WorkflowDB) NodeByName(auth model.Auth, name string) (*externalnode.ExternalNode, error) {
 	var i externalnode.ExternalNode
 	err := me.db.One("Name", name, &i)
 	return &i, err
 }
 
+// QueryFromInstanceID return an external node instance by machting the specified id
 func (me *WorkflowDB) QueryFromInstanceID(auth model.Auth, id string) (externalnode.ExternalQuery, error) {
 	var i externalnode.ExternalNodeInstance
 	err := me.db.Get(externalNodeInstance, id, &i)
@@ -267,6 +277,7 @@ func (me *WorkflowDB) QueryFromInstanceID(auth model.Auth, id string) (externaln
 	}, nil
 }
 
+// ListExternalNodes return a list of all external node definitions
 func (me *WorkflowDB) ListExternalNodes() []*externalnode.ExternalNode {
 	var l []*externalnode.ExternalNode
 	me.db.Select().Each(new(externalnode.ExternalNode), func(record interface{}) error {
@@ -277,10 +288,12 @@ func (me *WorkflowDB) ListExternalNodes() []*externalnode.ExternalNode {
 	return l
 }
 
+// DeleteExternalNode remove an external node definition
 func (me *WorkflowDB) DeleteExternalNode(auth model.Auth, id string) error {
 	return me.db.DeleteStruct(&externalnode.ExternalNode{ID: id})
 }
 
+// PutExternalNodeInstance saves an instance of an external node to the database
 func (me *WorkflowDB) PutExternalNodeInstance(auth model.Auth, item *externalnode.ExternalNodeInstance) error {
 	tx, err := me.db.Begin(true)
 	if err != nil {

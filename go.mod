@@ -4,7 +4,7 @@ go 1.13
 
 require (
 	github.com/DataDog/zstd v1.4.4 // indirect
-	github.com/ProxeusApp/proxeus-core/externalnode v0.0.0-00010101000000-000000000000
+	github.com/ProxeusApp/proxeus-core/externalnode v0.0.0-20200224162123-278dfce8819f
 	github.com/SparkPost/gosparkpost v0.0.0-20170825125937-4c6d2a3be658
 	github.com/ajg/form v1.5.1 // indirect
 	github.com/allegro/bigcache v1.2.1 // indirect
@@ -94,4 +94,4 @@ require (
 
 replace github.com/ProxeusApp/proxeus-core => ./
 
-replace github.com/ProxeusApp/proxeus-core/externalnode => ./externalnode
+//replace github.com/ProxeusApp/proxeus-core/externalnode => ./externalnode

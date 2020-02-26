@@ -28,6 +28,7 @@ func resolveHomeDirectory(path string) string {
 	return filepath.Clean(filepath.Join(u.HomeDir, path[1:]))
 }
 
+// NewSettingsDB returns a handle to access the settings database / file
 func NewSettingsDB(settingsFile string, initialSettings *model.Settings) (*SettingsDB, error) {
 	path := resolveHomeDirectory(settingsFile)
 	err := os.MkdirAll(filepath.Dir(path), 0750)
@@ -53,6 +54,7 @@ func NewSettingsDB(settingsFile string, initialSettings *model.Settings) (*Setti
 	return sdb, nil
 }
 
+// Put adds a new set of settings into the database / file
 func (se *SettingsDB) Put(s *model.Settings) error {
 	err := validate.Struct(s)
 	if err != nil {
@@ -61,6 +63,7 @@ func (se *SettingsDB) Put(s *model.Settings) error {
 	return se.jf.Put(s)
 }
 
+// Get retrieves all settings from the database / file
 func (se *SettingsDB) Get() (*model.Settings, error) {
 	var s model.Settings
 	err := se.jf.Get(&s)

@@ -1,0 +1,14 @@
+{
+  "name": "e2e",
+  "version": "1.0.0",
+  "description": "End to End tests",
+  "scripts": {
+    "cy:open": "cypress open",
+    "cy:run": "cypress run"
+  },
+  "author": "Silvio Rainoldi",
+  "license": "ISC",
+  "dependencies": {
+    "cypress": "^4.0.2"
+  }
+}

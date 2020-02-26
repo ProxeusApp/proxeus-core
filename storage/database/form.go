@@ -33,6 +33,7 @@ const formVersion = "form_version"
 
 const formCompVersion = "formComp_version"
 
+// NewFormDB returns a handle to the form component database
 func NewFormDB(c DBConfig) (*FormDB, error) {
 	baseDir := filepath.Join(c.Dir, "form")
 	db, err := db.OpenDatabase(c.Engine, c.URI, filepath.Join(baseDir, "forms"))
@@ -60,6 +61,7 @@ func NewFormDB(c DBConfig) (*FormDB, error) {
 	return udb, nil
 }
 
+// List returns the set of form items matching the supplied filter criteria
 func (me *FormDB) List(auth model.Auth, contains string, options storage.Options) ([]*model.FormItem, error) {
 	params := makeSimpleQuery(options)
 	var items []*model.FormItem
@@ -86,6 +88,7 @@ func (me *FormDB) List(auth model.Auth, contains string, options storage.Options
 	return items, nil
 }
 
+// Get returns one form item by its id
 func (me *FormDB) Get(auth model.Auth, id string) (*model.FormItem, error) {
 	var item model.FormItem
 	err := me.db.One("ID", id, &item)
@@ -100,6 +103,7 @@ func (me *FormDB) Get(auth model.Auth, id string) (*model.FormItem, error) {
 	return itemRef, err
 }
 
+// Put saves a form item into the database
 func (me *FormDB) Put(auth model.Auth, item *model.FormItem) error {
 	return me.put(auth, item, true)
 }
@@ -157,6 +161,7 @@ func (me *FormDB) put(auth model.Auth, item *model.FormItem, updated bool) error
 	}
 }
 
+// Delete removes a form item from the database
 func (me *FormDB) Delete(auth model.Auth, id string) error {
 	tx, err := me.db.Begin(true)
 	if err != nil {
@@ -218,6 +223,7 @@ func (me *FormDB) updateVars(auth model.Auth, item *model.FormItem, tx db.DB) er
 	return nil
 }
 
+// DelComp removes a form component definition from the database
 func (me *FormDB) DelComp(auth model.Auth, id string) error {
 	if !auth.AccessRights().IsGrantedForUserModifications() {
 		return model.ErrAuthorityMissing
@@ -239,6 +245,7 @@ func (me *FormDB) DelComp(auth model.Auth, id string) error {
 	return tx.Commit()
 }
 
+// PutComp saves a form component into the database
 func (me *FormDB) PutComp(auth model.Auth, comp *model.FormComponentItem) error {
 	if comp == nil {
 		return errors.New("item cannot be nil")
@@ -254,6 +261,7 @@ func (me *FormDB) PutComp(auth model.Auth, comp *model.FormComponentItem) error 
 	return me.db.Save(comp)
 }
 
+// GetComp retrieves a form component from the database
 func (me *FormDB) GetComp(auth model.Auth, id string) (*model.FormComponentItem, error) {
 	if id == "" {
 		return nil, fmt.Errorf("id can't be empty")
@@ -292,6 +300,7 @@ func (me *formComponentSearchMatcher) MatchField(v interface{}) (bool, error) {
 	return len(me.re.FindIndex(bts)) > 0, nil
 }
 
+// ListComp returns a list of form component matching the supplied filter criteria
 func (me *FormDB) ListComp(auth model.Auth, contains string, options storage.Options) (map[string]*model.FormComponentItem, error) {
 	params := makeSimpleQuery(options)
 	items := make(map[string]*model.FormComponentItem)
@@ -345,6 +354,7 @@ func (me *FormDB) ListComp(auth model.Auth, contains string, options storage.Opt
 	return items, nil
 }
 
+// Vars returns a list of variable defined in a form
 func (me *FormDB) Vars(auth model.Auth, contains string, options storage.Options) ([]string, error) {
 	contains = regexp.QuoteMeta(contains)
 	params := makeSimpleQuery(options)

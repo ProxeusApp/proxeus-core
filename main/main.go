@@ -7,6 +7,8 @@ import (
 	"os"
 	"path"
 
+	"github.com/ProxeusApp/proxeus-core/main/handlers/workflow"
+
 	"github.com/ProxeusApp/proxeus-core/service"
 
 	"github.com/ProxeusApp/proxeus-core/main/handlers/api"
@@ -62,11 +64,19 @@ func main() {
 	fmt.Println()
 
 	//Important: Pass system to services (and not e.g. system.DB.WorkflowPayments because system.DB variable is replaced on calling api/handlers.PostInit()
-	userService := service.NewUserService(system)
-	paymentService := service.NewPaymentService(userService, system)
+	service.Init(system)
+	userService := service.NewUserService()
+	paymentService := service.NewPaymentService(userService)
+	workflowService := service.NewWorkflowService(userService)
+	nodeService := service.NewNodeService(workflowService)
+	fileService := service.NewFileService()
+	documentService := service.NewDocumentService(userService, fileService)
+	templateDocumentService := service.NewTemplateDocumentService()
+	userDocumentService := service.NewUserDocumentService(userService, fileService, templateDocumentService)
 
 	payment.Init(paymentService, userService)
-	api.Init(paymentService, userService)
+	api.Init(paymentService, userService, workflowService, documentService, userDocumentService, fileService, templateDocumentService)
+	workflow.Init(workflowService, userService, nodeService)
 
 	www.SetSystem(system)
 
@@ -152,7 +162,7 @@ func StaticHandler(c echo.Context) error {
 	} else {
 		header.Set("Cache-Control", "public,max-age=72000")
 	}
-	b, err := embedded.FindAssetWithCT(url, &ct)
+	b, err := embedded.FindAssetWithContentType(url, &ct)
 	if err == nil {
 		return c.Blob(http.StatusOK, ct, b)
 	}
