@@ -19,6 +19,7 @@ type storedFile struct {
 	Data []byte
 }
 
+// NewFileDB returns a handle for the File database
 func NewFileDB(c DBConfig) (*FileDB, error) {
 	baseDir := path.Join(c.Dir, "file")
 	db, err := db.OpenDatabase(c.Engine, c.URI, filepath.Join(baseDir, "files"))
@@ -28,6 +29,7 @@ func NewFileDB(c DBConfig) (*FileDB, error) {
 	return &FileDB{db: db}, nil
 }
 
+// Read returns a file content to the supplied writer
 func (d *FileDB) Read(path string, w io.Writer) error {
 	if path == "" {
 		return os.ErrNotExist
@@ -41,6 +43,7 @@ func (d *FileDB) Read(path string, w io.Writer) error {
 	return err
 }
 
+// Write writes a file content from the supplied reader
 func (d *FileDB) Write(path string, r io.Reader) error {
 	buf, err := ioutil.ReadAll(r)
 	if err != nil {
@@ -50,6 +53,7 @@ func (d *FileDB) Write(path string, r io.Reader) error {
 	return d.db.Set("storedFile", f.ID, &f)
 }
 
+// Exists checks whether a file with a specific path exists in the file database
 func (d *FileDB) Exists(path string) (bool, error) {
 	var f storedFile
 	err := d.db.Get("storedFile", path, &f)
@@ -61,7 +65,10 @@ func (d *FileDB) Exists(path string) (bool, error) {
 	}
 	return true, nil
 }
+
+//Delete removes a file from the file database
 func (d *FileDB) Delete(path string) error {
 	return d.db.Delete("storedFile", path)
 }
+
 func (d *FileDB) Close() error { return d.db.Close() }

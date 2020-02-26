@@ -9,6 +9,7 @@ import (
 	"github.com/asdine/storm"
 )
 
+// OpenDatabase returns a handle to the respective database chosen by the engine specified
 func OpenDatabase(engine, uri, name string) (DB, error) {
 	switch engine {
 	case "mongo":
@@ -19,6 +20,7 @@ func OpenDatabase(engine, uri, name string) (DB, error) {
 	return nil, fmt.Errorf("unknown db engine '%s'", engine)
 }
 
+// NotFound returns whether an error in the used db engine is of type not found
 func NotFound(err error) bool {
 	return err == mongo.ErrNoDocuments || err == storm.ErrNotFound
 }

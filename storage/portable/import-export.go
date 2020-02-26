@@ -46,6 +46,7 @@ type importExportMeta struct {
 	Version int
 }
 
+// NewImportExport creates a configuration to import and export database files
 func NewImportExport(auth model.Auth, dbSet *storage.DBSet, dir string) (*ImportExport, error) {
 	u := uuid.NewV4()
 	ie := &ImportExport{
@@ -72,6 +73,7 @@ func (ie *ImportExport) SetSkipExistingOnImport(yes bool) {
 	ie.skipExistingOnImport = yes
 }
 
+// Pack produces and return the handle to a tar file containing the export of the database files
 func (ie *ImportExport) Pack() (*os.File, error) {
 	var err error
 	if !ie.exportingAllUsersAnyway && len(ie.neededUsers) > 0 {

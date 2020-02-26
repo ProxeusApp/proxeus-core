@@ -6,6 +6,7 @@ import (
 	"github.com/ProxeusApp/proxeus-core/storage"
 )
 
+// NewDBSet uses the configuration in the setting db to instantiate the remaining databases and return them as a set
 func NewDBSet(sDB storage.SettingsIF, folderPath string) (me *storage.DBSet, err error) {
 	me = &storage.DBSet{Settings: sDB}
 	settings, err := me.Settings.Get()
