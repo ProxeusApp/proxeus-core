@@ -59,19 +59,15 @@ func MainHostedAPI(e *echo.Echo, s *www.Security, version string) {
 		{GET, PUBLIC, "/document", api.UserBackendHTMLHandler},
 		{GET, PUBLIC, "/document/:ID/payment", api.UserBackendHTMLHandler},
 		{GET, PUBLIC, "/document/:ID", api.UserBackendHTMLHandler},
-		{GET, USER, "/api/my/profile/photo", api.GetProfilePhotoHandler},
-		{GET, USER, "/api/profile/photo", api.GetProfilePhotoHandler},
 	}
 
 	routesNoCache := []r{
-		{GET, ROOT, "/api/switch/user/:address", api.SwitchUserHandler},
-		{GET, USER, "/api/export/results", api.GetExportResults},
-		{GET, USER, "/api/import/results", api.GetImportResults},
-		{GET, USER, "/api/export", api.GetExport},
-		{POST, USER, "/api/export", api.GetExport},
-		{POST, USER, "/api/import", api.PostImport},
-		{GET, ROOT, "/api/init", api.GetInit},
-		{POST, ROOT, "/api/init", api.PostInit},
+		// config
+		{GET, PUBLIC, "/api/config", api.ConfigHandler(version)},
+
+		// authentication
+		{GET, PUBLIC, "/api/session/token", api.GetSessionTokenHandler},
+		{DELETE, USER, "/api/session/token", api.DeleteSessionTokenHandler},
 		{GET, PUBLIC, "/api/challenge", api.ChallengeHandler},       // Need session
 		{POST, PUBLIC, "/api/change/bcaddress", api.UpdateAddress},  // Need session
 		{POST, PUBLIC, "/api/change/email", api.ChangeEmailRequest}, // Need session
@@ -82,20 +78,18 @@ func MainHostedAPI(e *echo.Echo, s *www.Security, version string) {
 		{POST, PUBLIC, "/api/register/:token", api.Register},
 		{POST, PUBLIC, "/api/login", api.LoginHandler},
 		{POST, PUBLIC, "/api/logout", api.LogoutHandler},
-		{GET, PUBLIC, "/api/config", api.ConfigHandler(version)},
+		{GET, USER, "/api/user/create/api/key/:ID", api.CreateApiKeyHandler},
+		{DELETE, USER, "/api/user/create/api/key/:ID", api.DeleteApiKeyHandler},
+
+		// user
 		{GET, PUBLIC, "/api/me", api.MeHandler}, // Need session
 		{POST, USER, "/api/me", api.MeUpdateHandler},
-
-		// API Key session
-		{GET, PUBLIC, "/api/session/token", api.GetSessionTokenHandler},
-		{DELETE, USER, "/api/session/token", api.DeleteSessionTokenHandler},
-
 		{POST, USER, "/api/my/profile/photo", api.PutProfilePhotoHandler},
+		{GET, USER, "/api/my/profile/photo", api.GetProfilePhotoHandler},
+		{GET, USER, "/api/profile/photo", api.GetProfilePhotoHandler},
 
-		{GET, ROOT, "/api/settings/export", api.ExportSettings},
-		{GET, USER, "/api/userdata/export", api.ExportUserData},
+		// document
 		{GET, PUBLIC, "/api/document/:ID", api.DocumentHandler}, // Need session
-
 		{GET, PUBLIC, "/api/document/list", workflow.ListPublishedHandler},
 		{GET, PUBLIC, "/api/document/:ID/allAtOnce/schema", api.WorkflowSchema},
 		{POST, PUBLIC, "/api/document/:ID/allAtOnce", api.WorkflowExecuteAtOnce},
@@ -109,6 +103,7 @@ func MainHostedAPI(e *echo.Echo, s *www.Security, version string) {
 		{GET, PUBLIC, "/api/document/:ID/preview/:templateID/:lang/:format", api.DocumentPreviewHandler}, // Should be GUEST
 		{GET, GUEST, "/api/document/:ID/delete", api.DocumentDeleteHandler},
 
+		// user document
 		{GET, GUEST, "/api/user/document", api.UserDocumentListHandler},
 		{GET, USER, "/api/user/document/:ID", api.UserDocumentGetHandler},
 		{GET, GUEST, "/api/user/document/file/:ID/:dataPath", api.UserDocumentFileHandler},
@@ -119,9 +114,20 @@ func MainHostedAPI(e *echo.Echo, s *www.Security, version string) {
 		{GET, USER, "/api/user/document/signingRequests", api.UserDocumentSignatureRequestGetCurrentUserHandler},
 		{POST, USER, "/api/user/delete", api.UserDeleteHandler},
 
+		// import export
 		{GET, USER, "/api/user/export", api.ExportUser},
-		{GET, USER, "/api/user/create/api/key/:ID", api.CreateApiKeyHandler},
-		{DELETE, USER, "/api/user/create/api/key/:ID", api.DeleteApiKeyHandler},
+		{GET, ROOT, "/api/settings/export", api.ExportSettings},
+		{GET, USER, "/api/userdata/export", api.ExportUserData},
+		{GET, USER, "/api/export/results", api.GetExportResults},
+		{GET, USER, "/api/import/results", api.GetImportResults},
+		{GET, USER, "/api/export", api.GetExport},
+		{POST, USER, "/api/export", api.GetExport},
+		{POST, USER, "/api/import", api.PostImport},
+
+		// admin
+		{GET, ROOT, "/api/init", api.GetInit},
+		{POST, ROOT, "/api/init", api.PostInit},
+		{GET, ROOT, "/api/switch/user/:address", api.SwitchUserHandler},
 		{POST, ADMIN, "/api/admin/invite", api.InviteRequest},
 		{GET, SUPERADMIN, " /api/admin/user/:ID", api.AdminUserGetHandler},
 		{GET, USER, " /api/admin/user/list", api.AdminUserListHandler},
@@ -161,9 +167,8 @@ func MainHostedAPI(e *echo.Echo, s *www.Security, version string) {
 		{GET, SUPERADMIN, "/api/admin/payments/list", payment.ListPayments},
 		{DELETE, SUPERADMIN, "/api/admin/payments/:paymentId", payment.DeleteWorkflowPayment},
 
-		// form builder
+		// form
 		{GET, PUBLIC, "/api/form/component", formbuilder.GetComponentsHandler}, // `Need session`
-
 		{GET, USER, "/api/form/export", formbuilder.ExportForms},
 		{GET, CREATOR, "/api/admin/form/:ID/delete", formbuilder.DeleteHandler},
 		{GET, PUBLIC, "/api/admin/form/list", formbuilder.ListHandler}, // Need session
@@ -182,7 +187,8 @@ func MainHostedAPI(e *echo.Echo, s *www.Security, version string) {
 		{GET, PUBLIC, "/api/admin/form/test/file/:id/:fieldname", formbuilder.GetFileIdFieldName}, // Need session
 		{GET, PUBLIC, "/api/admin/form/file/types", formbuilder.GetFileTypes},
 		{POST, PUBLIC, "/api/admin/form/test/file/:id/:fieldname", formbuilder.PostFileIdFieldName}, // Need session
-		// template IDE
+
+		// template
 		{GET, CREATOR, "/api/admin/template/:ID/delete", template_ide.DeleteHandler},
 		{GET, USER, "/api/template/export", template_ide.ExportTemplate},
 		{GET, PUBLIC, "/api/admin/template/vars", template_ide.VarsTemplateHandler},                   // Need session
@@ -200,7 +206,7 @@ func MainHostedAPI(e *echo.Echo, s *www.Security, version string) {
 		{GET, CREATOR, "/api/admin/template/ide/tmplAssistanceDownload", template_ide.IdeGetTmpAssDownload},
 		{GET, PUBLIC, "/api/admin/template/ide/form", template_ide.IdeFormHandler}, // Need session
 
-		//external node
+		// external node
 		{POST, PUBLIC, "/api/admin/external/register", api.ExternalRegister},
 		{GET, PUBLIC, "/api/admin/external/list", api.ExternalList},
 		{POST, PUBLIC, "/api/admin/external/config/:id", api.ExternalConfigStore},

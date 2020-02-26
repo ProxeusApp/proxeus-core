@@ -1,23 +1,31 @@
 package formbuilder
 
 import (
-	"encoding/json"
 	"net/http"
 	"strings"
+
+	"github.com/ProxeusApp/proxeus-core/service"
 
 	"github.com/ProxeusApp/proxeus-core/storage/portable"
 
 	"github.com/labstack/echo"
 
 	"github.com/ProxeusApp/proxeus-core/main/handlers/api"
-	"github.com/ProxeusApp/proxeus-core/storage"
-
-	"io/ioutil"
 
 	"github.com/ProxeusApp/proxeus-core/main/handlers/helpers"
 	"github.com/ProxeusApp/proxeus-core/main/www"
 	"github.com/ProxeusApp/proxeus-core/sys/model"
 )
+
+var (
+	formService          service.FormService
+	formComponentService service.FormComponentService
+)
+
+func Init(formComponentS service.FormComponentService, formS service.FormService) {
+	formComponentService = formComponentS
+	formService = formS
+}
 
 func ExportForms(e echo.Context) error {
 	c := e.(*www.Context)
@@ -25,19 +33,10 @@ func ExportForms(e echo.Context) error {
 	if sess == nil {
 		return c.NoContent(http.StatusUnauthorized)
 	}
-	var id []string
-	if c.QueryParam("id") != "" {
-		id = []string{c.QueryParam("id")}
-	} else if c.QueryParam("contains") != "" {
-		items, _ := c.System().DB.Form.List(sess, c.QueryParam("contains"), storage.Options{Limit: 1000})
-		if len(items) > 0 {
-			id = make([]string, len(items))
-			for i, item := range items {
-				id[i] = item.ID
-			}
-		}
-	}
-	return api.Export(sess, []portable.EntityType{portable.Form}, c, id...)
+	id := c.QueryParam("id")
+	contains := c.QueryParam("contains")
+	exportId := formService.ExportForms(sess, id, contains)
+	return api.Export(sess, []portable.EntityType{portable.Form}, c, exportId...)
 }
 
 func ListHandler(e echo.Context) error {
@@ -46,7 +45,7 @@ func ListHandler(e echo.Context) error {
 	settings := helpers.RequestOptions(c)
 	sess := c.Session(false)
 	if sess != nil {
-		dat, err := c.System().DB.Form.List(sess, contains, settings)
+		dat, err := formService.List(sess, contains, settings)
 		if err != nil || dat == nil {
 			if err == model.ErrAuthorityMissing {
 				return c.NoContent(http.StatusUnauthorized)
@@ -63,7 +62,7 @@ func GetOneFormHandler(e echo.Context) error {
 	formID := c.Param("formID")
 	sess := c.Session(true)
 	if sess != nil {
-		item, err := c.System().DB.Form.Get(sess, formID)
+		item, err := formService.Get(sess, formID)
 		if err != nil {
 			return c.String(http.StatusNotFound, err.Error())
 		} else {
@@ -78,21 +77,45 @@ func UpdateFormHandler(e echo.Context) error {
 	ID := c.QueryParam("id")
 	sess := c.Session(false)
 	var err error
-	if sess != nil {
-		if strings.Contains(c.Request().Header.Get("Content-Type"), "application/json") {
-			body, _ := ioutil.ReadAll(c.Request().Body)
-			item := model.FormItem{}
-			err = json.Unmarshal(body, &item)
-			if err == nil {
-				item.ID = ID
-				err = c.System().DB.Form.Put(sess, &item)
-				if err == nil {
-					return c.JSON(http.StatusOK, item)
-				}
-			}
-		}
+	if sess == nil {
+		return c.String(http.StatusBadRequest, err.Error())
+	}
+	if !strings.Contains(c.Request().Header.Get("Content-Type"), "application/json") {
+		return c.String(http.StatusBadRequest, err.Error())
+	}
+	item, err := formService.UpdateForm(sess, ID, c.Request().Body)
+	if err == nil {
+		return c.JSON(http.StatusOK, item)
 	}
 	return c.String(http.StatusBadRequest, err.Error())
+}
+
+func DeleteHandler(e echo.Context) error {
+	c := e.(*www.Context)
+	ID := c.Param("ID")
+	sess := c.Session(false)
+	if sess != nil {
+		err := formService.Delete(sess, ID)
+		if err != nil {
+			return c.String(http.StatusBadRequest, err.Error())
+		}
+		return c.NoContent(http.StatusOK)
+	}
+	return c.NoContent(http.StatusBadRequest)
+}
+
+func VarsHandler(e echo.Context) error {
+	c := e.(*www.Context)
+	containing := c.QueryParam("c")
+	sess := c.Session(false)
+	if sess != nil {
+		resultVars, err := formService.Vars(sess, containing, helpers.RequestOptions(c))
+		if err != nil {
+			return err
+		}
+		return c.JSON(http.StatusOK, resultVars)
+	}
+	return c.NoContent(http.StatusNotFound)
 }
 
 func GetComponentsHandler(e echo.Context) error {
@@ -104,10 +127,10 @@ func GetComponentsHandler(e echo.Context) error {
 		var dat interface{}
 		var err error
 		if id != "" {
-			dat, err = c.System().DB.Form.GetComp(sess, id)
+			dat, err = formComponentService.GetComp(sess, id)
 		} else {
 			settings := helpers.RequestOptions(c)
-			dat, err = c.System().DB.Form.ListComp(sess, contains, settings)
+			dat, err = formComponentService.ListComp(sess, contains, settings)
 		}
 		if err != nil {
 			return c.NoContent(http.StatusBadRequest)
@@ -129,32 +152,11 @@ func SetComponentHandler(e echo.Context) error {
 		return c.NoContent(http.StatusBadRequest)
 	}
 
-	body, _ := ioutil.ReadAll(c.Request().Body)
-	var comp model.FormComponentItem
-	err := json.Unmarshal(body, &comp)
-	if err != nil {
-		return c.NoContent(http.StatusBadRequest)
-	}
-
-	err = c.System().DB.Form.PutComp(sess, &comp)
+	comp, err := formComponentService.SetComp(sess, c.Request().Body)
 	if err != nil {
 		return c.NoContent(http.StatusInternalServerError)
 	}
 	return c.JSON(http.StatusOK, comp.ID)
-}
-
-func DeleteHandler(e echo.Context) error {
-	c := e.(*www.Context)
-	ID := c.Param("ID")
-	sess := c.Session(false)
-	if sess != nil {
-		err := c.System().DB.Form.Delete(sess, ID)
-		if err != nil {
-			return c.String(http.StatusBadRequest, err.Error())
-		}
-		return c.NoContent(http.StatusOK)
-	}
-	return c.NoContent(http.StatusBadRequest)
 }
 
 func DeleteComponentHandler(e echo.Context) error {
@@ -163,7 +165,7 @@ func DeleteComponentHandler(e echo.Context) error {
 	if id != "" {
 		sess := c.Session(false)
 		if sess != nil {
-			err := c.System().DB.Form.DelComp(sess, id)
+			err := formComponentService.DelComp(sess, id)
 			if err != nil {
 				return err
 			}
@@ -171,18 +173,4 @@ func DeleteComponentHandler(e echo.Context) error {
 		}
 	}
 	return c.NoContent(http.StatusBadRequest)
-}
-
-func VarsHandler(e echo.Context) error {
-	c := e.(*www.Context)
-	containing := c.QueryParam("c")
-	sess := c.Session(false)
-	if sess != nil {
-		resultVars, err := c.System().DB.Form.Vars(sess, containing, helpers.RequestOptions(c))
-		if err != nil {
-			return err
-		}
-		return c.JSON(http.StatusOK, resultVars)
-	}
-	return c.NoContent(http.StatusNotFound)
 }
