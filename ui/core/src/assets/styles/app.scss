@@ -23,7 +23,6 @@ $mdi-font-path: "~@mdi/font/fonts";
 }
 
 .app-main {
-  //min-width: 900px;
   > div > .container-fluid, > div > .main-container {
     height: calc(100vh - 60px);
     overflow-y: scroll;
