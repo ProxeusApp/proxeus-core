@@ -11,7 +11,25 @@
     <div v-if="createNew" class="tabcontent" ref="inputs">
       <div v-if="newFormReady()" class="init-settings form-group" ref="fields">
         <nav-tabs class="mt-0">
-          <tab title="System settings" :selected="true">
+          <tab v-if="app.me === null" :selected="app.me === null" title="Initial user settings (will be ignored if email exists already)">
+            <animated-input name="user.email" :max="100" :label="$t('New Email')" v-model="user.email">
+              <span
+                class="text-muted">{{$t('Initial user email explanation','Set the email of the initial user.')}}</span>
+            </animated-input>
+            <div class="form-group">
+              <simple-select :unselect="false" style="margin-top: 15px;" name="user.role" v-model="user.role"
+                             :idProp="'role'"
+                             :labelProp="'name'" :options="app.roles"/>
+              <span
+                class="text-muted">{{$t('Initial user role explanation','Set the role for the initial user, root is recommended.')}}</span>
+            </div>
+            <animated-input type="password" name="user.password" :max="100" :label="$t('Password')"
+                            v-model="user.password">
+              <span class="text-muted"
+                    style="white-space: normal;">{{$t('Initial user password explanation','Set the password of the initial user.')}}</span>
+            </animated-input>
+          </tab>
+          <tab title="System settings" :selected="app.me !== null">
             <animated-input name="settings.dataDir" :max="100" :label="$t('Data dir','Data directory')"
                             v-model="settings.dataDir">
               <div class="alert-danger">{{$t('Warning data dir', 'Warning: by changing the data directory you will loose all the data like the users, workflows, etc...Do not do it unless you are aware of the implications.')}}
@@ -82,24 +100,6 @@
             <animated-input name="settings.sparkpostApiKey" :max="100" :label="$t('Sparkpost API Key')"
                             v-model="settings.sparkpostApiKey">
               <span class="text-muted">{{$t('Sparkpost API Key explanation','Set the Sparkpost API key which will be used to send out emails.')}}</span>
-            </animated-input>
-          </tab>
-          <tab v-if="app.me === null" title="Initial user settings (will be ignored if email exists already)">
-            <animated-input name="user.email" :max="100" :label="$t('New Email')" v-model="user.email">
-              <span
-                class="text-muted">{{$t('Initial user email explanation','Set the email of the initial user.')}}</span>
-            </animated-input>
-            <div class="form-group">
-              <simple-select :unselect="false" style="margin-top: 15px;" name="user.role" v-model="user.role"
-                             :idProp="'role'"
-                             :labelProp="'name'" :options="app.roles"/>
-              <span
-                class="text-muted">{{$t('Initial user role explanation','Set the role for the initial user, root is recommended.')}}</span>
-            </div>
-            <animated-input type="password" name="user.password" :max="100" :label="$t('Password')"
-                            v-model="user.password">
-              <span class="text-muted"
-                    style="white-space: normal;">{{$t('Initial user password explanation','Set the password of the initial user.')}}</span>
             </animated-input>
           </tab>
         </nav-tabs>

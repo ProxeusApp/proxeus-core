@@ -756,7 +756,7 @@ function condition(){
               } else {
                 _.$fcfMain.show()
               }
-              _.$chartMain.css('height', ($(document.body).height() - minusHeight) + 'px')
+              _.$chartMain.css('height', ($(document.body).height() - minusHeight - 2) + 'px')
             }
           }
           this.heightFixer()
