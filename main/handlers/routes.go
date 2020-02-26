@@ -88,7 +88,6 @@ func MainHostedAPI(e *echo.Echo, s *www.Security, version string) {
 		{GET, USER, "/api/my/profile/photo", api.GetProfilePhotoHandler},
 		{GET, USER, "/api/profile/photo", api.GetProfilePhotoHandler},
 
-
 		// document
 		{GET, PUBLIC, "/api/document/:ID", api.DocumentHandler}, // Need session
 		{GET, PUBLIC, "/api/document/list", workflow.ListPublishedHandler},

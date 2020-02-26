@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"github.com/ProxeusApp/proxeus-core/service"
 	"io"
 	"io/ioutil"
 	"net"
@@ -12,6 +11,8 @@ import (
 	"net/url"
 	"os"
 	"strings"
+
+	"github.com/ProxeusApp/proxeus-core/service"
 
 	"github.com/ProxeusApp/proxeus-core/sys"
 
