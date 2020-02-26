@@ -97,7 +97,7 @@ license:
 	license_finder
 
 .PHONY: doc
-doc: ui init server
+doc: init ui server
 	$(eval serverurl=localhost:6060)
 	GO111MODULE=on godoc -http=$(serverurl) &
 	sleep 3
