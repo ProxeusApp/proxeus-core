@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"github.com/ProxeusApp/proxeus-core/service"
 	"io"
 	"io/ioutil"
 	"net"
@@ -19,7 +20,6 @@ import (
 	"github.com/labstack/echo"
 
 	"github.com/ProxeusApp/proxeus-core/main/handlers/api"
-	"github.com/ProxeusApp/proxeus-core/main/handlers/formbuilder"
 	"github.com/ProxeusApp/proxeus-core/main/handlers/helpers"
 	"github.com/ProxeusApp/proxeus-core/main/www"
 	"github.com/ProxeusApp/proxeus-core/storage"
@@ -40,7 +40,7 @@ var rendererHelper = func(e echo.Context, tmplPath, fileName string) error {
 	if sess == nil || tmplPath == "" {
 		return os.ErrInvalid
 	}
-	dc := formbuilder.GetDataManager(sess)
+	dc := service.GetDataManager(sess)
 	dataMap, files := dc.GetAllDataFilePathNameOnly()
 	if dataMap == nil {
 		dataMap = map[string]interface{}{}
@@ -99,7 +99,7 @@ func IdeFormHandler(e echo.Context) error {
 		settings.MetaOnly = false
 		dat, err := c.System().DB.Form.List(sess, contains, settings)
 		if err == nil && dat != nil {
-			dc := formbuilder.GetDataManager(sess)
+			dc := service.GetDataManager(sess)
 			for _, it := range dat {
 				if it.Data != nil {
 					it.Data["data"], _ = dc.GetData(it.ID)
