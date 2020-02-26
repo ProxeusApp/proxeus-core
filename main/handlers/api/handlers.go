@@ -13,7 +13,6 @@ import (
 	"net/http"
 	"net/url"
 	"os"
-	"path/filepath"
 	"strconv"
 	"strings"
 	"time"
@@ -50,11 +49,12 @@ var (
 	userDocumentService     service.UserDocumentService
 	fileService             service.FileService
 	templateDocumentService service.TemplateDocumentService
+	formService             service.FormService
+	formComponentService    service.FormComponentService
 )
 
 func Init(paymentS service.PaymentService, userS service.UserService, workflowS service.WorkflowService,
-	documentS service.DocumentService, userDocumentS service.UserDocumentService, fileS service.FileService,
-	templateDocumentS service.TemplateDocumentService) {
+	documentS service.DocumentService, fileS service.FileService, userDocumentS service.UserDocumentService, templateDocumentS service.TemplateDocumentService, formS service.FormService, formCompS service.FormComponentService) {
 
 	paymentService = paymentS
 	userService = userS
@@ -63,6 +63,8 @@ func Init(paymentS service.PaymentService, userS service.UserService, workflowS 
 	userDocumentService = userDocumentS
 	fileService = fileS
 	templateDocumentService = templateDocumentS
+	formService = formS
+	formComponentService = formCompS
 }
 
 func html(c echo.Context, p string) error {
@@ -316,32 +318,7 @@ func PostInit(e echo.Context) error {
 			}
 		}
 	}
-	dat, err := c.System().DB.Form.List(root, "", storage.Options{})
-	if db.NotFound(err) || (err == nil && dat == nil) {
-		defaultFormcomponentents := []string{"HC1", "HC2", "HC3", "HC5", "HC7", "HC8", "HC9", "HC10", "HC11", "HC12"}
-		for _, formCompId := range defaultFormcomponentents {
-			jsonFile, err := os.Open(filepath.Join("test", "assets", "components", formCompId+".json"))
-			if err != nil {
-				fmt.Println(err)
-			}
-
-			body, _ := ioutil.ReadAll(jsonFile)
-			var comp model.FormComponentItem
-			err = json.Unmarshal(body, &comp)
-			if err != nil {
-				log.Println(err)
-				jsonFile.Close()
-				continue
-			}
-
-			err = c.System().DB.Form.PutComp(root, &comp)
-			if err != nil {
-				log.Println(err)
-				jsonFile.Close()
-				continue
-			}
-		}
-	}
+	formComponentService.EnsureDefaultFormComponents(root)
 
 	return c.NoContent(http.StatusOK)
 }

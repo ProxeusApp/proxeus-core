@@ -7,6 +7,8 @@ import (
 	"os"
 	"path"
 
+	"github.com/ProxeusApp/proxeus-core/main/handlers/formbuilder"
+
 	"github.com/ProxeusApp/proxeus-core/main/handlers/workflow"
 
 	"github.com/ProxeusApp/proxeus-core/service"
@@ -73,10 +75,13 @@ func main() {
 	documentService := service.NewDocumentService(userService, fileService)
 	templateDocumentService := service.NewTemplateDocumentService()
 	userDocumentService := service.NewUserDocumentService(userService, fileService, templateDocumentService)
+	formService := service.NewFormService()
+	formComponentService := service.NewFormComponentService()
 
 	payment.Init(paymentService, userService)
-	api.Init(paymentService, userService, workflowService, documentService, userDocumentService, fileService, templateDocumentService)
+	api.Init(paymentService, userService, workflowService, documentService, fileService, userDocumentService, templateDocumentService, formService, formComponentService)
 	workflow.Init(workflowService, userService, nodeService)
+	formbuilder.Init(formComponentService, formService)
 
 	www.SetSystem(system)
 

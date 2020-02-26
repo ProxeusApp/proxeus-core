@@ -34,7 +34,7 @@ export PROXEUS_DATABASE_URI?=mongodb://localhost:27017# Only used for the mongo 
 coverage?=false
 comma:=,
 space:= $() $()
-coverpkg=$(subst $(space),$(comma), $(filter-out %/mock %/assets, $(shell go list ./main/... ./sys/... ./storage/...)))
+coverpkg=$(subst $(space),$(comma), $(filter-out %/mock %/assets, $(shell go list ./main/... ./sys/... ./storage/... ./service/...)))
 
 startproxeus=artifacts/proxeus
 stopproxeus=pkill proxeus
@@ -121,7 +121,7 @@ fmt:
 
 .PHONY: test
 test: generate
-	go test $(COVERAGE_OPTS)  ./main/... ./sys/... ./storage/...
+	go test $(COVERAGE_OPTS)  ./main/... ./sys/... ./storage/... ./service/...
 
 .PHONY: test-integration
 test-integration:
