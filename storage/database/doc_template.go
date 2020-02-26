@@ -23,6 +23,7 @@ type DocTemplateDB struct {
 
 const docTemplVersion = "doctmpl_vers"
 
+// NewDocTemplateDB opens a handle to the Document Template database
 func NewDocTemplateDB(c DBConfig) (*DocTemplateDB, error) {
 	baseDir := filepath.Join(c.Dir, "document_template")
 	db, err := db.OpenDatabase(c.Engine, c.URI, filepath.Join(baseDir, "document_templates"))
@@ -40,10 +41,12 @@ func NewDocTemplateDB(c DBConfig) (*DocTemplateDB, error) {
 	return udb, nil
 }
 
+// AssetsKeys return the base filepath of the document templates
 func (me *DocTemplateDB) AssetsKey() string {
 	return me.baseFilePath
 }
 
+// List fetches template items from the database based on the supplied filter options
 func (me *DocTemplateDB) List(auth model.Auth, contains string, options storage.Options) ([]*model.TemplateItem, error) {
 	params := makeSimpleQuery(options)
 	items := make([]*model.TemplateItem, 0)
@@ -78,6 +81,8 @@ func (me *DocTemplateDB) List(auth model.Auth, contains string, options storage.
 	return items, nil
 }
 
+
+// Get retrieves a sinlge template item using its key
 func (me *DocTemplateDB) Get(auth model.Auth, id string) (*model.TemplateItem, error) {
 	var item model.TemplateItem
 	err := me.db.One("ID", id, &item)
@@ -99,6 +104,7 @@ func (me *DocTemplateDB) ProvideFileInfoFor(auth model.Auth, id, lang string, fm
 	return me.getFileInfoFor(auth, id, lang, fm)
 }
 
+// PutVars inserts a new variable into the databse
 func (me *DocTemplateDB) PutVars(auth model.Auth, id, lang string, vars []string) error {
 	tx, err := me.db.Begin(true)
 	if err != nil {
@@ -155,6 +161,7 @@ func (me *DocTemplateDB) getFileInfoFor(auth model.Auth, id, lang string, fm *fi
 	return nil, os.ErrNotExist
 }
 
+// DeleteTemplate removes a template from the database
 func (me *DocTemplateDB) DeleteTemplate(auth model.Auth, files storage.FilesIF, id, lang string) error {
 	if auth == nil || id == "" || lang == "" {
 		return os.ErrInvalid
@@ -236,6 +243,7 @@ func (me *DocTemplateDB) put(auth model.Auth, item *model.TemplateItem, updated 
 	}
 }
 
+// Delete removes a template's files on the file system
 func (me *DocTemplateDB) Delete(auth model.Auth, files storage.FilesIF, id string) error {
 	tx, err := me.db.Begin(true)
 	if err != nil {
@@ -272,6 +280,7 @@ func (me *DocTemplateDB) Delete(auth model.Auth, files storage.FilesIF, id strin
 	return tx.Commit()
 }
 
+// Vars returns a list of variables defines for a specific template
 func (me *DocTemplateDB) Vars(auth model.Auth, contains string, options storage.Options) ([]string, error) {
 	contains = regexp.QuoteMeta(contains)
 	params := makeSimpleQuery(options)

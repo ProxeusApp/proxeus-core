@@ -10,6 +10,7 @@ import (
 	"github.com/ProxeusApp/proxeus-core/sys/model"
 )
 
+// DBSet holds all references to the Proxeus Database implementations
 type DBSet struct {
 	Settings          SettingsIF
 	I18n              I18nIF
@@ -24,6 +25,7 @@ type DBSet struct {
 	Session           SessionIF
 }
 
+// Options holds filter criteria for queries to the databases
 type Options struct {
 	Limit    int                    `json:"limit"`
 	Index    int                    `json:"index"`
@@ -47,12 +49,14 @@ func (o Options) WithInclude(in []string) Options {
 	return o
 }
 
+// SettingsIF is the interface to the general Proxeus configuration file
 type SettingsIF interface {
 	Put(stngs *model.Settings) error
 	Get() (*model.Settings, error)
 	Close() error
 }
 
+// I18nIF is the interface to the translation database
 type I18nIF interface {
 	Find(keyContains string, valueContains string, options Options) (map[string]map[string]string, error)
 	Get(lang string, key string, args ...string) (string, error)
@@ -68,6 +72,7 @@ type I18nIF interface {
 	Close() error
 }
 
+// Form is the interface to the form database
 type FormIF interface {
 	List(auth model.Auth, contains string, options Options) ([]*model.FormItem, error)
 	Get(auth model.Auth, id string) (*model.FormItem, error)
@@ -81,6 +86,7 @@ type FormIF interface {
 	Close() error
 }
 
+// WorkflowIF is the interface to the workflow database
 type WorkflowIF interface {
 	ListPublished(auth model.Auth, contains string, options Options) ([]*model.WorkflowItem, error)
 	List(auth model.Auth, contains string, options Options) ([]*model.WorkflowItem, error)
@@ -93,6 +99,7 @@ type WorkflowIF interface {
 	ExternalNodeIF
 }
 
+// ExternalNodeIF is the interface to the external node definition database
 type ExternalNodeIF interface {
 	RegisterExternalNode(auth model.Auth, n *externalnode.ExternalNode) error
 	ListExternalNodes() []*externalnode.ExternalNode
@@ -102,6 +109,7 @@ type ExternalNodeIF interface {
 	PutExternalNodeInstance(auth model.Auth, i *externalnode.ExternalNodeInstance) error
 }
 
+// TemplateIF is the interface to the template database
 type TemplateIF interface {
 	List(auth model.Auth, contains string, options Options) ([]*model.TemplateItem, error)
 	Get(auth model.Auth, id string) (*model.TemplateItem, error)
@@ -116,6 +124,7 @@ type TemplateIF interface {
 	Close() error
 }
 
+// UserIF is the interface to the user database
 type UserIF interface {
 	GetBaseFilePath() string
 	Login(name, pw string) (*model.User, error)
@@ -135,6 +144,7 @@ type UserIF interface {
 	Close() error
 }
 
+// UserDataIF is the interface to the user's workflow data database
 type UserDataIF interface {
 	List(auth model.Auth, contains string, options Options, includeReadGranted bool) ([]*model.UserDataItem, error)
 	Delete(auth model.Auth, files FilesIF, id string) error
@@ -151,6 +161,7 @@ type UserDataIF interface {
 	Close() error
 }
 
+// UserDataIF is the interface to the signature requests database
 type SignatureRequestsIF interface {
 	GetBySignatory(ethAddr string) (*[]model.SignatureRequestItem, error)
 	GetByID(docid string, docpath string) (*[]model.SignatureRequestItem, error)
@@ -161,6 +172,7 @@ type SignatureRequestsIF interface {
 	Close() error
 }
 
+// WorkflowPaymentsIF is the interface to the workflow payment database
 type WorkflowPaymentsIF interface {
 	GetByTxHashAndStatusAndFromEthAddress(txHash, status, from string) (*model.WorkflowPaymentItem, error)
 	Get(paymentId string) (*model.WorkflowPaymentItem, error)
@@ -177,6 +189,7 @@ type WorkflowPaymentsIF interface {
 	Close() error
 }
 
+// FielsIF is the interface to a generic File
 type FilesIF interface {
 	Read(path string, w io.Writer) error
 	Write(path string, r io.Reader) error
@@ -185,6 +198,7 @@ type FilesIF interface {
 	Close() error
 }
 
+// SessionIF is the interface to the session database
 type SessionIF interface {
 	Get(sid string) (*model.Session, error)
 	Put(s *model.Session) error
@@ -198,6 +212,7 @@ type SessionIF interface {
 	Close() error
 }
 
+// Close ensures proper closing of all database handles
 func (db *DBSet) Close() error {
 	cs := []io.Closer{
 		db.Settings,
@@ -224,6 +239,7 @@ func (db *DBSet) Close() error {
 	return nil
 }
 
+// CopyFileAcross copies content between databases
 func CopyFileAcross(dstDb, srcDb FilesIF, dstPath, srcPath string) (int64, error) {
 	var buf bytes.Buffer
 	err := srcDb.Read(srcPath, &buf)

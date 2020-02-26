@@ -25,6 +25,7 @@ const usrdHeavyData = "usrd_data"
 const usrdVersion = "usrd_vers"
 const usrdMainDir = "userdata"
 
+// NewUserDataDB returns a handle to the user data database
 func NewUserDataDB(c DBConfig) (*UserDataDB, error) {
 	baseDir := filepath.Join(c.Dir, usrdMainDir)
 	db, err := db.OpenDatabase(c.Engine, c.URI, filepath.Join(baseDir, "usrdb"))
@@ -52,6 +53,7 @@ func NewUserDataDB(c DBConfig) (*UserDataDB, error) {
 	return udb, nil
 }
 
+// List returns all user data item matching the supplied filter criteria
 func (me *UserDataDB) List(auth model.Auth, contains string, options storage.Options, includeReadGranted bool) ([]*model.UserDataItem, error) {
 	params := makeSimpleQuery(options)
 	items := make([]*model.UserDataItem, 0)
@@ -81,6 +83,7 @@ func (me *UserDataDB) List(auth model.Auth, contains string, options storage.Opt
 	return items, nil
 }
 
+// Delete removes user data and its accociates files from the database
 func (me *UserDataDB) Delete(auth model.Auth, filesDB storage.FilesIF, id string) error {
 	tx, err := me.db.Begin(true)
 	if err != nil {
@@ -117,6 +120,7 @@ func (me *UserDataDB) Delete(auth model.Auth, filesDB storage.FilesIF, id string
 	return tx.Commit()
 }
 
+// Get returns a specific user data item by matching the id
 func (me *UserDataDB) Get(auth model.Auth, id string) (*model.UserDataItem, error) {
 	var item model.UserDataItem
 	err := me.db.One("ID", id, &item)
@@ -132,11 +136,13 @@ func (me *UserDataDB) Get(auth model.Auth, id string) (*model.UserDataItem, erro
 	return itemRef, nil
 }
 
+// GetAllFileInfosOf returns the associated file objects of a user data item
 func (me *UserDataDB) GetAllFileInfosOf(ud *model.UserDataItem) []*file.IO {
 	m := file.MapIO(ud.Data)
 	return m.GetAllFileInfos(me.baseFilePath)
 }
 
+// GetByWorkflow returns a the user data item by matching a specific workflow item
 func (me *UserDataDB) GetByWorkflow(auth model.Auth, wf *model.WorkflowItem, finished bool) (*model.UserDataItem, bool, error) {
 	var item model.UserDataItem
 	matchers := defaultMatcher(auth, "", nil, true)
@@ -154,6 +160,7 @@ func (me *UserDataDB) GetByWorkflow(auth model.Auth, wf *model.WorkflowItem, fin
 	return &item, alreadyStarted, err
 }
 
+// GetData returns the data object for retrieving specific data from a data item
 func (me *UserDataDB) GetData(auth model.Auth, id, dataPath string) (interface{}, error) {
 	tx, err := me.db.Begin(false)
 	if err != nil {
@@ -180,6 +187,7 @@ func (me *UserDataDB) GetData(auth model.Auth, id, dataPath string) (interface{}
 	return nil, os.ErrNotExist
 }
 
+// GetDataAndFiles returns the data object and associated files
 func (me *UserDataDB) GetDataAndFiles(auth model.Auth, id, dataPath string) (interface{}, []string, error) {
 	tx, err := me.db.Begin(false)
 	if err != nil {
@@ -211,6 +219,7 @@ func (me *UserDataDB) GetDataAndFiles(auth model.Auth, id, dataPath string) (int
 	return nil, nil, os.ErrNotExist
 }
 
+// PutData inserts a data object into the data item database
 func (me *UserDataDB) PutData(auth model.Auth, id string, dataObj map[string]interface{}) error {
 	tx, err := me.db.Begin(true)
 	if err != nil {
@@ -246,10 +255,12 @@ func (me *UserDataDB) PutData(auth model.Auth, id string, dataObj map[string]int
 	return tx.Commit()
 }
 
+// NewFile return a handle for a new data item file based on the defined base path and specific file metadata
 func (me *UserDataDB) NewFile(auth model.Auth, meta file.Meta) *file.IO {
 	return file.New(me.baseFilePath, meta)
 }
 
+// GetDataAndFiles returns the files associated with a data item
 func (me *UserDataDB) GetDataFile(auth model.Auth, id, dataPath string) (*file.IO, error) {
 	tx, err := me.db.Begin(false)
 	if err != nil {
@@ -275,6 +286,7 @@ func (me *UserDataDB) GetDataFile(auth model.Auth, id, dataPath string) (*file.I
 	return nil, os.ErrNotExist
 }
 
+// Put saves a user data item into the database
 func (me *UserDataDB) Put(auth model.Auth, item *model.UserDataItem) error {
 	return me.put(auth, item, true)
 }
@@ -350,6 +362,7 @@ func (me *UserDataDB) saveOnly(item *model.UserDataItem, tx db.DB) error {
 	return tx.Save(&cp)
 }
 
+// AssetsKey returns the base path of the data items associated file
 func (me *UserDataDB) AssetsKey() string {
 	return me.baseFilePath
 }
