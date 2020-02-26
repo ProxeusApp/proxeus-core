@@ -106,9 +106,9 @@ doc: init
 	wget -P artifacts/$(serverurl)/lib/godoc http://localhost:6060/lib/godoc/jquery.js
 	wget -P artifacts/$(serverurl)/lib/godoc http://localhost:6060/lib/godoc/godocs.js
 	# Now, only the package we're interested into. not the whole standard library
-	wget -r -P artifacts -np -e robots=off "http://$(serverurl)/pkg/github.com/ProxeusApp/proxeus-core/"
+	wget -r -P artifacts -np -e robots=off "http://$(serverurl)/pkg/git.proxeus.com/core/"
 	mkdir -p artifacts/godoc/lib/godoc
-	cp -r artifacts/$(serverurl)/pkg/github.com/ProxeusApp/proxeus-core/* artifacts/godoc
+	cp -r artifacts/$(serverurl)/pkg/git.proxeus.com/core/* artifacts/godoc
 	cp -r artifacts/$(serverurl)/lib/godoc/* artifacts/godoc/lib/godoc/
 	rm -R artifacts/$(serverurl)
 	pkill godoc
