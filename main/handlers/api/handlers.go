@@ -1429,75 +1429,15 @@ func UserDocumentSignatureRequestGetCurrentUserHandler(e echo.Context) error {
 		return c.NoContent(http.StatusUnauthorized)
 	}
 
-	user, err := userService.GetUser(sess)
+	requests, err := signatureService.GetForCurrentUser(sess)
 	if err != nil {
-		return c.NoContent(http.StatusInternalServerError)
-	}
-	ethAddr := user.EthereumAddr
-	if len(ethAddr) != 42 {
-		return c.NoContent(http.StatusNotFound)
-	}
-	signatureRequests, err := c.System().DB.SignatureRequests.GetBySignatory(ethAddr)
-	if err != nil {
-		return c.String(http.StatusNotFound, err.Error())
+		if os.IsNotExist(err) {
+			return c.NoContent(http.StatusNotFound)
+		}
+		log.Println("[UserDocumentSignatureRequestAddHandler] signatureService.GetForCurrentUser err: ", err.Error())
+		return c.String(http.StatusBadRequest, err.Error())
 	}
 
-	type SignatureRequestItemComplete struct {
-		ID          string  `json:"id"`
-		DocID       string  `json:"docID"`
-		Hash        string  `json:"hash"`
-		From        string  `json:"requestorName"`
-		FromAddr    string  `json:"requestorAddr"`
-		RequestedAt *string `json:"requestedAt,omitempty"`
-		Rejected    bool    `json:"rejected"`
-		RejectedAt  *string `json:"rejectedAt,omitempty"`
-		Revoked     bool    `json:"revoked"`
-		RevokedAt   *string `json:"revokedAt,omitempty"`
-	}
-
-	type SignatureRequests []SignatureRequestItemComplete
-
-	var requests = *new(SignatureRequests)
-	for _, sigreq := range *signatureRequests {
-		var requesterName string
-		requester, err := c.System().DB.User.GetByBCAddress(sigreq.Requestor)
-		if err != nil && !db.NotFound(err) {
-			return c.NoContent(http.StatusInternalServerError)
-		}
-		if requester != nil {
-			requesterName = requester.Name
-		}
-
-		var reqAt string
-		reqAt = sigreq.RequestedAt.Format("2.1.2006 15:04")
-		var rejAt string
-		if sigreq.Rejected {
-			rejAt = sigreq.RejectedAt.Format("2.1.2006 15:04")
-		}
-		var revAt string
-		revAt = sigreq.RevokedAt.Format("2.1.2006 15:04")
-
-		reqitem := SignatureRequestItemComplete{
-			sigreq.DocId,
-			sigreq.DocPath,
-			sigreq.Hash,
-			requesterName,
-			sigreq.Requestor,
-			&reqAt,
-			sigreq.Rejected,
-			&rejAt,
-			sigreq.Revoked,
-			&revAt,
-		}
-		if !sigreq.Revoked {
-			reqitem.RevokedAt = nil
-		}
-		if !sigreq.Rejected {
-			reqitem.RejectedAt = nil
-		}
-
-		requests = append(requests, reqitem)
-	}
 	return c.JSON(http.StatusOK, requests)
 }
 
@@ -1601,7 +1541,7 @@ func UserDocumentSignatureRequestAddHandler(e echo.Context) error {
 		if errors.Is(err, service.ErrSignatureRequestAlreadyExists) {
 			return c.String(http.StatusConflict, c.I18n().T(err.Error()))
 		}
-		log.Println("[UserDocumentSignatureRequestAddHandler] signatureService.Add err: ", err.Error())
+		log.Println("[UserDocumentSignatureRequestAddHandler] signatureService.AddAndNotify err: ", err.Error())
 		return c.String(http.StatusBadRequest, err.Error())
 	}
 
@@ -1618,44 +1558,13 @@ func UserDocumentSignatureRequestRejectHandler(e echo.Context) error {
 	docId := c.Param("docID")
 	id := c.Param("ID")
 
-	item, err := userService.GetUser(sess)
+	err := signatureService.RejectAndNotify(sess, c.I18n(), id, docId, c.Request().Host)
 	if err != nil {
-		return c.NoContent(http.StatusInternalServerError)
-	}
-	signatoryAddr := item.EthereumAddr
-	signatureRequests, err := c.System().DB.SignatureRequests.GetByID(id, docId)
-	if err != nil {
-		return c.String(http.StatusNotFound, err.Error())
-	}
-	signatureRequest := (*signatureRequests)[0]
-	req := signatureRequest.Requestor
-
-	err = c.System().DB.SignatureRequests.SetRejected(id, docId, signatoryAddr)
-	if err != nil {
-		return c.String(http.StatusNotFound, err.Error())
-	}
-
-	requestorAddr, err := c.System().DB.User.GetByBCAddress(req)
-	if err != nil {
-		return c.NoContent(http.StatusInternalServerError)
-	}
-
-	if len(requestorAddr.Email) > 3 {
-		/*
-			Your signature request for a document on <platform base URL> from <timestamp> has been rejected by <Name> (<Email>)<Ethereum-Addr>
-
-			You may send another request if you think this was by mistake.
-
-		*/
-
-		subject := c.I18n().T("Signature request rejected")
-		body := fmt.Sprintf("<div>Your signature request for a document on %s from %s <br />has been rejected by  %s (%s)<br />%s<br />"+
-			"<br />You may send another request if you think this was by mistake.</div>",
-			c.Request().Host, signatureRequest.RequestedAt.Format("2.1.2006 15:04"), item.Name, item.Email, item.EthereumAddr)
-		err = emailService.Send(requestorAddr.Email, subject, body)
-		if err != nil {
-			log.Println("UserDocumentSignatureRequestRejectHandler emailService.Send err: ", err.Error())
+		if os.IsNotExist(err) {
+			return c.NoContent(http.StatusNotFound)
 		}
+		log.Println("UserDocumentSignatureRequestGetByDocumentIDHandler signatureService.RejectAndNotify err: ", err.Error())
+		return c.String(http.StatusBadRequest, err.Error())
 	}
 
 	return c.NoContent(http.StatusOK)
@@ -1672,40 +1581,13 @@ func UserDocumentSignatureRequestRevokeHandler(e echo.Context) error {
 	id := c.Param("ID")
 	signatory := c.FormValue("signatory")
 
-	sig, err := c.System().DB.User.GetByBCAddress(signatory)
+	err := signatureService.RevokeAndNotify(sess, c.I18n(), id, docId, signatory, c.Request().Host, c.Scheme())
 	if err != nil {
-		return c.NoContent(http.StatusInternalServerError)
-	}
-	signatoryEmail := sig.Email
-
-	err = c.System().DB.SignatureRequests.SetRevoked(id, docId, signatory)
-	if err != nil {
-		return c.String(http.StatusNotFound, err.Error())
-	}
-
-	requestor, err := userService.GetUser(sess)
-	if err != nil {
-		return c.NoContent(http.StatusInternalServerError)
-	}
-
-	if len(signatoryEmail) > 3 {
-		/*
-			Earlier you may have received a signature request from <base URL>by <Name> (<Email>)<Ethereum-Addr>
-
-			The requestor has retracted the request. You may still log in and view the request, but can no longer sign the document.
-
-			To check your signature requests, please log in <here (link to requests, if logged in>
-		*/
-
-		subject := c.I18n().T("New signature request received")
-		body := fmt.Sprintf("<div>Earlier you may have received a signature request from %s by %s (%s)<br />%s<br /><br />"+
-			"The requestor has retracted the request. You may still log in and view the request, but can no longer sign the document."+
-			"<br /><br />To check your signature requests, please log in <a href='%s'>here</a></div>",
-			c.Request().Host, requestor.Name, requestor.Email, requestor.EthereumAddr, helpers.AbsoluteURL(c, "/user/signature-requests"))
-		err = emailService.Send(signatoryEmail, subject, body)
-		if err != nil {
-			log.Println("UserDocumentSignatureRequestRevokeHandler emailService.Send err: ", err.Error())
+		if os.IsNotExist(err) {
+			return c.NoContent(http.StatusNotFound)
 		}
+		log.Println("[UserDocumentSignatureRequestAddHandler] signatureService.RevokeAndNotify err: ", err.Error())
+		return c.String(http.StatusBadRequest, err.Error())
 	}
 
 	return c.NoContent(http.StatusOK)
