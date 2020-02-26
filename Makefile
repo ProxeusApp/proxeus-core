@@ -97,10 +97,8 @@ license:
 	license_finder
 
 .PHONY: doc
-doc: init server
+doc: ui init server
 	$(eval serverurl=localhost:6060)
-	pwd
-	ls -la
 	GO111MODULE=on godoc -http=$(serverurl) &
 	sleep 3
 	# Download css & js first
