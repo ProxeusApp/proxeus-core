@@ -1,6 +1,9 @@
 package test
 
 import (
+	"strings"
+	"time"
+
 	"github.com/ProxeusApp/proxeus-core/externalnode"
 
 	"net/http"
@@ -14,6 +17,11 @@ const (
 )
 
 func testWorkflowExternalNode(s *session) {
+
+	if !externalNodeAvailable(s, "Crypto to Fiat Forex Rates") {
+		s.t.Fatal("external node not available")
+	}
+
 	u := registerTestUser(s)
 	login(s, u)
 
@@ -88,6 +96,17 @@ func setExternalNodeConfig(s *session, id string, config interface{}) {
 
 func getExternalNodeConfig(s *session, id string, config interface{}) {
 	s.e.GET("/api/admin/external/config/" + id).Expect().Status(http.StatusOK)
+}
+
+func externalNodeAvailable(s *session, name string) bool {
+	for i := 0; i < 10; i++ {
+		list := s.e.GET("/api/admin/external/list").Expect().Status(http.StatusOK).Body().Raw()
+		if strings.Contains(list, name) {
+			return true
+		}
+		time.Sleep(time.Second)
+	}
+	return false
 }
 
 const workflowXData = `{

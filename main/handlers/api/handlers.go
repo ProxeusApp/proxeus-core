@@ -1981,6 +1981,13 @@ func ExternalRegister(e echo.Context) error {
 	return c.System().DB.Workflow.RegisterExternalNode(new(model.User), &node)
 }
 
+func ExternalList(e echo.Context) error {
+	c := e.(*www.Context)
+	nodes := c.System().DB.Workflow.ListExternalNodes()
+
+	return c.JSON(http.StatusOK, nodes)
+}
+
 func ExternalConfigStore(e echo.Context) error {
 	c := e.(*www.Context)
 
