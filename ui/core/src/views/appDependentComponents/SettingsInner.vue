@@ -1,22 +1,15 @@
 <template>
   <div>
-    <table v-if="!configOnly">
-      <tr>
-        <td>
-          <button class="btn btn-default tabbtn" :class="{active:createNew}" @click="tabClick(true)"
-                  @focus="$event.target.blur();" type="button">New
-          </button>
-        </td>
-        <td>
-          <button class="btn btn-default tabbtn" :class="{active:!createNew}" @click="tabClick(false)"
-                  @focus="$event.target.blur();" type="button">Import
-          </button>
-        </td>
-      </tr>
-    </table>
+    <div class="d-flex mb-3 align-items-center" v-if="!configOnly">
+      <button class="btn btn-primary" :class="{active:createNew}" @click="tabClick(true)"
+              @focus="$event.target.blur();">New
+      </button>
+      <button class="btn btn-primary ml-2" :class="{active:!createNew}" @click="tabClick(false)"
+              @focus="$event.target.blur();">Import
+      </button>
+    </div>
     <div v-if="createNew" class="tabcontent" ref="inputs">
       <div v-if="newFormReady()" class="init-settings form-group" ref="fields">
-
         <nav-tabs class="mt-0">
           <tab title="System settings" :selected="true">
             <animated-input name="settings.dataDir" :max="100" :label="$t('Data dir','Data directory')"

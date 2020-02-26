@@ -80,9 +80,6 @@ export default {
   @import "assets/styles/fonts.scss";
   @import "assets/styles/buttons.scss";
 
-  $mdi-font-path: "~@mdi/font/fonts";
-  @import "~@mdi/font/scss/materialdesignicons.scss";
-
   @import "assets/styles/modals.scss";
   @import "assets/styles/fancy-radio-checkbox.scss";
 
@@ -91,6 +88,10 @@ export default {
   @import "assets/styles/global.scss";
 
   @import "assets/styles/flatpickr.scss";
+  @import "assets/styles/nav-tabs.scss";
+
+  $mdi-font-path: "~@mdi/font/fonts";
+  @import "~@mdi/font/scss/materialdesignicons.scss";
 
   ::-moz-selection {
     background: $info;
