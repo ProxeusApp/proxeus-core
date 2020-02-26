@@ -1,6 +1,7 @@
 package db
 
 import (
+	"log"
 	"os"
 	"path/filepath"
 	"sync"
@@ -38,6 +39,9 @@ func OpenStorm(path string) (*StormShim, error) {
 		return nil, err
 	}
 	db, err := storm.Open(path, storm.Codec(msgpack.Codec))
+	if err != nil {
+		log.Println(err)
+	}
 	s := &StormShim{db: db, tx: db}
 	var hasTTL bool
 	s.Get(ttlBucket, "ttl", &hasTTL)
