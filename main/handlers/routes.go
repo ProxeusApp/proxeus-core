@@ -202,6 +202,7 @@ func MainHostedAPI(e *echo.Echo, s *www.Security, version string) {
 
 		//external node
 		{POST, PUBLIC, "/api/admin/external/register", api.ExternalRegister},
+		{GET, PUBLIC, "/api/admin/external/list", api.ExternalList},
 		{POST, PUBLIC, "/api/admin/external/config/:id", api.ExternalConfigStore},
 		{GET, PUBLIC, "/api/admin/external/config/:id", api.ExternalConfigRetrieve},
 		{GET, CREATOR, "/api/admin/external/:name/:id", api.ExternalConfigurationPage}, // Need session
