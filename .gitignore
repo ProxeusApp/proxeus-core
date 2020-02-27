@@ -12,3 +12,8 @@ main/handlers/assets/bindata.go
 
 vendor
 data
+
+test/e2e/cypress/plugins/
+test/e2e/cypress/support/
+test/e2e/cypress/videos/
+test/e2e/node_modules/
