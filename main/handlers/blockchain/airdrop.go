@@ -17,21 +17,22 @@ import (
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
-	"github.com/ethereum/go-ethereum/ethclient"
 
 	"github.com/ProxeusApp/proxeus-core/main/handlers/blockchain/ethglue"
 )
 
 const etherUnit = 1000000000000000000
 
-var conn *ethclient.Client
+var conn ethglue.ETHClientIF
 var nonceManager ethglue.NonceManager
 
 var mu sync.Mutex
 
 func GiveTokens(toWallet string) {
 	var err error
-	conn, err = ethglue.Dial(config.Config.EthClientURL)
+
+	dialler := ethglue.NewDefaultDialler()
+	conn, err = dialler.Dial(config.Config.EthClientURL)
 	if err != nil {
 		log.Panic("[airdrop] Failed to connect to the Ethereum client:", err)
 	}

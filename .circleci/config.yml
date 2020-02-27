@@ -62,6 +62,8 @@ jobs:
     resource_class: large
     steps:
       - checkout
+      - attach_workspace:
+          at: ~/project/
       - restore_cache:
           keys:
             - go-mod-v2-{{ checksum "go.sum" }}
