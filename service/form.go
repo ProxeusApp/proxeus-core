@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"github.com/ProxeusApp/proxeus-core/storage"
-	"github.com/ProxeusApp/proxeus-core/sys"
 	"github.com/ProxeusApp/proxeus-core/sys/file"
 	"github.com/ProxeusApp/proxeus-core/sys/form"
 	"github.com/ProxeusApp/proxeus-core/sys/model"
@@ -17,17 +16,17 @@ type (
 	FormService interface {
 		List(auth model.Auth, contains string, options storage.Options) ([]*model.FormItem, error)
 		Get(auth model.Auth, id string) (*model.FormItem, error)
-		ExportForms(auth model.Auth, id, contains string) ([]string)
+		ExportForms(auth model.Auth, id, contains string) []string
 		UpdateForm(auth model.Auth, id string, reader io.ReadCloser) (*model.FormItem, error)
 		Delete(auth model.Auth, id string) error
 
 		Vars(auth model.Auth, contains string, options storage.Options) ([]string, error)
 
-		GetFormData(sess *sys.Session, id string, reset bool) (map[string]interface{}, error)
-		SetFormSrc(sess *sys.Session, id string, formSrc map[string]interface{}) error
-		GetFormFile(sess *sys.Session, id string, fieldname string, writer io.Writer) error
-		TestFormData(sess *sys.Session, id string, input map[string]interface{}, submit bool) (validate.ErrorMap, error)
-		PostFormFile(sess *sys.Session, id string, fileName string,fieldname string, reader io.ReadCloser, contentType string) (interface{},error)
+		GetFormData(auth model.MemoryAuth, id string, reset bool) (map[string]interface{}, error)
+		SetFormSrc(auth model.MemoryAuth, id string, formSrc map[string]interface{}) error
+		GetFormFile(auth model.MemoryAuth, id string, fieldname string, writer io.Writer) error
+		TestFormData(auth model.MemoryAuth, id string, input map[string]interface{}, submit bool) (validate.ErrorMap, error)
+		PostFormFile(auth model.MemoryAuth, id string, fileName string, fieldname string, reader io.ReadCloser, contentType string) (interface{}, error)
 	}
 
 	DefaultFormService struct {
@@ -38,7 +37,8 @@ func NewFormService() *DefaultFormService {
 	return &DefaultFormService{}
 }
 
-func (me *DefaultFormService) UpdateForm(auth model.Auth, id string, reader io.ReadCloser) (*model.FormItem, error){
+// UpdateForm updates the form with the data from the reader
+func (me *DefaultFormService) UpdateForm(auth model.Auth, id string, reader io.ReadCloser) (*model.FormItem, error) {
 	body, _ := ioutil.ReadAll(reader)
 	item := model.FormItem{}
 	err := json.Unmarshal(body, &item)
@@ -50,7 +50,8 @@ func (me *DefaultFormService) UpdateForm(auth model.Auth, id string, reader io.R
 	return nil, nil
 }
 
-func (me *DefaultFormService) ExportForms(auth model.Auth, id, contains string) ([]string){
+// ExportForms returns the id of all forms
+func (me *DefaultFormService) ExportForms(auth model.Auth, id, contains string) []string {
 	var exportId []string
 	if id != "" {
 		exportId = []string{id}
@@ -66,32 +67,38 @@ func (me *DefaultFormService) ExportForms(auth model.Auth, id, contains string) 
 	return exportId
 }
 
+// List returns a list of all forms
 func (me *DefaultFormService) List(auth model.Auth, contains string, options storage.Options) ([]*model.FormItem, error) {
 	return formDB().List(auth, contains, options)
 }
 
+// Get returns a form by id
 func (me *DefaultFormService) Get(auth model.Auth, id string) (*model.FormItem, error) {
 	return formDB().Get(auth, id)
 }
 
+// Delete a form by id
 func (me *DefaultFormService) Delete(auth model.Auth, id string) error {
 	return formDB().Delete(auth, id)
 }
 
+// Returns a list of variable defined in a form
 func (me *DefaultFormService) Vars(auth model.Auth, contains string, options storage.Options) ([]string, error) {
 	return formDB().Vars(auth, contains, options)
 }
 
-func (me *DefaultFormService) SetFormSrc(sess *sys.Session, id string, formSrc map[string]interface{}) error{
-	dc := GetDataManager(sess)
+// SetFormSrc sets the data from formSrc to the form
+func (me *DefaultFormService) SetFormSrc(auth model.MemoryAuth, id string, formSrc map[string]interface{}) error {
+	dc := GetDataManager(auth)
 	return dc.PutDataWithoutMerge("src"+id, formSrc)
 }
 
-func (me *DefaultFormService) TestFormData(sess *sys.Session, id string, input map[string]interface{}, submit bool) (validate.ErrorMap, error){
-	dc := GetDataManager(sess)
+// TestFormData validates and sets data
+func (me *DefaultFormService) TestFormData(auth model.MemoryAuth, id string, input map[string]interface{}, submit bool) (validate.ErrorMap, error) {
+	dc := GetDataManager(auth)
 	formSrc, _ := dc.GetData("src" + id)
 	if formSrc == nil {
-		item, err := formDB().Get(sess, id)
+		item, err := formDB().Get(auth, id)
 		if err == nil && item != nil {
 			formSrc = item.Data
 		}
@@ -116,8 +123,9 @@ func (me *DefaultFormService) TestFormData(sess *sys.Session, id string, input m
 	return nil, err
 }
 
-func (me *DefaultFormService) GetFormFile(sess *sys.Session, id string, fieldname string, writer io.Writer) error{
-	dc := GetDataManager(sess)
+// GetFormFile reads the contents of a form file into the writer
+func (me *DefaultFormService) GetFormFile(auth model.MemoryAuth, id string, fieldname string, writer io.Writer) error {
+	dc := GetDataManager(auth)
 	fi, err := dc.GetDataFile(id, fieldname)
 	if err == nil {
 		err = filesDB().Read(fi.Path(), writer)
@@ -125,19 +133,22 @@ func (me *DefaultFormService) GetFormFile(sess *sys.Session, id string, fieldnam
 	return err
 }
 
-func (me *DefaultFormService) GetFormData(sess *sys.Session, id string, reset bool) (map[string]interface{}, error){
-	dc := GetDataManager(sess)
+// GetFormData returns the data of a form
+// If the reset flag is set the data will be cleared
+func (me *DefaultFormService) GetFormData(auth model.MemoryAuth, id string, reset bool) (map[string]interface{}, error) {
+	dc := GetDataManager(auth)
 	if reset {
 		dc.Clear(id)
 	}
 	return dc.GetData(id)
 }
 
-func (me *DefaultFormService) PostFormFile(sess *sys.Session, id string, fileName string,fieldname string, reader io.ReadCloser, contentType string) (interface{},error){
-	dc := GetDataManager(sess)
+// PostFormFile sets the form file from the reader
+func (me *DefaultFormService) PostFormFile(auth model.MemoryAuth, id string, fileName string, fieldname string, reader io.ReadCloser, contentType string) (interface{}, error) {
+	dc := GetDataManager(auth)
 	formSrc, _ := dc.GetData("src" + id)
 	if formSrc == nil {
-		item, err := formDB().Get(sess, id)
+		item, err := formDB().Get(auth, id)
 		if err == nil && item != nil {
 			formSrc = item.Data
 		}
@@ -161,14 +172,15 @@ func (me *DefaultFormService) PostFormFile(sess *sys.Session, id string, fileNam
 	return nil, err
 }
 
-func GetDataManager(sess *sys.Session) form.DataManager {
+// GetDataManager returns the form.DataManager
+func GetDataManager(auth model.MemoryAuth) form.DataManager {
 	var dc form.DataManager
-	v, ok := sess.GetMemory("testDC")
+	v, ok := auth.GetMemory("testDC")
 	if ok {
 		dc = v.(form.DataManager)
 	} else {
-		dc = form.NewDataManager(sess.GetSessionDir())
-		sess.PutMemory("testDC", dc)
+		dc = form.NewDataManager(auth.GetSessionDir())
+		auth.PutMemory("testDC", dc)
 	}
 	return dc
 }
