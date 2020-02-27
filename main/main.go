@@ -83,9 +83,11 @@ func main() {
 	signatureService := service.NewSignatureService(fileService, userService, emailService)
 	formService := service.NewFormService()
 	formComponentService := service.NewFormComponentService()
+	apiService := service.NewApiService()
 
 	payment.Init(paymentService, userService)
-	api.Init(paymentService, userService, workflowService, documentService, userDocumentService, fileService, templateDocumentService, signatureService, emailService, formService, formComponentService)
+	api.Init(paymentService, userService, workflowService, documentService, userDocumentService, fileService, templateDocumentService, signatureService,
+		emailService, formService, formComponentService, apiService)
 	workflow.Init(workflowService, userService, nodeService)
 	formbuilder.Init(formComponentService, formService)
 

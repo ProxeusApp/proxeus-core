@@ -11,9 +11,7 @@ type (
 		GetUser(auth model.Auth) (*model.User, error)
 		GetById(auth model.Auth, id string) (*model.User, error)
 		GetUserDataById(auth model.Auth, id string) (*model.UserDataItem, error)
-		CreateApiKey(auth model.Auth, userId, apiKeyName string) (string, error)
 		DeleteUser(auth model.Auth) error
-		DeleteApiKey(auth model.Auth, userId, hiddenApiKey string) error
 		DeleteUserData(auth model.Auth, id string) error
 		GetByBCAddress(blockchainAddress string) (*model.User, error)
 	}
@@ -89,16 +87,6 @@ func (me *defaultUserService) DeleteUser(auth model.Auth) error {
 // Deletes the UserData of the user with the provided id
 func (me *defaultUserService) DeleteUserData(auth model.Auth, id string) error {
 	return userDataDB().Delete(auth, filesDB(), id)
-}
-
-// CreateApiKey creates and returns a new api key
-func (me *defaultUserService) CreateApiKey(auth model.Auth, userId, apiKeyName string) (string, error) {
-	return userDB().CreateApiKey(auth, userId, apiKeyName)
-}
-
-// DeleteApiKey removes an existing API key
-func (me *defaultUserService) DeleteApiKey(auth model.Auth, userId, hiddenApiKey string) error {
-	return userDB().DeleteApiKey(auth, userId, hiddenApiKey)
 }
 
 // GetByBCAddress returns the user associated with the provided blockchainAddress

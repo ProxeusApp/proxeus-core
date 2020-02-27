@@ -50,11 +50,13 @@ var (
 	emailService            service.EmailService
 	formService             service.FormService
 	formComponentService    service.FormComponentService
+	apiService              service.ApiService
 )
 
 func Init(paymentS service.PaymentService, userS service.UserService, workflowS service.WorkflowService,
 	documentS service.DocumentService, userDocumentS service.UserDocumentService, fileS service.FileService,
-	templateDocumentS service.TemplateDocumentService, signatureS service.SignatureService, emailS service.EmailService, formS service.FormService, formCompS service.FormComponentService) {
+	templateDocumentS service.TemplateDocumentService, signatureS service.SignatureService, emailS service.EmailService,
+	formS service.FormService, formCompS service.FormComponentService, apiS service.ApiService) {
 
 	paymentService = paymentS
 	userService = userS
@@ -67,6 +69,7 @@ func Init(paymentS service.PaymentService, userS service.UserService, workflowS 
 	emailService = emailS
 	formService = formS
 	formComponentService = formCompS
+	apiService = apiS
 }
 
 func html(c echo.Context, p string) error {
@@ -1767,7 +1770,7 @@ func CreateApiKeyHandler(e echo.Context) error {
 	if name == "" {
 		return c.String(http.StatusBadRequest, "please provide a name for your key")
 	}
-	apiKey, err := userService.CreateApiKey(sess, id, name)
+	apiKey, err := apiService.CreateApiKey(sess, id, name)
 	if err != nil {
 		return c.String(http.StatusBadRequest, err.Error())
 	}
@@ -1794,7 +1797,7 @@ func DeleteApiKeyHandler(e echo.Context) error {
 	}
 	id := c.Param("ID")
 	hiddenApiKey := c.QueryParam("hiddenApiKey")
-	err := userService.DeleteApiKey(sess, id, hiddenApiKey)
+	err := apiService.DeleteApiKey(sess, id, hiddenApiKey)
 	if err != nil {
 		return c.String(http.StatusBadRequest, err.Error())
 	}
