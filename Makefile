@@ -100,10 +100,9 @@ license:
 doc: init server
 	$(eval serverurl=localhost:6061)
 	# godoc only reads documentation from downloaded packages, therefore we simulate a src structure. godoc doesn't follow symlinks
-	mkdir -p /tmp/tmpgoroot/doc
 	mkdir -p /tmp/tmpgopath/src/git.proxeus.com/
 	cp -R * /tmp/tmpgopath/src/git.proxeus.com/
-	GOPATH=/tmp/tmpgopath GO111MODULE=on godoc -goroot=/tmp/tmpgoroot -http=$(serverurl) &
+	GOPATH=/tmp/tmpgopath GO111MODULE=on godoc -http=$(serverurl) &
 	sleep 3
 	# Download css & js first
 	wget -P artifacts/$(serverurl)/lib/godoc http://$(serverurl)/lib/godoc/style.css
