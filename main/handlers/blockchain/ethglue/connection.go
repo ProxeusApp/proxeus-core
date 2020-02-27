@@ -18,7 +18,7 @@ type Dialler struct {
 func NewDefaultDialler() *Dialler {
 	return &Dialler{
 		connectionTimeout: 10,
-		ethDialler:        defaultETHDialler{},
+		ethDialler:        &defaultETHDialler{},
 	}
 }
 
@@ -26,11 +26,11 @@ func NewCustomDialler(ethDialler ETHDiallerIF, connectionTimeout time.Duration) 
 	return &Dialler{ethDialler: ethDialler, connectionTimeout: connectionTimeout}
 }
 
-func (me Dialler) Dial(rawUrl string) (ethClient ETHClientIF, err error) {
+func (me *Dialler) Dial(rawUrl string) (ethClient ETHClientIF, err error) {
 	return me.DialContext(context.Background(), rawUrl)
 }
 
-func (me Dialler) DialContext(ctx context.Context, rawUrl string) (ethClient ETHClientIF, err error) {
+func (me *Dialler) DialContext(ctx context.Context, rawUrl string) (ethClient ETHClientIF, err error) {
 	ctx, cancel := context.WithTimeout(ctx, me.connectionTimeout*time.Second)
 	defer cancel()
 
@@ -68,10 +68,10 @@ func (me Dialler) DialContext(ctx context.Context, rawUrl string) (ethClient ETH
 // Default's ETHDialler. Makes a real connection to Ethereum
 type defaultETHDialler struct{}
 
-func (me defaultETHDialler) Dial(rawUrl string) (ethClient ETHClientIF, err error) {
+func (me *defaultETHDialler) Dial(rawUrl string) (ethClient ETHClientIF, err error) {
 	return me.DialContext(context.Background(), rawUrl)
 }
 
-func (me defaultETHDialler) DialContext(ctx context.Context, rawUrl string) (ETHClientIF, error) {
+func (me *defaultETHDialler) DialContext(ctx context.Context, rawUrl string) (ETHClientIF, error) {
 	return ethclient.DialContext(ctx, rawUrl)
 }
