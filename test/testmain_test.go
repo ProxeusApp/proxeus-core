@@ -48,22 +48,24 @@ func TestApi(t *testing.T) {
 		name string
 		f    func(s *session)
 	}{
-		{"User", testUser},
-		{"UserProfile", testUserProfile},
-		{"APIKey", testApiKey},
-		{"Form", testForm},
-		{"Payment", testPayment},
-		{"UnattendedWorkflow", testUnattendedWorkflow},
-		{"UnattendedWorkflowAdvanced", testUnattendedWorkflowAdvanced},
-		{"Workflow", testWorkflow},
-		{"WorkflowAdvanced", testWorkflowAdvanced},
-		{"I18n", testI18n},
-		{"I18nAdmin", testI18nAdmin},
-		{"ImportExport", testImportExport},
-		{"ImportExportAdmin", testImportExportAdmin},
-		{"ImportExportRoot", testImportExportRoot},
-		{"Template", testTemplate},
-		{"WorkflowWithFile", testWorkflowWithFile},
+		/*
+			{"User", testUser},
+			{"UserProfile", testUserProfile},
+			{"APIKey", testApiKey},
+			{"Form", testForm},
+			{"Payment", testPayment},
+			{"UnattendedWorkflow", testUnattendedWorkflow},
+			{"UnattendedWorkflowAdvanced", testUnattendedWorkflowAdvanced},
+			{"Workflow", testWorkflow},
+			{"WorkflowAdvanced", testWorkflowAdvanced},
+			{"I18n", testI18n},
+			{"I18nAdmin", testI18nAdmin},
+			{"ImportExport", testImportExport},
+			{"ImportExportAdmin", testImportExportAdmin},
+			{"ImportExportRoot", testImportExportRoot},
+			{"Template", testTemplate},
+			{"WorkflowWithFile", testWorkflowWithFile},
+		*/
 		{"WorkflowExternalNode", testWorkflowExternalNode},
 	}
 
@@ -162,16 +164,5 @@ func initProxeus(s *session) {
 		}
 
 		s.e.POST("/api/init").WithJSON(init).Expect().Status(http.StatusOK)
-		// We upload components
-		login(s, s.root)
-		for _, name := range []string{"HC1", "HC2", "HC3", "HC5", "HC7", "HC8", "HC9", "HC10", "HC11", "HC12"} {
-			c, err := Asset(fmt.Sprintf("test/assets/components/%s.json", name))
-			if err != nil {
-				s.t.Errorf("Cannot read asset %s", err)
-			}
-			s.e.POST("/api/admin/form/component").WithQuery("id", name).WithHeader("Content-Type", "application/json").WithBytes(c).Expect().Status(http.StatusOK)
-		}
-
-		logout(s)
 	}
 }

@@ -22,7 +22,7 @@ import (
 	"github.com/ProxeusApp/proxeus-core/storage"
 	"github.com/ProxeusApp/proxeus-core/storage/database"
 	"github.com/ProxeusApp/proxeus-core/storage/database/db"
-	sm "github.com/ProxeusApp/proxeus-core/storage/database/mock"
+	sm "github.com/ProxeusApp/proxeus-core/storage/mock"
 	"github.com/ProxeusApp/proxeus-core/sys"
 	"github.com/ProxeusApp/proxeus-core/sys/model"
 )
