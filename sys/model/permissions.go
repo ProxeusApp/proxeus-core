@@ -26,7 +26,9 @@ type Auth interface {
 type MemoryAuth interface {
 	Auth
 	GetMemory(k string) (interface{}, bool)
+	PutMemory(k string, val interface{})
 	DeleteMemory(k string)
+	GetSessionDir() string
 }
 
 type AccessibleItem interface {
