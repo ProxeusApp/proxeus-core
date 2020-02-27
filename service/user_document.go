@@ -37,18 +37,18 @@ func NewUserDocumentService(userS UserService, fileS FileService, templateDocume
 	return &DefaultUserDocumentService{userService: userS, fileService: fileS, templateDocumentService: templateDocumentS}
 }
 
-//returns a list of UserDataItem that contain the string passed in contain.
-//settings are used to modify the result list
+// List returns a list of UserDataItem that contain the string passed in contain.
+// settings are used to modify the result list
 func (me *DefaultUserDocumentService) List(auth model.Auth, contains string, settings storage.Options) ([]*model.UserDataItem, error) {
 	return userDataDB().List(auth, contains, settings, false)
 }
 
-//returns the UserDataItem with the id
+// Get returns the UserDataItem with the id
 func (me *DefaultUserDocumentService) Get(auth model.Auth, id string) (*model.UserDataItem, error) {
 	return userDataDB().Get(auth, id)
 }
 
-//returns file info for a pdf file that was generated from a workflow
+// GetDocFile returns file info for a pdf file that was generated from a workflow
 func (me *DefaultUserDocumentService) GetDocFile(auth model.Auth, id, dataPath, inlineOrAttachment string) (*FileHeaderResponse, string, error) {
 	fileInfo, err := me.fileService.GetDataFile(auth, id, dataPath)
 	if err != nil {
@@ -69,7 +69,7 @@ func (me *DefaultUserDocumentService) GetDocFile(auth model.Auth, id, dataPath, 
 	return headerResponse, fileInfo.Path(), nil
 }
 
-//returns file info for a docx file that was generated from a workflow
+// GetTemplateWithFormatFile returns file info for a docx file that was generated from a workflow
 func (me *DefaultUserDocumentService) GetTemplateWithFormatFile(auth model.Auth, id, dataPath, format, inlineOrAttachment string) (*FileHeaderResponse, io.ReadCloser, error) {
 	fileInfo, err := me.fileService.GetDataFile(auth, id, dataPath)
 	if err != nil {

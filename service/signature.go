@@ -64,8 +64,9 @@ func NewSignatureService(fileService FileService, userService UserService, email
 	return &DefaultSignatureService{fileService: fileService, userService: userService, emailService: emailService}
 }
 
-func (me *DefaultSignatureService) GetById(id, docId string) (SignatureRequestsMinimal, error) {
-	signatureRequests, err := signatureRequestDB().GetByID(id, docId)
+// GetById returns the signature request related to the provided documentId
+func (me *DefaultSignatureService) GetById(id, documentId string) (SignatureRequestsMinimal, error) {
+	signatureRequests, err := signatureRequestDB().GetByID(id, documentId)
 	if err != nil {
 		log.Println("[signatureService][GetById] signatureRequestDB().GetByID err: ", err.Error())
 		return nil, os.ErrNotExist
@@ -105,6 +106,7 @@ func (me *DefaultSignatureService) GetById(id, docId string) (SignatureRequestsM
 	return requests, nil
 }
 
+// GetForCurrentUser returns a list of the signature requests for the current user
 func (me *DefaultSignatureService) GetForCurrentUser(auth model.Auth) (SignatureRequestsComplete, error) {
 	user, err := me.userService.GetUser(auth)
 	if err != nil {
@@ -163,6 +165,7 @@ func (me *DefaultSignatureService) GetForCurrentUser(auth model.Auth) (Signature
 	return requests, nil
 }
 
+// AddAndNotify adds a new signature request and if the signatory has provided an email address sends an email notification.
 func (me *DefaultSignatureService) AddAndNotify(auth model.Auth, translator www.Translator, id, docId, signatory, host, scheme string) error {
 	err := me.add(auth, id, docId, signatory)
 	if err != nil {
@@ -188,6 +191,7 @@ func (me *DefaultSignatureService) AddAndNotify(auth model.Auth, translator www.
 	return me.emailService.Send(requestedSigner.Email, subject, body)
 }
 
+// RevokeAndNotify revokes an existing signature request and if the signatory has provided an email address sends an email notification.
 func (me *DefaultSignatureService) RevokeAndNotify(auth model.Auth, translator www.Translator, id, docId, signatory, host, scheme string) error {
 
 	sig, err := userDB().GetByBCAddress(signatory)
@@ -225,6 +229,7 @@ func (me *DefaultSignatureService) RevokeAndNotify(auth model.Auth, translator w
 	return err
 }
 
+// RejectAndNotify rejects an existing signature request and if the signatory has provided an email address sends an email notification.
 func (me *DefaultSignatureService) RejectAndNotify(auth model.Auth, translator www.Translator, id, docId, host string) error {
 	item, err := me.userService.GetUser(auth)
 	if err != nil {

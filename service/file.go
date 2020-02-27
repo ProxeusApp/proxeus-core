@@ -21,17 +21,17 @@ func NewFileService() *DefaultFileService {
 	return &DefaultFileService{}
 }
 
-//read file in path into writer
+//Read reads the file in path into writer
 func (me *DefaultFileService) Read(path string, w io.Writer) error {
 	return filesDB().Read(path, w)
 }
 
-// Return the file by id and dataPath
+// GetDataFile returns the file by id and dataPath
 func (me *DefaultFileService) GetDataFile(auth model.Auth, id, dataPath string) (*file.IO, error) {
 	return userDataDB().GetDataFile(auth, id, dataPath)
 }
 
-// Return the data and files by id and dataPath
+// GetDataAndFiles returns the data and files by id and dataPath
 func (me *DefaultFileService) GetDataAndFiles(auth model.Auth, id, dataPath string) (interface{}, []string, error) {
 	return userDataDB().GetDataAndFiles(auth, id, dataPath)
 }
