@@ -32,20 +32,24 @@ func NewWorkflowService(userService UserService) *DefaultWorkflowService {
 	return &DefaultWorkflowService{userService: userService}
 }
 
+// List returns a list of all WorkflowItem that match "contains" and the provided storage.Options
 func (me *DefaultWorkflowService) List(auth model.Auth, contains string, options storage.Options) ([]*model.WorkflowItem, error) {
 	return workflowDB().List(auth, contains, options)
 }
 
+// List returns a list of published WorkflowItem that match "contains" and the provided storage.Options
 func (me *DefaultWorkflowService) ListPublished(auth model.Auth, contains string, options storage.Options) ([]*model.WorkflowItem, error) {
 	return workflowDB().ListPublished(auth, contains, options)
 }
 
+// Get returns a workflow by the provided id
 func (me *DefaultWorkflowService) Get(auth model.Auth, id string) (*model.WorkflowItem, error) {
 	return workflowDB().Get(auth, id)
 }
 
+// GetAndPopulateOwner a workflow by the provided id and sets the OwnerEthAddress
 func (me *DefaultWorkflowService) GetAndPopulateOwner(auth model.Auth, id string) (*model.WorkflowItem, error) {
-	workflow, err := workflowDB().Get(auth, id)
+	workflow, err := me.Get(auth, id)
 	if err != nil {
 		return workflow, err
 	}
@@ -58,6 +62,7 @@ func (me *DefaultWorkflowService) GetAndPopulateOwner(auth model.Auth, id string
 	return workflow, err
 }
 
+// ListIds returns a list of all workflow ids that match contains and the provided storage.Options
 func (me *DefaultWorkflowService) ListIds(auth model.Auth, contains string, options storage.Options) ([]string, error) {
 	items, err := me.List(auth, contains, options)
 	if err != nil {
@@ -74,6 +79,7 @@ func (me *DefaultWorkflowService) ListIds(auth model.Auth, contains string, opti
 	return id, err
 }
 
+// Publish publishes a workflowItem
 func (me *DefaultWorkflowService) Publish(auth model.Auth, wfItem *model.WorkflowItem) map[string]interface{} {
 	errs := map[string]interface{}{}
 	collectError := func(err error, node *workflow.Node) {
@@ -130,14 +136,17 @@ func (me *DefaultWorkflowService) Publish(auth model.Auth, wfItem *model.Workflo
 	return errs
 }
 
+// Put saves a WorkflowItem
 func (me *DefaultWorkflowService) Put(auth model.Auth, wfItem *model.WorkflowItem) error {
 	return workflowDB().Put(auth, wfItem)
 }
 
+// Delete removes a WorkflowItem
 func (me *DefaultWorkflowService) Delete(auth model.Auth, id string) error {
 	return workflowDB().Delete(auth, id)
 }
 
+// InstantiateExternalNode creates a new instance of an external node
 func (me *DefaultWorkflowService) InstantiateExternalNode(auth model.Auth, nodeId, nodeName string) (*extNode.ExternalQuery, error) {
 	externalQuery, err := workflowDB().QueryFromInstanceID(auth, nodeId)
 	if err == nil {
@@ -171,6 +180,7 @@ func (me *DefaultWorkflowService) InstantiateExternalNode(auth model.Auth, nodeI
 	return &newExternalQuery, nil
 }
 
+// CopyWorkflows copies the workflow and related forms and templates to the new user
 func (me *DefaultWorkflowService) CopyWorkflows(rootUser, newUser *model.User) {
 	log.Println("Copy workflows to new user, if any...")
 	// If some default workflows have to be assigned to the user, then clone them

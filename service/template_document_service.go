@@ -17,6 +17,7 @@ func NewTemplateDocumentService() *DefaultTemplateDocumentService {
 	return &DefaultTemplateDocumentService{}
 }
 
+// Compile compiles a template with the documentService
 func (me *DefaultTemplateDocumentService) Compile(template eio.Template) (*http.Response, error) {
 	return me.ds().Compile(filesDB(), template)
 }

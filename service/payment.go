@@ -40,6 +40,7 @@ func NewPaymentService(userService UserService) *DefaultPaymentService {
 	return &DefaultPaymentService{userService: userService}
 }
 
+// CreateWorkflowPayment creates a workflow payment for a workflow by the ethAddress with the status "created".
 func (me *DefaultPaymentService) CreateWorkflowPayment(auth model.Auth, workflowId, ethAddress string) (*model.WorkflowPaymentItem, error) {
 	workflow, err := workflowDB().Get(auth, workflowId)
 	if err != nil {
@@ -59,17 +60,19 @@ func (me *DefaultPaymentService) CreateWorkflowPayment(auth model.Auth, workflow
 	return payment, paymentsDB().Save(payment)
 }
 
+// GetWorkflowPaymentById returns a WorkflowPaymentItem for the id
 func (me *DefaultPaymentService) GetWorkflowPaymentById(paymentId string) (*model.WorkflowPaymentItem, error) {
 	return paymentsDB().Get(paymentId)
 }
 
-func (me *DefaultPaymentService) GetWorkflowPayment(txHash, ethAddressess, status string) (*model.WorkflowPaymentItem, error) {
+//GetWorkflowPayment returns a WorkflowPaymentItem that matches the txHash, ethAddress and status
+func (me *DefaultPaymentService) GetWorkflowPayment(txHash, ethAddresses, status string) (*model.WorkflowPaymentItem, error) {
 	if txHash == "" {
 		log.Printf("[GetWorkflowPayment] bad request, either provide paymentId, txHash or workflowId")
 		return nil, errRequiredParamMissing
 	}
 
-	payment, err := paymentsDB().GetByTxHashAndStatusAndFromEthAddress(txHash, status, ethAddressess)
+	payment, err := paymentsDB().GetByTxHashAndStatusAndFromEthAddress(txHash, status, ethAddresses)
 	if err != nil {
 		log.Println("[GetWorkflowPayment] GetByTxHashAndStatusAndFromethAddressess err: ", err.Error())
 		return nil, err
@@ -80,6 +83,7 @@ func (me *DefaultPaymentService) GetWorkflowPayment(txHash, ethAddressess, statu
 	return payment, nil
 }
 
+// UpdateWorkflowPaymentPending updates a WorkflowPaymentItem with status "created" and sets it to status "pending"
 func (me *DefaultPaymentService) UpdateWorkflowPaymentPending(paymentId, txHash, ethAddress string) error {
 	txHash = strings.TrimSpace(txHash)
 	if txHash == "" {
@@ -93,16 +97,17 @@ func (me *DefaultPaymentService) UpdateWorkflowPaymentPending(paymentId, txHash,
 	return err
 }
 
+// CancelWorkflowPayment sets the status of a WorkflowPaymentItem to "cancelled"
 func (me *DefaultPaymentService) CancelWorkflowPayment(paymentId, ethAddress string) error {
 	return paymentsDB().Cancel(paymentId, ethAddress)
 }
 
-// Set the payment status from confirmed to redeemed
+// RedeemPayment sets the payment status of WorkflowPaymentItem from "confirmed" to "redeemed"
 func (me *DefaultPaymentService) RedeemPayment(workflowId, ethAddr string) error {
 	return paymentsDB().Redeem(workflowId, ethAddr)
 }
 
-//returns a bool indicating whether a payment is required for the user for a workflow
+//CheckIfWorkflowPaymentRequired returns whether a payment is required for the user for a workflow
 func (me *DefaultPaymentService) CheckIfWorkflowPaymentRequired(auth model.Auth, workflowId string) (bool, error) {
 	workflow, err := workflowDB().Get(auth, workflowId)
 	if err != nil {
@@ -120,6 +125,8 @@ func (me *DefaultPaymentService) CheckIfWorkflowPaymentRequired(auth model.Auth,
 	return isPaymentRequired(alreadyStarted, workflow, auth.UserID()), nil
 }
 
+// CheckForWorkflowPayment checks whether a workflow payment is required.
+// If a payment is required checks whether a payment with status "confirmed" is found.
 func (me *DefaultPaymentService) CheckForWorkflowPayment(auth model.Auth, workflowId string) error {
 	user, err := me.userService.GetUser(auth)
 	if err != nil {
@@ -138,10 +145,12 @@ func (me *DefaultPaymentService) CheckForWorkflowPayment(auth model.Auth, workfl
 	return err
 }
 
+// Delete sets the status of a CheckForWorkflowPayment to "deleted"
 func (me *DefaultPaymentService) Delete(paymentId string) error {
 	return paymentsDB().Delete(paymentId)
 }
 
+// All returns a list of all WorkflowPaymentItem
 func (me *DefaultPaymentService) All() ([]*model.WorkflowPaymentItem, error) {
 	return paymentsDB().All()
 }

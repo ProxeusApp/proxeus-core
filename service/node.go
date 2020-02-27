@@ -27,47 +27,14 @@ func NewNodeService(workflowService WorkflowService) *defaultNodeService {
 	return &defaultNodeService{workflowService: workflowService}
 }
 
+//ProbeExternalNodes checks all registered external nodes health endpoint and deletes the ones that are offline
 func (me *defaultNodeService) ProbeExternalNodes() {
 	for _, node := range me.listExternalNodes() {
 		me.probeExternalNode(node)
 	}
 }
 
-func (me *defaultNodeService) probeExternalNode(node *externalnode.ExternalNode) {
-	log.Printf("[nodeservice] checking external node %s \n", node.Name)
-	err := me.healthCheck(node.HealthUrl())
-	if err != nil {
-		log.Printf("[nodeservice] removing external node err %s \n", err)
-		me.deleteExternalNode(new(model.User), node.ID)
-	}
-}
-
-func (me *defaultNodeService) healthCheck(url string) error {
-	client := http.Client{Timeout: 5 * time.Second}
-	var err error
-	var r *http.Response
-	for i := 0; i < 3; i++ {
-		r, err = client.Get(url)
-		if err == nil && r.StatusCode == http.StatusOK {
-			return nil
-		}
-		time.Sleep(2 * time.Second)
-	}
-	var code int
-	if r != nil {
-		code = r.StatusCode
-	}
-	return fmt.Errorf("%s [code %d]", err.Error(), code)
-}
-
-func (me *defaultNodeService) deleteExternalNode(auth model.Auth, id string) error {
-	return workflowDB().DeleteExternalNode(auth, id)
-}
-
-func (me *defaultNodeService) listExternalNodes() []*externalnode.ExternalNode {
-	return workflowDB().ListExternalNodes()
-}
-
+//List returns a list of workflow nodes.
 func (me *defaultNodeService) List(nodeType string) []*workflow.Node {
 	var nodes []*workflow.Node
 	switch nodeType {
@@ -106,4 +73,39 @@ func (me *defaultNodeService) List(nodeType string) []*workflow.Node {
 		}
 	}
 	return nodes
+}
+
+func (me *defaultNodeService) probeExternalNode(node *externalnode.ExternalNode) {
+	log.Printf("[nodeservice] checking external node %s \n", node.Name)
+	err := me.healthCheck(node.HealthUrl())
+	if err != nil {
+		log.Printf("[nodeservice] removing external node err %s \n", err)
+		me.deleteExternalNode(new(model.User), node.ID)
+	}
+}
+
+func (me *defaultNodeService) healthCheck(url string) error {
+	client := http.Client{Timeout: 5 * time.Second}
+	var err error
+	var r *http.Response
+	for i := 0; i < 3; i++ {
+		r, err = client.Get(url)
+		if err == nil && r.StatusCode == http.StatusOK {
+			return nil
+		}
+		time.Sleep(2 * time.Second)
+	}
+	var code int
+	if r != nil {
+		code = r.StatusCode
+	}
+	return fmt.Errorf("%s [code %d]", err.Error(), code)
+}
+
+func (me *defaultNodeService) deleteExternalNode(auth model.Auth, id string) error {
+	return workflowDB().DeleteExternalNode(auth, id)
+}
+
+func (me *defaultNodeService) listExternalNodes() []*externalnode.ExternalNode {
+	return workflowDB().ListExternalNodes()
 }

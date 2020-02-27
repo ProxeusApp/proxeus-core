@@ -1767,7 +1767,7 @@ func CreateApiKeyHandler(e echo.Context) error {
 	if name == "" {
 		return c.String(http.StatusBadRequest, "please provide a name for your key")
 	}
-	apiKey, err := userService.CreateApiKeyHandler(sess, id, name)
+	apiKey, err := userService.CreateApiKey(sess, id, name)
 	if err != nil {
 		return c.String(http.StatusBadRequest, err.Error())
 	}
