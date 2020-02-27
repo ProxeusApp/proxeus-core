@@ -28,7 +28,8 @@ export PROXEUS_SPARKPOST_API_KEY?=${PROXEUS_SPARKPOST_API_KEY}
 export PROXEUS_EMAIL_FROM=no-reply@proxeus.com
 export PROXEUS_DATA_DIR?=./data
 export PROXEUS_DATABASE_ENGINE?=storm
-export PROXEUS_DATABASE_URI?=mongodb://localhost:27017# Only used for the mongo engine
+export PROXEUS_DATABASE_URI?=mongodb://localhost:27017
+#Only used for the mongo engine
 
 #########################################################
 
@@ -121,7 +122,7 @@ doc: init
 
 .PHONY: fmt
 fmt:
-	goimports -w -local $(golocalimport) main sys storage service
+	goimports -w -local $(golocalimport) main sys service
 
 .PHONY: test
 test: generate

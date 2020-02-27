@@ -43,6 +43,7 @@ func main() {
 	cfg.Init()
 	system, err := sys.NewWithSettings(cfg.Config.SettingsFile, &cfg.Config.Settings)
 	if err != nil {
+		fmt.Printf("Configuration: %#v\n", cfg.Config)
 		panic(err)
 	}
 
