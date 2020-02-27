@@ -299,7 +299,7 @@ func (me *WorkflowPaymentsDB) Remove(payment *model.WorkflowPaymentItem) error {
 
 var errNothingToUpdate = errors.New("nothing to update")
 
-// Update sets the status and tx hash of created workflow items machting the supplied criteria to the supplied values
+// Update sets the status and tx hash of created workflow items matching the supplied criteria to the supplied values
 func (me *WorkflowPaymentsDB) Update(paymentId, status, txHash, from string) error {
 	tx, err := me.db.Begin(true)
 	if err != nil {
