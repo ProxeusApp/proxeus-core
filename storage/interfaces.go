@@ -106,7 +106,7 @@ type ExternalNodeIF interface {
 	ListExternalNodes() []*externalnode.ExternalNode
 	DeleteExternalNode(auth model.Auth, id string) error
 	NodeByName(auth model.Auth, name string) (*externalnode.ExternalNode, error)
-	QueryFromInstanceID(auth model.Auth, id string) (externalnode.ExternalQuery, error)
+	QueryFromInstanceID(auth model.Auth, id string) (externalnode.ExternalNodeInstance, error)
 	PutExternalNodeInstance(auth model.Auth, i *externalnode.ExternalNodeInstance) error
 }
 

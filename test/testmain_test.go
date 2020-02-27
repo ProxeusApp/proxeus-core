@@ -117,7 +117,7 @@ func cloneSession(t *testing.T, s *session) *session {
 }
 
 func isOnline(url string) bool {
-	for i := 0; i < 10; i++ {
+	for i := 0; i < 100; i++ {
 		r, err := http.Get(url)
 		if err != nil {
 			time.Sleep(time.Second)

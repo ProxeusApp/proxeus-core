@@ -1131,6 +1131,7 @@ func DocumentNextHandler(e echo.Context) error {
 
 	formInput, err := helpers.ParseDataFromReq(c)
 	if err != nil {
+		fmt.Println(err.Error())
 		return c.String(http.StatusBadRequest, err.Error())
 	}
 
@@ -1150,6 +1151,7 @@ func DocumentNextHandler(e echo.Context) error {
 			resData["errors"] = er
 			return c.JSON(http.StatusUnprocessableEntity, resData)
 		}
+		fmt.Println(err.Error())
 		return c.JSON(http.StatusBadRequest, err.Error())
 	}
 
