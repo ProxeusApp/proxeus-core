@@ -16,7 +16,7 @@ type NonceManager struct {
 	nextNonce       *big.Int
 	lastNonceChange time.Time
 
-	ethClient  pendingNonceGetter
+	ethClient  ETHClientIF
 	ethAccount common.Address
 
 	errStreakCount int64
@@ -25,10 +25,6 @@ type NonceManager struct {
 
 const maxErrStreak = 3
 const idleSyncTimeInMinutes = 15
-
-type pendingNonceGetter interface {
-	PendingNonceAt(ctx context.Context, account common.Address) (uint64, error)
-}
 
 func (n *NonceManager) NextNonce() *big.Int {
 	n.mu.Lock()
@@ -54,7 +50,7 @@ func (n *NonceManager) OnAccountChange(addr string) {
 	n.syncNonce()
 }
 
-func (n *NonceManager) OnDial(c pendingNonceGetter) {
+func (n *NonceManager) OnDial(c ETHClientIF) {
 	n.ethClient = c
 }
 
