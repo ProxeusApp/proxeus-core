@@ -6,11 +6,11 @@ import (
 	"log"
 	"time"
 
+	"github.com/ProxeusApp/proxeus-core/main/handlers/blockchain/ethglue"
+
 	"github.com/ethereum/go-ethereum"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
-
-	"github.com/ProxeusApp/proxeus-core/main/handlers/blockchain/ethglue"
 )
 
 type LogSubscriber interface {
@@ -23,10 +23,12 @@ type webSocketLogSubscriber struct {
 	webSocketURL string
 	contract     string
 	logs         chan<- types.Log
+	ethDialler   ethglue.ETHDiallerIF
 }
 
-func NewWebSocketLogSubscriber(webSocketURL, contract string) *webSocketLogSubscriber {
+func NewWebSocketLogSubscriber(ethDialler ethglue.ETHDiallerIF, webSocketURL, contract string) *webSocketLogSubscriber {
 	return &webSocketLogSubscriber{
+		ethDialler:   ethDialler,
 		webSocketURL: webSocketURL,
 		contract:     contract,
 	}
@@ -42,7 +44,7 @@ func (c *webSocketLogSubscriber) Subscribe(ctx context.Context, logs chan<- type
 			return
 		default:
 			var err error
-			ethwsconn, err := ethglue.DialContext(ctx, c.webSocketURL)
+			ethClient, err := c.ethDialler.DialContext(ctx, c.webSocketURL)
 			if err != nil {
 				log.Printf("failed to dial for eth events, will retry (%s)\n", err)
 				continue
@@ -50,8 +52,8 @@ func (c *webSocketLogSubscriber) Subscribe(ctx context.Context, logs chan<- type
 			query := ethereum.FilterQuery{
 				Addresses: filterAddresses,
 			}
-			ctx, cancel := context.WithTimeout(ctx, time.Duration(10*time.Second))
-			s, err := ethwsconn.SubscribeFilterLogs(ctx, query, logs)
+			ctx, cancel := context.WithTimeout(ctx, 10*time.Second)
+			s, err := ethClient.SubscribeFilterLogs(ctx, query, logs)
 			cancel()
 			if err != nil {
 				log.Printf("failed to subscribe for eth events, will retry (%s)\n", err)

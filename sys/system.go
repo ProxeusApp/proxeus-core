@@ -11,8 +11,10 @@ import (
 	"strings"
 	"time"
 
+	"github.com/ProxeusApp/proxeus-core/main/handlers/blockchain/ethglue"
+
 	"github.com/ethereum/go-ethereum/accounts/abi"
-	"github.com/patrickmn/go-cache"
+	cache "github.com/patrickmn/go-cache"
 
 	cfg "github.com/ProxeusApp/proxeus-core/main/config"
 	"github.com/ProxeusApp/proxeus-core/main/handlers/blockchain"
@@ -132,12 +134,13 @@ func (me *System) init(stngs *model.Settings) error {
 	log.Println("blockchain config ethWebSocketURL: ", cfg.Config.EthWebSocketURL)
 
 	xesAdapter := blockchain.NewAdapter(cfg.Config.XESContractAddress, XESABI)
+	dialler := ethglue.NewDefaultDialler()
 
 	var logSubscriber blockchain.LogSubscriber
 	if me.TestMode {
 		logSubscriber = blockchain.NewDummyLogSubscriber()
 	} else {
-		logSubscriber = blockchain.NewWebSocketLogSubscriber(cfg.Config.EthWebSocketURL, xesAdapter.GetContractAddress())
+		logSubscriber = blockchain.NewWebSocketLogSubscriber(dialler, cfg.Config.EthWebSocketURL, xesAdapter.GetContractAddress())
 	}
 	bcListenerPayment := blockchain.NewPaymentListener(xesAdapter, me.DB.WorkflowPayments, logSubscriber)
 	ctxPay := context.Background()
@@ -156,7 +159,7 @@ func (me *System) init(stngs *model.Settings) error {
 	if me.TestMode {
 		logSubscriber = blockchain.NewDummyLogSubscriber()
 	} else {
-		logSubscriber = blockchain.NewWebSocketLogSubscriber(cfg.Config.EthWebSocketURL, stngs.BlockchainContractAddress)
+		logSubscriber = blockchain.NewWebSocketLogSubscriber(dialler, cfg.Config.EthWebSocketURL, stngs.BlockchainContractAddress)
 	}
 	bcListenerSignature := blockchain.NewSignatureListener(me.DB.SignatureRequests, me.DB.User, emailSender, ProxeusFSABI, cfg.Config.PlatformDomain, logSubscriber)
 	ctxSig := context.Background()
