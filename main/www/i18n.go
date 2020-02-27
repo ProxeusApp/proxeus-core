@@ -20,10 +20,15 @@ var (
 	cookieName  = "lang"
 )
 
-type WebI18n struct {
-	i18nStore storage.I18nIF
-	Lang      string
-}
+type (
+	Translator interface {
+		T(b ...interface{}) string
+	}
+	WebI18n struct {
+		i18nStore storage.I18nIF
+		Lang      string
+	}
+)
 
 func NewI18n(i18nStore storage.I18nIF, c echo.Context) *WebI18n {
 	wi18n := WebI18n{i18nStore, ""}

@@ -42,3 +42,7 @@ func settingsDB() storage.SettingsIF {
 func filesDB() storage.FilesIF {
 	return system.DB.Files
 }
+
+func signatureRequestDB() storage.SignatureRequestsIF {
+	return system.DB.SignatureRequests
+}
