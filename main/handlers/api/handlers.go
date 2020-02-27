@@ -51,12 +51,13 @@ var (
 	formService             service.FormService
 	formComponentService    service.FormComponentService
 	apiService              service.ApiService
+	authService             service.AuthenticationService
 )
 
 func Init(paymentS service.PaymentService, userS service.UserService, workflowS service.WorkflowService,
 	documentS service.DocumentService, userDocumentS service.UserDocumentService, fileS service.FileService,
 	templateDocumentS service.TemplateDocumentService, signatureS service.SignatureService, emailS service.EmailService,
-	formS service.FormService, formCompS service.FormComponentService, apiS service.ApiService) {
+	formS service.FormService, formCompS service.FormComponentService, apiS service.ApiService, authS service.AuthenticationService) {
 
 	paymentService = paymentS
 	userService = userS
@@ -70,6 +71,7 @@ func Init(paymentS service.PaymentService, userS service.UserService, workflowS 
 	formService = formS
 	formComponentService = formCompS
 	apiService = apiS
+	authService = authS
 }
 
 func html(c echo.Context, p string) error {
@@ -467,12 +469,12 @@ func LoginHandler(e echo.Context) (err error) {
 			return errors.New("challenge.invalid")
 		}
 		log.Println("Session challenge", challenge)
-		created, user, err = LoginWithWallet(c, challenge, loginForm.Signature)
+		created, user, err = authService.LoginWithWallet(challenge, loginForm.Signature)
 		if user != nil {
 			sess.Delete("challenge")
 		}
 	} else {
-		user, err = c.System().DB.User.Login(loginForm.Email, loginForm.Password)
+		user, err = authService.LoginWithUsernamePassword(loginForm.Email, loginForm.Password)
 		if err != nil {
 			return c.NoContent(http.StatusBadRequest)
 		}
@@ -506,47 +508,6 @@ func LoginHandler(e echo.Context) (err error) {
 		"location": redirectAfterLogin(user.Role, string(referer)),
 		"created":  created,
 	})
-}
-
-func LoginWithWallet(c *www.Context, challenge, signature string) (bool, *model.User, error) {
-	created := false
-	var address string
-	var err error
-	address, err = blockchain.VerifySignInChallenge(challenge, signature)
-	if err != nil {
-		return false, nil, err
-	}
-	var usr *model.User
-	usr, err = c.System().DB.User.GetByBCAddress(address)
-	if db.NotFound(err) {
-		stngs := c.System().GetSettings()
-		it := &model.User{
-			EthereumAddr: address,
-			Role:         model.StringToRole(stngs.DefaultRole),
-		}
-		it.Name = "created by ethereum account sign"
-		err = c.System().DB.User.Put(root, it)
-		if err != nil {
-			return false, nil, err
-		}
-		created = true
-		usr, err = c.System().DB.User.GetByBCAddress(address)
-		if err == nil {
-			workflowService.CopyWorkflows(root, usr)
-			if c.System().GetSettings().BlockchainNet == "ropsten" && c.System().GetSettings().AirdropEnabled == "true" {
-				go func() {
-					defer func() {
-						if r := recover(); r != nil {
-							log.Println("airdrop recover with err ", r)
-						}
-					}()
-					blockchain.GiveTokens(address)
-				}()
-			}
-		}
-
-	}
-	return created, usr, err
 }
 
 // Returns an object containing
