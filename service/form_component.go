@@ -30,8 +30,8 @@ func NewFormComponentService() *DefaultFormComponentService {
 	return &DefaultFormComponentService{}
 }
 
-
-func (me *DefaultFormComponentService) EnsureDefaultFormComponents(auth model.Auth){
+//EnsureDefaultFormComponents creates all default form components
+func (me *DefaultFormComponentService) EnsureDefaultFormComponents(auth model.Auth) {
 	dat, err := formDB().ListComp(auth, "", storage.Options{})
 	if db.NotFound(err) || (err == nil && dat == nil) {
 		defaultFormcomponentents := []string{"HC1", "HC2", "HC3", "HC5", "HC7", "HC8", "HC9", "HC10", "HC11", "HC12"}
@@ -60,11 +60,13 @@ func (me *DefaultFormComponentService) EnsureDefaultFormComponents(auth model.Au
 	}
 }
 
+// DelComp removes a form component
 func (me *DefaultFormComponentService) DelComp(auth model.Auth, id string) error {
 	return formDB().DelComp(auth, id)
 }
 
-func (me *DefaultFormComponentService) SetComp(auth model.Auth, reader io.ReadCloser) (*model.FormComponentItem, error){
+// SetComp sets a form components
+func (me *DefaultFormComponentService) SetComp(auth model.Auth, reader io.ReadCloser) (*model.FormComponentItem, error) {
 	body, _ := ioutil.ReadAll(reader)
 	var comp model.FormComponentItem
 	err := json.Unmarshal(body, &comp)
@@ -74,10 +76,12 @@ func (me *DefaultFormComponentService) SetComp(auth model.Auth, reader io.ReadCl
 	return &comp, formDB().PutComp(auth, &comp)
 }
 
+// GetComp returns a form component by id
 func (me *DefaultFormComponentService) GetComp(auth model.Auth, id string) (*model.FormComponentItem, error) {
 	return formDB().GetComp(auth, id)
 }
 
+// ListComp lists all components that match contains and storage.options
 func (me *DefaultFormComponentService) ListComp(auth model.Auth, contains string, options storage.Options) (map[string]*model.FormComponentItem, error) {
 	return formDB().ListComp(auth, contains, options)
 }
