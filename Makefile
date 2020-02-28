@@ -102,7 +102,6 @@ doc: init server
 	# godoc only reads documentation from downloaded packages, therefore we simulate a src structure. godoc doesn't follow symlinks
 	mkdir -p /tmp/tmpgopath/src/git.proxeus.com/
 	cp -R * /tmp/tmpgopath/src/git.proxeus.com/
-	https://github.com/ProxeusApp/proxeus-core
 	GOPATH=/tmp/tmpgopath godoc -v -http=$(serverurl) &
 	sleep 60
 	# Download css & js first
