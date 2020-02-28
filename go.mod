@@ -84,7 +84,7 @@ require (
 	golang.org/x/arch v0.0.0-20191126211547-368ea8f32fff // indirect
 	golang.org/x/crypto v0.0.0-20200210222208-86ce3cb69678
 	golang.org/x/image v0.0.0-20190523035834-f03afa92d3ff // indirect
-	golang.org/x/net v0.0.0-20191003171128-d98b1b443823 // indirect
+	golang.org/x/net v0.0.0-20191003171128-d98b1b443823
 	golang.org/x/sys v0.0.0-20200124204421-9fbb57f87de9 // indirect
 	golang.org/x/tools v0.0.0-20200124021010-5c352bb417e0 // indirect
 	google.golang.org/appengine v1.6.0 // indirect
