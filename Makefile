@@ -103,7 +103,7 @@ doc: init server
 	mkdir -p /tmp/tmpgopath/src/git.proxeus.com/
 	cp -R * /tmp/tmpgopath/src/git.proxeus.com/
 	GOPATH=/tmp/tmpgopath GO111MODULE=on godoc -http=$(serverurl) &
-	sleep 3
+	sleep 30
 	# Download css & js first
 	wget -P artifacts/$(serverurl)/lib/godoc http://$(serverurl)/lib/godoc/style.css
 	wget -P artifacts/$(serverurl)/lib/godoc http://$(serverurl)/lib/godoc/jquery.js
