@@ -41,23 +41,21 @@ comma:=,
 space:= $() $()
 coverpkg=$(subst $(space),$(comma), $(filter-out %/mock %/assets, $(shell go list ./main/... ./sys/... ./storage/... ./service/...)))
 
-startproxeus=artifacts/proxeus
+startproxeus=PROXEUS_DATA_DIR=$(1)/data PROXEUS_SETTINGS_FILE=$(1)/settings/main.json PROXEUS_TEST_MODE=true artifacts/proxeus &
 stopproxeus=pkill proxeus
-startds=curl -s http://localhost:2115 > /dev/null || ( docker-compose up -d document-service && touch $(testdir)/ds-started )
-stopds=[ -e  $(testdir)/ds-started ] && docker-compose stop document-service
-startnodes=curl -s http://localhost:8011 > /dev/null || (PROXEUS_PLATFORM_DOMAIN=http://$(DOCKER_GATEWAY):1323 NODE_CRYPTO_RATES_URL=http://localhost:8011 REGISTER_RETRY_INTERVAL=1 docker-compose up -d node-crypto-forex-rates && touch $(testdir)/nodes-started )
-stopnodes=[ -e  $(testdir)/nodes-started ] && docker-compose stop node-crypto-forex-rates
-startmongo=nc -z localhost 27017 2> /dev/null || docker run -d -p 27017:27017 -p 27018:27018 -p 27019:27019 proxeus/mongo-dev-cluster
+startds=curl -s http://localhost:2115 > /dev/null || ( PROXEUS_DATA_DIR=$(1) docker-compose up -d document-service && touch $(1)/ds-started )
+startnodes=curl -s http://localhost:8011 > /dev/null || (PROXEUS_PLATFORM_DOMAIN=http://$(DOCKER_GATEWAY):1323 NODE_CRYPTO_RATES_URL=http://localhost:8011 REGISTER_RETRY_INTERVAL=1 docker-compose up -d node-crypto-forex-rates && touch $(1)/nodes-started )
+startmongo=nc -z localhost 27017 2> /dev/null || (docker run -d -p 27017:27017 -p 27018:27018 -p 27019:27019 proxeus/mongo-dev-cluster && sleep 10 && touch $(1)/mongo-started)
 
 ifeq ($(coverage),true)
 	COVERAGE_OPTS=-coverprofile artifacts/$@.coverage -coverpkg="$(coverpkg)"
-	startproxeus=go test -v -tags coverage -coverprofile artifacts/$@-$(PROXEUS_DATABASE_ENGINE).coverage -coverpkg="$(coverpkg)" ./main
+	startproxeus=PROXEUS_DATA_DIR=$(1)/data PROXEUS_SETTINGS_FILE=$(1)/settings/main.json PROXEUS_TEST_MODE=true go test -v -tags coverage -coverprofile artifacts/$@-$(PROXEUS_DATABASE_ENGINE).coverage -coverpkg="$(coverpkg)" ./main &
 	stopproxeus=pkill main.test
 endif
 
 dependencies=go curl
 mocks=main/handlers/blockchain/mock/adapter_mock.go storage/mock/interfaces.go
-bindata=main/handlers/assets/bindata.go test/bindata.go
+bindata=main/handlers/assets/bindata.go test/assets/bindata.go
 golocalimport=github.com/ProxeusApp/proxeus-core
 
 .PHONY: all
@@ -136,9 +134,9 @@ test: generate
 
 .PHONY: test-integration
 test-integration:
-	$(eval testdir := $(shell mktemp -d /tmp/proxeus-test-api.XXXXX ))
+	$(eval testdir := $(shell mktemp -d /tmp/proxeus-test-integration.XXXXX ))
 	mkdir -p $(testdir)
-	$(eval cid=$(shell $(startmongo)))
+	$(eval cid=$(shell $(call startmongo,$(testdir))))
 	go test $(COVERAGE_OPTS) -count=1 -tags integration ./storage/database/db/...; ret=$$?; \
 		$(if $(cid), docker rm -f $(cid);) \
 		rm -fr $(testdir); \
@@ -148,15 +146,10 @@ test-integration:
 test-api: server
 	$(eval testdir := $(shell mktemp -d /tmp/proxeus-test-api.XXXXX ))
 	mkdir -p $(testdir)
-	$(eval cid=$(shell [[ "x$(PROXEUS_DATABASE_ENGINE)" == "xmongo" ]] && $(startmongo)))
-	$(startds)
-	$(startnodes)
-	sleep 10
-	echo starting test main ; \
-					 PROXEUS_DATA_DIR=$(testdir)/data \
-					 PROXEUS_SETTINGS_FILE=$(testdir)/settings/main.json \
-					 PROXEUS_TEST_MODE=true \
-					 $(startproxeus) &
+	$(eval cid=$(shell [[ "x$(PROXEUS_DATABASE_ENGINE)" == "xmongo" ]] && $(call startmongo,$(testdir))))
+	$(call startds,$(testdir))
+	$(call startnodes,$(testdir))
+	$(call startproxeus,$(testdir))
 	PROXEUS_URL=http://localhost:1323  go test -count=1 ./test; ret=$$?; \
 		$(stopproxeus); \
 		[ -e  $(testdir)/ds-started ] && docker-compose down; \
@@ -168,15 +161,14 @@ test-api: server
 test-ui: server ui
 	$(eval testdir := $(shell mktemp -d /tmp/proxeus-test-ui.XXXXX ))
 	mkdir -p $(testdir)
-	$(startds)
-	$(startnodes)
-	echo starting UI test ; \
-					 PROXEUS_DATA_DIR=$(testdir)/data \
-					 PROXEUS_SETTINGS_FILE=$(testdir)/settings/main.json \
-					 PROXEUS_TEST_MODE=true \
-					 $(startproxeus) &
-	$(MAKE) -C test/e2e test; ret=$$? && docker-compose down -v; \
+	$(eval cid=$(shell [[ "x$(PROXEUS_DATABASE_ENGINE)" == "xmongo" ]] && $(call startmongo,$(testdir))))
+	$(call startds,$(testdir))
+	$(call startnodes,$(testdir))
+	$(call startproxeus,$(testdir))
+	$(MAKE) -C test/e2e test; ret=$$?; \
 		$(stopproxeus); \
+		[ -e  $(testdir)/ds-started ] && docker-compose down; \
+		$(if $(cid), docker rm -f $(cid);) \
 		rm -fr $(testdir); \
 		exit $$ret
 
@@ -200,8 +192,8 @@ main/handlers/assets/bindata.go: $(wildcard ./ui/core/dist/**)
 	go-bindata ${BINDATA_OPTS} -pkg assets -o ./main/handlers/assets/bindata.go -prefix ./ui/core/dist ./ui/core/dist/...
 	goimports -w $@
 
-test/bindata.go: $(shell find ./test/assets/)
-	go-bindata ${BINDATA_OPTS} -pkg test -o ./test/bindata.go ./test/assets/...
+test/assets/bindata.go: $(filter-out bindata.go,$(shell find ./test/assets/))
+	go-bindata ${BINDATA_OPTS} -pkg assets -o ./test/assets/bindata.go ./test/assets/...
 	goimports -w $@
 
 .SECONDEXPANSION: # See https://www.gnu.org/software/make/manual/make.html#Secondary-Expansion

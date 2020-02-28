@@ -328,7 +328,9 @@ func PostInit(e echo.Context) error {
 			}
 		}
 	}
-	formComponentService.EnsureDefaultFormComponents(root)
+	if err := formComponentService.EnsureDefaultFormComponents(root); err != nil {
+		fmt.Println("Error during form component initialisation: ", err)
+	}
 
 	return c.NoContent(http.StatusOK)
 }

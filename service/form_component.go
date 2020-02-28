@@ -16,7 +16,7 @@ import (
 
 type (
 	FormComponentService interface {
-		EnsureDefaultFormComponents(auth model.Auth)
+		EnsureDefaultFormComponents(auth model.Auth) error
 		DelComp(auth model.Auth, id string) error
 		SetComp(auth model.Auth, reader io.ReadCloser) (*model.FormComponentItem, error)
 		GetComp(auth model.Auth, id string) (*model.FormComponentItem, error)
@@ -32,14 +32,18 @@ func NewFormComponentService() *DefaultFormComponentService {
 }
 
 //EnsureDefaultFormComponents creates all default form components
-func (me *DefaultFormComponentService) EnsureDefaultFormComponents(auth model.Auth) {
+func (me *DefaultFormComponentService) EnsureDefaultFormComponents(auth model.Auth) error {
 	dat, err := formDB().ListComp(auth, "", storage.Options{})
-	if db.NotFound(err) || (err == nil && dat == nil) {
+	if err != nil && !db.NotFound(err) {
+		return err
+	}
+	if db.NotFound(err) || len(dat) == 0 {
 		defaultFormcomponentents := []string{"HC1", "HC2", "HC3", "HC5", "HC7", "HC8", "HC9", "HC10", "HC11", "HC12"}
 		for _, formCompId := range defaultFormcomponentents {
 			jsonFile, err := os.Open(filepath.Join("test", "assets", "components", formCompId+".json"))
 			if err != nil {
 				log.Println(err)
+				return err
 			}
 
 			body, _ := ioutil.ReadAll(jsonFile)
@@ -48,17 +52,18 @@ func (me *DefaultFormComponentService) EnsureDefaultFormComponents(auth model.Au
 			if err != nil {
 				log.Println(err)
 				jsonFile.Close()
-				continue
+				return err
 			}
 
 			err = formDB().PutComp(auth, &comp)
 			if err != nil {
 				log.Println(err)
 				jsonFile.Close()
-				continue
+				return err
 			}
 		}
 	}
+	return nil
 }
 
 // DelComp removes a form component

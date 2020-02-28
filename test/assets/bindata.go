@@ -18,7 +18,7 @@
 // test/assets/test-tar.tar.gz
 // DO NOT EDIT!
 
-package test
+package assets
 
 import (
 	"bytes"
@@ -98,7 +98,7 @@ func testAssetsComponentsHc1Json() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "test/assets/components/HC1.json", size: 337, mode: os.FileMode(436), modTime: time.Unix(1581917735, 0)}
+	info := bindataFileInfo{name: "test/assets/components/HC1.json", size: 337, mode: os.FileMode(420), modTime: time.Unix(1580941257, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -118,7 +118,7 @@ func testAssetsComponentsHc10Json() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "test/assets/components/HC10.json", size: 9833, mode: os.FileMode(436), modTime: time.Unix(1581917735, 0)}
+	info := bindataFileInfo{name: "test/assets/components/HC10.json", size: 9833, mode: os.FileMode(420), modTime: time.Unix(1580941257, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -138,7 +138,7 @@ func testAssetsComponentsHc11Json() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "test/assets/components/HC11.json", size: 850, mode: os.FileMode(436), modTime: time.Unix(1581917735, 0)}
+	info := bindataFileInfo{name: "test/assets/components/HC11.json", size: 850, mode: os.FileMode(420), modTime: time.Unix(1580941257, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -158,7 +158,7 @@ func testAssetsComponentsHc12Json() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "test/assets/components/HC12.json", size: 1583, mode: os.FileMode(436), modTime: time.Unix(1581917735, 0)}
+	info := bindataFileInfo{name: "test/assets/components/HC12.json", size: 1583, mode: os.FileMode(420), modTime: time.Unix(1580941257, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -178,7 +178,7 @@ func testAssetsComponentsHc2Json() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "test/assets/components/HC2.json", size: 808, mode: os.FileMode(436), modTime: time.Unix(1581917735, 0)}
+	info := bindataFileInfo{name: "test/assets/components/HC2.json", size: 808, mode: os.FileMode(420), modTime: time.Unix(1580941257, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -198,7 +198,7 @@ func testAssetsComponentsHc3Json() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "test/assets/components/HC3.json", size: 1421, mode: os.FileMode(436), modTime: time.Unix(1581917735, 0)}
+	info := bindataFileInfo{name: "test/assets/components/HC3.json", size: 1421, mode: os.FileMode(420), modTime: time.Unix(1580941257, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -218,7 +218,7 @@ func testAssetsComponentsHc5Json() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "test/assets/components/HC5.json", size: 2021, mode: os.FileMode(436), modTime: time.Unix(1581917735, 0)}
+	info := bindataFileInfo{name: "test/assets/components/HC5.json", size: 2021, mode: os.FileMode(420), modTime: time.Unix(1580941257, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -238,7 +238,7 @@ func testAssetsComponentsHc7Json() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "test/assets/components/HC7.json", size: 704, mode: os.FileMode(436), modTime: time.Unix(1581917735, 0)}
+	info := bindataFileInfo{name: "test/assets/components/HC7.json", size: 704, mode: os.FileMode(420), modTime: time.Unix(1580941257, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -258,7 +258,7 @@ func testAssetsComponentsHc8Json() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "test/assets/components/HC8.json", size: 1310, mode: os.FileMode(436), modTime: time.Unix(1581917735, 0)}
+	info := bindataFileInfo{name: "test/assets/components/HC8.json", size: 1310, mode: os.FileMode(420), modTime: time.Unix(1580941257, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -278,7 +278,7 @@ func testAssetsComponentsHc9Json() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "test/assets/components/HC9.json", size: 1474, mode: os.FileMode(436), modTime: time.Unix(1581917735, 0)}
+	info := bindataFileInfo{name: "test/assets/components/HC9.json", size: 1474, mode: os.FileMode(420), modTime: time.Unix(1580941257, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -298,7 +298,7 @@ func testAssetsImageJpg() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "test/assets/image.jpg", size: 939, mode: os.FileMode(436), modTime: time.Unix(1581917735, 0)}
+	info := bindataFileInfo{name: "test/assets/image.jpg", size: 939, mode: os.FileMode(420), modTime: time.Unix(1580941257, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -318,7 +318,7 @@ func testAssetsTemplatesTest_expectedPdf() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "test/assets/templates/test_expected.pdf", size: 8016, mode: os.FileMode(436), modTime: time.Unix(1581917735, 0)}
+	info := bindataFileInfo{name: "test/assets/templates/test_expected.pdf", size: 8016, mode: os.FileMode(420), modTime: time.Unix(1580941257, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -338,7 +338,7 @@ func testAssetsTemplatesTest_expected2Pdf() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "test/assets/templates/test_expected2.pdf", size: 12178, mode: os.FileMode(436), modTime: time.Unix(1581917739, 0)}
+	info := bindataFileInfo{name: "test/assets/templates/test_expected2.pdf", size: 12178, mode: os.FileMode(420), modTime: time.Unix(1581001774, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -358,7 +358,7 @@ func testAssetsTemplatesTest_templateOdt() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "test/assets/templates/test_template.odt", size: 8631, mode: os.FileMode(436), modTime: time.Unix(1581917735, 0)}
+	info := bindataFileInfo{name: "test/assets/templates/test_template.odt", size: 8631, mode: os.FileMode(420), modTime: time.Unix(1580941257, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -378,7 +378,7 @@ func testAssetsTemplatesTest_template2Odt() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "test/assets/templates/test_template2.odt", size: 10525, mode: os.FileMode(436), modTime: time.Unix(1581917739, 0)}
+	info := bindataFileInfo{name: "test/assets/templates/test_template2.odt", size: 10525, mode: os.FileMode(420), modTime: time.Unix(1581001774, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -398,7 +398,7 @@ func testAssetsTestTarTarGz() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "test/assets/test-tar.tar.gz", size: 225698, mode: os.FileMode(436), modTime: time.Unix(1582559124, 0)}
+	info := bindataFileInfo{name: "test/assets/test-tar.tar.gz", size: 225698, mode: os.FileMode(420), modTime: time.Unix(1582881700, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
