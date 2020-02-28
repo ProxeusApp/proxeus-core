@@ -57,22 +57,6 @@ jobs:
           name: Validate
           command: make init validate
 
-  doc-go:
-    executor: docker-image-golang
-    resource_class: large
-    steps:
-      - checkout
-      - attach_workspace:
-          at: ~/project/
-      - restore_cache:
-          keys:
-            - go-mod-v2-{{ checksum "go.sum" }}
-      - run:
-          name: Generate doc
-          command: make doc
-      - store_artifacts:
-          path: artifacts/godoc.tar.gz
-
   test-go:
     executor: docker-image-golang
     steps:
@@ -310,9 +294,6 @@ workflows:
           requires:
             - test-integration-go
       - coverage-go:
-          requires:
-            - build-go
-      - doc-go:
           requires:
             - build-go
       - build-server-docker:
