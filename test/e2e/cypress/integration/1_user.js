@@ -57,15 +57,17 @@ describe(`User signup & login at ${url}`, () => {
       })
 
       it('should sign up admin', () => {
+        cy.wait(2000)
         cy.server()
         cy.route({
             method: 'POST',
             url: '/api/register',
             onResponse: (xhr) => {
-              signupResponse = xhr.response.headers['x-test-token']
+              signupResponse = xhr.response.headers['x-test-token'];
+              console.log(xhr.response);
             },
           },
-        )
+        ).as('sign-admin')
 
         cy.get('#inputEmail').type(`${adminEmailAddress}{enter}`)
         cy.get('#frontend-app').should('contain', 'Email sent')
