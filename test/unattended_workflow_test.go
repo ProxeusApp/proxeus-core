@@ -4,6 +4,8 @@ import (
 	"bytes"
 	"fmt"
 	"net/http"
+
+	"github.com/ProxeusApp/proxeus-core/test/assets"
 )
 
 func testUnattendedWorkflow(s *session) {
@@ -31,7 +33,7 @@ func testUnattendedWorkflow(s *session) {
 
 	r := executeAllAtOnce(s, token, id, data, false)
 
-	expected, err := Asset("test/assets/templates/test_expected.pdf")
+	expected, err := assets.Asset("test/assets/templates/test_expected.pdf")
 	if err != nil {
 		s.t.Errorf("Cannot upload asset %s", err)
 	}
