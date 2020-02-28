@@ -8,7 +8,7 @@ describe(`Power up on ${url}`, () => {
   })
 
   it('should have a powerup button', () => {
-    const button = cy.get('.btn-primary').first()
+    const button = cy.get('button.btn-primary').eq(2)
     button.should($button => {
       expect($button).to.be.visible
       expect($button).to.contain.text('Power up')
@@ -16,7 +16,7 @@ describe(`Power up on ${url}`, () => {
   })
 
   it('should bring to home page after saving with default values', () => {
-    cy.get('.btn-primary').first().click()
+    cy.get('button.btn-primary').eq(2).click()
   })
 
 })
