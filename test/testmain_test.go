@@ -48,24 +48,22 @@ func TestApi(t *testing.T) {
 		name string
 		f    func(s *session)
 	}{
-		/*
-			{"User", testUser},
-			{"UserProfile", testUserProfile},
-			{"APIKey", testApiKey},
-			{"Form", testForm},
-			{"Payment", testPayment},
-			{"UnattendedWorkflow", testUnattendedWorkflow},
-			{"UnattendedWorkflowAdvanced", testUnattendedWorkflowAdvanced},
-			{"Workflow", testWorkflow},
-			{"WorkflowAdvanced", testWorkflowAdvanced},
-			{"I18n", testI18n},
-			{"I18nAdmin", testI18nAdmin},
-			{"ImportExport", testImportExport},
-			{"ImportExportAdmin", testImportExportAdmin},
-			{"ImportExportRoot", testImportExportRoot},
-			{"Template", testTemplate},
-			{"WorkflowWithFile", testWorkflowWithFile},
-		*/
+		{"User", testUser},
+		{"UserProfile", testUserProfile},
+		{"APIKey", testApiKey},
+		{"Form", testForm},
+		{"Payment", testPayment},
+		{"UnattendedWorkflow", testUnattendedWorkflow},
+		{"UnattendedWorkflowAdvanced", testUnattendedWorkflowAdvanced},
+		{"Workflow", testWorkflow},
+		{"WorkflowAdvanced", testWorkflowAdvanced},
+		{"I18n", testI18n},
+		{"I18nAdmin", testI18nAdmin},
+		{"ImportExport", testImportExport},
+		{"ImportExportAdmin", testImportExportAdmin},
+		{"ImportExportRoot", testImportExportRoot},
+		{"Template", testTemplate},
+		{"WorkflowWithFile", testWorkflowWithFile},
 		{"WorkflowExternalNode", testWorkflowExternalNode},
 	}
 
