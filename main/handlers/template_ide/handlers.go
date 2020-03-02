@@ -12,6 +12,8 @@ import (
 	"os"
 	"strings"
 
+	"github.com/ProxeusApp/proxeus-core/sys"
+
 	"github.com/ProxeusApp/proxeus-core/service"
 
 	"github.com/ProxeusApp/proxeus-core/storage/portable"
@@ -306,7 +308,7 @@ func IdeGetDeleteHandler(e echo.Context) error {
 	}
 	id := c.Param("id")
 	lang := c.Param("lang")
-	err := templateS.RemoveTemplate(sess, id, lang)
+	err := ideDelete(id, lang, sess)
 	if err != nil {
 		return c.String(http.StatusBadRequest, err.Error())
 	}
@@ -323,11 +325,16 @@ func IdePostUploadHandler(e echo.Context) error {
 	lang := c.Param("lang")
 	fileName, _ := url.QueryUnescape(c.Request().Header.Get("File-Name"))
 	dataReader := c.Request().Body
-	err := templateS.AddTemplate(sess, id, lang, fileName, dataReader)
-	c.Request().Body.Close()
+	if fileName == "" {
+		fileName = "unknown"
+	}
+	sess.Put(id+lang, fileName)
+	err := sess.WriteFile(id+lang, dataReader)
 	if err != nil {
 		return c.String(http.StatusBadRequest, err.Error())
 	}
+	sess.Put("activeTmpl"+id, lang)
+	c.Request().Body.Close()
 	return c.NoContent(http.StatusOK)
 }
 
@@ -393,5 +400,15 @@ func UploadTemplateHandler(e echo.Context) error {
 	if err != nil {
 		return c.NoContent(http.StatusBadRequest)
 	}
+	//remove pending file from the session
+	err = ideDelete(id, lang, sess)
+	if err != nil {
+		return err
+	}
 	return c.NoContent(http.StatusOK)
+}
+
+func ideDelete(id, lang string, sess *sys.Session) error {
+	sess.Delete(id + lang)
+	return sess.DeleteFile(id + lang)
 }
