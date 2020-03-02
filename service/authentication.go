@@ -141,6 +141,9 @@ func (me *defaultAuthenticationService) ResetPassword(translator www.Translator,
 		return os.ErrInvalid, errors
 	}
 	r, err := sessionDB().GetTokenRequest(model.TokenResetPassword, tokenID)
+	if err != nil {
+		return err, errors
+	}
 	err = userDB().PutPw(r.UserID, password)
 	if err != nil {
 		return err, errors
