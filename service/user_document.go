@@ -15,8 +15,10 @@ type (
 	UserDocumentService interface {
 		List(auth model.Auth, contains string, settings storage.Options) ([]*model.UserDataItem, error)
 		Get(auth model.Auth, id string) (*model.UserDataItem, error)
+		Put(auth model.Auth, userDataItem *model.UserDataItem) error
 		GetDocFile(auth model.Auth, id, dataPath, inlineOrAttachment string) (*FileHeaderResponse, string, error)
 		GetTemplateWithFormatFile(auth model.Auth, id, dataPath, format, inlineOrAttachment string) (*FileHeaderResponse, io.ReadCloser, error)
+		GetByWorkflow(auth model.Auth, wf *model.WorkflowItem, finished bool) (*model.UserDataItem, bool, error)
 	}
 
 	DefaultUserDocumentService struct {
@@ -46,6 +48,15 @@ func (me *DefaultUserDocumentService) List(auth model.Auth, contains string, set
 // Get returns the UserDataItem with the id
 func (me *DefaultUserDocumentService) Get(auth model.Auth, id string) (*model.UserDataItem, error) {
 	return userDataDB().Get(auth, id)
+}
+
+//Returns the userDataItem with the provided workflow
+func (me *DefaultUserDocumentService) GetByWorkflow(auth model.Auth, wf *model.WorkflowItem, finished bool) (*model.UserDataItem, bool, error) {
+	return userDataDB().GetByWorkflow(auth, wf, finished)
+}
+
+func (me *DefaultUserDocumentService) Put(auth model.Auth, userDataItem *model.UserDataItem) error {
+	return userDataDB().Put(auth, userDataItem)
 }
 
 // GetDocFile returns file info for a pdf file that was generated from a workflow
