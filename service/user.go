@@ -14,6 +14,7 @@ type (
 		DeleteUser(auth model.Auth) error
 		DeleteUserData(auth model.Auth, id string) error
 		GetByBCAddress(blockchainAddress string) (*model.User, error)
+		GetByEmail(email string) (*model.User, error)
 	}
 	defaultUserService struct {
 	}
@@ -92,4 +93,9 @@ func (me *defaultUserService) DeleteUserData(auth model.Auth, id string) error {
 // GetByBCAddress returns the user associated with the provided blockchainAddress
 func (me *defaultUserService) GetByBCAddress(blockchainAddress string) (*model.User, error) {
 	return userDB().GetByBCAddress(blockchainAddress)
+}
+
+// GetByEmail returns the user associated with the provided email
+func (me *defaultUserService) GetByEmail(email string) (*model.User, error) {
+	return userDB().GetByEmail(email)
 }

@@ -11,6 +11,7 @@ type (
 	AuthenticationService interface {
 		LoginWithUsernamePassword(email, password string) (*model.User, error)
 		LoginWithWallet(challenge, signature string) (bool, *model.User, error)
+		ChangeEmail(tokenID string) (*model.TokenRequest, error)
 	}
 	defaultAuthenticationService struct {
 		userService     UserService
@@ -73,4 +74,17 @@ func (me *defaultAuthenticationService) LoginWithWallet(challenge, signature str
 
 	}
 	return created, usr, err
+}
+
+func (me *defaultAuthenticationService) ChangeEmail(tokenID string) (*model.TokenRequest, error) {
+	tokenRequest, err := sessionDB().GetTokenRequest(model.TokenChangeEmail, tokenID)
+	if err != nil {
+		return nil, err
+	}
+	err = userDB().UpdateEmail(tokenRequest.UserID, tokenRequest.Email)
+	if err != nil {
+		return tokenRequest, err
+	}
+	err = sessionDB().DeleteTokenRequest(tokenRequest)
+	return tokenRequest, err
 }

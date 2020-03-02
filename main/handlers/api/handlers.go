@@ -383,7 +383,7 @@ func UpdateAddress(e echo.Context) error {
 	loginForm := new(loginForm)
 	_ = c.Bind(loginForm)
 	sess := c.Session(false)
-	u := getUserFromSession(c, sess)
+	u := getUserFromSession(sess)
 	if sess == nil || u == nil {
 		return c.NoContent(http.StatusUnauthorized)
 	}
@@ -827,7 +827,7 @@ func ChangeEmailRequest(e echo.Context) (err error) {
 	if sess == nil || sess.AccessRights() == model.PUBLIC {
 		return c.NoContent(http.StatusUnauthorized)
 	}
-	if usr, err := c.System().DB.User.GetByEmail(m.Email); usr == nil {
+	if usr, err := userService.GetByEmail(m.Email); usr == nil {
 		var token model.TokenRequest
 		usr, _ = userService.GetUser(sess)
 		if usr == nil {
@@ -870,22 +870,16 @@ func ChangeEmailRequest(e echo.Context) (err error) {
 func ChangeEmail(e echo.Context) error {
 	c := e.(*www.Context)
 	tokenID := c.Param("token")
-	r, err := c.System().DB.Session.GetTokenRequest(model.TokenChangeEmail, tokenID)
+
+	tokenRequest, err := authService.ChangeEmail(tokenID)
 	if err != nil {
 		return c.NoContent(http.StatusBadRequest)
 	}
-	err = c.System().DB.User.UpdateEmail(r.UserID, r.Email)
-	if err != nil {
-		return c.NoContent(http.StatusExpectationFailed)
-	}
-	err = c.System().DB.Session.DeleteTokenRequest(r)
-	if err != nil {
-		return c.NoContent(http.StatusExpectationFailed)
-	}
+
 	sess := c.Session(false)
-	if sess != nil && sess.UserID() == r.UserID {
+	if sess != nil && sess.UserID() == tokenRequest.UserID {
 		sess.Delete("user")
-		getUserFromSession(c, sess)
+		getUserFromSession(sess)
 	}
 	return c.NoContent(http.StatusOK)
 }
@@ -1161,7 +1155,7 @@ func DocumentEditHandler(e echo.Context) error {
 	return c.NoContent(http.StatusOK)
 }
 
-func getUserFromSession(c *www.Context, s *sys.Session) (user *model.User) {
+func getUserFromSession(s *sys.Session) (user *model.User) {
 	if s == nil {
 		return nil
 	}
@@ -1169,7 +1163,7 @@ func getUserFromSession(c *www.Context, s *sys.Session) (user *model.User) {
 	if err != nil {
 		if s.S.ID != "" {
 			id := s.UserID()
-			user, err = c.System().DB.User.Get(s, id)
+			user, err = userService.GetById(s, id)
 			if err != nil {
 				return nil
 			}
