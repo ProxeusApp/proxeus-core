@@ -232,7 +232,6 @@ func (me *UserDB) List(auth model.Auth, contains string, options storage.Options
 			)
 		} else {
 			matchers = append(matchers,
-				q.Or(
 					q.And(
 						q.Eq("WantToBeFound", true),
 						q.Or(
@@ -242,12 +241,12 @@ func (me *UserDB) List(auth model.Auth, contains string, options storage.Options
 							q.Re("EthereumAddr", contains),
 						),
 					),
-					q.And(
-						q.Eq("WantToBeFound", false),
-						q.Re("EthereumAddr", contains),
-					),
-				),
 			)
+		}
+	}else{
+		if !auth.AccessRights().IsGrantedForUserModifications() {
+			matchers = append(matchers,
+				q.Eq("WantToBeFound", true),)
 		}
 	}
 	if len(params.exclude) > 0 {

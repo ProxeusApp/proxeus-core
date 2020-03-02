@@ -17,6 +17,19 @@ func testImportExport(s *session) {
 }
 
 func exportWorkflow(s *session, w *workflow) []byte {
+	// Set WantToBeFound to true in order to have the User included in the Export
+	id := s.e.GET("/api/me").Expect().Status(http.StatusOK).JSON().
+		Path("$.id").String().Raw()
+	s.e.POST("/api/me").WithJSON(
+		struct {
+			ID            string `json:"id"`
+			WantToBeFound bool   `json:"wantToBeFound"`
+		}{
+			ID:            id,
+			WantToBeFound: true,
+		}).Expect().Status(http.StatusOK)
+
+
 	// export by name
 	b1 := s.e.GET("/api/workflow/export").WithQueryString("include=workflow&contains=" + w.Name).
 		Expect().Status(http.StatusOK).Body().Raw()
