@@ -41,6 +41,7 @@ func OpenStorm(path string) (*StormShim, error) {
 	db, err := storm.Open(path, storm.Codec(msgpack.Codec))
 	if err != nil {
 		log.Println(err)
+		return nil, err
 	}
 	s := &StormShim{db: db, tx: db}
 	var hasTTL bool
