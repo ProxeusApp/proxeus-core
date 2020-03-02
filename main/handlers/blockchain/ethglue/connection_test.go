@@ -6,14 +6,12 @@ import (
 	"math/big"
 	"testing"
 
-	"github.com/ethereum/go-ethereum"
-	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/stretchr/testify/assert"
 )
 
-var ethDialler fakeETHDialler
-var ethClient fakeETHClient
+var ethDialler FakeETHDialler
+var ethClient FakeETHClient
 
 func TestDialler_DialContext(t *testing.T) {
 	ctx := context.Background()
@@ -78,75 +76,6 @@ func TestDialler_DialContext(t *testing.T) {
 }
 
 func resetStubs() {
-	ethDialler = fakeETHDialler{}
-	ethClient = fakeETHClient{}
-}
-
-type fakeETHDialler struct {
-	DialContextStub  func(ctx context.Context, rawUrl string) (ETHClientIF, error)
-	DialContextCalls int
-
-	DialStub  func(rawUrl string) (ethClient ETHClientIF, err error)
-	DialCalls int
-}
-
-func (me *fakeETHDialler) Dial(rawUrl string) (ethClient ETHClientIF, err error) {
-	me.DialCalls++
-
-	if me.DialStub == nil {
-		return nil, nil
-	}
-
-	return me.DialStub(rawUrl)
-}
-
-func (me *fakeETHDialler) DialContext(ctx context.Context, rawUrl string) (ETHClientIF, error) {
-	me.DialContextCalls++
-
-	if me.DialContextStub == nil {
-		return nil, nil
-	}
-
-	return me.DialContextStub(ctx, rawUrl)
-}
-
-type fakeETHClient struct {
-	HeaderByNumberStub  func(ctx context.Context, number *big.Int) (*types.Header, error)
-	HeaderByNumberCalls int
-}
-
-func (me *fakeETHClient) HeaderByNumber(ctx context.Context, number *big.Int) (*types.Header, error) {
-	me.HeaderByNumberCalls++
-
-	if me.HeaderByNumberStub == nil {
-		return nil, nil
-	}
-
-	return me.HeaderByNumberStub(ctx, number)
-}
-
-func (me *fakeETHClient) CodeAt(ctx context.Context, contract common.Address, blockNumber *big.Int) ([]byte, error) {
-	panic("implement me")
-}
-func (me *fakeETHClient) CallContract(ctx context.Context, call ethereum.CallMsg, blockNumber *big.Int) ([]byte, error) {
-	panic("implement me")
-}
-func (me *fakeETHClient) PendingCodeAt(ctx context.Context, account common.Address) ([]byte, error) {
-	panic("implement me")
-}
-func (me *fakeETHClient) PendingNonceAt(ctx context.Context, account common.Address) (uint64, error) {
-	panic("implement me")
-}
-func (me *fakeETHClient) SuggestGasPrice(ctx context.Context) (*big.Int, error) { panic("implement me") }
-func (me *fakeETHClient) EstimateGas(ctx context.Context, call ethereum.CallMsg) (gas uint64, err error) {
-	panic("implement me")
-}
-func (me *fakeETHClient) SendTransaction(ctx context.Context, tx *types.Transaction) error {
-	panic("implement me")
-}
-func (me *fakeETHClient) FilterLogs(ctx context.Context, query ethereum.FilterQuery) ([]types.Log, error) {
-	panic("implement me")
-}
-func (me *fakeETHClient) SubscribeFilterLogs(ctx context.Context, query ethereum.FilterQuery, ch chan<- types.Log) (ethereum.Subscription, error) {
-	panic("implement me")
+	ethDialler = FakeETHDialler{}
+	ethClient = FakeETHClient{}
 }
