@@ -160,7 +160,7 @@ func ExportUserData(e echo.Context) error {
 	if c.QueryParam("id") != "" {
 		id = []string{c.QueryParam("id")}
 	} else if c.QueryParam("contains") != "" {
-		items, _ := c.System().DB.UserData.List(sess, c.QueryParam("contains"), storage.Options{Limit: 1000}, false)
+		items, _ := userDocumentService.List(sess, c.QueryParam("contains"), storage.Options{Limit: 1000})
 		if len(items) > 0 {
 			id = make([]string, len(items))
 			for i, item := range items {
@@ -190,7 +190,7 @@ func ExportUser(e echo.Context) error {
 	if c.QueryParam("id") != "" {
 		id = []string{c.QueryParam("id")}
 	} else if c.QueryParam("contains") != "" {
-		items, _ := c.System().DB.User.List(sess, c.QueryParam("contains"), storage.Options{Limit: 1000})
+		items, _ := userDocumentService.List(sess, c.QueryParam("contains"), storage.Options{Limit: 1000})
 		if len(items) > 0 {
 			id = make([]string, len(items))
 			for i, item := range items {
@@ -311,14 +311,14 @@ func PostInit(e echo.Context) error {
 
 	if !yes {
 		u := &model.User{Email: d.User.Email, Role: d.User.Role}
-		uex, _ := c.System().DB.User.GetByEmail(u.Email)
+		uex, _ := userService.GetByEmail(u.Email)
 		if uex == nil {
-			err = c.System().DB.User.Put(root, u)
+			err = userService.Put(root, u)
 			if err != nil {
 				fmt.Println("Error during PostInit user: ", err)
 				return c.NoContent(http.StatusInternalServerError)
 			}
-			err = c.System().DB.User.PutPw(u.ID, d.User.Password)
+			err = userService.PutPassword(u.ID, d.User.Password)
 			if err != nil {
 				fmt.Println("Error during PostInit password: ", err)
 				return c.NoContent(http.StatusInternalServerError)
@@ -398,7 +398,7 @@ func UpdateAddress(e echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusUnprocessableEntity, challengeError)
 	}
-	item, err := c.System().DB.User.GetByBCAddress(address)
+	item, err := userService.GetByBCAddress(address)
 	if item != nil {
 		return c.JSON(http.StatusUnprocessableEntity, map[string]interface{}{"etherPK": []map[string]interface{}{{"msg": "Please choose another account."}}})
 	}
@@ -407,7 +407,7 @@ func UpdateAddress(e echo.Context) error {
 		return c.NoContent(http.StatusInternalServerError)
 	}
 	item.EthereumAddr = address
-	err = c.System().DB.User.Put(sess, item)
+	err = userService.Put(sess, item)
 	if err != nil {
 		return c.NoContent(http.StatusInternalServerError)
 	}
@@ -418,7 +418,7 @@ func UpdateAddress(e echo.Context) error {
 //root only feature to switch user by address - useful for permission checks
 func SwitchUserHandler(e echo.Context) error {
 	c := e.(*www.Context)
-	user, err := c.System().DB.User.GetByBCAddress(e.Param("address"))
+	user, err := userService.GetByBCAddress(e.Param("address"))
 	if err != nil || user == nil {
 		return c.NoContent(http.StatusBadRequest)
 	}
@@ -523,7 +523,7 @@ func GetSessionTokenHandler(e echo.Context) (err error) {
 		return c.NoContent(http.StatusBadRequest)
 	}
 
-	user, err := c.System().DB.User.APIKey(apiKey)
+	user, err := apiService.AuthenticateWithApiKey(apiKey)
 	if err != nil {
 		return c.NoContent(http.StatusBadRequest)
 	}
@@ -575,13 +575,13 @@ func InviteRequest(e echo.Context) (err error) {
 	if m.Role == 0 {
 		m.Role = model.StringToRole(stngs.DefaultRole)
 	}
-	if usr, err := c.System().DB.User.GetByEmail(m.Email); usr == nil {
+	if usr, err := userService.GetByEmail(m.Email); usr == nil {
 		var token model.TokenRequest
 		token.Email = m.Email
 		token.Token = uuid.NewV4().String()
 		token.Role = m.Role
 		token.Type = model.TokenRegister
-		err = c.System().DB.Session.PutTokenRequest(&token)
+		err = authService.PutTokenRequest(&token)
 		if err != nil {
 			return c.NoContent(http.StatusInternalServerError)
 		}
@@ -626,24 +626,9 @@ func RegisterRequest(e echo.Context) (err error) {
 		return c.JSON(http.StatusUnprocessableEntity, err)
 	}
 
-	if usr, _ := c.System().DB.User.GetByEmail(m.Email); usr != nil {
-		// always return ok if provided email was valid
-		// otherwise public users can test what email accounts exist
-		return c.NoContent(http.StatusOK)
-	}
-
-	stngs := c.System().GetSettings()
-
-	var token model.TokenRequest
-	token.Email = m.Email
-	token.Token = uuid.NewV4().String()
-	token.Role = model.StringToRole(stngs.DefaultRole)
-	token.Type = model.TokenRegister
-	if c.System().TestMode && m.Role > 0 {
-		token.Role = m.Role
-	}
-	err = c.System().DB.Session.PutTokenRequest(&token)
+	token, err := authService.RegisterRequest(c.I18n(), c.Scheme(), c.Request().Host, m)
 	if err != nil {
+		log.Println("[RegisterRequest] authService.RegisterRequest err: ", err.Error())
 		return c.NoContent(http.StatusInternalServerError)
 	}
 
@@ -651,15 +636,6 @@ func RegisterRequest(e echo.Context) (err error) {
 		c.Response().Header().Set("X-Test-Token", token.Token)
 	}
 
-	subject := c.I18n().T("Register")
-	body := fmt.Sprintf(
-		"Hi there,\n\nplease proceed with your registration by visiting this link:\n%s\n\nIf you didn't request this, please ignore this email.\n\nProxeus",
-		helpers.AbsoluteURL(c, "/register/", token.Token),
-	)
-	err = emailService.Send(m.Email, subject, body)
-	if err != nil {
-		return c.NoContent(http.StatusExpectationFailed)
-	}
 	return c.NoContent(http.StatusOK)
 }
 
@@ -683,29 +659,16 @@ func Register(e echo.Context) error {
 	if err := c.Bind(&p); err != nil {
 		return err
 	}
-	if len(p.Password) < 6 {
-		return c.JSON(http.StatusUnprocessableEntity, map[string]interface{}{"password": []map[string]interface{}{{"msg": c.I18n().T("Password not strong enough")}}})
+
+	err, errors := authService.Register(c.I18n(), tokenID, p.Password)
+	if len(errors) != 0 {
+		return c.JSON(http.StatusUnprocessableEntity, errors)
 	}
-	r, err := c.System().DB.Session.GetTokenRequest(model.TokenRegister, tokenID)
 	if err != nil {
-		return c.NoContent(http.StatusExpectationFailed)
-	}
-	newUser := &model.User{Email: r.Email, Role: r.Role}
-	err = c.System().DB.User.Put(root, newUser)
-	if err != nil {
+		log.Println("[Register] authService.Register err: ", err.Error())
 		return c.NoContent(http.StatusExpectationFailed)
 	}
 
-	workflowService.CopyWorkflows(root, newUser)
-
-	err = c.System().DB.User.PutPw(newUser.ID, p.Password)
-	if err != nil {
-		return c.NoContent(http.StatusExpectationFailed)
-	}
-	err = c.System().DB.Session.DeleteTokenRequest(r)
-	if err != nil {
-		return c.NoContent(http.StatusExpectationFailed)
-	}
 	return c.NoContent(http.StatusOK)
 }
 
@@ -735,35 +698,17 @@ func ResetPasswordRequest(e echo.Context) (err error) {
 	if err != nil {
 		return c.JSON(http.StatusUnprocessableEntity, err)
 	}
-	if usr, err := c.System().DB.User.GetByEmail(m.Email); err == nil {
-		var token model.TokenRequest
-		token.Email = m.Email
-		token.Token = uuid.NewV4().String()
-		token.UserID = usr.ID
-		token.Type = model.TokenResetPassword
-		err = c.System().DB.Session.PutTokenRequest(&token)
-		if err != nil {
-			return c.NoContent(http.StatusInternalServerError)
-		}
 
-		if c.System().TestMode {
-			c.Response().Header().Set("X-Test-Token", token.Token)
-		}
-
-		subject := c.I18n().T("Reset Password")
-		body := fmt.Sprintf(
-			"Hi %s,\n\nif you requested a password reset, please go on and click on this link to reset your password\n%s\n\nIf you didn't request it, please ignore this email.\n\nProxeus",
-			usr.Name,
-			helpers.AbsoluteURL(c, "/reset/password/", token.Token),
-		)
-
-		err = emailService.Send(m.Email, subject, body)
-		if err != nil {
-			return c.NoContent(http.StatusExpectationFailed)
-		}
+	token, err := authService.ResetPasswordRequest(c.I18n(), c.Scheme(), c.Request().Host, m)
+	if err != nil {
+		log.Println("[ResetPasswordRequest] authService.ResetPasswordRequest err: ", err.Error())
+		return c.NoContent(http.StatusInternalServerError)
 	}
-	// always return ok if provided email was valid
-	// otherwise public users can test what email accounts exist
+
+	if c.System().TestMode {
+		c.Response().Header().Set("X-Test-Token", token.Token)
+	}
+
 	return c.NoContent(http.StatusOK)
 }
 
@@ -784,18 +729,16 @@ func ResetPassword(e echo.Context) error {
 	if err := c.Bind(&p); err != nil {
 		return err
 	}
-	if len(p.Password) < 6 {
-		return c.JSON(http.StatusUnprocessableEntity, map[string]interface{}{"password": []map[string]interface{}{{"msg": c.I18n().T("Password not strong enough")}}})
+
+	err, errors := authService.ResetPassword(c.I18n(), p.Password, tokenID)
+	if len(errors) != 0 {
+		return c.JSON(http.StatusUnprocessableEntity, errors)
 	}
-	r, err := c.System().DB.Session.GetTokenRequest(model.TokenResetPassword, tokenID)
-	err = c.System().DB.User.PutPw(r.UserID, p.Password)
 	if err != nil {
+		log.Println("[ResetPassword] authService.ResetPassword err: ", err.Error())
 		return c.NoContent(http.StatusExpectationFailed)
 	}
-	err = c.System().DB.Session.DeleteTokenRequest(r)
-	if err != nil {
-		return c.NoContent(http.StatusExpectationFailed)
-	}
+
 	return c.NoContent(http.StatusOK)
 }
 
@@ -837,7 +780,7 @@ func ChangeEmailRequest(e echo.Context) (err error) {
 		token.Token = uuid.NewV4().String()
 		token.UserID = sess.UserID()
 		token.Type = model.TokenChangeEmail
-		err = c.System().DB.Session.PutTokenRequest(&token)
+		err = authService.PutTokenRequest(&token)
 		if err != nil {
 			return c.NoContent(http.StatusInternalServerError)
 		}
@@ -935,7 +878,7 @@ func MeHandler(e echo.Context) error {
 	if sess == nil {
 		return c.NoContent(http.StatusNotFound)
 	}
-	u := getUserFromSession(c, sess)
+	u := getUserFromSession(sess)
 	if u != nil {
 		return c.JSON(http.StatusOK, u)
 	}
@@ -966,12 +909,12 @@ func MeUpdateHandler(e echo.Context) error {
 			u.Name = item.Name
 			u.Detail = item.Detail
 			u.WantToBeFound = item.WantToBeFound
-			err = c.System().DB.User.Put(sess, u)
+			err = userService.Put(sess, u)
 			if err != nil {
 				return c.String(http.StatusUnprocessableEntity, err.Error())
 			}
 			if len(item.Password) >= 6 {
-				err = c.System().DB.User.PutPw(u.ID, item.Password)
+				err = userService.PutPassword(u.ID, item.Password)
 				if err != nil {
 					return c.String(http.StatusUnprocessableEntity, err.Error())
 				}
@@ -1597,14 +1540,14 @@ func AdminUserUpdateHandler(e echo.Context) error {
 		item.ID = c.QueryParam("id")
 		err := json.Unmarshal(body, &item)
 		if err == nil {
-			exItem, err := c.System().DB.User.Get(sess, item.ID)
+			exItem, err := userService.GetById(sess, item.ID)
 			if err != nil {
 				return c.NoContent(http.StatusNotFound)
 			}
 			exItem.Name = item.Name
 			exItem.Detail = item.Detail
 			exItem.Role = item.Role
-			err = c.System().DB.User.Put(sess, exItem)
+			err = userService.Put(sess, exItem)
 			if err != nil {
 				return c.NoContent(http.StatusInternalServerError)
 			}
@@ -1624,7 +1567,7 @@ func AdminUserGetHandler(e echo.Context) error {
 		return c.NoContent(http.StatusUnauthorized)
 	}
 	itemID := c.Param("ID")
-	item, err := c.System().DB.User.Get(sess, itemID)
+	item, err := userService.GetById(sess, itemID)
 	if err != nil {
 		return err
 	}
@@ -1642,7 +1585,7 @@ func AdminUserListHandler(e echo.Context) error {
 	}
 	contains := c.QueryParam("c")
 	settings := helpers.RequestOptions(c)
-	dat, err := c.System().DB.User.List(sess, contains, settings)
+	dat, err := userDocumentService.List(sess, contains, settings)
 	if err != nil || dat == nil {
 		if err == model.ErrAuthorityMissing {
 			return c.NoContent(http.StatusUnauthorized)

@@ -6,6 +6,7 @@ type (
 	ApiService interface {
 		CreateApiKey(auth model.Auth, userId, apiKeyName string) (string, error)
 		DeleteApiKey(auth model.Auth, userId, hiddenApiKey string) error
+		AuthenticateWithApiKey(apiKey string) (*model.User, error)
 	}
 	defaultApiService struct {
 	}
@@ -23,4 +24,9 @@ func (me *defaultApiService) CreateApiKey(auth model.Auth, userId, apiKeyName st
 // DeleteApiKey removes an existing API key
 func (me *defaultApiService) DeleteApiKey(auth model.Auth, userId, hiddenApiKey string) error {
 	return userDB().DeleteApiKey(auth, userId, hiddenApiKey)
+}
+
+// APIKey tries to authenticate the user with the supplied API key and returns the user object or an error
+func (me *defaultApiService) AuthenticateWithApiKey(apiKey string) (*model.User, error) {
+	return userDB().APIKey(apiKey)
 }

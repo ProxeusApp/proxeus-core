@@ -8,6 +8,7 @@ import (
 
 type (
 	UserService interface {
+		Put(auth model.Auth, user *model.User) error
 		GetUser(auth model.Auth) (*model.User, error)
 		GetById(auth model.Auth, id string) (*model.User, error)
 		GetUserDataById(auth model.Auth, id string) (*model.UserDataItem, error)
@@ -15,6 +16,7 @@ type (
 		DeleteUserData(auth model.Auth, id string) error
 		GetByBCAddress(blockchainAddress string) (*model.User, error)
 		GetByEmail(email string) (*model.User, error)
+		PutPassword(userId, password string) error
 	}
 	defaultUserService struct {
 	}
@@ -98,4 +100,14 @@ func (me *defaultUserService) GetByBCAddress(blockchainAddress string) (*model.U
 // GetByEmail returns the user associated with the provided email
 func (me *defaultUserService) GetByEmail(email string) (*model.User, error) {
 	return userDB().GetByEmail(email)
+}
+
+// Put adds a user
+func (me *defaultUserService) Put(auth model.Auth, user *model.User) error {
+	return userDB().Put(auth, user)
+}
+
+// PutPassword sets the password for a user
+func (me *defaultUserService) PutPassword(userId, password string) error {
+	return userDB().PutPw(userId, password)
 }
