@@ -52,12 +52,14 @@ var (
 	formComponentService    service.FormComponentService
 	apiService              service.ApiService
 	authService             service.AuthenticationService
+	nodeService             service.NodeService
 )
 
 func Init(paymentS service.PaymentService, userS service.UserService, workflowS service.WorkflowService,
 	documentS service.DocumentService, userDocumentS service.UserDocumentService, fileS service.FileService,
 	templateDocumentS service.TemplateDocumentService, signatureS service.SignatureService, emailS service.EmailService,
-	formS service.FormService, formCompS service.FormComponentService, apiS service.ApiService, authS service.AuthenticationService) {
+	formS service.FormService, formCompS service.FormComponentService, apiS service.ApiService, authS service.AuthenticationService,
+	nodeS service.NodeService) {
 
 	paymentService = paymentS
 	userService = userS
@@ -72,6 +74,7 @@ func Init(paymentS service.PaymentService, userS service.UserService, workflowS 
 	formComponentService = formCompS
 	apiService = apiS
 	authService = authS
+	nodeService = nodeS
 }
 
 func html(c echo.Context, p string) error {
@@ -190,7 +193,7 @@ func ExportUser(e echo.Context) error {
 	if c.QueryParam("id") != "" {
 		id = []string{c.QueryParam("id")}
 	} else if c.QueryParam("contains") != "" {
-		items, _ := userDocumentService.List(sess, c.QueryParam("contains"), storage.Options{Limit: 1000})
+		items, _ := userService.List(sess, c.QueryParam("contains"), storage.Options{Limit: 1000})
 		if len(items) > 0 {
 			id = make([]string, len(items))
 			for i, item := range items {
@@ -932,7 +935,8 @@ func PutProfilePhotoHandler(e echo.Context) error {
 	if sess == nil {
 		return c.NoContent(http.StatusBadRequest)
 	}
-	err := c.System().DB.User.PutProfilePhoto(sess, sess.UserID(), c.Request().Body)
+
+	err := userService.PutProfilePhoto(sess, sess.UserID(), c.Request().Body)
 	if err != nil {
 		return c.NoContent(http.StatusBadRequest)
 	}
@@ -949,7 +953,8 @@ func GetProfilePhotoHandler(e echo.Context) error {
 	if id == "" {
 		id = sess.UserID()
 	}
-	err := c.System().DB.User.GetProfilePhoto(sess, id, c.Response().Writer)
+
+	err := userService.GetProfilePhoto(sess, id, c.Response().Writer)
 	if err != nil {
 		return c.NoContent(http.StatusNotFound)
 	}
@@ -997,7 +1002,7 @@ func DocumentHandler(e echo.Context) error {
 	var st *app.Status
 
 	var wf *model.WorkflowItem
-	wf, err = c.System().DB.Workflow.GetPublished(sess, ID)
+	wf, err = workflowService.GetPublished(sess, ID)
 	if err != nil {
 		return c.String(http.StatusNotFound, err.Error())
 	}
@@ -1022,7 +1027,7 @@ func DocumentHandler(e echo.Context) error {
 			}
 		}
 
-		usrDataItem, _, err := c.System().DB.UserData.GetByWorkflow(sess, wf, false)
+		usrDataItem, _, err := userDocumentService.GetByWorkflow(sess, wf, false)
 		if err != nil {
 			if !db.NotFound(err) {
 				return c.String(http.StatusNotFound, err.Error())
@@ -1033,7 +1038,7 @@ func DocumentHandler(e echo.Context) error {
 				Name:       wf.Name,
 				Detail:     wf.Detail,
 			}
-			err := c.System().DB.UserData.Put(sess, usrDataItem)
+			err := userDocumentService.Put(sess, usrDataItem)
 			if err != nil {
 				return c.String(http.StatusInternalServerError, err.Error())
 			}
@@ -1585,7 +1590,7 @@ func AdminUserListHandler(e echo.Context) error {
 	}
 	contains := c.QueryParam("c")
 	settings := helpers.RequestOptions(c)
-	dat, err := userDocumentService.List(sess, contains, settings)
+	dat, err := userService.List(sess, contains, settings)
 	if err != nil || dat == nil {
 		if err == model.ErrAuthorityMissing {
 			return c.NoContent(http.StatusUnauthorized)
@@ -1732,12 +1737,12 @@ func ExternalRegister(e echo.Context) error {
 	if err != nil {
 		return err
 	}
-	return c.System().DB.Workflow.RegisterExternalNode(new(model.User), &node)
+	return nodeService.RegisterExternalNode(new(model.User), &node)
 }
 
 func ExternalList(e echo.Context) error {
 	c := e.(*www.Context)
-	nodes := c.System().DB.Workflow.ListExternalNodes()
+	nodes := nodeService.ListExternalNodes()
 
 	return c.JSON(http.StatusOK, nodes)
 }
@@ -1752,7 +1757,7 @@ func ExternalConfigStore(e echo.Context) error {
 	}
 
 	//QueryFromInstanceID -> instance
-	q, err := c.System().DB.Workflow.QueryFromInstanceID(new(model.User), node.ID)
+	q, err := nodeService.QueryFromInstanceID(new(model.User), node.ID)
 	if err != nil {
 		return c.String(http.StatusBadRequest, err.Error())
 	}
@@ -1761,7 +1766,7 @@ func ExternalConfigStore(e echo.Context) error {
 	q.Config = node.Config
 
 	//PutExternalNodeInstance
-	err = c.System().DB.Workflow.PutExternalNodeInstance(new(model.User), q.ExternalNodeInstance)
+	err = nodeService.PutExternalNodeInstance(new(model.User), q.ExternalNodeInstance)
 	if err != nil {
 		return c.String(http.StatusBadRequest, err.Error())
 	}
@@ -1771,7 +1776,7 @@ func ExternalConfigStore(e echo.Context) error {
 func ExternalConfigRetrieve(e echo.Context) error {
 	c := e.(*www.Context)
 	id := c.Param("id")
-	q, err := c.System().DB.Workflow.QueryFromInstanceID(new(model.User), id)
+	q, err := nodeService.QueryFromInstanceID(new(model.User), id)
 	if err != nil {
 		return c.String(http.StatusBadRequest, err.Error())
 	}

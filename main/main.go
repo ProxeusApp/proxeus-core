@@ -88,7 +88,7 @@ func main() {
 
 	payment.Init(paymentService, userService)
 	api.Init(paymentService, userService, workflowService, documentService, userDocumentService, fileService, templateDocumentService, signatureService,
-		emailService, formService, formComponentService, apiService, authService)
+		emailService, formService, formComponentService, apiService, authService, nodeService)
 	workflow.Init(workflowService, userService, nodeService)
 	formbuilder.Init(formComponentService, formService)
 
