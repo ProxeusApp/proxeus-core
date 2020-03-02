@@ -1,10 +1,11 @@
 package service
 
 import (
+	"io"
+
 	"github.com/ProxeusApp/proxeus-core/storage"
 	"github.com/ProxeusApp/proxeus-core/storage/database/db"
 	"github.com/ProxeusApp/proxeus-core/sys/model"
-	"io"
 )
 
 type (

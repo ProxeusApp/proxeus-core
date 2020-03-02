@@ -1,10 +1,11 @@
 package database
 
 import (
-	"github.com/ProxeusApp/proxeus-core/externalnode"
 	"os"
 	"path/filepath"
 	"time"
+
+	"github.com/ProxeusApp/proxeus-core/externalnode"
 
 	"github.com/ProxeusApp/proxeus-core/storage"
 
