@@ -403,7 +403,7 @@ func UploadTemplateHandler(e echo.Context) error {
 	//remove pending file from the session
 	err = ideDelete(id, lang, sess)
 	if err != nil {
-		return err
+		return c.NoContent(http.StatusBadRequest)
 	}
 	return c.NoContent(http.StatusOK)
 }
