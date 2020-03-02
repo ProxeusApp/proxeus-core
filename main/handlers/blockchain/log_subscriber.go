@@ -47,6 +47,7 @@ func (c *webSocketLogSubscriber) Subscribe(ctx context.Context, logs chan<- type
 			ethClient, err := c.ethDialler.DialContext(ctx, c.webSocketURL)
 			if err != nil {
 				log.Printf("failed to dial for eth events, will retry (%s)\n", err)
+				time.Sleep(time.Second * 1)
 				continue
 			}
 			query := ethereum.FilterQuery{
