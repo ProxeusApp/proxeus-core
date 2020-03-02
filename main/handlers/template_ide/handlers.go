@@ -248,6 +248,7 @@ func IdeGetDownloadHandler(e echo.Context) error {
 		if tmplName != "" {
 			var err error
 			exists, err = c.System().DB.Files.Exists(sess.FilePath(id + lang))
+			tmplPath = sess.FilePath(id + lang)
 			if err != nil {
 				return c.String(http.StatusInternalServerError, err.Error())
 			}
