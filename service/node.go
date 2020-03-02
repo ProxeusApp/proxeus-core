@@ -17,6 +17,10 @@ type (
 	NodeService interface {
 		ProbeExternalNodes()
 		List(nodeType string) []*workflow.Node
+		RegisterExternalNode(user *model.User, node *externalnode.ExternalNode) error
+		ListExternalNodes() []*externalnode.ExternalNode
+		QueryFromInstanceID(auth model.Auth, nodeId string) (externalnode.ExternalQuery, error)
+		PutExternalNodeInstance(auth model.Auth, instance *externalnode.ExternalNodeInstance) error
 	}
 	defaultNodeService struct {
 		workflowService WorkflowService
@@ -29,7 +33,7 @@ func NewNodeService(workflowService WorkflowService) *defaultNodeService {
 
 //ProbeExternalNodes checks all registered external nodes health endpoint and deletes the ones that are offline
 func (me *defaultNodeService) ProbeExternalNodes() {
-	for _, node := range me.listExternalNodes() {
+	for _, node := range me.ListExternalNodes() {
 		me.probeExternalNode(node)
 	}
 }
@@ -62,7 +66,7 @@ func (me *defaultNodeService) List(nodeType string) []*workflow.Node {
 			})
 		}
 	case "externalNode":
-		for _, node := range me.listExternalNodes() {
+		for _, node := range me.ListExternalNodes() {
 			id := uuid.NewV4().String()
 			nodes = append(nodes, &workflow.Node{
 				ID:     id,
@@ -73,6 +77,26 @@ func (me *defaultNodeService) List(nodeType string) []*workflow.Node {
 		}
 	}
 	return nodes
+}
+
+// RegisterExternalNode saves an external node definition
+func (me *defaultNodeService) RegisterExternalNode(user *model.User, node *externalnode.ExternalNode) error {
+	return workflowDB().RegisterExternalNode(user, node)
+}
+
+// ListExternalNodes return a list of all external node definitions
+func (me *defaultNodeService) ListExternalNodes() []*externalnode.ExternalNode {
+	return workflowDB().ListExternalNodes()
+}
+
+// QueryFromInstanceID return an external node instance by machting the specified id
+func (me *defaultNodeService) QueryFromInstanceID(auth model.Auth, nodeId string) (externalnode.ExternalQuery, error) {
+	return workflowDB().QueryFromInstanceID(auth, nodeId)
+}
+
+// PutExternalNodeInstance saves an instance of an external node to the database
+func (me *defaultNodeService) PutExternalNodeInstance(auth model.Auth, externalNode *externalnode.ExternalNodeInstance) error {
+	return workflowDB().PutExternalNodeInstance(auth, externalNode)
 }
 
 func (me *defaultNodeService) probeExternalNode(node *externalnode.ExternalNode) {
@@ -104,8 +128,4 @@ func (me *defaultNodeService) healthCheck(url string) error {
 
 func (me *defaultNodeService) deleteExternalNode(auth model.Auth, id string) error {
 	return workflowDB().DeleteExternalNode(auth, id)
-}
-
-func (me *defaultNodeService) listExternalNodes() []*externalnode.ExternalNode {
-	return workflowDB().ListExternalNodes()
 }

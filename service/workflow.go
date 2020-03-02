@@ -21,6 +21,7 @@ type (
 		Delete(auth model.Auth, id string) error
 		InstantiateExternalNode(auth model.Auth, nodeId, nodeName string) (*extNode.ExternalQuery, error)
 		CopyWorkflows(rootUser, newUser *model.User)
+		GetPublished(auth model.Auth, id string) (*model.WorkflowItem, error)
 	}
 
 	DefaultWorkflowService struct {
@@ -252,4 +253,8 @@ func (me *DefaultWorkflowService) CopyWorkflows(rootUser, newUser *model.User) {
 		w.Data.Flow.Nodes = newNodes
 		workflowDB().Put(newUser, &w)
 	}
+}
+
+func (me *DefaultWorkflowService) GetPublished(auth model.Auth, id string) (*model.WorkflowItem, error) {
+	return workflowDB().GetPublished(auth, id)
 }

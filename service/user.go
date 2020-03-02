@@ -4,18 +4,23 @@ import (
 	"github.com/ProxeusApp/proxeus-core/storage"
 	"github.com/ProxeusApp/proxeus-core/storage/database/db"
 	"github.com/ProxeusApp/proxeus-core/sys/model"
+	"io"
 )
 
 type (
 	UserService interface {
+		Put(auth model.Auth, user *model.User) error
 		GetUser(auth model.Auth) (*model.User, error)
 		GetById(auth model.Auth, id string) (*model.User, error)
 		GetUserDataById(auth model.Auth, id string) (*model.UserDataItem, error)
-		CreateApiKey(auth model.Auth, userId, apiKeyName string) (string, error)
 		DeleteUser(auth model.Auth) error
-		DeleteApiKey(auth model.Auth, userId, hiddenApiKey string) error
 		DeleteUserData(auth model.Auth, id string) error
 		GetByBCAddress(blockchainAddress string) (*model.User, error)
+		GetByEmail(email string) (*model.User, error)
+		PutPassword(userId, password string) error
+		GetProfilePhoto(auth model.Auth, id string, writer io.Writer) error
+		PutProfilePhoto(auth model.Auth, userId string, reader io.ReadCloser) error
+		List(sess model.Auth, contains string, settings storage.Options) ([]*model.User, error)
 	}
 	defaultUserService struct {
 	}
@@ -91,17 +96,35 @@ func (me *defaultUserService) DeleteUserData(auth model.Auth, id string) error {
 	return userDataDB().Delete(auth, filesDB(), id)
 }
 
-// CreateApiKey creates and returns a new api key
-func (me *defaultUserService) CreateApiKey(auth model.Auth, userId, apiKeyName string) (string, error) {
-	return userDB().CreateApiKey(auth, userId, apiKeyName)
-}
-
-// DeleteApiKey removes an existing API key
-func (me *defaultUserService) DeleteApiKey(auth model.Auth, userId, hiddenApiKey string) error {
-	return userDB().DeleteApiKey(auth, userId, hiddenApiKey)
-}
-
 // GetByBCAddress returns the user associated with the provided blockchainAddress
 func (me *defaultUserService) GetByBCAddress(blockchainAddress string) (*model.User, error) {
 	return userDB().GetByBCAddress(blockchainAddress)
+}
+
+// GetByEmail returns the user associated with the provided email
+func (me *defaultUserService) GetByEmail(email string) (*model.User, error) {
+	return userDB().GetByEmail(email)
+}
+
+// Put adds a user
+func (me *defaultUserService) Put(auth model.Auth, user *model.User) error {
+	return userDB().Put(auth, user)
+}
+
+// List returns references to all the user object matching the supplied filter criteria
+func (me *defaultUserService) List(sess model.Auth, contains string, settings storage.Options) ([]*model.User, error) {
+	return userDB().List(sess, contains, settings)
+}
+
+// PutPassword sets the password for a user
+func (me *defaultUserService) PutPassword(userId, password string) error {
+	return userDB().PutPw(userId, password)
+}
+
+func (me *defaultUserService) GetProfilePhoto(auth model.Auth, userId string, writer io.Writer) error {
+	return userDB().GetProfilePhoto(auth, userId, writer)
+}
+
+func (me *defaultUserService) PutProfilePhoto(auth model.Auth, userId string, reader io.ReadCloser) error {
+	return userDB().PutProfilePhoto(auth, userId, reader)
 }
