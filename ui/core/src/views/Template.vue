@@ -4,7 +4,7 @@
       :title="$t('Template title prefix', 'Proxeus - ')+(template && template.name || $t('Template title', 'Template'))"/>
     <top-nav :title="template && template.name ? template.name : $t('Template')" :sm="true"
              :returnToRoute="{name:'Templates'}">
-      <div slot="buttons" v-if="hasRenderedDocument" class="tdmin" v-for="(type, i) in downloadButtons" :key="i">
+      <div slot="buttons" v-if="hasRenderedDocument" v-for="(type, i) in downloadButtons" :key="i">
         <a :href="`/api/admin/template/ide/download/${id}?format=${type}`"
            class="filedownload-btn px-2" target="_blank">
           <table style="text-align: center;">
