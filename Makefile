@@ -54,7 +54,7 @@ bindata=main/handlers/assets/bindata.go test/bindata.go
 golocalimport=github.com/ProxeusApp/proxeus-core
 
 .PHONY: all
-all: ui server license
+all: ui server
 
 .PHONY: init
 init:
