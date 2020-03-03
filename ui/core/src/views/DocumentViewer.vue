@@ -6,13 +6,10 @@
            :returnToRoute="{name:'Documents'}">
     <span slot="buttons" class="btn btn-secondary" v-show="hasChanges">Saving ...</span>
     <!--<button slot="buttons" class="btn btn-primary ml-3" @click="infoToggled = !infoToggled">Edit infos</button>-->
-    <td slot="buttons" class="tdmin" v-if="app.userIsUserOrHigher()">
-      <button v-if="document" style="height: 40px;"
-              @click="app.exportData('&id='+document.id, null, '/api/userdata/export','UserData_'+document.id)"
-              type="button" class="btn btn-primary ml-2">
-        <i style="font-style: normal;font-size: 18px;">&#8659;</i>
-        <span>{{$t('Export')}}</span></button>
-    </td>
+    <button slot="buttons" v-if="document && app.userIsUserOrHigher()" style="height: 40px;"
+            @click="app.exportData('&id='+document.id, null, '/api/userdata/export','UserData_'+document.id)"
+            type="button" class="btn btn-primary ml-2">
+      <span>{{$t('Export')}}</span></button>
   </top-nav>
   <div class="col-sm-12 mt-3">
     <div class="row">
