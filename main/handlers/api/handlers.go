@@ -85,20 +85,24 @@ func html(c echo.Context, p string) error {
 	return c.HTMLBlob(http.StatusOK, bts)
 }
 
+// Returns the app.html file
 func SharedByLinkHTMLHandler(c echo.Context) error {
 	log.Println("SharedByLinkHTMLHandler")
 	//c.Param("type") TODO different html by type for user data
 	return html(c, "app.html")
 }
 
+// Returns the frontend.html file
 func PublicIndexHTMLHandler(c echo.Context) error {
 	return html(c, "frontend.html")
 }
 
+// Returns the user.html file
 func UserBackendHTMLHandler(c echo.Context) error {
 	return html(c, "user.html")
 }
 
+// Returns the app.html file
 func AdminIndexHandler(c echo.Context) error {
 	return html(c, "app.html")
 }
@@ -109,6 +113,16 @@ type ImportExportResult struct {
 	Results   portable.ProcessedResults `json:"results"`
 }
 
+// Returns exported entities
+//
+// @params
+// 		include string
+//		EntityType  []string
+// @returns
+//	200 => File
+//	400 => Bad Request
+//  422 => Input error
+// }
 func GetExport(e echo.Context) error {
 	c := e.(*www.Context)
 	sess := c.Session(false)
@@ -134,6 +148,16 @@ func GetExport(e echo.Context) error {
 	return Export(sess, exportEntities, c)
 }
 
+// Imports a file containing exported entities
+//
+// @params
+// 		skipExisting string
+//		File File (in body)
+// @returns
+//	200 => OK
+//	400 => Bad Request
+//  422 => Input error
+// }
 func PostImport(e echo.Context) error {
 	c := e.(*www.Context)
 	sess := c.Session(false)
@@ -153,6 +177,17 @@ func PostImport(e echo.Context) error {
 
 }
 
+// Exports user data
+//
+// @params
+// 		contains string
+// 		id 		 string
+// @returns
+//	200 => File
+//	400 => Bad Request
+//  401 => StatusUnauthorized
+//  422 => Input error
+// }
 func ExportUserData(e echo.Context) error {
 	c := e.(*www.Context)
 	sess := c.Session(false)
@@ -174,6 +209,13 @@ func ExportUserData(e echo.Context) error {
 	return Export(sess, []portable.EntityType{portable.UserData}, c, id...)
 }
 
+// Export platform settings
+//
+// @returns
+//	200 => File
+//	400 => Bad Request
+//  422 => Input error
+// }
 func ExportSettings(e echo.Context) error {
 	c := e.(*www.Context)
 	sess := c.Session(false)
@@ -183,6 +225,16 @@ func ExportSettings(e echo.Context) error {
 	return Export(sess, []portable.EntityType{portable.Settings}, c, "Settings")
 }
 
+// Export a user record
+//
+// @params
+// 		contains string
+// 		id 		 string
+// @returns
+//	200 => File
+//	400 => Bad Request
+//  422 => Input error
+// }
 func ExportUser(e echo.Context) error {
 	c := e.(*www.Context)
 	sess := c.Session(false)
@@ -204,6 +256,13 @@ func ExportUser(e echo.Context) error {
 	return Export(sess, []portable.EntityType{portable.User}, c, id...)
 }
 
+// Helper function for all exports
+//
+// @returns
+//	200 => File
+//	400 => Bad Request
+//  422 => Input error
+// }
 func Export(sess *sys.Session, exportEntities []portable.EntityType, e echo.Context, id ...string) error {
 	c := e.(*www.Context)
 	if len(exportEntities) == 0 {
@@ -228,6 +287,13 @@ func Export(sess *sys.Session, exportEntities []portable.EntityType, e echo.Cont
 	return c.NoContent(http.StatusOK)
 }
 
+// Returns the last exported records stored in the user session
+//
+// @params
+// @returns
+//	200 => imexResults
+//	401 => StatusUnauthorized
+// }
 func GetExportResults(e echo.Context) error {
 	c := e.(*www.Context)
 	sess := c.Session(false)
@@ -237,6 +303,14 @@ func GetExportResults(e echo.Context) error {
 	return results("lastExport", sess, c)
 }
 
+// Returns the last imported records from the user session
+//
+// @params
+//		delete boolean
+// @returns
+//	200 => imex results
+//	401 => Unauthorized
+// }
 func GetImportResults(e echo.Context) error {
 	c := e.(*www.Context)
 	sess := c.Session(false)
@@ -265,6 +339,12 @@ func results(key string, sess *sys.Session, c echo.Context) error {
 	return c.JSON(http.StatusOK, imexResults)
 }
 
+// Returns the platform settings and the "configured" flag that defines whether the user is configured or not
+//
+// @returns
+//	200 => map[string]interface{}{"settings": settings, "configured": configured}
+//	500 => Server error
+// }
 func GetInit(e echo.Context) error {
 	c := e.(*www.Context)
 	configured, err := c.System().Configured()
@@ -280,6 +360,17 @@ func GetInit(e echo.Context) error {
 
 var root = &model.User{Role: model.ROOT}
 
+// Initialize the system
+//
+// @params initStruct => struct {
+//		Settings *model.Settings `json:"settings"`
+//		User     *usr            `json:"user"`
+//	}
+// @returns
+//	200 => OK
+//  422 => unprocessable entity
+//	500 => Server error
+// }
 func PostInit(e echo.Context) error {
 	c := e.(*www.Context)
 	sess := c.Session(false)
@@ -562,6 +653,20 @@ func DeleteSessionTokenHandler(e echo.Context) (err error) {
 	return c.NoContent(http.StatusOK)
 }
 
+// Invite a user
+//
+// @params TokenRequest struct {
+//		Email  string    `json:"email" validate:"email=true,required=true"`
+//		Token  string    `json:"token"`
+//		UserID string    `json:"userID"`
+//		Role   Role      `json:"role"`
+//		Type   TokenType `json:"type"`
+//	}
+// @returns
+//	200 => OK
+//  422 => unprocessable entity
+//	500 => Server error
+// }
 func InviteRequest(e echo.Context) (err error) {
 	c := e.(*www.Context)
 	sess := c.Session(false)
@@ -877,6 +982,13 @@ func ChallengeHandler(e echo.Context) error {
 	return c.HTML(http.StatusOK, challengeHex)
 }
 
+// Returns the user object from the session
+//
+// @params => -
+// @returns
+//	200 => User => {}
+//  404 => Not found
+// }
 func MeHandler(e echo.Context) error {
 	c := e.(*www.Context)
 	sess := c.Session(false)
@@ -895,6 +1007,12 @@ type UserWithPw struct {
 	Password string `json:"password,omitempty"`
 }
 
+// Returns the user object from the session
+//
+// @params => -
+// @returns
+//	200 => User => {}
+//  404 => Not found
 func MeUpdateHandler(e echo.Context) error {
 	c := e.(*www.Context)
 	sess := c.Session(false)
@@ -931,6 +1049,12 @@ func MeUpdateHandler(e echo.Context) error {
 	return c.NoContent(http.StatusBadRequest)
 }
 
+// Returns the user object from the session
+//
+// @params => -
+// @returns
+//	200 => User => {}
+//  404 => Not found
 func PutProfilePhotoHandler(e echo.Context) error {
 	c := e.(*www.Context)
 	sess := c.Session(false)
@@ -945,6 +1069,13 @@ func PutProfilePhotoHandler(e echo.Context) error {
 	return c.NoContent(http.StatusOK)
 }
 
+// Returns a profile photo
+//
+// @params id => string
+// @returns
+//	200 => File
+//  404 => Not found
+// }
 func GetProfilePhotoHandler(e echo.Context) error {
 	c := e.(*www.Context)
 	sess := c.Session(false)
@@ -966,7 +1097,8 @@ func GetProfilePhotoHandler(e echo.Context) error {
 }
 
 // Check if a payment is required for current user for the workflow.
-// Return http OK if no payment is required or if payment is required and a payment a matching payment with status = "confirmed" is found
+// Return http OK if no payment is required or if payment is required and a payment a matching payment
+// with status = "confirmed" is found
 func CheckForWorkflowPayment(e echo.Context) error {
 	c := e.(*www.Context)
 	sess := c.Session(true)
@@ -992,6 +1124,15 @@ func CheckForWorkflowPayment(e echo.Context) error {
 
 var errNoPaymentFound = errors.New("no payment for workflow")
 
+// Process a document
+//
+// @params ID => string
+// @returns
+//	200 => map[string]interface{}{"name" => string, "status" => string}
+//  400 => Bad request
+//  404 => Not found
+//  422 => Unprocessable entity
+//  500 => Server error
 func DocumentHandler(e echo.Context) error {
 	c := e.(*www.Context)
 	ID := c.Param("ID")
@@ -1067,6 +1208,12 @@ func DocumentHandler(e echo.Context) error {
 	}
 }
 
+// Delete a document
+//
+// @params ID => string
+// @returns
+//	200 => OK
+//  400 => Bad request
 func DocumentDeleteHandler(e echo.Context) error {
 	c := e.(*www.Context)
 	ID := c.Param("ID")
@@ -1083,6 +1230,13 @@ func DocumentDeleteHandler(e echo.Context) error {
 	return c.NoContent(http.StatusOK)
 }
 
+// Update a document
+//
+// @params ID => string, FormInput => interface{}
+// @returns
+//	200 => OK
+//  400 => Bad request
+//  422 => Unprocessable entity
 func DocumentEditHandler(e echo.Context) error {
 	c := e.(*www.Context)
 	ID := c.Param("ID")
@@ -1123,6 +1277,16 @@ func getUserFromSession(s *sys.Session) (user *model.User) {
 	return user
 }
 
+// Move one step further in the document process
+//
+// @params 	ID => string
+//			final => boolean,
+//			FormInput => map[string]interface{}
+// @returns
+//	200 => map[string]interface{}
+//  400 => Bad request
+//  401 => Unauthorized
+//  422 => Unprocessable entity
 func DocumentNextHandler(e echo.Context) error {
 	c := e.(*www.Context)
 	ID := c.Param("ID")
@@ -1164,6 +1328,12 @@ func DocumentNextHandler(e echo.Context) error {
 	return c.JSON(http.StatusOK, resData)
 }
 
+// Move one step back in the document process
+//
+// @params 	ID => string
+// @returns
+//	200 => status => string
+//  400 => Bad request
 func DocumentPrevHandler(e echo.Context) error {
 	c := e.(*www.Context)
 	ID := c.Param("ID")
@@ -1187,6 +1357,15 @@ func DocumentPrevHandler(e echo.Context) error {
 	return c.JSON(http.StatusOK, resData)
 }
 
+// Update a document with data
+//
+// @params 	ID => string
+//			FormInput => map[string]interface{}
+// @returns
+//	200 => OK
+//  400 => Bad request
+//  422 => Unprocessable entity
+//  500 => Server error
 func DocumentDataHandler(e echo.Context) error {
 	c := e.(*www.Context)
 	ID := c.Param("ID")
@@ -1215,6 +1394,13 @@ func DocumentDataHandler(e echo.Context) error {
 	return c.NoContent(http.StatusOK)
 }
 
+// Returns a document's file output
+//
+// @params 	ID => string
+//			inputName => string
+// @returns
+//	200 => map[string]interface{}
+//  404 => Not found
 func DocumentFileGetHandler(e echo.Context) error {
 	c := e.(*www.Context)
 	sess := c.Session(false)
@@ -1240,6 +1426,11 @@ func DocumentFileGetHandler(e echo.Context) error {
 	return c.NoContent(http.StatusOK)
 }
 
+// Attach a file to a document
+//
+// @params 	@Fileinput
+//			ID => string
+//			inputName => string
 func DocumentFilePostHandler(e echo.Context) error {
 	c := e.(*www.Context)
 	fieldname := c.Param("inputName")
@@ -1271,6 +1462,7 @@ func DocumentFilePostHandler(e echo.Context) error {
 	return c.JSON(http.StatusOK, finfo)
 }
 
+// Returns a preview of the document in PDF form
 func DocumentPreviewHandler(e echo.Context) error {
 	c := e.(*www.Context)
 	ID := c.Param("ID")
@@ -1302,6 +1494,7 @@ func DocumentPreviewHandler(e echo.Context) error {
 	return c.NoContent(http.StatusOK)
 }
 
+// Returns a list of paginated user documents
 func UserDocumentListHandler(e echo.Context) error {
 	c := e.(*www.Context)
 	sess := c.Session(false)
@@ -1317,6 +1510,7 @@ func UserDocumentListHandler(e echo.Context) error {
 	return c.JSON(http.StatusOK, items)
 }
 
+// Returns a documents metadata
 func UserDocumentGetHandler(e echo.Context) error {
 	c := e.(*www.Context)
 	sess := c.Session(false)
@@ -1332,6 +1526,7 @@ func UserDocumentGetHandler(e echo.Context) error {
 	return c.JSON(http.StatusOK, item)
 }
 
+// Returns a signature request for the current user
 func UserDocumentSignatureRequestGetCurrentUserHandler(e echo.Context) error {
 	c := e.(*www.Context)
 	sess := c.Session(false)
@@ -1351,6 +1546,7 @@ func UserDocumentSignatureRequestGetCurrentUserHandler(e echo.Context) error {
 	return c.JSON(http.StatusOK, requests)
 }
 
+// Remove a user from the database
 func UserDeleteHandler(e echo.Context) error {
 	c := e.(*www.Context)
 	sess := c.Session(false)
@@ -1366,6 +1562,7 @@ func UserDeleteHandler(e echo.Context) error {
 	return LogoutHandler(c)
 }
 
+// Returns a signature request based on a provided document ID
 func UserDocumentSignatureRequestGetByDocumentIDHandler(e echo.Context) error {
 	c := e.(*www.Context)
 	sess := c.Session(false)
@@ -1388,6 +1585,7 @@ func UserDocumentSignatureRequestGetByDocumentIDHandler(e echo.Context) error {
 	return c.JSON(http.StatusOK, requests)
 }
 
+// Add a signature request for a document
 func UserDocumentSignatureRequestAddHandler(e echo.Context) error {
 	c := e.(*www.Context)
 	sess := c.Session(false)
@@ -1415,6 +1613,7 @@ func UserDocumentSignatureRequestAddHandler(e echo.Context) error {
 	return c.NoContent(http.StatusOK)
 }
 
+// Reject a signature request for a document
 func UserDocumentSignatureRequestRejectHandler(e echo.Context) error {
 	c := e.(*www.Context)
 	sess := c.Session(false)
@@ -1437,6 +1636,7 @@ func UserDocumentSignatureRequestRejectHandler(e echo.Context) error {
 	return c.NoContent(http.StatusOK)
 }
 
+// Revoke a documents signature
 func UserDocumentSignatureRequestRevokeHandler(e echo.Context) error {
 	c := e.(*www.Context)
 	sess := c.Session(false)
@@ -1485,6 +1685,7 @@ func PutTestSignature(e echo.Context) error {
 	return nil
 }
 
+// Returns a file belonging to a users document
 func UserDocumentFileHandler(e echo.Context) error {
 	c := e.(*www.Context)
 	sess := c.Session(false)
@@ -1537,6 +1738,7 @@ func setResponseHeader(resp *echo.Response, fileHeaderResponse *service.FileHead
 	resp.Committed = true //prevents from-> http: multiple response.WriteHeader calls
 }
 
+// Update a user's metadata
 func AdminUserUpdateHandler(e echo.Context) error {
 	c := e.(*www.Context)
 	sess := c.Session(false)
@@ -1569,6 +1771,7 @@ func AdminUserUpdateHandler(e echo.Context) error {
 	return c.NoContent(http.StatusBadRequest)
 }
 
+// Returns a user by ID
 func AdminUserGetHandler(e echo.Context) error {
 	c := e.(*www.Context)
 	sess := c.Session(false)
@@ -1586,6 +1789,7 @@ func AdminUserGetHandler(e echo.Context) error {
 	return c.JSON(http.StatusOK, item)
 }
 
+// Lists all users
 func AdminUserListHandler(e echo.Context) error {
 	c := e.(*www.Context)
 	sess := c.Session(false)
@@ -1604,6 +1808,7 @@ func AdminUserListHandler(e echo.Context) error {
 	return c.JSON(http.StatusOK, dat)
 }
 
+// Returns a workflows schema
 func WorkflowSchema(e echo.Context) error {
 	c := e.(*www.Context)
 	sess := c.Session(false)
@@ -1628,6 +1833,7 @@ func WorkflowSchema(e echo.Context) error {
 	return c.JSON(http.StatusOK, result)
 }
 
+// Execute a workflow at once
 func WorkflowExecuteAtOnce(e echo.Context) error {
 	c := e.(*www.Context)
 	sess := c.Session(false)
@@ -1714,6 +1920,7 @@ func DeleteApiKeyHandler(e echo.Context) error {
 	return c.NoContent(http.StatusOK)
 }
 
+// Instantiate an external node and return the config URL
 func ExternalConfigurationPage(e echo.Context) error {
 	c := e.(*www.Context)
 	sess := c.Session(false)
@@ -1734,6 +1941,14 @@ func ExternalConfigurationPage(e echo.Context) error {
 	return c.Redirect(http.StatusFound, externalNodeQuery.ConfigUrl())
 }
 
+// Register an external node
+// @param node => {
+//		ID     string `json:"id" storm:"id"`
+//		Name   string `json:"name"`
+//		Detail string `json:"detail"`
+//		Url    string `json:"url"`
+//		Secret string `json:"secret"`
+//	}
 func ExternalRegister(e echo.Context) error {
 	c := e.(*www.Context)
 	var node externalnode.ExternalNode
@@ -1744,6 +1959,7 @@ func ExternalRegister(e echo.Context) error {
 	return nodeService.RegisterExternalNode(new(model.User), &node)
 }
 
+// List external nodes
 func ExternalList(e echo.Context) error {
 	c := e.(*www.Context)
 	nodes := nodeService.ListExternalNodes()
@@ -1751,6 +1967,7 @@ func ExternalList(e echo.Context) error {
 	return c.JSON(http.StatusOK, nodes)
 }
 
+// Update the config of an external store
 func ExternalConfigStore(e echo.Context) error {
 	c := e.(*www.Context)
 
@@ -1777,6 +1994,7 @@ func ExternalConfigStore(e echo.Context) error {
 	return c.NoContent(http.StatusOK)
 }
 
+// Returns the config of an external node
 func ExternalConfigRetrieve(e echo.Context) error {
 	c := e.(*www.Context)
 	id := c.Param("id")

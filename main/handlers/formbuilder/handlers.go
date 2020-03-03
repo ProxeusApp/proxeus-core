@@ -27,6 +27,7 @@ func Init(formComponentS service.FormComponentService, formS service.FormService
 	formService = formS
 }
 
+// Export a form by ID
 func ExportForms(e echo.Context) error {
 	c := e.(*www.Context)
 	sess := c.Session(false)
@@ -39,6 +40,7 @@ func ExportForms(e echo.Context) error {
 	return api.Export(sess, []portable.EntityType{portable.Form}, c, exportId...)
 }
 
+// Returns a list of all forms
 func ListHandler(e echo.Context) error {
 	c := e.(*www.Context)
 	contains := c.QueryParam("c")
@@ -57,6 +59,7 @@ func ListHandler(e echo.Context) error {
 	return c.NoContent(http.StatusUnauthorized)
 }
 
+// Returns a form by formID
 func GetOneFormHandler(e echo.Context) error {
 	c := e.(*www.Context)
 	formID := c.Param("formID")
@@ -72,6 +75,7 @@ func GetOneFormHandler(e echo.Context) error {
 	return c.NoContent(http.StatusNotFound)
 }
 
+// Update a form's formSrc
 func UpdateFormHandler(e echo.Context) error {
 	c := e.(*www.Context)
 	ID := c.QueryParam("id")
@@ -90,6 +94,7 @@ func UpdateFormHandler(e echo.Context) error {
 	return c.String(http.StatusBadRequest, err.Error())
 }
 
+// Remove a form by its ID
 func DeleteHandler(e echo.Context) error {
 	c := e.(*www.Context)
 	ID := c.Param("ID")
@@ -104,6 +109,7 @@ func DeleteHandler(e echo.Context) error {
 	return c.NoContent(http.StatusBadRequest)
 }
 
+// Returns all form-vars for using in the template IDe
 func VarsHandler(e echo.Context) error {
 	c := e.(*www.Context)
 	containing := c.QueryParam("c")
@@ -118,6 +124,7 @@ func VarsHandler(e echo.Context) error {
 	return c.NoContent(http.StatusNotFound)
 }
 
+// Return a component by ID
 func GetComponentsHandler(e echo.Context) error {
 	c := e.(*www.Context)
 	id := c.QueryParam("id")
@@ -140,6 +147,7 @@ func GetComponentsHandler(e echo.Context) error {
 	return c.NoContent(http.StatusNotFound)
 }
 
+// Update a component
 func SetComponentHandler(e echo.Context) error {
 	c := e.(*www.Context)
 	sess := c.Session(false)
@@ -159,6 +167,7 @@ func SetComponentHandler(e echo.Context) error {
 	return c.JSON(http.StatusOK, comp.ID)
 }
 
+// Remove a component
 func DeleteComponentHandler(e echo.Context) error {
 	c := e.(*www.Context)
 	id := c.Param("id")

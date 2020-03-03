@@ -39,7 +39,7 @@ func Init(paymentS service.PaymentService, userS service.UserService) {
 	userService = userS
 }
 
-//create a payment for a workflow
+// Create a payment for a workflow
 func CreateWorkflowPayment(e echo.Context) error {
 	c := e.(*www.Context)
 
