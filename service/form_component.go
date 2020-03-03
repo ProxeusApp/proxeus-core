@@ -33,34 +33,32 @@ func NewFormComponentService() *DefaultFormComponentService {
 
 //EnsureDefaultFormComponents creates all default form components
 func (me *DefaultFormComponentService) EnsureDefaultFormComponents(auth model.Auth) error {
-	dat, err := formDB().ListComp(auth, "", storage.Options{})
+	_, err := formDB().ListComp(auth, "", storage.Options{})
 	if err != nil && !db.NotFound(err) {
 		return err
 	}
-	if db.NotFound(err) || len(dat) == 0 {
-		defaultFormcomponentents := []string{"HC1", "HC2", "HC3", "HC5", "HC7", "HC8", "HC9", "HC10", "HC11", "HC12"}
-		for _, formCompId := range defaultFormcomponentents {
-			jsonFile, err := os.Open(filepath.Join("test", "assets", "components", formCompId+".json"))
-			if err != nil {
-				log.Println(err)
-				return err
-			}
+	defaultFormcomponentents := []string{"HC1", "HC2", "HC3", "HC5", "HC7", "HC8", "HC9", "HC10", "HC11", "HC12"}
+	for _, formCompId := range defaultFormcomponentents {
+		jsonFile, err := os.Open(filepath.Join("test", "assets", "components", formCompId+".json"))
+		if err != nil {
+			log.Println(err)
+			return err
+		}
 
-			body, _ := ioutil.ReadAll(jsonFile)
-			var comp model.FormComponentItem
-			err = json.Unmarshal(body, &comp)
-			if err != nil {
-				log.Println(err)
-				jsonFile.Close()
-				return err
-			}
+		body, _ := ioutil.ReadAll(jsonFile)
+		var comp model.FormComponentItem
+		err = json.Unmarshal(body, &comp)
+		if err != nil {
+			log.Println(err)
+			jsonFile.Close()
+			return err
+		}
 
-			err = formDB().PutComp(auth, &comp)
-			if err != nil {
-				log.Println(err)
-				jsonFile.Close()
-				return err
-			}
+		err = formDB().PutComp(auth, &comp)
+		if err != nil {
+			log.Println(err)
+			jsonFile.Close()
+			return err
 		}
 	}
 	return nil
