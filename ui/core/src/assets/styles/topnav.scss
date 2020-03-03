@@ -3,6 +3,11 @@
   background: white;
   box-shadow: 1px 1px 12px rgba(0, 0, 0, 0.16);
 
+  .navbar-text {
+    overflow: hidden;
+    max-width: 600px;
+  }
+
   .topnav-buttons {
     white-space: nowrap;
     text-overflow: ellipsis;
