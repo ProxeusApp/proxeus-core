@@ -15,6 +15,8 @@ Here is the list of dependencies:
 + vue-cli
 + git
 + docker-compose (18.06.0+)
++ (OSX) Brew Package Manager
++ (OSX) Command Line Tools (Xcode)
 
 
 #### Linux (Debian)
@@ -23,6 +25,10 @@ sudo apt-get install make golang curl npm git license-finder-pip
 ```
 
 #### OSX
+If you currently do not have the OSX `Command Line Tools` installed run
+```
+xcode-select --install
+```
 
 ```
 brew install make golang curl npm git
@@ -57,7 +63,20 @@ make all
 ```
 
 ### Start
-Run `server`
+Before running proxeus make sure to set all [required environment variables](../README.md#quick-start-with-docker).
+```
+export PROXEUS_DATA_DIR=./data
+export PROXEUS_INFURA_API_KEY=<Your Infura API key>
+export PROXEUS_SPARKPOST_API_KEY=<Your SparkPost API Key>
+export PROXEUS_BLOCKCHAIN_CONTRACT_ADDRESS=0x1d3e5c81bf4bc60d41a8fbbb3d1bae6f03a75f71
+export PROXEUS_ALLOW_HTTP=true
+export PROXEUS_PLATFORM_DOMAIN=localhost
+export PROXEUS_EMAIL_FROM=youremail@example.com
+```
+Make sure that the email domain for `PROXEUS_EMAIL_FROM` is a configured sending domain in sparkpost
+
+
+Run `server`.
 ```
 ./artifacts/proxeus
 ```
