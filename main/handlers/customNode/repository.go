@@ -10,6 +10,7 @@ import (
 	"github.com/ProxeusApp/proxeus-core/sys/workflow"
 )
 
+// Returns a list of all custom nodes
 func List(c *www.Context, nodeType string) []*workflow.Node {
 	var nodes []*workflow.Node
 	switch nodeType {

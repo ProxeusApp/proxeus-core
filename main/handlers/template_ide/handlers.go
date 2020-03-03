@@ -80,6 +80,7 @@ var rendererHelper = func(e echo.Context, tmplPath, fileName string) error {
 	return err
 }
 
+// Exports an export file of a given template ID
 func ExportTemplate(e echo.Context) error {
 	c := e.(*www.Context)
 	sess := c.Session(false)
@@ -101,6 +102,7 @@ func ExportTemplate(e echo.Context) error {
 	return api.Export(sess, []portable.EntityType{portable.Template}, c, id...)
 }
 
+// Handles form testdata input
 func IdeFormHandler(e echo.Context) error {
 	c := e.(*www.Context)
 	contains := c.QueryParam("c")
@@ -185,6 +187,7 @@ func OneTmplHandler(e echo.Context) error {
 
 }
 
+// Returns a rendered template
 func DownloadTemplateHandler(e echo.Context) error {
 	c := e.(*www.Context)
 	id := c.Param("id")
@@ -215,6 +218,7 @@ func DownloadTemplateHandler(e echo.Context) error {
 	return c.NoContent(http.StatusOK)
 }
 
+// Initiates a template assistant manager download
 func IdeGetTmpAssDownload(e echo.Context) error {
 	c := e.(*www.Context)
 	dsResp, err := templateS.DownloadExtension(c.QueryParam("os"))
@@ -230,6 +234,7 @@ func IdeGetTmpAssDownload(e echo.Context) error {
 	return err
 }
 
+// Remove the template with the given ID
 func DeleteHandler(e echo.Context) error {
 	c := e.(*www.Context)
 	id := c.Param("ID")
@@ -244,6 +249,7 @@ func DeleteHandler(e echo.Context) error {
 	return c.NoContent(http.StatusOK)
 }
 
+// Returns the active template file
 func IdeGetDownloadHandler(e echo.Context) error {
 	c := e.(*www.Context)
 	sess := c.Session(false)
@@ -300,6 +306,7 @@ func IdeGetDownloadHandler(e echo.Context) error {
 	return c.NoContent(http.StatusOK)
 }
 
+// Removes a file from the template IDE
 func IdeGetDeleteHandler(e echo.Context) error {
 	c := e.(*www.Context)
 	sess := c.Session(false)
@@ -315,6 +322,7 @@ func IdeGetDeleteHandler(e echo.Context) error {
 	return c.NoContent(http.StatusOK)
 }
 
+// Handles the upload a template file in the template IDE
 func IdePostUploadHandler(e echo.Context) error {
 	c := e.(*www.Context)
 	sess := c.Session(false)
@@ -338,6 +346,7 @@ func IdePostUploadHandler(e echo.Context) error {
 	return c.NoContent(http.StatusOK)
 }
 
+// Remove a template from the database
 func DeleteTemplateHandler(e echo.Context) error {
 	c := e.(*www.Context)
 	sess := c.Session(false)
@@ -353,6 +362,7 @@ func DeleteTemplateHandler(e echo.Context) error {
 	return c.NoContent(http.StatusOK)
 }
 
+// Set the template with the given id as active
 func IdeSetActiveHandler(e echo.Context) error {
 	c := e.(*www.Context)
 	sess := c.Session(false)
@@ -365,6 +375,7 @@ func IdeSetActiveHandler(e echo.Context) error {
 	return c.NoContent(http.StatusOK)
 }
 
+// Returns a list of template variables from the database
 func VarsTemplateHandler(e echo.Context) error {
 	c := e.(*www.Context)
 	contains := c.QueryParam("c")
@@ -384,6 +395,7 @@ func VarsTemplateHandler(e echo.Context) error {
 
 }
 
+// Upload a new template
 func UploadTemplateHandler(e echo.Context) error {
 	c := e.(*www.Context)
 	sess := c.Session(false)

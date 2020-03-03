@@ -33,6 +33,7 @@ func Init(workflowS service.WorkflowService, userS service.UserService, nodeS se
 	nodeService = nodeS
 }
 
+// Returns a file export of a given workflow
 func ExportWorkflow(e echo.Context) error {
 	c := e.(*www.Context)
 	sess := c.Session(false)
@@ -54,6 +55,7 @@ func ExportWorkflow(e echo.Context) error {
 	return api.Export(sess, []portable.EntityType{portable.Workflow}, c, id...)
 }
 
+// Returns a workflow by the provided id with a set OwnerEthAddress
 func GetHandler(e echo.Context) error {
 	c := e.(*www.Context)
 	ID := c.Param("ID")
@@ -69,6 +71,20 @@ func GetHandler(e echo.Context) error {
 	return c.JSON(http.StatusOK, workflow)
 }
 
+// Updates a workflow with the given workflowitem data
+// @param json => {
+//		Permissions
+//		ID     string `json:"id" storm:"id"`
+//		Name   string `json:"name" storm:"index"`
+//		Detail string `json:"detail"`
+//		//Permissions Permissions `json:"permissions"`
+//		Updated time.Time `json:"updated" storm:"index"`
+//		Created time.Time `json:"created" storm:"index"`
+//		Price   uint64    `json:"price" storm:"index"`
+//		Data            *workflow.Workflow `json:"data"`
+//		OwnerEthAddress string             `json:"ownerEthAddress"` //only used in frontend
+//		Deactivated     bool               `json:"deactivated"`
+//	}
 func UpdateHandler(e echo.Context) error {
 	c := e.(*www.Context)
 	ID := c.QueryParam("id")
@@ -131,6 +147,7 @@ func UpdateHandler(e echo.Context) error {
 	return c.JSON(http.StatusOK, workflowItem)
 }
 
+// Remove a workflow from the database
 func DeleteHandler(e echo.Context) error {
 	c := e.(*www.Context)
 	ID := c.Param("ID")
@@ -145,10 +162,12 @@ func DeleteHandler(e echo.Context) error {
 	return c.NoContent(http.StatusBadRequest)
 }
 
+// List published workflows
 func ListPublishedHandler(e echo.Context) error {
 	return listHandler(e.(*www.Context), true, e.QueryParam("c"), helpers.RequestOptions(e))
 }
 
+// List all workflows
 func ListHandler(e echo.Context) error {
 	return listHandler(e.(*www.Context), false, e.QueryParam("c"), helpers.RequestOptions(e))
 }
@@ -174,6 +193,7 @@ func listHandler(c *www.Context, published bool, contains string, settings stora
 	return c.JSON(http.StatusOK, workflowItems)
 }
 
+// Returns a list of custom node handlers
 func ListCustomNodeHandler(e echo.Context) error {
 	c := e.(*www.Context)
 	nodeType := c.Param("type")
