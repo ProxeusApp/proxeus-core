@@ -234,7 +234,7 @@ func testTTL(t *testing.T, db DB) {
 	defer db.Close()
 
 	err := db.Set("bucketTTL", "123", &myStruct{ID: "abc"},
-		OptionWithTTL(time.Duration(1)*time.Second))
+		OptionWithTTL(time.Duration(3)*time.Second))
 	if err != nil {
 		t.Error(err)
 	}
