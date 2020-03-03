@@ -10,7 +10,6 @@ import (
 	"testing"
 	"time"
 
-	"github.com/ProxeusApp/proxeus-core/test/assets"
 	uuid "github.com/satori/go.uuid"
 	"gopkg.in/gavv/httpexpect.v2"
 
