@@ -2,9 +2,10 @@ package storage
 
 import (
 	"bytes"
-	"github.com/ProxeusApp/proxeus-core/externalnode"
 	"io"
 	"time"
+
+	"github.com/ProxeusApp/proxeus-core/externalnode"
 
 	"github.com/ProxeusApp/proxeus-core/sys/file"
 	"github.com/ProxeusApp/proxeus-core/sys/model"

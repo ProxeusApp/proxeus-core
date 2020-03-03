@@ -6,9 +6,10 @@ import (
 
 	"github.com/ProxeusApp/proxeus-core/storage"
 
+	. "github.com/onsi/gomega"
+
 	"github.com/ProxeusApp/proxeus-core/sys/file"
 	"github.com/ProxeusApp/proxeus-core/sys/model"
-	. "github.com/onsi/gomega"
 )
 
 func TestDocTemplate(t *testing.T) {

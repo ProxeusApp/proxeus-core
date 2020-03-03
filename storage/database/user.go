@@ -232,21 +232,21 @@ func (me *UserDB) List(auth model.Auth, contains string, options storage.Options
 			)
 		} else {
 			matchers = append(matchers,
-					q.And(
-						q.Eq("WantToBeFound", true),
-						q.Or(
-							q.Re("Email", contains),
-							q.Re("Name", contains),
-							q.Re("Detail", contains),
-							q.Re("EthereumAddr", contains),
-						),
+				q.And(
+					q.Eq("WantToBeFound", true),
+					q.Or(
+						q.Re("Email", contains),
+						q.Re("Name", contains),
+						q.Re("Detail", contains),
+						q.Re("EthereumAddr", contains),
 					),
+				),
 			)
 		}
-	}else{
+	} else {
 		if !auth.AccessRights().IsGrantedForUserModifications() {
 			matchers = append(matchers,
-				q.Eq("WantToBeFound", true),)
+				q.Eq("WantToBeFound", true))
 		}
 	}
 	if len(params.exclude) > 0 {

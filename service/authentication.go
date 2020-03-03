@@ -2,14 +2,16 @@ package service
 
 import (
 	"fmt"
+	"log"
+	"os"
+
+	uuid "github.com/satori/go.uuid"
+
 	"github.com/ProxeusApp/proxeus-core/main/handlers/blockchain"
 	"github.com/ProxeusApp/proxeus-core/main/handlers/helpers"
 	"github.com/ProxeusApp/proxeus-core/main/www"
 	"github.com/ProxeusApp/proxeus-core/storage/database/db"
 	"github.com/ProxeusApp/proxeus-core/sys/model"
-	uuid "github.com/satori/go.uuid"
-	"log"
-	"os"
 )
 
 type (

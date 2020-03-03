@@ -10,8 +10,9 @@ import (
 
 	"github.com/ProxeusApp/proxeus-core/storage"
 
-	"github.com/ProxeusApp/proxeus-core/sys/model"
 	. "github.com/onsi/gomega"
+
+	"github.com/ProxeusApp/proxeus-core/sys/model"
 )
 
 func TestUserData(t *testing.T) {
