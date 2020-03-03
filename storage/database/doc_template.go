@@ -81,7 +81,6 @@ func (me *DocTemplateDB) List(auth model.Auth, contains string, options storage.
 	return items, nil
 }
 
-
 // Get retrieves a sinlge template item using its key
 func (me *DocTemplateDB) Get(auth model.Auth, id string) (*model.TemplateItem, error) {
 	var item model.TemplateItem

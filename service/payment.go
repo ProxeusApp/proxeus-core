@@ -2,12 +2,14 @@ package service
 
 import (
 	"errors"
-	"github.com/ProxeusApp/proxeus-core/storage/database/db"
-	"github.com/ProxeusApp/proxeus-core/sys/model"
-	uuid "github.com/satori/go.uuid"
 	"log"
 	"strings"
 	"time"
+
+	uuid "github.com/satori/go.uuid"
+
+	"github.com/ProxeusApp/proxeus-core/storage/database/db"
+	"github.com/ProxeusApp/proxeus-core/sys/model"
 )
 
 type (

@@ -2,13 +2,14 @@ package service
 
 import (
 	"fmt"
-	"github.com/ProxeusApp/proxeus-core/storage"
-	"github.com/ProxeusApp/proxeus-core/sys/eio"
-	"github.com/ProxeusApp/proxeus-core/sys/model"
 	"io"
 	"log"
 	"os"
 	"strconv"
+
+	"github.com/ProxeusApp/proxeus-core/storage"
+	"github.com/ProxeusApp/proxeus-core/sys/eio"
+	"github.com/ProxeusApp/proxeus-core/sys/model"
 )
 
 type (

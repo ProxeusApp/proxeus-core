@@ -86,7 +86,7 @@ server-docker: generate
 
 .PHONY: validate
 validate: init
-	@if [[ "$$(goimports -l -local $(golocalimport) main sys | grep -v bindata.go | tee /dev/tty | wc -l | xargs)" != "0" ]]; then \
+	@if [[ "$$(goimports -l -local $(golocalimport) main sys storage service | grep -v bindata.go | tee /dev/tty | wc -l | xargs)" != "0" ]]; then \
 		echo "Format validation error.  Please run make fmt"; exit 1; \
 	fi
 	@echo "Format validated"
@@ -117,7 +117,7 @@ doc: init
 
 .PHONY: fmt
 fmt:
-	goimports -w -local $(golocalimport) main sys
+	goimports -w -local $(golocalimport) main sys storage service
 
 .PHONY: test
 test: generate

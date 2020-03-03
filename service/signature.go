@@ -4,16 +4,18 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
-	"github.com/ProxeusApp/proxeus-core/main/handlers/helpers"
-	"github.com/ProxeusApp/proxeus-core/main/www"
-	"github.com/ProxeusApp/proxeus-core/storage/database/db"
-	"github.com/ProxeusApp/proxeus-core/sys/model"
-	"github.com/ethereum/go-ethereum/crypto"
-	uuid "github.com/satori/go.uuid"
 	"log"
 	"os"
 	"strings"
 	"time"
+
+	"github.com/ethereum/go-ethereum/crypto"
+	uuid "github.com/satori/go.uuid"
+
+	"github.com/ProxeusApp/proxeus-core/main/handlers/helpers"
+	"github.com/ProxeusApp/proxeus-core/main/www"
+	"github.com/ProxeusApp/proxeus-core/storage/database/db"
+	"github.com/ProxeusApp/proxeus-core/sys/model"
 )
 
 type (

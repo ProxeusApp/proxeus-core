@@ -7,6 +7,8 @@ import (
 	"os"
 	"path"
 
+	"github.com/ProxeusApp/proxeus-core/main/handlers/template_ide"
+
 	"github.com/ProxeusApp/proxeus-core/sys/email"
 
 	"github.com/ProxeusApp/proxeus-core/main/handlers/formbuilder"
@@ -89,6 +91,7 @@ func main() {
 	payment.Init(paymentService, userService)
 	api.Init(paymentService, userService, workflowService, documentService, userDocumentService, fileService, templateDocumentService, signatureService,
 		emailService, formService, formComponentService, apiService, authService, nodeService)
+	template_ide.Init(templateDocumentService, formService)
 	workflow.Init(workflowService, userService, nodeService)
 	formbuilder.Init(formComponentService, formService)
 

@@ -1,9 +1,11 @@
 package service
 
 import (
-	"github.com/ProxeusApp/proxeus-core/sys/model"
-	"github.com/stretchr/testify/assert"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
+
+	"github.com/ProxeusApp/proxeus-core/sys/model"
 )
 
 func TestCheckIfWorkflowPaymentRequired(t *testing.T) {

@@ -2,13 +2,14 @@ package service
 
 import (
 	"fmt"
-	"github.com/ProxeusApp/proxeus-core/externalnode"
-	"github.com/ProxeusApp/proxeus-core/sys/model"
-	"github.com/ProxeusApp/proxeus-core/sys/workflow"
 	"log"
 	"net/http"
 	"os"
 	"time"
+
+	"github.com/ProxeusApp/proxeus-core/externalnode"
+	"github.com/ProxeusApp/proxeus-core/sys/model"
+	"github.com/ProxeusApp/proxeus-core/sys/workflow"
 
 	uuid "github.com/satori/go.uuid"
 )

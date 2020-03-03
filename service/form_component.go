@@ -2,10 +2,11 @@ package service
 
 import (
 	"encoding/json"
+	"io"
+
 	"github.com/ProxeusApp/proxeus-core/storage"
 	"github.com/ProxeusApp/proxeus-core/storage/database/db"
 	"github.com/ProxeusApp/proxeus-core/sys/model"
-	"io"
 
 	"io/ioutil"
 	"log"
