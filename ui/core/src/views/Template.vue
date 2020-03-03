@@ -4,13 +4,7 @@
       :title="$t('Template title prefix', 'Proxeus - ')+(template && template.name || $t('Template title', 'Template'))"/>
     <top-nav :title="template && template.name ? template.name : $t('Template')" :sm="true"
              :returnToRoute="{name:'Templates'}">
-      <td slot="buttons" class="tdmin">
-        <span class="divider ml-auto"></span>
-      </td>
-      <td slot="buttons" class="tdmin">
-        <span class="divider ml-auto"></span>
-      </td>
-      <td slot="buttons" v-if="hasRenderedDocument" class="tdmin" v-for="(type, i) in downloadButtons" :key="i">
+      <div slot="buttons" v-if="hasRenderedDocument" class="tdmin" v-for="(type, i) in downloadButtons" :key="i">
         <a :href="`/api/admin/template/ide/download/${id}?format=${type}`"
            class="filedownload-btn px-2" target="_blank">
           <table style="text-align: center;">
@@ -24,7 +18,7 @@
             </tr>
           </table>
         </a>
-      </td>
+      </div>
       <a target="_blank"
          href="https://docs.google.com/document/d/1-vJsTrU3w8dEcDr3-nV5owtxqHWSjzEf2uk6m9-cMIs/preview"
          class="btn btn-link btn-sm"><span
@@ -334,6 +328,7 @@ export default {
                   text: this.$t('Template saved'),
                   type: 'success'
                 })
+                this.infoToggled = false
               }, (err) => {
                 this.app.handleError(err)
                 this.hasChanges = false
