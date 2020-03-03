@@ -212,6 +212,7 @@ export default {
         success: function (res) {
           self.snapshot(self.form, self.skipFromSnapshot)
           self.hasFormChanges = false
+          self.infoToggled = false
           self.$notify({
             group: 'app',
             title: self.$t('Success'),
