@@ -334,6 +334,7 @@ export default {
                   text: this.$t('Template saved'),
                   type: 'success'
                 })
+                this.infoToggled = false
               }, (err) => {
                 this.app.handleError(err)
                 this.hasChanges = false
