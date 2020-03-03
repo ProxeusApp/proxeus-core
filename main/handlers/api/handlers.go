@@ -1770,7 +1770,7 @@ func ExternalConfigStore(e echo.Context) error {
 	q.Config = node.Config
 
 	//PutExternalNodeInstance
-	err = nodeService.PutExternalNodeInstance(new(model.User), q.ExternalNodeInstance)
+	err = nodeService.PutExternalNodeInstance(new(model.User), &q)
 	if err != nil {
 		return c.String(http.StatusBadRequest, err.Error())
 	}
