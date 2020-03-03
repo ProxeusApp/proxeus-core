@@ -110,7 +110,6 @@ func UpdateHandler(e echo.Context) error {
 
 	workflowItem.LoopNodes(nil, func(l *workflow.Looper, node *workflow.Node) bool {
 		if node.Type == "externalNode" {
-
 			externalNodeQuery, err := workflowService.InstantiateExternalNode(sess, node.ID, node.Name)
 			if err != nil || externalNodeQuery == nil {
 				log.Printf("[workflowHandler][UpdateHandler] instantiateExternalNode err: %s | externalNodeQuery is nil: %t",

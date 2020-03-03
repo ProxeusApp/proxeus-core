@@ -150,21 +150,21 @@ func (me *DefaultWorkflowService) Delete(auth model.Auth, id string) error {
 
 // InstantiateExternalNode creates a new instance of an external node
 func (me *DefaultWorkflowService) InstantiateExternalNode(auth model.Auth, nodeId, nodeName string) (*extNode.ExternalQuery, error) {
-	externalQuery, err := workflowDB().QueryFromInstanceID(auth, nodeId)
-	if err == nil {
-		log.Println("UpdateHandler externalNode instance exists, will not create new instance")
-		return &externalQuery, nil
-	}
-
-	newExternalNode, err := workflowDB().NodeByName(auth, nodeName)
+	externalNode, err := workflowDB().NodeByName(auth, nodeName)
 	if err != nil {
 		log.Println("UpdateHandler instantiateExternalNode NodeByName err: ", err.Error())
 		return nil, err
 	}
 
+	externalNodeInstance, err := workflowDB().QueryFromInstanceID(auth, nodeId)
+	if err == nil {
+		log.Println("UpdateHandler externalNode instance exists, will not create new instance")
+		return &extNode.ExternalQuery{externalNode, &externalNodeInstance}, nil
+	}
+
 	newExternalNodeInstance := &extNode.ExternalNodeInstance{
 		ID:       nodeId,
-		NodeName: newExternalNode.Name,
+		NodeName: nodeName,
 	}
 
 	//PutExternalNodeInstance
@@ -175,7 +175,7 @@ func (me *DefaultWorkflowService) InstantiateExternalNode(auth model.Auth, nodeI
 	}
 
 	newExternalQuery := extNode.ExternalQuery{
-		ExternalNode:         newExternalNode,
+		ExternalNode:         externalNode,
 		ExternalNodeInstance: newExternalNodeInstance,
 	}
 

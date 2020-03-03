@@ -115,7 +115,7 @@ func cloneSession(t *testing.T, s *session) *session {
 }
 
 func isOnline(url string) bool {
-	for i := 0; i < 10; i++ {
+	for i := 0; i < 100; i++ {
 		r, err := http.Get(url)
 		if err != nil {
 			time.Sleep(time.Second)
@@ -162,16 +162,9 @@ func initProxeus(s *session) {
 		}
 
 		s.e.POST("/api/init").WithJSON(init).Expect().Status(http.StatusOK)
-		// We upload components
 		login(s, s.root)
-		for _, name := range []string{"HC1", "HC2", "HC3", "HC5", "HC7", "HC8", "HC9", "HC10", "HC11", "HC12"} {
-			c, err := Asset(fmt.Sprintf("test/assets/components/%s.json", name))
-			if err != nil {
-				s.t.Errorf("Cannot read asset %s", err)
-			}
-			s.e.POST("/api/admin/form/component").WithQuery("id", name).WithHeader("Content-Type", "application/json").WithBytes(c).Expect().Status(http.StatusOK)
-		}
 
 		logout(s)
+
 	}
 }

@@ -760,10 +760,10 @@ func (mr *MockExternalNodeIFMockRecorder) NodeByName(auth, name interface{}) *go
 }
 
 // QueryFromInstanceID mocks base method
-func (m *MockExternalNodeIF) QueryFromInstanceID(auth model.Auth, id string) (externalnode.ExternalNodeInstance, error) {
+func (m *MockExternalNodeIF) QueryFromInstanceID(auth model.Auth, id string) (externalnode.ExternalQuery, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "QueryFromInstanceID", auth, id)
-	ret0, _ := ret[0].(externalnode.ExternalNodeInstance)
+	ret0, _ := ret[0].(externalnode.ExternalQuery)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

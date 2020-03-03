@@ -4,19 +4,20 @@ import (
 	"encoding/json"
 	"io"
 
+	"github.com/ProxeusApp/proxeus-core/test/assets"
+
 	"github.com/ProxeusApp/proxeus-core/storage"
 	"github.com/ProxeusApp/proxeus-core/storage/database/db"
 	"github.com/ProxeusApp/proxeus-core/sys/model"
 
 	"io/ioutil"
 	"log"
-	"os"
 	"path/filepath"
 )
 
 type (
 	FormComponentService interface {
-		EnsureDefaultFormComponents(auth model.Auth)
+		EnsureDefaultFormComponents(auth model.Auth) error
 		DelComp(auth model.Auth, id string) error
 		SetComp(auth model.Auth, reader io.ReadCloser) (*model.FormComponentItem, error)
 		GetComp(auth model.Auth, id string) (*model.FormComponentItem, error)
@@ -32,33 +33,32 @@ func NewFormComponentService() *DefaultFormComponentService {
 }
 
 //EnsureDefaultFormComponents creates all default form components
-func (me *DefaultFormComponentService) EnsureDefaultFormComponents(auth model.Auth) {
-	dat, err := formDB().ListComp(auth, "", storage.Options{})
-	if db.NotFound(err) || (err == nil && dat == nil) {
-		defaultFormcomponentents := []string{"HC1", "HC2", "HC3", "HC5", "HC7", "HC8", "HC9", "HC10", "HC11", "HC12"}
-		for _, formCompId := range defaultFormcomponentents {
-			jsonFile, err := os.Open(filepath.Join("test", "assets", "components", formCompId+".json"))
-			if err != nil {
-				log.Println(err)
-			}
+func (me *DefaultFormComponentService) EnsureDefaultFormComponents(auth model.Auth) error {
+	_, err := formDB().ListComp(auth, "", storage.Options{})
+	if err != nil && !db.NotFound(err) {
+		return err
+	}
+	defaultFormcomponentents := []string{"HC1", "HC2", "HC3", "HC5", "HC7", "HC8", "HC9", "HC10", "HC11", "HC12"}
+	for _, formCompId := range defaultFormcomponentents {
+		jsonFile, err := assets.Asset(filepath.Join("test", "assets", "components", formCompId+".json"))
+		if err != nil {
+			log.Println(err)
+			return err
+		}
+		var comp model.FormComponentItem
+		err = json.Unmarshal(jsonFile, &comp)
+		if err != nil {
+			log.Println(err)
+			return err
+		}
 
-			body, _ := ioutil.ReadAll(jsonFile)
-			var comp model.FormComponentItem
-			err = json.Unmarshal(body, &comp)
-			if err != nil {
-				log.Println(err)
-				jsonFile.Close()
-				continue
-			}
-
-			err = formDB().PutComp(auth, &comp)
-			if err != nil {
-				log.Println(err)
-				jsonFile.Close()
-				continue
-			}
+		err = formDB().PutComp(auth, &comp)
+		if err != nil {
+			log.Println(err)
+			return err
 		}
 	}
+	return nil
 }
 
 // DelComp removes a form component

@@ -3,6 +3,8 @@ package test
 import (
 	"bytes"
 	"net/http"
+
+	"github.com/ProxeusApp/proxeus-core/test/assets"
 )
 
 func testWorkflowWithFile(s *session) {
@@ -25,7 +27,7 @@ func testWorkflowWithFile(s *session) {
 func executeFileWorkflow(s *session, w *workflow) {
 	expectWorkflowInCleanState(s, w)
 
-	image, err := Asset("test/assets/image.jpg")
+	image, err := assets.Asset("test/assets/image.jpg")
 	if err != nil {
 		s.t.Errorf("Cannot read asset %s", err)
 	}
@@ -39,7 +41,7 @@ func executeFileWorkflow(s *session, w *workflow) {
 	previewID := r.JSON().Path("$.status.docs[0].id").String().Raw()
 	previewPDF := s.e.GET("/api/document/" + w.ID + "/preview/" + previewID + "/en/pdf").Expect().Status(http.StatusOK).Body().Raw()
 
-	expectedPDF, err := Asset("test/assets/templates/test_expected2.pdf")
+	expectedPDF, err := assets.Asset("test/assets/templates/test_expected2.pdf")
 	if err != nil {
 		s.t.Errorf("Cannot read asset %s", err)
 	}
