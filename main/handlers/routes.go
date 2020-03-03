@@ -131,6 +131,7 @@ func MainHostedAPI(e *echo.Echo, s *www.Security, version string) {
 		{POST, ADMIN, "/api/admin/invite", api.InviteRequest},
 		{GET, SUPERADMIN, " /api/admin/user/:ID", api.AdminUserGetHandler},
 		{GET, USER, " /api/admin/user/list", api.AdminUserListHandler},
+		{POST, USER, " /api/admin/user/list", api.AdminUserListHandler},
 		{POST, SUPERADMIN, "/api/admin/user/update", api.AdminUserUpdateHandler},
 
 		// i18n
