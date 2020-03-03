@@ -44,7 +44,7 @@
                             v-model="settings.cacheExpiry">
               <span class="text-muted">{{$t('Cache expiry explanation','Set the common cache expiry which will be used for email tokens or similar like 1h as one hour, 1m as one minute or 1s as one second.')}}</span>
               <simple-select :unselect="false" style="margin-top: 15px;" name="settings.defaultRole"
-                             v-model="settings.defaultRole" :idProp="'role'" :labelProp="'name'" :options="app.roles"/>
+                             v-model="settings.defaultRole" :idProp="'role'" :labelProp="'name'" :options="defaultUserRoles"/>
               <span class="text-muted">{{$t('Default role explanation','Select the default role that is going to be used for new registrations.')}}</span>
             </animated-input>
             <animated-input name="settings.documentServiceUrl" :max="100" :label="$t('Document Service URL')"
@@ -167,6 +167,11 @@ export default {
     }
   },
   updated () {
+  },
+  computed: {
+    defaultUserRoles () {
+      return this.app.roles.map(roleObj => { return { 'name': roleObj.name, 'role': roleObj.name.toLowerCase() } })
+    }
   },
   methods: {
     getInit (cb) {
