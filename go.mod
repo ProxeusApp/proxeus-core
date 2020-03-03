@@ -9,6 +9,7 @@ require (
 	github.com/allegro/bigcache v1.2.1 // indirect
 	github.com/aristanetworks/goarista v0.0.0-20190522184417-004c259faaeb // indirect
 	github.com/asdine/storm v0.0.0-20190418133842-e0f77eada154
+	github.com/asticode/go-bindata v1.0.0 // indirect
 	github.com/btcsuite/btcd v0.0.0-20190523000118-16327141da8c // indirect
 	github.com/c2h5oh/datasize v0.0.0-20171227191756-4eba002a5eae
 	github.com/cespare/cp v1.1.1 // indirect
@@ -59,6 +60,7 @@ require (
 	github.com/tidwall/pretty v1.0.0 // indirect
 	github.com/valyala/fasthttp v0.0.0-20171207120941-e5f51c11919d // indirect
 	github.com/vmihailenco/msgpack v4.0.4+incompatible // indirect
+	github.com/wadey/gocovmerge v0.0.0-20160331181800-b5bfa59ec0ad // indirect
 	github.com/xdg/scram v0.0.0-20180814205039-7eeb5667e42c // indirect
 	github.com/xdg/stringprep v1.0.0 // indirect
 	github.com/xeipuuv/gojsonpointer v0.0.0-20190905194746-02993c407bfb // indirect
@@ -74,7 +76,7 @@ require (
 	golang.org/x/image v0.0.0-20190523035834-f03afa92d3ff // indirect
 	golang.org/x/net v0.0.0-20191003171128-d98b1b443823
 	golang.org/x/sys v0.0.0-20200124204421-9fbb57f87de9 // indirect
-	golang.org/x/xerrors v0.0.0-20191011141410-1b5146add898 // indirect
+	golang.org/x/tools v0.0.0-20200302225559-9b52d559c609 // indirect
 	google.golang.org/appengine v1.6.0 // indirect
 	gopkg.in/gavv/httpexpect.v2 v2.0.0
 	gopkg.in/yaml.v2 v2.2.8 // indirect

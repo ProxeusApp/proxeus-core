@@ -101,22 +101,18 @@ license:
 	license_finder
 
 .PHONY: doc
-doc: init server
-	$(eval serverurl=localhost:6061)
-	# godoc only reads documentation from downloaded packages, therefore we simulate a src structure. godoc doesn't follow symlinks
-	mkdir -p /tmp/tmpgoroot/doc
-	mkdir -p /tmp/tmpgopath/src/git.proxeus.com/
-	cp -R * /tmp/tmpgopath/src/git.proxeus.com/
-	GOPATH=/tmp/tmpgopath GO111MODULE=on godoc -goroot=/tmp/tmpgoroot -http=$(serverurl) &
+doc: init
+	$(eval serverurl=localhost:6060)
+	GO111MODULE=on godoc -http=$(serverurl) &
 	sleep 3
 	# Download css & js first
 	wget -P artifacts/$(serverurl)/lib/godoc http://$(serverurl)/lib/godoc/style.css
 	wget -P artifacts/$(serverurl)/lib/godoc http://$(serverurl)/lib/godoc/jquery.js
 	wget -P artifacts/$(serverurl)/lib/godoc http://$(serverurl)/lib/godoc/godocs.js
 	# Now, only the package we're interested into. not the whole standard library
-	wget -r -P artifacts -np -e robots=off "http://$(serverurl)/pkg/git.proxeus.com/"
+	wget -r -P artifacts -np -e robots=off "http://$(serverurl)/pkg/github.com/ProxeusApp/proxeus-core/"
 	mkdir -p artifacts/godoc/lib/godoc
-	cp -r artifacts/$(serverurl)/pkg/git.proxeus.com/* artifacts/godoc
+	cp -r artifacts/$(serverurl)/pkg/github.com/ProxeusApp/proxeus-core/* artifacts/godoc
 	cp -r artifacts/$(serverurl)/lib/godoc/* artifacts/godoc/lib/godoc/
 	rm -R artifacts/$(serverurl)
 	pkill godoc
