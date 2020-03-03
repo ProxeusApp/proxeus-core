@@ -302,6 +302,8 @@ workflows:
       - build-docker-image:
           requires:
             - build-server-docker
+            - test-api-go
+            - test-ui
           filters:
             branches:
               only: master
