@@ -9,11 +9,12 @@ import (
 	reflect "reflect"
 	time "time"
 
+	gomock "github.com/golang/mock/gomock"
+
 	externalnode "github.com/ProxeusApp/proxeus-core/externalnode"
 	storage "github.com/ProxeusApp/proxeus-core/storage"
 	file "github.com/ProxeusApp/proxeus-core/sys/file"
 	model "github.com/ProxeusApp/proxeus-core/sys/model"
-	gomock "github.com/golang/mock/gomock"
 )
 
 // MockSettingsIF is a mock of SettingsIF interface
