@@ -10,6 +10,8 @@ import (
 	"net/http"
 	"time"
 
+	ext "github.com/ProxeusApp/proxeus-core/externalnode"
+
 	"github.com/ProxeusApp/proxeus-core/sys/workflow"
 
 	"github.com/ProxeusApp/proxeus-core/sys"
@@ -36,7 +38,15 @@ func (ex externalNode) Execute(n *workflow.Node) (proceed bool, err error) {
 	if err != nil {
 		return false, err
 	}
-	r, err := client.Post(q.NextUrl(), "application/json", bytes.NewBuffer(buf))
+	externalnode, err := ex.system().DB.Workflow.NodeByName(ex.auth(), q.NodeName)
+	if err != nil {
+		return false, err
+	}
+	qe := ext.ExternalQuery{
+		externalnode,
+		&q,
+	}
+	r, err := client.Post(qe.NextUrl(), "application/json", bytes.NewBuffer(buf))
 	if err != nil {
 		log.Printf("ERROR node response: %s", err)
 		return false, err
@@ -62,7 +72,16 @@ func (ex externalNode) Remove(n *workflow.Node) {
 		log.Print("remove err ", err.Error())
 		return
 	}
-	client.Post(q.RemoveUrl(), "application/json", bytes.NewBuffer([]byte("{}")))
+
+	externalnode, err := ex.system().DB.Workflow.NodeByName(ex.auth(), q.NodeName)
+	if err != nil {
+		return
+	}
+	qe := ext.ExternalQuery{
+		externalnode,
+		&q,
+	}
+	client.Post(qe.RemoveUrl(), "application/json", bytes.NewBuffer([]byte("{}")))
 }
 
 func (ex externalNode) Close() {
@@ -72,7 +91,15 @@ func (ex externalNode) Close() {
 		log.Print("close err ", err.Error())
 		return
 	}
-	client.Post(q.CloseUrl(), "application/json", bytes.NewBuffer([]byte("{}")))
+	externalnode, err := ex.system().DB.Workflow.NodeByName(ex.auth(), q.NodeName)
+	if err != nil {
+		return
+	}
+	qe := ext.ExternalQuery{
+		externalnode,
+		&q,
+	}
+	client.Post(qe.CloseUrl(), "application/json", bytes.NewBuffer([]byte("{}")))
 }
 
 func (ex externalNode) system() *sys.System {

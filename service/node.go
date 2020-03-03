@@ -20,7 +20,7 @@ type (
 		List(nodeType string) []*workflow.Node
 		RegisterExternalNode(user *model.User, node *externalnode.ExternalNode) error
 		ListExternalNodes() []*externalnode.ExternalNode
-		QueryFromInstanceID(auth model.Auth, nodeId string) (externalnode.ExternalQuery, error)
+		QueryFromInstanceID(auth model.Auth, nodeId string) (externalnode.ExternalNodeInstance, error)
 		PutExternalNodeInstance(auth model.Auth, instance *externalnode.ExternalNodeInstance) error
 	}
 	defaultNodeService struct {
@@ -91,7 +91,7 @@ func (me *defaultNodeService) ListExternalNodes() []*externalnode.ExternalNode {
 }
 
 // QueryFromInstanceID return an external node instance by machting the specified id
-func (me *defaultNodeService) QueryFromInstanceID(auth model.Auth, nodeId string) (externalnode.ExternalQuery, error) {
+func (me *defaultNodeService) QueryFromInstanceID(auth model.Auth, nodeId string) (externalnode.ExternalNodeInstance, error) {
 	return workflowDB().QueryFromInstanceID(auth, nodeId)
 }
 

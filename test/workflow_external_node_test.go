@@ -1,6 +1,7 @@
 package test
 
 import (
+	"fmt"
 	"strings"
 	"time"
 
@@ -38,8 +39,8 @@ func testWorkflowExternalNode(s *session) {
 		FiatCurrency string
 	}
 
-	config := &configData{
-		FiatCurrency: "USD",
+	config := map[string]interface{}{
+		"FiatCurrency": "USD",
 	}
 
 	node := externalnode.ExternalNodeInstance{
@@ -99,8 +100,10 @@ func getExternalNodeConfig(s *session, id string, config interface{}) {
 }
 
 func externalNodeAvailable(s *session, name string) bool {
+	time.Sleep(5*time.Second)
 	for i := 0; i < 10; i++ {
 		list := s.e.GET("/api/admin/external/list").Expect().Status(http.StatusOK).Body().Raw()
+		fmt.Print(list)
 		if strings.Contains(list, name) {
 			return true
 		}

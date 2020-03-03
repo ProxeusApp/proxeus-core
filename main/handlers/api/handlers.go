@@ -328,7 +328,9 @@ func PostInit(e echo.Context) error {
 			}
 		}
 	}
-	formComponentService.EnsureDefaultFormComponents(root)
+	if err := formComponentService.EnsureDefaultFormComponents(root); err != nil {
+		fmt.Println("Error during form component initialisation: ", err)
+	}
 
 	return c.NoContent(http.StatusOK)
 }
@@ -1131,6 +1133,7 @@ func DocumentNextHandler(e echo.Context) error {
 
 	formInput, err := helpers.ParseDataFromReq(c)
 	if err != nil {
+		fmt.Println(err.Error())
 		return c.String(http.StatusBadRequest, err.Error())
 	}
 
@@ -1150,6 +1153,7 @@ func DocumentNextHandler(e echo.Context) error {
 			resData["errors"] = er
 			return c.JSON(http.StatusUnprocessableEntity, resData)
 		}
+		fmt.Println(err.Error())
 		return c.JSON(http.StatusBadRequest, err.Error())
 	}
 
@@ -1766,7 +1770,7 @@ func ExternalConfigStore(e echo.Context) error {
 	q.Config = node.Config
 
 	//PutExternalNodeInstance
-	err = nodeService.PutExternalNodeInstance(new(model.User), q.ExternalNodeInstance)
+	err = nodeService.PutExternalNodeInstance(new(model.User), &q)
 	if err != nil {
 		return c.String(http.StatusBadRequest, err.Error())
 	}
