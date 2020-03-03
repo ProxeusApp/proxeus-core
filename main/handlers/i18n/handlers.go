@@ -19,6 +19,7 @@ import (
 	"github.com/ProxeusApp/proxeus-core/sys"
 )
 
+// Render app.html
 func IndexHandler(e echo.Context) error {
 	c := e.(*www.Context)
 	bts, err := sys.ReadAllFile("app.html")
@@ -28,6 +29,13 @@ func IndexHandler(e echo.Context) error {
 	return c.HTMLBlob(http.StatusOK, bts)
 }
 
+// Returns a json containing i18n metadata {
+//		"langListSize",
+//		"langList",
+//		"activeLangs",
+//		"langFallback",
+//		"fallbackTranslations",
+//	}
 func MetaHandler(e echo.Context) error {
 	c := e.(*www.Context)
 	fallback, _ := c.System().DB.I18n.GetFallback()
@@ -43,6 +51,7 @@ func MetaHandler(e echo.Context) error {
 	})
 }
 
+// Export the i18n definitions of the platform
 func ExportI18n(e echo.Context) error {
 	c := e.(*www.Context)
 	sess := c.Session(false)
@@ -60,12 +69,14 @@ func ExportI18n(e echo.Context) error {
 	return api.Export(sess, []portable.EntityType{portable.I18n}, c, id...)
 }
 
+// Returns all language keys
 func AllHandler(e echo.Context) error {
 	c := e.(*www.Context)
 	wi18n := www.NewI18n(c.System().DB.I18n, c)
 	return c.JSON(http.StatusOK, wi18n.GetAll())
 }
 
+// Search the key of a given key or a given translation
 func FindHandler(e echo.Context) error {
 	c := e.(*www.Context)
 	key := c.QueryParam("k")
@@ -78,6 +89,7 @@ func FindHandler(e echo.Context) error {
 	return c.JSON(http.StatusOK, da)
 }
 
+// Returns a list of matching i18n keys for a given form field
 func FormBuilderI18nSearchHandler(e echo.Context) error {
 	c := e.(*www.Context)
 	containing := c.QueryParam("c")
@@ -89,6 +101,7 @@ func FormBuilderI18nSearchHandler(e echo.Context) error {
 	return c.JSON(http.StatusOK, da)
 }
 
+// Update the i18n definitions
 func UpdateHandler(e echo.Context) error {
 	c := e.(*www.Context)
 	if strings.Contains(c.Request().Header.Get("Content-Type"), "application/json") {
@@ -114,6 +127,8 @@ func UpdateHandler(e echo.Context) error {
 	return c.NoContent(http.StatusBadRequest)
 }
 
+// Set the language fallback
+// @param lang => string
 func SetFallbackHandler(e echo.Context) error {
 	c := e.(*www.Context)
 	lang := c.QueryParam("lang")
@@ -126,6 +141,7 @@ func SetFallbackHandler(e echo.Context) error {
 	return c.NoContent(http.StatusOK)
 }
 
+// Switch the language
 func LangSwitchHandler(e echo.Context) error {
 	c := e.(*www.Context)
 	if strings.Contains(c.Request().Header.Get("Content-Type"), "application/json") {
@@ -146,6 +162,7 @@ func LangSwitchHandler(e echo.Context) error {
 	return c.NoContent(http.StatusBadRequest)
 }
 
+// Translate a given set of language keys
 func TranslateHandler(e echo.Context) error {
 	c := e.(*www.Context)
 	if strings.Contains(c.Request().Header.Get("Content-Type"), "application/json") {

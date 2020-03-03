@@ -33,6 +33,7 @@ func Init(workflowS service.WorkflowService, userS service.UserService, nodeS se
 	nodeService = nodeS
 }
 
+// Returns a file export of a given workflow
 func ExportWorkflow(e echo.Context) error {
 	c := e.(*www.Context)
 	sess := c.Session(false)
@@ -132,6 +133,7 @@ func UpdateHandler(e echo.Context) error {
 	return c.JSON(http.StatusOK, workflowItem)
 }
 
+// Remove a workflow from the database
 func DeleteHandler(e echo.Context) error {
 	c := e.(*www.Context)
 	ID := c.Param("ID")
@@ -146,10 +148,12 @@ func DeleteHandler(e echo.Context) error {
 	return c.NoContent(http.StatusBadRequest)
 }
 
+// List published workflows
 func ListPublishedHandler(e echo.Context) error {
 	return listHandler(e.(*www.Context), true, e.QueryParam("c"), helpers.RequestOptions(e))
 }
 
+// List all workflows
 func ListHandler(e echo.Context) error {
 	return listHandler(e.(*www.Context), false, e.QueryParam("c"), helpers.RequestOptions(e))
 }
@@ -175,6 +179,7 @@ func listHandler(c *www.Context, published bool, contains string, settings stora
 	return c.JSON(http.StatusOK, workflowItems)
 }
 
+// Returns a list of custom node handlers
 func ListCustomNodeHandler(e echo.Context) error {
 	c := e.(*www.Context)
 	nodeType := c.Param("type")
