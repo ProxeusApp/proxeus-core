@@ -1,5 +1,5 @@
 <template>
-  <nav class="navbar navbar-expand-lg py-0 topnav d-flex flex-row"
+  <nav class="navbar navbar-expand-lg py-0 topnav d-flex flex-row flex-nowrap"
        v-bind="$attrs"
        :style="{background:bg ? bg : ''}">
     <router-link class="topnav-back btn btn-sm btn-light mr-3" :to="returnToRoute"

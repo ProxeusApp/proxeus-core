@@ -1,7 +1,7 @@
 <template>
   <div class="container-fluid">
     <vue-headful :title="$t('Admin title', 'Proxeus - Admin')"/>
-    <div class="row" style="height:100%;">
+    <div class="row flex-nowrap" style="height:100%;min-width:900px;">
       <sidebar :toggled="sidebarToggled" v-if="showSidebar"></sidebar>
       <main class="app-main col px-0" role="main">
         <app-view></app-view>
