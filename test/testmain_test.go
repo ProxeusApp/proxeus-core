@@ -163,19 +163,9 @@ func initProxeus(s *session) {
 		}
 
 		s.e.POST("/api/init").WithJSON(init).Expect().Status(http.StatusOK)
-		// We upload components if needed
-		r := s.e.GET("/api/admin/form/component").Expect()
-		if !strings.Contains(r.Body().Raw(), `"HC1"`) { // Get /api/init returned the settings: Proxeus core is not initialised
-			login(s, s.root)
-			for _, name := range []string{"HC1", "HC2", "HC3", "HC5", "HC7", "HC8", "HC9", "HC10", "HC11", "HC12"} {
-				c, err := assets.Asset(fmt.Sprintf("test/assets/components/%s.json", name))
-				if err != nil {
-					s.t.Errorf("Cannot read asset %s", err)
-				}
-				s.e.POST("/api/admin/form/component").WithQuery("id", name).WithHeader("Content-Type", "application/json").WithBytes(c).Expect().Status(http.StatusOK)
-			}
+		login(s, s.root)
 
-			logout(s)
-		}
+		logout(s)
+
 	}
 }
