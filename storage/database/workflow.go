@@ -5,6 +5,8 @@ import (
 	"path/filepath"
 	"time"
 
+	uuid "github.com/satori/go.uuid"
+
 	"github.com/ProxeusApp/proxeus-core/externalnode"
 
 	"github.com/ProxeusApp/proxeus-core/storage"
@@ -12,7 +14,6 @@ import (
 	"github.com/ProxeusApp/proxeus-core/storage/database/db"
 
 	"github.com/asdine/storm/q"
-	uuid "github.com/satori/go.uuid"
 
 	"github.com/ProxeusApp/proxeus-core/sys/model"
 )
@@ -37,8 +38,8 @@ func NewWorkflowDB(c DBConfig) (*WorkflowDB, error) {
 
 	udb.db.Init(workflowHeavyData)
 
-	udb.db.Init(externalNodeInstance)
 	udb.db.Init(new(externalnode.ExternalNode))
+	udb.db.Init(new(externalnode.ExternalNodeInstance))
 
 	example := &model.WorkflowItem{}
 	udb.db.Init(example)
@@ -262,20 +263,10 @@ func (me *WorkflowDB) NodeByName(auth model.Auth, name string) (*externalnode.Ex
 }
 
 // QueryFromInstanceID return an external node instance by machting the specified id
-func (me *WorkflowDB) QueryFromInstanceID(auth model.Auth, id string) (externalnode.ExternalQuery, error) {
+func (me *WorkflowDB) QueryFromInstanceID(auth model.Auth, id string) (externalnode.ExternalNodeInstance, error) {
 	var i externalnode.ExternalNodeInstance
-	err := me.db.Get(externalNodeInstance, id, &i)
-	if err != nil {
-		return externalnode.ExternalQuery{}, err
-	}
-	n, err := me.NodeByName(auth, i.NodeName)
-	if err != nil {
-		return externalnode.ExternalQuery{}, err
-	}
-	return externalnode.ExternalQuery{
-		ExternalNode:         n,
-		ExternalNodeInstance: &i,
-	}, nil
+	err := me.db.One("ID", id, &i)
+	return i, err
 }
 
 // ListExternalNodes return a list of all external node definitions
@@ -301,16 +292,7 @@ func (me *WorkflowDB) PutExternalNodeInstance(auth model.Auth, item *externalnod
 		return err
 	}
 	defer tx.Rollback()
-	var i externalnode.ExternalNodeInstance
-	err = tx.Get(externalNodeInstance, item.ID, &i)
-	if db.NotFound(err) {
-		if !auth.AccessRights().AllowedToCreateEntities() {
-			return model.ErrAuthorityMissing
-		}
-	} else if err != nil {
-		return err
-	}
-	err = tx.Set(externalNodeInstance, item.ID, item)
+	err = tx.Save(item)
 	if err != nil {
 		return err
 	}

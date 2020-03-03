@@ -6,6 +6,8 @@ import (
 	"path/filepath"
 	"strconv"
 	"time"
+
+	"github.com/ProxeusApp/proxeus-core/test/assets"
 )
 
 type template struct {
@@ -36,7 +38,7 @@ func testTemplate(s *session) {
 }
 
 func createSimpleTemplate(s *session, u *user, name, path string) *template {
-	odtFileBytes, err := Asset(path)
+	odtFileBytes, err := assets.Asset(path)
 	if err != nil {
 		s.t.Errorf("Cannot read asset %s", err)
 	}
@@ -114,7 +116,7 @@ func templatePreviews(s *session, t *template, f *form) {
 		Status(http.StatusOK).Body().Length().Gt(1000)
 
 	// check if we can download what we've uploaded
-	odtFileBytes, err := Asset(templateOdtPath)
+	odtFileBytes, err := assets.Asset(templateOdtPath)
 	if err != nil {
 		s.t.Errorf("Cannot read asset %s", err)
 	}

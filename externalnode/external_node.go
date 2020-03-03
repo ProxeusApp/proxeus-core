@@ -27,7 +27,7 @@ type (
 	ExternalNodeInstance struct {
 		ID       string      `json:"id" storm:"id"`
 		NodeName string      `json:"nodeName"`
-		Config   interface{} `json:"nodeConfig"`
+		Config   map[string]interface{} `json:"nodeConfig"`
 	}
 
 	ExternalQuery struct {
@@ -92,7 +92,7 @@ func SetStoredConfig(c echo.Context, proxeusUrl string, conf interface{}) error 
 
 	n := ExternalNodeInstance{
 		ID:     id,
-		Config: conf,
+		Config: conf.(map[string]interface{}),
 	}
 	buf, err := json.Marshal(n)
 	if err != nil {
