@@ -125,7 +125,7 @@ doc: init server
 
 .PHONY: fmt
 fmt:
-	goimports -w -local $(golocalimport) main sys service
+	goimports -w -local $(golocalimport) main sys service storage
 
 .PHONY: test
 test: generate

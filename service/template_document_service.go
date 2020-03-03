@@ -2,11 +2,12 @@ package service
 
 import (
 	"bytes"
+	"io"
+	"net/http"
+
 	"github.com/ProxeusApp/proxeus-core/storage"
 	"github.com/ProxeusApp/proxeus-core/sys/file"
 	"github.com/ProxeusApp/proxeus-core/sys/model"
-	"io"
-	"net/http"
 
 	"github.com/ProxeusApp/proxeus-core/sys/eio"
 )

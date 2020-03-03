@@ -5,6 +5,8 @@ import (
 	"path/filepath"
 	"time"
 
+	uuid "github.com/satori/go.uuid"
+
 	"github.com/ProxeusApp/proxeus-core/externalnode"
 
 	"github.com/ProxeusApp/proxeus-core/storage"
@@ -12,7 +14,6 @@ import (
 	"github.com/ProxeusApp/proxeus-core/storage/database/db"
 
 	"github.com/asdine/storm/q"
-	"github.com/satori/go.uuid"
 
 	"github.com/ProxeusApp/proxeus-core/sys/model"
 )
