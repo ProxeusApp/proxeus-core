@@ -2,8 +2,9 @@ package service
 
 import (
 	"encoding/json"
-	"github.com/ProxeusApp/proxeus-core/test/assets"
 	"io"
+
+	"github.com/ProxeusApp/proxeus-core/test/assets"
 
 	"github.com/ProxeusApp/proxeus-core/storage"
 	"github.com/ProxeusApp/proxeus-core/storage/database/db"
