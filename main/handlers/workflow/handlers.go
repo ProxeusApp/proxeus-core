@@ -55,6 +55,7 @@ func ExportWorkflow(e echo.Context) error {
 	return api.Export(sess, []portable.EntityType{portable.Workflow}, c, id...)
 }
 
+// Returns a workflow by the provided id with a set OwnerEthAddress
 func GetHandler(e echo.Context) error {
 	c := e.(*www.Context)
 	ID := c.Param("ID")
@@ -70,6 +71,20 @@ func GetHandler(e echo.Context) error {
 	return c.JSON(http.StatusOK, workflow)
 }
 
+// Updates a workflow with the given workflowitem data
+// @param json => {
+//		Permissions
+//		ID     string `json:"id" storm:"id"`
+//		Name   string `json:"name" storm:"index"`
+//		Detail string `json:"detail"`
+//		//Permissions Permissions `json:"permissions"`
+//		Updated time.Time `json:"updated" storm:"index"`
+//		Created time.Time `json:"created" storm:"index"`
+//		Price   uint64    `json:"price" storm:"index"`
+//		Data            *workflow.Workflow `json:"data"`
+//		OwnerEthAddress string             `json:"ownerEthAddress"` //only used in frontend
+//		Deactivated     bool               `json:"deactivated"`
+//	}
 func UpdateHandler(e echo.Context) error {
 	c := e.(*www.Context)
 	ID := c.QueryParam("id")
