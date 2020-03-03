@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 	_ "net/http/pprof"
 	"os"
@@ -43,6 +44,10 @@ func main() {
 	cfg.Init()
 	system, err := sys.NewWithSettings(cfg.Config.SettingsFile, &cfg.Config.Settings)
 	if err != nil {
+		log.Printf("Unable to start Proxeus. Please either check your configuration in the settings file found in: %s "+
+			"or remove the file and restart Proxeus with different environment variables.",
+			cfg.Config.SettingsFile)
+		log.Printf("Configuration: %#v\n", cfg.Config)
 		panic(err)
 	}
 
