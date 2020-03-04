@@ -1,3 +1,4 @@
+// Package service holds the service layer for the Proxeus core
 package service
 
 import (

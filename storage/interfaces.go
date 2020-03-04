@@ -1,3 +1,5 @@
+//todo: docs
+
 package storage
 
 import (
@@ -59,6 +61,7 @@ type SettingsIF interface {
 
 // I18nIF is the interface to the translation database
 type I18nIF interface {
+	//todo docs
 	Find(keyContains string, valueContains string, options Options) (map[string]map[string]string, error)
 	Get(lang string, key string, args ...string) (string, error)
 	GetAll(lang string) (map[string]string, error)
@@ -190,7 +193,7 @@ type WorkflowPaymentsIF interface {
 	Close() error
 }
 
-// FielsIF is the interface to a generic File
+// FilesIF is the interface to a generic File
 type FilesIF interface {
 	Read(path string, w io.Writer) error
 	Write(path string, r io.Reader) error

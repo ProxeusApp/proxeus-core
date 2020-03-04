@@ -15,12 +15,26 @@ import (
 )
 
 type (
+
+	// NodeService is an interface that provides node functions
 	NodeService interface {
+
+		//ProbeExternalNodes checks all registered external nodes health endpoint and deletes the ones that are offline
 		ProbeExternalNodes()
+
+		//List returns a list of workflow nodes.
 		List(nodeType string) []*workflow.Node
+
+		// RegisterExternalNode saves an external node definition
 		RegisterExternalNode(user *model.User, node *externalnode.ExternalNode) error
+
+		// ListExternalNodes return a list of all external node definitions
 		ListExternalNodes() []*externalnode.ExternalNode
+
+		// QueryFromInstanceID return an external node instance by machting the specified id
 		QueryFromInstanceID(auth model.Auth, nodeId string) (externalnode.ExternalNodeInstance, error)
+
+		// PutExternalNodeInstance saves an instance of an external node to the database
 		PutExternalNodeInstance(auth model.Auth, instance *externalnode.ExternalNodeInstance) error
 	}
 	defaultNodeService struct {

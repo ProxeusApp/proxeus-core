@@ -16,11 +16,23 @@ import (
 )
 
 type (
+
+	// FormComponentService is an interface that provides form component functions
 	FormComponentService interface {
+
+		//EnsureDefaultFormComponents creates all default form components
 		EnsureDefaultFormComponents(auth model.Auth) error
+
+		// DelComp removes a form component
 		DelComp(auth model.Auth, id string) error
+
+		// SetComp sets a form components
 		SetComp(auth model.Auth, reader io.ReadCloser) (*model.FormComponentItem, error)
+
+		// GetComp returns a form component by id
 		GetComp(auth model.Auth, id string) (*model.FormComponentItem, error)
+
+		// ListComp lists all components that match contains and storage.options
 		ListComp(auth model.Auth, contains string, options storage.Options) (map[string]*model.FormComponentItem, error)
 	}
 

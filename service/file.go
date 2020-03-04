@@ -8,9 +8,15 @@ import (
 )
 
 type (
+	// FileService is an interface that provides file functions
 	FileService interface {
+		// Read reads the file in path into writer
 		Read(path string, w io.Writer) error
+
+		// GetDataFile returns the file by id and dataPath
 		GetDataFile(auth model.Auth, id, dataPath string) (*file.IO, error)
+
+		// GetDataAndFiles returns the data and files by id and dataPath
 		GetDataAndFiles(auth model.Auth, id, dataPath string) (interface{}, []string, error)
 	}
 
@@ -22,7 +28,7 @@ func NewFileService() *DefaultFileService {
 	return &DefaultFileService{}
 }
 
-//Read reads the file in path into writer
+// Read reads the file in path into writer
 func (me *DefaultFileService) Read(path string, w io.Writer) error {
 	return filesDB().Read(path, w)
 }
