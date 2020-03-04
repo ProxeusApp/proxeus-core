@@ -11,9 +11,11 @@ ifdef BUILD_ID
 endif
 
 DOCKER_GATEWAY=172.17.0.1
+DOCKER=sudo docker
 ifeq ($(shell uname), Darwin)
 	DOCKER_LINUX=docker run --rm -v "$(PWD):/usr/src" -w /usr/src golang:$(GO_VERSION)
 	DOCKER_GATEWAY=host.docker.internal
+	DOCKER=docker
 endif
 
 # Default proxeus environment
@@ -103,20 +105,19 @@ license:
 .PHONY: doc
 doc: init
 	$(eval serverurl=localhost:6060)
-	GO111MODULE=on godoc -http=$(serverurl) &
-	sleep 3
+	$(DOCKER) run --rm -e "GOPATH=/tmp/go" --name "godoc" -p 6060:6060 -v ${PWD}:/tmp/go/src/github.com/ProxeusApp/proxeus-core golang bash -c "go get golang.org/x/tools/cmd/godoc && /tmp/go/bin/godoc -http=:6060" &
 	# Download css & js first
-	wget -P artifacts/$(serverurl)/lib/godoc http://$(serverurl)/lib/godoc/style.css
-	wget -P artifacts/$(serverurl)/lib/godoc http://$(serverurl)/lib/godoc/jquery.js
-	wget -P artifacts/$(serverurl)/lib/godoc http://$(serverurl)/lib/godoc/godocs.js
+	wget --retry-connrefused -P artifacts/$(serverurl)/lib/godoc http://$(serverurl)/lib/godoc/style.css
+	wget --retry-connrefused -P artifacts/$(serverurl)/lib/godoc http://$(serverurl)/lib/godoc/jquery.js
+	wget --retry-connrefused -P artifacts/$(serverurl)/lib/godoc http://$(serverurl)/lib/godoc/godocs.js
 	# Now, only the package we're interested into. not the whole standard library
-	wget -r -P artifacts -np -e robots=off "http://$(serverurl)/pkg/github.com/ProxeusApp/proxeus-core/"
+	wget -r --retry-on-http-error=404 -P artifacts -np -e robots=off "http://$(serverurl)/pkg/github.com/ProxeusApp/proxeus-core/"
 	mkdir -p artifacts/godoc/lib/godoc
 	cp -r artifacts/$(serverurl)/pkg/github.com/ProxeusApp/proxeus-core/* artifacts/godoc
 	cp -r artifacts/$(serverurl)/lib/godoc/* artifacts/godoc/lib/godoc/
 	rm -R artifacts/$(serverurl)
-	pkill godoc
-	tar -zcvf artifacts/godoc.tar.gz artifacts/godoc
+	$(DOCKER) stop godoc
+	zip -r artifacts/godoc.zip artifacts/godoc
 	rm -R artifacts/godoc
 
 .PHONY: fmt
