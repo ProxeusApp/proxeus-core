@@ -108,6 +108,7 @@ func (me *FormDB) Put(auth model.Auth, item *model.FormItem) error {
 	return me.put(auth, item, true)
 }
 
+// Put inserts a form item
 func (me *FormDB) put(auth model.Auth, item *model.FormItem, updated bool) error {
 	if item == nil {
 		return os.ErrInvalid
@@ -366,6 +367,7 @@ func (me *FormDB) Vars(auth model.Auth, contains string, options storage.Options
 	return getVars(contains, params.limit, params.index, tx)
 }
 
+// Close closes the database
 func (me *FormDB) Close() error {
 	return me.db.Close()
 }

@@ -299,6 +299,7 @@ func (me *WorkflowDB) PutExternalNodeInstance(auth model.Auth, item *externalnod
 	return tx.Commit()
 }
 
+// Close closes the database
 func (me *WorkflowDB) Close() error {
 	return me.db.Close()
 }

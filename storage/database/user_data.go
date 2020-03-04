@@ -260,7 +260,7 @@ func (me *UserDataDB) NewFile(auth model.Auth, meta file.Meta) *file.IO {
 	return file.New(me.baseFilePath, meta)
 }
 
-// GetDataAndFiles returns the files associated with a data item
+// GetDataFile returns the files associated with a data item
 func (me *UserDataDB) GetDataFile(auth model.Auth, id, dataPath string) (*file.IO, error) {
 	tx, err := me.db.Begin(false)
 	if err != nil {
@@ -367,6 +367,7 @@ func (me *UserDataDB) AssetsKey() string {
 	return me.baseFilePath
 }
 
+// Close closes the database
 func (me *UserDataDB) Close() error {
 	return me.db.Close()
 }

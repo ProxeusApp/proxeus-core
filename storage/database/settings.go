@@ -70,4 +70,5 @@ func (se *SettingsDB) Get() (*model.Settings, error) {
 	return &s, err
 }
 
+// Close closes the database
 func (se *SettingsDB) Close() error { return nil }
