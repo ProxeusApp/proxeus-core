@@ -102,7 +102,7 @@ func (me *WorkflowDB) list(auth model.Auth, contains string, options storage.Opt
 	return items, nil
 }
 
-// ListPublished returns a workflow item matching the supplied filter options that if it is flagged as published
+// GetPublished returns a workflow item matching the supplied filter options that if it is flagged as published
 func (me *WorkflowDB) GetPublished(auth model.Auth, id string) (*model.WorkflowItem, error) {
 	var item model.WorkflowItem
 	err := me.db.One("ID", id, &item)

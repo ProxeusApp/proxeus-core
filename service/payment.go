@@ -13,21 +13,42 @@ import (
 )
 
 type (
+
+	// PaymentService is an interface that provides payment functions
 	PaymentService interface {
+
+		// CreateWorkflowPayment creates a workflow payment for a workflow by the ethAddress with the status "created".
 		CreateWorkflowPayment(auth model.Auth, workflowId, ethAddress string) (*model.WorkflowPaymentItem, error)
+
+		// GetWorkflowPaymentById returns a WorkflowPaymentItem for the id
 		GetWorkflowPaymentById(paymentId string) (*model.WorkflowPaymentItem, error)
+
+		//GetWorkflowPayment returns a WorkflowPaymentItem that matches the txHash, ethAddress and status
 		GetWorkflowPayment(txHash, ethAddresses, status string) (*model.WorkflowPaymentItem, error)
+
+		// UpdateWorkflowPaymentPending updates a WorkflowPaymentItem with status "created" and sets it to status "pending"
 		UpdateWorkflowPaymentPending(paymentId, txHash, ethAddress string) error
+
+		// CancelWorkflowPayment sets the status of a WorkflowPaymentItem to "cancelled"
 		CancelWorkflowPayment(paymentId, ethAddress string) error
+
+		// RedeemPayment sets the payment status of WorkflowPaymentItem from "confirmed" to "redeemed"
 		RedeemPayment(workflowId, ethAddr string) error
+
+		//CheckIfWorkflowPaymentRequired returns whether a payment is required for the user for a workflow
 		CheckIfWorkflowPaymentRequired(auth model.Auth, workflowId string) (bool, error)
+
+		// CheckForWorkflowPayment checks whether a workflow payment is required.
 		CheckForWorkflowPayment(auth model.Auth, workflowId string) error
+
+		// Delete sets the status of a CheckForWorkflowPayment to "deleted"
 		Delete(paymentId string) error
+
+		// All returns a list of all WorkflowPaymentItem
 		All() ([]*model.WorkflowPaymentItem, error)
 	}
 
 	DefaultPaymentService struct {
-		//Important: Pass system to service (and not e.g. system.DB.WorkflowPayments because system.DB variable is replaced on calling api/handlers.PostInit()
 		userService UserService
 	}
 )

@@ -11,17 +11,41 @@ import (
 )
 
 type (
+
+	// WorkflowService is an interface that provides workflow functions
 	WorkflowService interface {
+
+		// List returns a list of all WorkflowItem that match "contains" and the provided storage.Options
 		List(auth model.Auth, contains string, options storage.Options) ([]*model.WorkflowItem, error)
+
+		// ListPublished returns a list of published WorkflowItem that match "contains" and the provided storage.Options
 		ListPublished(auth model.Auth, contains string, options storage.Options) ([]*model.WorkflowItem, error)
+
+		// ListIds returns a list of all workflow ids that match contains and the provided storage.Options
 		ListIds(auth model.Auth, contains string, options storage.Options) ([]string, error)
+
+		// GetAndPopulateOwner a workflow by the provided id and sets the OwnerEthAddress
 		GetAndPopulateOwner(auth model.Auth, id string) (*model.WorkflowItem, error)
+
+		// Get returns a workflow by the provided id
 		Get(auth model.Auth, id string) (*model.WorkflowItem, error)
+
+		// Publish publishes a workflowItem
 		Publish(auth model.Auth, wfItem *model.WorkflowItem) map[string]interface{}
+
+		// Put saves a WorkflowItem
 		Put(auth model.Auth, wfItem *model.WorkflowItem) error
+
+		// Delete removes a WorkflowItem
 		Delete(auth model.Auth, id string) error
+
+		// InstantiateExternalNode creates a new instance of an external node
 		InstantiateExternalNode(auth model.Auth, nodeId, nodeName string) (*extNode.ExternalQuery, error)
+
+		// CopyWorkflows copies the workflow and related forms and templates to the new user
 		CopyWorkflows(rootUser, newUser *model.User)
+
+		// GetPublished returns a workflow item matching the supplied filter options that if it is flagged as published
 		GetPublished(auth model.Auth, id string) (*model.WorkflowItem, error)
 	}
 
@@ -39,7 +63,7 @@ func (me *DefaultWorkflowService) List(auth model.Auth, contains string, options
 	return workflowDB().List(auth, contains, options)
 }
 
-// List returns a list of published WorkflowItem that match "contains" and the provided storage.Options
+// ListPublished returns a list of published WorkflowItem that match "contains" and the provided storage.Options
 func (me *DefaultWorkflowService) ListPublished(auth model.Auth, contains string, options storage.Options) ([]*model.WorkflowItem, error) {
 	return workflowDB().ListPublished(auth, contains, options)
 }
@@ -256,6 +280,7 @@ func (me *DefaultWorkflowService) CopyWorkflows(rootUser, newUser *model.User) {
 	}
 }
 
+// GetPublished returns a workflow item matching the supplied filter options that if it is flagged as published
 func (me *DefaultWorkflowService) GetPublished(auth model.Auth, id string) (*model.WorkflowItem, error) {
 	return workflowDB().GetPublished(auth, id)
 }

@@ -13,12 +13,27 @@ import (
 )
 
 type (
+
+	// UserDocumentService is an interface that provides user document functions
 	UserDocumentService interface {
+
+		// List returns a list of UserDataItem that contain the string passed in contain.
+		// settings are used to modify the result list
 		List(auth model.Auth, contains string, settings storage.Options) ([]*model.UserDataItem, error)
+
+		// Get returns the UserDataItem with the ids
 		Get(auth model.Auth, id string) (*model.UserDataItem, error)
+
+		// Put sets the UserDataItem
 		Put(auth model.Auth, userDataItem *model.UserDataItem) error
+
+		// GetDocFile returns file info for a pdf file that was generated from a workflow
 		GetDocFile(auth model.Auth, id, dataPath, inlineOrAttachment string) (*FileHeaderResponse, string, error)
+
+		// GetTemplateWithFormatFile returns file info for a docx file that was generated from a workflow
 		GetTemplateWithFormatFile(auth model.Auth, id, dataPath, format, inlineOrAttachment string) (*FileHeaderResponse, io.ReadCloser, error)
+
+		// GetByWorkflow returns the userDataItem with the provided workflow
 		GetByWorkflow(auth model.Auth, wf *model.WorkflowItem, finished bool) (*model.UserDataItem, bool, error)
 	}
 
@@ -51,11 +66,12 @@ func (me *DefaultUserDocumentService) Get(auth model.Auth, id string) (*model.Us
 	return userDataDB().Get(auth, id)
 }
 
-//Returns the userDataItem with the provided workflow
+// GetByWorkflow returns the userDataItem with the provided workflow
 func (me *DefaultUserDocumentService) GetByWorkflow(auth model.Auth, wf *model.WorkflowItem, finished bool) (*model.UserDataItem, bool, error) {
 	return userDataDB().GetByWorkflow(auth, wf, finished)
 }
 
+// Put sets the UserDataItem
 func (me *DefaultUserDocumentService) Put(auth model.Auth, userDataItem *model.UserDataItem) error {
 	return userDataDB().Put(auth, userDataItem)
 }
