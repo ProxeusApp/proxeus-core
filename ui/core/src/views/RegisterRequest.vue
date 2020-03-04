@@ -26,7 +26,7 @@
           </div>
           <span class="text-muted"
                 style="display: inline-block;">{{$t('Sign up explanation', 'Sign up by providing your email and clicking the button below.')}}</span>
-          <button class="btn btn-primary px-3 mt-3" type="submit">{{$t('Sign up')}}</button>
+          <button class="btn btn-primary px-3 mt-3" type="submit" id="signupcontent">{{$t('Sign up')}}</button>
         </form>
         <div v-show="done">
           <div
