@@ -54,7 +54,7 @@ ifeq ($(coverage),true)
 	stopproxeus=pkill main.test
 endif
 
-dependencies=go curl
+dependencies=go curl wget
 mocks=main/handlers/blockchain/mock/adapter_mock.go storage/mock/interfaces.go
 bindata=main/handlers/assets/bindata.go test/assets/bindata.go
 golocalimport=github.com/ProxeusApp/proxeus-core
