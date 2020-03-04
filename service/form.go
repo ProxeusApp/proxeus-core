@@ -14,19 +14,41 @@ import (
 )
 
 type (
+
+	// FormService is an interface that provides form functions
 	FormService interface {
+		// List returns a list of all forms
 		List(auth model.Auth, contains string, options storage.Options) ([]*model.FormItem, error)
+
+		// Get returns a form by id
 		Get(auth model.Auth, id string) (*model.FormItem, error)
+
+		// ExportForms returns the id of all forms
 		ExportForms(auth model.Auth, id, contains string) []string
+
+		// UpdateForm updates the form with the data from the reader
 		UpdateForm(auth model.Auth, id string, reader io.ReadCloser) (*model.FormItem, error)
+
+		// Delete a form by id
 		Delete(auth model.Auth, id string) error
 
+		// Returns a list of variable defined in a form
 		Vars(auth model.Auth, contains string, options storage.Options) ([]string, error)
 
+		// GetFormData returns the data of a form
+		// If the reset flag is set the data will be cleared
 		GetFormData(auth model.MemoryAuth, id string, reset bool) (map[string]interface{}, error)
+
+		// SetFormSrc sets the data from formSrc to the form
 		SetFormSrc(auth model.MemoryAuth, id string, formSrc map[string]interface{}) error
+
+		// GetFormFile reads the contents of a form file into the writer
 		GetFormFile(auth model.MemoryAuth, id string, fieldname string, writer io.Writer) error
+
+		// TestFormData validates and sets data
 		TestFormData(auth model.MemoryAuth, id string, input map[string]interface{}, submit bool) (validate.ErrorMap, error)
+
+		// PostFormFile sets the form file from the reader
 		PostFormFile(auth model.MemoryAuth, id string, fileName string, fieldname string, reader io.ReadCloser, contentType string) (interface{}, error)
 	}
 

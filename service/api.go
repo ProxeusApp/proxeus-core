@@ -3,9 +3,16 @@ package service
 import "github.com/ProxeusApp/proxeus-core/sys/model"
 
 type (
+
+	// ApiService is an interface that provides api key functions
 	ApiService interface {
+		// CreateApiKey creates and returns a new api key
 		CreateApiKey(auth model.Auth, userId, apiKeyName string) (string, error)
+
+		// DeleteApiKey removes an existing API key
 		DeleteApiKey(auth model.Auth, userId, hiddenApiKey string) error
+
+		// AuthenticateWithApiKey tries to authenticate the user with the supplied API key and returns the user object or an error
 		AuthenticateWithApiKey(apiKey string) (*model.User, error)
 	}
 	defaultApiService struct {
@@ -26,7 +33,7 @@ func (me *defaultApiService) DeleteApiKey(auth model.Auth, userId, hiddenApiKey 
 	return userDB().DeleteApiKey(auth, userId, hiddenApiKey)
 }
 
-// APIKey tries to authenticate the user with the supplied API key and returns the user object or an error
+// AuthenticateWithApiKey tries to authenticate the user with the supplied API key and returns the user object or an error
 func (me *defaultApiService) AuthenticateWithApiKey(apiKey string) (*model.User, error) {
 	return userDB().APIKey(apiKey)
 }

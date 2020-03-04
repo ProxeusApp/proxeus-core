@@ -16,16 +16,36 @@ import (
 )
 
 type (
+	// DocumentService is an interface that provides user document functions
 	DocumentService interface {
+		// GetWorkflowSchema Returns the workflow by id
 		GetWorkflowSchema(auth model.Auth, workflowId string) (*model.WorkflowItem, map[string]interface{}, error)
+
+		// GetWorkflowSchema Returns the workflow by id
 		Edit(auth model.Auth, userId string, formInput map[string]interface{}) error
+
+		// GetDocApp returns the DocumentFlowInstance with the passed id
 		GetDocApp(auth model.MemoryAuth, id string) *app.DocumentFlowInstance
+
+		// Update changes the data of the workflow
 		Update(auth model.MemoryAuth, id string, data map[string]interface{}) (validate.ErrorMap, error)
+
+		// UpdateFile modifies the file of the current workflow
 		UpdateFile(auth model.MemoryAuth, id, fieldName, fileName, contentType string, reader io.Reader) (*file.IO, validate.Errors, error)
+
+		// Next proceeds to the next workflow step
 		Next(auth model.MemoryAuth, id, lang string, data map[string]interface{}, final bool) (*app.DocumentFlowInstance, *app.Status, error)
+
+		// Prev returns to the previous workflow step
 		Prev(auth model.MemoryAuth, id string) (*app.Status, error)
+
+		// GetFile returns a file by id and input name
 		GetFile(auth model.MemoryAuth, id, inputName string) (*file.IO, error)
+
+		// Preview gets a file Preview for a template
 		Preview(auth model.MemoryAuth, id, templateId, lang, format string) (*app.PreviewResponse, error)
+
+		// Delete removes the existing document with the provided id
 		Delete(auth model.MemoryAuth, id string) error
 	}
 

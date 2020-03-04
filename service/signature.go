@@ -19,11 +19,22 @@ import (
 )
 
 type (
+
+	// SignatureService is an interface that provides document signature functions
 	SignatureService interface {
+		// GetById returns the signature request related to the provided documentId
 		GetById(id, docId string) (SignatureRequestsMinimal, error)
+
+		// GetForCurrentUser returns a list of the signature requests for the current user
 		GetForCurrentUser(auth model.Auth) (SignatureRequestsComplete, error)
+
+		// AddAndNotify adds a new signature request and if the signatory has provided an email address sends an email notification.
 		AddAndNotify(auth model.Auth, translator www.Translator, id, docId, signatory, host, scheme string) error
+
+		// RevokeAndNotify revokes an existing signature request and if the signatory has provided an email address sends an email notification.
 		RevokeAndNotify(auth model.Auth, translator www.Translator, id, docId, signatory, host, scheme string) error
+
+		// RejectAndNotify rejects an existing signature request and if the signatory has provided an email address sends an email notification.
 		RejectAndNotify(auth model.Auth, translator www.Translator, id, docId, host string) error
 	}
 	DefaultSignatureService struct {

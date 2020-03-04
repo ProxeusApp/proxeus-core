@@ -15,14 +15,32 @@ import (
 )
 
 type (
+
+	// AuthenticationService is an interface that provides user authentication functions
 	AuthenticationService interface {
+
+		// LoginWithUsernamePassword performs a login with username and password
 		LoginWithUsernamePassword(email, password string) (*model.User, error)
+
+		// LoginWithWallet logs the user in when the login is done with a signature (e.g. Metamask)
 		LoginWithWallet(challenge, signature string) (bool, *model.User, error)
+
+		// ChangeEmail Changes the email of a user
 		ChangeEmail(tokenID string) (*model.TokenRequest, error)
+
+		// ResetPasswordRequest sends an email request to the user to reset the password
 		ResetPasswordRequest(translator www.Translator, scheme, host string, m *model.TokenRequest) (model.TokenRequest, error)
+
+		// ResetPassword resets the users password
 		ResetPassword(translator www.Translator, password, tokenID string) (error, map[string]interface{})
+
+		// RegisterRequest sends an email request to the user to register
 		RegisterRequest(translator www.Translator, scheme, host string, m *model.TokenRequest) (model.TokenRequest, error)
+
+		// Register registers the user on the platform
 		Register(translator www.Translator, tokenID, password string) (error, map[string]interface{})
+
+		// PutTokenRequest saves the tokenRequest in the sessionDB
 		PutTokenRequest(token *model.TokenRequest) error
 	}
 	defaultAuthenticationService struct {
@@ -88,7 +106,7 @@ func (me *defaultAuthenticationService) LoginWithWallet(challenge, signature str
 	return created, usr, err
 }
 
-// LoginWithWallet Changes the email of a user
+// ChangeEmail Changes the email of a user
 func (me *defaultAuthenticationService) ChangeEmail(tokenID string) (*model.TokenRequest, error) {
 	tokenRequest, err := sessionDB().GetTokenRequest(model.TokenChangeEmail, tokenID)
 	if err != nil {

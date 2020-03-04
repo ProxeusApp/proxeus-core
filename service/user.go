@@ -9,18 +9,44 @@ import (
 )
 
 type (
+
+	// UserService is an interface that provides user functions
 	UserService interface {
+
+		// Put adds a user
 		Put(auth model.Auth, user *model.User) error
+
+		// GetUser returns the currently logged in user
 		GetUser(auth model.Auth) (*model.User, error)
+
+		// GetById returns the User with the provided id
 		GetById(auth model.Auth, id string) (*model.User, error)
+
+		// GetById returns the UserDataItem for the provided id
 		GetUserDataById(auth model.Auth, id string) (*model.UserDataItem, error)
+
+		// DeleteUser removes a user and all related data from the database
 		DeleteUser(auth model.Auth) error
+
+		// Deletes the UserData of the user with the provided id
 		DeleteUserData(auth model.Auth, id string) error
+
+		// GetByBCAddress returns the user associated with the provided blockchainAddress
 		GetByBCAddress(blockchainAddress string) (*model.User, error)
+
+		// GetByEmail returns the user associated with the provided email
 		GetByEmail(email string) (*model.User, error)
+
+		// PutPassword sets the password for a user
 		PutPassword(userId, password string) error
+
+		// GetProfilePhoto returns the profile photo for a user
 		GetProfilePhoto(auth model.Auth, id string, writer io.Writer) error
+
+		// PutProfilePhoto sets the profile photo for a user
 		PutProfilePhoto(auth model.Auth, userId string, reader io.ReadCloser) error
+
+		// List returns references to all the user object matching the supplied filter criteria
 		List(sess model.Auth, contains string, settings storage.Options) ([]*model.User, error)
 	}
 	defaultUserService struct {
@@ -122,10 +148,12 @@ func (me *defaultUserService) PutPassword(userId, password string) error {
 	return userDB().PutPw(userId, password)
 }
 
+// GetProfilePhoto returns the profile photo for a user
 func (me *defaultUserService) GetProfilePhoto(auth model.Auth, userId string, writer io.Writer) error {
 	return userDB().GetProfilePhoto(auth, userId, writer)
 }
 
+// PutProfilePhoto sets the profile photo for a user
 func (me *defaultUserService) PutProfilePhoto(auth model.Auth, userId string, reader io.ReadCloser) error {
 	return userDB().PutProfilePhoto(auth, userId, reader)
 }
