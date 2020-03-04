@@ -11,34 +11,6 @@
     </div>
     <div class="p-0 ml-0" style="position:relative;">
       <search-box v-on:search="search" ref="searchBox"/>
-      <table style="position: absolute;display: inline-block;top:18px;right: 150px;z-index: 10;">
-        <tbody>
-        <tr>
-          <td>
-            <div v-if="delImpsUrl" @click="delImpsAction" class="easy-read" style="cursor: pointer;">
-              <a href="JavaScript:void(0);" style="position: relative;display: inline-block;"
-                 class="badge badge-primary">Imported
-                <button class="btn btn-primary btn-round"
-                        style="cursor: pointer;position: absolute;right: -23px;top: -20px;padding: 3px;">
-                  <i class="material-icons">close</i>
-                </button>
-              </a>
-            </div>
-          </td>
-<!--          <td>-->
-<!--            <div v-if="delExsUrl" @click="delExsAction" class="easy-read" style="margin-left: 30px;cursor: pointer;">-->
-<!--              <a href="JavaScript:void(0);" style="position: relative;display: inline-block;"-->
-<!--                 class="badge badge-primary">Exported-->
-<!--                <button class="btn btn-primary btn-round"-->
-<!--                        style="cursor: pointer;position: absolute;right: -23px;top: -20px;padding: 3px;">-->
-<!--                  <i class="material-icons">close</i>-->
-<!--                </button>-->
-<!--              </a>-->
-<!--            </div>-->
-<!--          </td>-->
-        </tr>
-        </tbody>
-      </table>
     </div>
     <div ref="listGroup" class="mbottominset">
       <slot name="newItemForm">
