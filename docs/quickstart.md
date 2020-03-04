@@ -84,9 +84,10 @@ services:
 
 Run the following command in the directory containing your `docker-compose.yml` file (Linux and OSX):
 ```
-export PROXEUS_INFURA_KEY=<Your Infura API key>
-export PROXEUS_SPARKPOST_KEY=<Your SparkPost API Key>
-export PROXEUS_CONTRACT_ADDRESS=0x1d3e5c81bf4bc60d41a8fbbb3d1bae6f03a75f71
+export PROXEUS_EMAIL_FROM=<Your valid Sender Email Address>
+export PROXEUS_INFURA_API_KEY=<Your Infura API key>
+export PROXEUS_SPARKPOST_API_KEY=<Your SparkPost API Key>
+export PROXEUS_BLOCKCHAIN_CONTRACT_ADDRESS=0x1d3e5c81bf4bc60d41a8fbbb3d1bae6f03a75f71
 export PROXEUS_ALLOW_HTTP=true
 docker-compose up 
 ```
