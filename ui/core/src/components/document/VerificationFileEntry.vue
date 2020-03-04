@@ -150,13 +150,6 @@
 
           <hr class="my-2"/>
           <div class="container mt-2">
-            <div v-show="signers.length > 0" class="row mb-2 ">
-              <div class="col-lg-4 pr-0 pl-0">{{ $t('Verified file signers', 'Signers:') }}</div>
-              <div class="col-lg-8 pl-0">
-                <div v-for="signer in signers">{{ signer | addressOrHash}}
-                </div>
-              </div>
-            </div>
             <div v-show="timestamp" class="row mb-2 ">
               <div class="col-lg-4 pr-0 pl-0">{{ $t('Verified file timestamp', 'Registration date:') }}</div>
               <div class="col-lg-8 pl-0">{{ timestamp }}</div>
