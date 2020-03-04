@@ -33,6 +33,7 @@ services:
     volumes:
       - nginx-share:/etc/nginx/vhost.d
       - nginx-share:/usr/share/nginx/html
+      - ./nginx-timeout.conf:/etc/nginx/conf.d/nginx-timeout.conf
       - ${PROXEUS_DATA_DIR:-./data}/certs:/etc/nginx/certs:ro
       - ${DOCKER_SOCK:-/var/run/docker.sock}:/tmp/docker.sock:ro
     networks:
