@@ -10,8 +10,6 @@ import (
 
 	"github.com/ProxeusApp/proxeus-core/main/handlers/template_ide"
 
-	"github.com/ProxeusApp/proxeus-core/sys/email"
-
 	"github.com/ProxeusApp/proxeus-core/main/handlers/formbuilder"
 
 	"github.com/ProxeusApp/proxeus-core/main/handlers/workflow"
@@ -85,8 +83,7 @@ func main() {
 	templateDocumentService := service.NewTemplateDocumentService()
 	userDocumentService := service.NewUserDocumentService(userService, fileService, templateDocumentService)
 
-	emailSender, err := email.NewSparkPostEmailSender(system.GetSettings().SparkpostApiKey, system.GetSettings().EmailFrom)
-	emailService := service.NewEmailService(emailSender)
+	emailService := service.NewEmailService()
 	signatureService := service.NewSignatureService(fileService, userService, emailService)
 	formService := service.NewFormService()
 	formComponentService := service.NewFormComponentService()
