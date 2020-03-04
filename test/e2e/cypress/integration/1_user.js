@@ -20,7 +20,7 @@ describe(`User signup & login at ${url}`, () => {
     context('page layout', () => {
 
       it('should have a signup button on the top', () => {
-        const button = cy.get('.btn-primary').first()
+        const button = cy.get('.btn-primary#signup')
         button.should($button => {
           expect($button).to.be.visible
           expect($button).to.have.text('Sign up')
@@ -29,7 +29,7 @@ describe(`User signup & login at ${url}`, () => {
       })
 
       it('should have another signup button', () => {
-        const button = cy.get('.btn-primary').eq(3)
+        const button = cy.get('#signupcontent')
         button.should($button => {
           expect($button).to.be.visible
           expect($button).to.contain.text('Sign up')
@@ -37,12 +37,12 @@ describe(`User signup & login at ${url}`, () => {
       })
 
       it('should go to signup page by clicking on first signup button', () => {
-        cy.get('.btn-primary').first().click()
+        cy.get('.btn-primary#signup').click()
         cy.url().should('include', '/register')
       })
 
       it('should go to signup page by clicking on second signup button', () => {
-        cy.get('.btn-primary').eq(3).click()
+        cy.get('#signupcontent').click()
         cy.url().should('include', '/register')
       })
     })

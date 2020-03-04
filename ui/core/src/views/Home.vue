@@ -6,9 +6,7 @@
       <div class="col text-center">
         <h1 class="mb-3">{{$t('Proxeus Platform Title', 'Proxeus Platform')}}</h1>
         <p class="mb-3">{{$t('Proxeus Platform Description', 'Proxeus is all about document-centered processes that interact with the Blockchain. Our app lets you drag & drop a workflow in the wink of an eye. Proxeus workflows may comprise forms, document templates and conditions. Proxeus enables you to create tamper-proof and easily verifiable documents by registering them on the Ethereum Blockchain.')}}</p>
-        <a href="/register" class="btn btn-lg btn-primary">
-          {{$t('Sign up', 'Sign up')}}
-        </a>
+        <a href="/register" class="btn btn-lg btn-primary" id="signupcontent">{{$t('Sign up', 'Sign up')}}</a>
       </div>
     </div>
     <hr class="mt-5"/>

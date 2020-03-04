@@ -14,7 +14,7 @@
                    :placeholder="$t('Password')" required autofocus>
           </div>
           <div v-show="pwResetRequest" class="form-group">
-            <a href="/register" class="">{{$t('Sign up')}}</a>
+            <a href="/register" class="" id="signupcontent">{{$t('Sign up')}}</a>
           </div>
           <span class="text-muted"
                 style="display: inline-block;">{{$t('Set password explanation', 'Set a password by clicking the button below.')}}</span>
