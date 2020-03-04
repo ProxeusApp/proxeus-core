@@ -293,6 +293,7 @@ func (me *WorkflowPaymentsDB) Delete(paymentId string) error {
 	return tx.Commit()
 }
 
+// Remove removes a workflow payment item
 func (me *WorkflowPaymentsDB) Remove(payment *model.WorkflowPaymentItem) error {
 	return me.db.DeleteStruct(payment)
 }
@@ -336,6 +337,7 @@ func (me *WorkflowPaymentsDB) Update(paymentId, status, txHash, from string) err
 	return tx.Commit()
 }
 
+// Close closes the database
 func (me *WorkflowPaymentsDB) Close() error {
 	return me.db.Close()
 }

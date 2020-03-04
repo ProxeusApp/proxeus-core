@@ -78,7 +78,9 @@ func (me *FakeETHClient) PendingCodeAt(ctx context.Context, account common.Addre
 func (me *FakeETHClient) PendingNonceAt(ctx context.Context, account common.Address) (uint64, error) {
 	panic("implement me")
 }
-func (me *FakeETHClient) SuggestGasPrice(ctx context.Context) (*big.Int, error) { panic("implement me") }
+func (me *FakeETHClient) SuggestGasPrice(ctx context.Context) (*big.Int, error) {
+	panic("implement me")
+}
 func (me *FakeETHClient) EstimateGas(ctx context.Context, call ethereum.CallMsg) (gas uint64, err error) {
 	panic("implement me")
 }

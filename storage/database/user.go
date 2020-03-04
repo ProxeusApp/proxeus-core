@@ -67,6 +67,7 @@ func NewUserDB(c DBConfig, fileDB storage.FilesIF) (*UserDB, error) {
 	return udb, nil
 }
 
+// GetBaseFilePath returns the base file path
 func (me *UserDB) GetBaseFilePath() string {
 	return me.baseFilePath
 }
@@ -205,6 +206,7 @@ func (me *UserDB) DeleteApiKey(auth model.Auth, userId, hiddenApiKey string) err
 	return tx.Commit()
 }
 
+// Count returns the user count
 func (me *UserDB) Count() (int, error) {
 	return me.db.Count(&model.User{})
 }
@@ -508,6 +510,7 @@ func (me *UserDB) PutProfilePhoto(auth model.Auth, id string, reader io.Reader) 
 	return me.fileDB.Write(me.fullPhotoPath(u), reader)
 }
 
+// Close closes the database
 func (me *UserDB) Close() error {
 	return me.db.Close()
 }
