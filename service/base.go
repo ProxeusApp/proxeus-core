@@ -3,6 +3,7 @@ package service
 import (
 	"github.com/ProxeusApp/proxeus-core/storage"
 	"github.com/ProxeusApp/proxeus-core/sys"
+	"github.com/ProxeusApp/proxeus-core/sys/email"
 )
 
 var system *sys.System
@@ -49,4 +50,8 @@ func signatureRequestDB() storage.SignatureRequestsIF {
 
 func sessionDB() storage.SessionIF {
 	return system.DB.Session
+}
+
+func emailSender() email.EmailSender {
+	return system.EmailSender
 }
