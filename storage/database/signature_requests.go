@@ -113,6 +113,7 @@ func (me *SignatureRequestsDB) SetRevoked(docid string, docpath string, signator
 	return err
 }
 
+// Close closes the database
 func (me *SignatureRequestsDB) Close() error {
 	return me.db.Close()
 }

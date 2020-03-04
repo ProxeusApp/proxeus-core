@@ -81,7 +81,7 @@ func (me *DocTemplateDB) List(auth model.Auth, contains string, options storage.
 	return items, nil
 }
 
-// Get retrieves a sinlge template item using its key
+// Get retrieves a single template item using its key
 func (me *DocTemplateDB) Get(auth model.Auth, id string) (*model.TemplateItem, error) {
 	var item model.TemplateItem
 	err := me.db.One("ID", id, &item)
@@ -98,12 +98,13 @@ func (me *DocTemplateDB) Get(auth model.Auth, id string) (*model.TemplateItem, e
 	return itemRef, nil
 }
 
+// ProvideFileInfoFor returns the fileinfo for a file
 // On return, n == len(buf) if and only if err == nil.
 func (me *DocTemplateDB) ProvideFileInfoFor(auth model.Auth, id, lang string, fm *file.Meta) (*file.IO, error) {
 	return me.getFileInfoFor(auth, id, lang, fm)
 }
 
-// PutVars inserts a new variable into the databse
+// PutVars inserts a new variable into the database
 func (me *DocTemplateDB) PutVars(auth model.Auth, id, lang string, vars []string) error {
 	tx, err := me.db.Begin(true)
 	if err != nil {
@@ -117,6 +118,7 @@ func (me *DocTemplateDB) PutVars(auth model.Auth, id, lang string, vars []string
 	return tx.Commit()
 }
 
+// GetTemplate returns the file template
 func (me *DocTemplateDB) GetTemplate(auth model.Auth, id, lang string) (*file.IO, error) {
 	return me.getFileInfoFor(auth, id, lang, nil)
 }
@@ -198,6 +200,7 @@ func (me *DocTemplateDB) DeleteTemplate(auth model.Auth, files storage.FilesIF, 
 	return os.ErrNotExist
 }
 
+//Put inserts a template item
 func (me *DocTemplateDB) Put(auth model.Auth, item *model.TemplateItem) error {
 	return me.put(auth, item, true)
 }
@@ -291,6 +294,7 @@ func (me *DocTemplateDB) Vars(auth model.Auth, contains string, options storage.
 	return getVars(contains, params.limit, params.index, tx)
 }
 
+// Close closes the databases
 func (me *DocTemplateDB) Close() error {
 	return me.db.Close()
 }

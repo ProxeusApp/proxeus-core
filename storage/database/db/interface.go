@@ -1,5 +1,4 @@
-//todo docs
-
+// Package db holds the database layer for the Proxeus core
 package db
 
 import (
@@ -19,8 +18,14 @@ type DB interface {
 
 	// Begin starts a new transaction
 	Begin(writable bool) (DB, error)
+
+	// WithBatch returns a new Node with the batch mode enabled.
 	WithBatch(enabled bool) DB
+
+	// Rollback rolls back the transaction
 	Rollback() error
+
+	// Commit commits the transaction
 	Commit() error
 
 	// Select a list of records that match a list of matchers.

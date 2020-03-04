@@ -35,20 +35,24 @@ func NewSessionDB(c DBConfig, sessionExpiration, tokenExpiration time.Duration) 
 	}, nil
 }
 
+// Get returns a session
 func (d *SessionDB) Get(sid string) (*model.Session, error) {
 	var s model.Session
 	err := d.db.Get(sessionBucket, sid, &s)
 	return &s, err
 }
 
+// Put inserts a session
 func (d *SessionDB) Put(s *model.Session) error {
 	return d.db.Set(sessionBucket, s.ID, s, db.OptionWithTTL(d.sessionExpiration))
 }
 
+// Delete removes a session
 func (d *SessionDB) Delete(s *model.Session) error {
 	return d.db.Delete(sessionBucket, s.ID)
 }
 
+// GetTokenRequest returns a token request
 func (d *SessionDB) GetTokenRequest(t model.TokenType, id string) (*model.TokenRequest, error) {
 	var s model.TokenRequest
 	err := d.db.Get(tokenBucket, id, &s)
@@ -60,20 +64,28 @@ func (d *SessionDB) GetTokenRequest(t model.TokenType, id string) (*model.TokenR
 	}
 	return &s, nil
 }
+
+// PutTokenRequest inserts a token request
 func (d *SessionDB) PutTokenRequest(r *model.TokenRequest) error {
 	return d.db.Set(tokenBucket, r.Token, r, db.OptionWithTTL(d.tokenExpiration))
 }
 
+// DeleteTokenRequest removes a token request
 func (d *SessionDB) DeleteTokenRequest(r *model.TokenRequest) error {
 	return d.db.Delete(tokenBucket, r.Token)
 }
 
+// GetValue returns the value for the provided key
 func (d *SessionDB) GetValue(key string, v interface{}) error {
 	return d.db.Get(valueBucket, key, v)
 }
+
+// PutValue sets the value for a key
 func (d *SessionDB) PutValue(key string, v interface{}) error {
 	return d.db.Set(valueBucket, key, v, db.OptionWithTTL(d.sessionExpiration))
 }
+
+// DeleteValue removes the value of a key
 func (d *SessionDB) DeleteValue(key string) error {
 	return d.db.Delete(valueBucket, key)
 }

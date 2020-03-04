@@ -315,7 +315,7 @@ func (me *I18nDB) GetAllLangs() ([]*model.Lang, error) {
 
 const fallback = "fallback"
 
-// PutFallback sets a spcificic language as default/fallback
+// PutFallback sets a specific language as default/fallback
 func (me *I18nDB) PutFallback(lang string) error {
 	if !me.langReg.MatchString(lang) {
 		return os.ErrInvalid
@@ -337,6 +337,7 @@ func (me *I18nDB) GetFallback() (string, error) {
 	return l, nil
 }
 
+// Close closes the database
 func (me *I18nDB) Close() error {
 	return me.db.Close()
 }

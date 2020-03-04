@@ -71,4 +71,5 @@ func (d *FileDB) Delete(path string) error {
 	return d.db.Delete("storedFile", path)
 }
 
+// Close closes the database
 func (d *FileDB) Close() error { return d.db.Close() }
