@@ -223,16 +223,6 @@ const workflow2Data = `{
             }
           ]
         },
-        "1234123-1234124": {
-          "id": "1234123-1234124",
-          "name": "Mail Sender",
-          "detail": "sends an email",
-          "type": "mailsender",
-          "p": {
-            "x": 388,
-            "y": -94
-          }
-        },
         "14_49lea1daf77": {
           "id": "14_49lea1daf77",
           "name": "condition",
