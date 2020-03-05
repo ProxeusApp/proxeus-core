@@ -104,6 +104,8 @@ license:
 
 .PHONY: doc
 doc: init
+	(echo "Checking wget is installed... " && which wget ) || ( echo "Please install wget before continuing" && exit 1)
+
 	$(eval serverurl=localhost:6060)
 	$(DOCKER) run --rm -e "GOPATH=/tmp/go" --name "godoc" -p 6060:6060 -v ${PWD}:/tmp/go/src/github.com/ProxeusApp/proxeus-core golang bash -c "go get golang.org/x/tools/cmd/godoc && /tmp/go/bin/godoc -http=:6060" &
 	# Download css & js first

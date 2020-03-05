@@ -15,6 +15,7 @@ Here is the list of dependencies:
 + vue-cli
 + git
 + docker-compose (18.06.0+)
++ wget (for godoc generation)
 + (OSX) Brew Package Manager
 + (OSX) Command Line Tools (Xcode)
 
