@@ -136,7 +136,6 @@ func (me *DocumentFlowInstance) init(wfd *workflow.Workflow, state []workflow.St
 		State:       state,
 		GetData:     me.getData, // for condition execution
 		NodeImpl: map[string]*workflow.NodeDef{
-			"mailsender":     {InitImplFunc: me.newMailSender, Background: true},
 			"priceretriever": {InitImplFunc: me.newPriceRetriever, Background: true},
 			"externalNode":   {InitImplFunc: me.newExternalNode, Background: true},
 			"form":           {InitImplFunc: me.newFormNodeImpl, Background: false},
@@ -205,10 +204,6 @@ func (me *DocumentFlowInstance) getDataFor(id string) (map[string]interface{}, e
 
 func (me *DocumentFlowInstance) getDataByPath(dataPath string) (interface{}, error) {
 	return me.system.DB.UserData.GetData(me.auth, me.DataID, dataPath)
-}
-
-func (me *DocumentFlowInstance) newMailSender(n *workflow.Node) (workflow.NodeIF, error) {
-	return &mailSenderNode{ctx: me}, nil
 }
 
 func (me *DocumentFlowInstance) newPriceRetriever(n *workflow.Node) (workflow.NodeIF, error) {

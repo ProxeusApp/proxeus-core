@@ -14,13 +14,6 @@ import (
 func List(c *www.Context, nodeType string) []*workflow.Node {
 	var nodes []*workflow.Node
 	switch nodeType {
-	case "mailsender":
-		nodes = append(nodes, &workflow.Node{
-			ID:     "1234123-1234124",
-			Name:   "Mail Sender",
-			Detail: "sends an email",
-			Type:   "mailsender",
-		})
 	case "priceretriever":
 		nodes = append(nodes, &workflow.Node{
 			ID:     "3",
