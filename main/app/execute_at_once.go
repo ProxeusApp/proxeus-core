@@ -53,9 +53,6 @@ func ExecuteWorkflowAtOnce(c *www.Context, a model.Auth, wfi *model.WorkflowItem
 		},
 		GetData: eaoc.getData,
 		NodeImpl: map[string]*workflow.NodeDef{
-			"mailsender": {InitImplFunc: func(n *workflow.Node) (workflow.NodeIF, error) {
-				return &mailSenderNode{ctx2: eaoc}, nil
-			}, Background: true},
 			"priceretriever": {InitImplFunc: func(n *workflow.Node) (workflow.NodeIF, error) {
 				return &priceRetrieverNode{ctx2: eaoc}, nil
 			}, Background: true},
