@@ -63,7 +63,6 @@ func getSessionWithUser(c *Context, create bool, usr *model.User) (currentSessio
 			sess.Values["id"] = currentSession.S.ID
 			options := sessions.Options{
 				Path:     "/",
-				MaxAge:   60 * 30, // 30 minutes,
 				HttpOnly: true,
 				SameSite: http.SameSiteStrictMode,
 				Secure:   true,
