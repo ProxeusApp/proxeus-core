@@ -43,8 +43,7 @@ func TestUser(t *testing.T) {
 	Expect(us.GetByEmail(email)).To(equalJSON(item))
 	Expect(us.Count()).To(Equal(2))
 	Expect(us.List(dummySuperAdmin, email, options)).To(equalJSON([]*model.User{item}))
-	_, err := us.List(dummy, email, options)
-	Expect(err).To(HaveOccurred())
+	Expect(us.List(dummy, email, options)).To(equalJSON([]*model.User{item}))
 
 	// profile photo
 	phData := []byte("img_data")
@@ -53,7 +52,7 @@ func TestUser(t *testing.T) {
 	buf.Reset()
 	Expect(us.GetProfilePhoto(dummySuperAdmin, item.ID, buf)).To(Succeed())
 	Expect(buf.Bytes()).To(Equal(phData))
-	_, err = us.List(dummySuperAdmin, "", options)
+	_, err := us.List(dummySuperAdmin, "", options)
 	Expect(err).To(Succeed())
 
 	// api keys

@@ -235,7 +235,10 @@ func (me *UserDB) List(auth model.Auth, contains string, options storage.Options
 		} else {
 			matchers = append(matchers,
 				q.And(
-					q.Eq("WantToBeFound", true),
+					q.Or(
+						q.Eq("WantToBeFound", true),
+						q.Eq("ID", auth.UserID()),
+					),
 					q.Or(
 						q.Re("Email", contains),
 						q.Re("Name", contains),
@@ -248,7 +251,11 @@ func (me *UserDB) List(auth model.Auth, contains string, options storage.Options
 	} else {
 		if !auth.AccessRights().IsGrantedForUserModifications() {
 			matchers = append(matchers,
-				q.Eq("WantToBeFound", true))
+				q.Or(
+					q.Eq("WantToBeFound", true),
+					q.Eq("ID", auth.UserID()),
+				),
+			)
 		}
 	}
 	if len(params.exclude) > 0 {
