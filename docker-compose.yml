@@ -95,3 +95,20 @@ services:
       TZ: Europe/Zurich
     ports:
       - "8012:8012"
+
+  node-proof-of-existence:
+    image: proxeus/node-proof-of-existence:latest
+    container_name: xes_node-proof-of-existence
+    networks:
+      - xes-platform-network
+    restart: unless-stopped
+    environment:
+      PROXEUS_INSTANCE_URL: "${PROXEUS_PLATFORM_DOMAIN:-http://xes-platform:1323}"
+      SERVICE_SECRET: secret
+      SERVICE_PORT: 8014
+      SERVICE_URL: "${SERVICE_DOMAIN:-http://node-proof-of-existence:8014}"
+      TWITTER_CONSUMER_KEY: ${TWITTER_CONSUMER_KEY}
+      TWITTER_CONSUMER_SECRET: ${TWITTER_CONSUMER_SECRET}
+      TZ: Europe/Zurich
+    ports:
+      - "8014:8014"
