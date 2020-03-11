@@ -9,13 +9,21 @@
   </main>
   <div class="container-fluid" v-if="showFooter === true">
     <div class="row">
-      <div class="footer p-3 col-sm-12 d-flex justify-content-center">
-        <a target="_blank"
-           v-bind:href="$t('Handbook url')"
-           class="footer-link">Handbook
-        </a>
-        <a target="_blank" href="https://proxeus.com/en/privacy-policy/" class="footer-link ml-3">Privacy Policy</a>
-        <a target="_blank" v-bind:href="$t('Terms & Conditions link')" class="footer-link ml-3">Terms & Conditions</a>
+      <div class="footer p-3 col-sm-12 d-flex justify-content-between">
+        <div></div>
+        <div>
+            <a target="_blank"
+               v-bind:href="$t('Handbook url')"
+               class="footer-link">Handbook
+            </a>
+            <a target="_blank" href="https://proxeus.com/en/privacy-policy/" class="footer-link ml-3">Privacy Policy</a>
+            <a target="_blank" v-bind:href="$t('Terms & Conditions link')" class="footer-link ml-3">Terms & Conditions</a>
+        </div>
+        <div>
+            <a target="_blank" href="https://proxeus.com/" class="footer-link ml-3 small">
+              {{$t('Powered by')}} <img src="/static/proxeus-logo-white.svg" alt="" />
+            </a>
+        </div>
       </div>
     </div>
   </div>
@@ -123,12 +131,19 @@ export default {
     bottom: 0;
     position: fixed;
     background: $primary;
+    div {
+      min-width: 200px;
+    }
   }
 
   .footer-link {
     color: white;
     &:hover {
       color: $gray-300;
+    }
+    img {
+      height: 20px;
+      margin-left: 5px;
     }
   }
 
