@@ -1,6 +1,6 @@
 # How to generate the ACKNOWLEDGEMENTS file 
 
-The acknowledgement file is constructed automatically using the `create_acknowledgemen.sh` bash script.
+The acknowledgement file is constructed automatically using the `create_acknowledgement.sh` bash script.
 
 ## Dependencies
 
@@ -24,5 +24,4 @@ Run the following command to generate the acknowledgement file:
 ```
 ./create_acknowledgment.sh > ACKNOWLEDGEMENTS
 ```
-
 
