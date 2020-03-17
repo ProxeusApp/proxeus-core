@@ -116,11 +116,9 @@ The user manual is available here: [User Manual](https://docs.google.com/documen
 ## Contributing
 
 As an open-source project, we welcome any kind of community involvement, whether that is by contributing code, reporting issues or 
-engaging in insightful discussions. Especially, we are looking forward to receiving contributions for custom workflow nodes.
+engaging in insightful discussions. Especially, we are looking forward to receiving contributions for external workflow nodes.
 
-See the [coding style](coding_style.md) section for instructions on the coding style we use.
-
-Please use our support@proxeus.com email to open improvement and bug tickets.
+See the [Contributing](docs/contributing.md) section for instructions on how to contribute.
 
 ### Security Issues
 
