@@ -39,7 +39,7 @@
     - [Custom Workflow Nodes](custom_workflow_nodes.md)
 
 - [Contributing](contributing.md)
-
+    - [Code of Conduct](code_of_conduct.md)
     - [Coding Style](coding_style.md)
 
 - [FAQ](faq.md)
