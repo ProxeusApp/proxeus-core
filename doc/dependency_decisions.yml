@@ -210,13 +210,13 @@
     :versions: []
     :when: 2019-12-19 15:19:28.739783000 Z
 - - :approve
-  - ithub.com/mattn/go-colorable
+  - github.com/mattn/go-colorable
   - :who: emeka.mosanya@blockfactory.com
     :why: MIT
     :versions: []
     :when: 2019-12-19 15:19:45.808702000 Z
 - - :approve
-  - ithub.com/mattn/go-colorable
+  - github.com/mattn/go-colorable
   - :who: emeka.mosanya@blockfactory.com
     :why: MIT
     :versions: []
@@ -531,11 +531,11 @@
   - github.com/hashicorp/golang-lru
   - :who: 
     :why: MPL-2.0 ExhB dependency of LGPL-3.0 library
-    :versions: []
+    versions: []
     :when: 2020-02-18 08:20:21.193487000 Z
 - - :approve
-  - github.com/ProxeusApp/proxeus-core/externalnode
+  - github.com/onsi/ginkgo
   - :who: 
-    :why: GPL-3.0
+    :why: MIT
     :versions: []
-    :when: 2020-02-18 08:20:54.597848000 Z
+    :when: 2020-03-17 08:04:02.171490000 Z
