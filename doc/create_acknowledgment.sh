@@ -2,6 +2,7 @@
 
 # Comand line tool to generate the ACKNOWLEDGEMENT file
 #
+# hub api user 
 # ./create_acknowledgment.sh <path to dependency_decisions.yml file> ACKNOWLEDGEMENT
 
 set -o nounset -o errexit -o pipefail 
@@ -9,6 +10,7 @@ set -o nounset -o errexit -o pipefail
 which hub > /dev/null || echo Please install the hub command line tool from https://hub.github.com
 which yq > /dev/null || echo Please install the yq YAML command line tool from https://github.com/kislyuk/yq
 which jq > /dev/null || echo Please install the jq JSON command line tool from https://stedolan.github.io/jq
+which curl > /dev/null || echo Please install the curl command line tool from https://curl.haxx.se
 
 dependency_file=${1:-dependency_decisions.yml}
 workdir=$(mktemp -d /tmp/create-acknowledgement.XXXXX)
@@ -18,7 +20,7 @@ if [[ `uname` == "Darwin" ]]
 then
     MD5="md5 -rq"
 else
-    MD5="mdsum"
+    MD5="md5sum"
 fi
 
 # module to git repo map
@@ -81,6 +83,8 @@ license() {
     echo
 }
 
+# Authenticate to get github API access.
+hub api user
 
 for repo in `cat "${dependency_file}" | yq -r .[][1]`
 do
