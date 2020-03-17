@@ -6,9 +6,9 @@
 
 set -o nounset -o errexit -o pipefail 
 
-which hub || echo Please install the hub command line tool from https://hub.github.com
-which yq || echo Please install the yq YAML command line tool from https://github.com/kislyuk/yq
-which jq || echo Please install the jq JSON command line tool from https://stedolan.github.io/jq
+which -s hub || echo Please install the hub command line tool from https://hub.github.com
+which -s yq || echo Please install the yq YAML command line tool from https://github.com/kislyuk/yq
+which -s jq || echo Please install the jq JSON command line tool from https://stedolan.github.io/jq
 
 dependency_file=${1:-dependency_decisions.yml}
 workdir=$(mktemp -d /tmp/create-acknowledgement.XXXXX)

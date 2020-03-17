@@ -1,6 +1,3 @@
-/usr/local/bin/hub
-/usr/local/bin/yq
-/usr/local/bin/jq
 ############################################
 Project name : DataDog/zstd
 Project repository: https://github.com/DataDog/zstd
