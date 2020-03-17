@@ -6,17 +6,24 @@
 
 set -o nounset -o errexit -o pipefail 
 
-which -s hub || echo Please install the hub command line tool from https://hub.github.com
-which -s yq || echo Please install the yq YAML command line tool from https://github.com/kislyuk/yq
-which -s jq || echo Please install the jq JSON command line tool from https://stedolan.github.io/jq
+which hub > /dev/null || echo Please install the hub command line tool from https://hub.github.com
+which yq > /dev/null || echo Please install the yq YAML command line tool from https://github.com/kislyuk/yq
+which jq > /dev/null || echo Please install the jq JSON command line tool from https://stedolan.github.io/jq
 
 dependency_file=${1:-dependency_decisions.yml}
 workdir=$(mktemp -d /tmp/create-acknowledgement.XXXXX)
 trap "rm -fr ${workdir}; exit" INT TERM EXIT
 
+if [[ `uname` == "Darwin" ]]
+then
+    MD5="md5 -rq"
+else
+    MD5="mdsum"
+fi
+
 # module to git repo map
 key(){
-    echo $(md5 -rq -s $1)
+    echo $1 | ${MD5} | cut -f1 -d" "
 }
 
 map(){
