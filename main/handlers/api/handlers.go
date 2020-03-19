@@ -1471,11 +1471,14 @@ func DocumentPreviewHandler(e echo.Context) error {
 	format := c.Param("format")
 
 	previewResponse, err := documentService.Preview(c.Session(false), ID, tmplID, lang, format)
-	if os.IsNotExist(err) {
-		if err, ok := err.(net.Error); ok && err.Timeout() {
-			return c.NoContent(http.StatusServiceUnavailable)
+	if err != nil {
+		if os.IsNotExist(err) {
+			if err, ok := err.(net.Error); ok && err.Timeout() {
+				return c.NoContent(http.StatusServiceUnavailable)
+			}
+			return c.NoContent(http.StatusBadRequest)
 		}
-		return c.NoContent(http.StatusBadRequest)
+		return c.NoContent(http.StatusInternalServerError)
 	}
 
 	resp := c.Response()
