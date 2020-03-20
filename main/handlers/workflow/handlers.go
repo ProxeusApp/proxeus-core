@@ -177,10 +177,14 @@ func listHandler(c *www.Context, published bool, contains string, settings stora
 		err           error
 		workflowItems []*model.WorkflowItem
 	)
+	sess := c.Session(false)
+	if sess == nil {
+		return c.NoContent(http.StatusUnauthorized)
+	}
 	if published {
-		workflowItems, err = workflowService.ListPublished(c.Session(false), contains, settings)
+		workflowItems, err = workflowService.ListPublished(sess, contains, settings)
 	} else {
-		workflowItems, err = workflowService.List(c.Session(false), contains, settings)
+		workflowItems, err = workflowService.List(sess, contains, settings)
 	}
 	if err != nil {
 		if err == model.ErrAuthorityMissing {
