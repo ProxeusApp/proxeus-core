@@ -132,6 +132,7 @@ func GetExport(e echo.Context) error {
 	var exportEntities []portable.EntityType
 	if strings.ToLower(c.Request().Method) == "get" {
 		spl := strings.Split(c.QueryParam("include"), ",")
+		log.Println("[Export][GET] About to export: ", c.QueryParam("include"))
 		for _, s := range spl {
 			s = strings.TrimSpace(s)
 			entity := portable.StringToEntityType(s)
@@ -140,6 +141,7 @@ func GetExport(e echo.Context) error {
 			}
 		}
 	} else {
+		log.Printf("[Export][POST] exportEntities: %+v", exportEntities)
 		_ = c.Bind(&exportEntities)
 	}
 	if len(exportEntities) == 0 {

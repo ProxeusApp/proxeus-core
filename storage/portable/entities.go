@@ -2,14 +2,13 @@ package portable
 
 import (
 	"fmt"
+	"log"
 	"os"
 	"path/filepath"
 	"strings"
-	"sync"
 
 	"github.com/ProxeusApp/proxeus-core/storage"
 	"github.com/ProxeusApp/proxeus-core/storage/database"
-	"github.com/ProxeusApp/proxeus-core/sys/file"
 	"github.com/ProxeusApp/proxeus-core/sys/form"
 	"github.com/ProxeusApp/proxeus-core/sys/model"
 )
@@ -107,36 +106,20 @@ func (ie *ImportExport) exportTemplate(id ...string) error {
 	}
 	for i := 0; true; i++ {
 		items, err := ie.sysDB.Template.List(ie.auth, "", storage.IndexOptions(i).WithInclude(id))
+		log.Printf("[exportTemplate] found %d files to export", len(items))
 		if err == nil && len(items) > 0 {
-			wg := &sync.WaitGroup{}
-			wg.Add(1)
-			fileCopyErrs := map[string]error{}
-			go func() {
-				for _, item := range items {
-					for _, tmplItem := range item.Data {
-						path := filepath.Join(ie.db.Template.AssetsKey(), tmplItem.PathName())
-						_, err = storage.CopyFileAcross(ie.db.Files, ie.sysDB.Files, path, tmplItem.Path())
-						if err != nil {
-							fileCopyErrs[item.ID] = err
-						}
-					}
-				}
-				wg.Done()
-			}()
-
 			for _, item := range items {
 				if !ie.isProcessed(Template, item.ID) {
+
 					item.Permissions.UserIdsMap(ie.neededUsers)
+					log.Printf("[exportTemplate] put item into export db #1 with name: %s, id: %s", item.Name, item.ID)
+					err := ie.db.Template.Put(ie.auth, item)
 					if err != nil {
 						ie.processedEntry(Template, item.ID, err)
 						continue
 					}
 					ie.processedEntry(Template, item.ID, nil)
 				}
-			}
-			wg.Wait()
-			for k, v := range fileCopyErrs {
-				ie.processedEntry(Template, k, v)
 			}
 		} else {
 			break
@@ -158,8 +141,12 @@ func (ie *ImportExport) importTemplate() error {
 	}
 	for i := 0; true; i++ {
 		items, err := ie.db.Template.List(ie.auth, "", storage.IndexOptions(i))
+
+		log.Printf("[importTemplate] found %d items to process.*", len(items))
+
 		if err == nil && len(items) > 0 {
 			for _, item := range items {
+				log.Printf("[importTemplate] about to import template #1 with name: %s, id: %s", item.Name, item.ID)
 				if ie.skipExistingOnImport {
 					_, err = ie.sysDB.Template.Get(ie.auth, item.ID)
 					if err == nil {
@@ -169,29 +156,12 @@ func (ie *ImportExport) importTemplate() error {
 
 				item.Permissions.UpdateUserID(ie.locatedSameUserWithDifferentID)
 
+				log.Printf("[importTemplate] about to put template item to db: %s, id: %s", item.Name, item.ID)
 				err = ie.sysDB.Template.Put(ie.auth, item)
 				if err != nil {
+					log.Printf("[importTemplate] error on about to put template item to db: %s, id: %s, err: %s", item.Name, item.ID, err)
 					ie.processedEntry(Template, item.ID, err)
 					continue
-				}
-				var fi *file.IO
-				hadError := false
-				for lang, tmplItem := range item.Data {
-					fi, err = ie.sysDB.Template.GetTemplate(ie.auth, item.ID, lang)
-					if err != nil {
-						hadError = true
-						ie.processedEntry(Template, item.ID, err)
-						continue
-					}
-					n, err := storage.CopyFileAcross(ie.sysDB.Files, ie.db.Files, fi.Path(), tmplItem.Path())
-					fi.SetSize(n)
-					if err != nil {
-						hadError = true
-						ie.processedEntry(Template, item.ID, err)
-					}
-				}
-				if !hadError {
-					ie.processedEntry(Template, item.ID, nil)
 				}
 			}
 		} else {
@@ -468,22 +438,7 @@ func (ie *ImportExport) exportUserData(id ...string) error {
 		items, err := ie.sysDB.UserData.List(ie.auth, "", storage.IndexOptions(i).WithInclude(id), true)
 		if err == nil && len(items) > 0 {
 			workflows := map[string]bool{}
-			wg := &sync.WaitGroup{}
-			wg.Add(1)
 			fileCopyErrs := map[string]error{}
-			go func() {
-				for _, item := range items {
-					fios := ie.sysDB.UserData.GetAllFileInfosOf(item)
-					for _, fio := range fios {
-						path := filepath.Join(ie.db.UserData.AssetsKey(), fio.PathName())
-						_, err = storage.CopyFileAcross(ie.db.Files, ie.sysDB.Files, path, fio.Path())
-						if err != nil {
-							fileCopyErrs[item.ID] = err
-						}
-					}
-				}
-				wg.Done()
-			}()
 			for _, item := range items {
 				if !ie.isProcessed(UserData, item.ID) {
 					err = ie.db.UserData.Put(ie.auth, item)
@@ -514,7 +469,6 @@ func (ie *ImportExport) exportUserData(id ...string) error {
 					return err
 				}
 			}
-			wg.Wait()
 			for k, v := range fileCopyErrs {
 				ie.processedEntry(UserData, k, v)
 			}
@@ -853,19 +807,6 @@ func (ie *ImportExport) importUserData() error {
 				if err != nil {
 					ie.processedEntry(UserData, item.ID, err)
 					continue
-				}
-				hadError := false
-				fios := ie.db.UserData.GetAllFileInfosOf(item)
-				for _, fio := range fios {
-					path := filepath.Join(ie.sysDB.UserData.AssetsKey(), fio.PathName())
-					_, err = storage.CopyFileAcross(ie.sysDB.Files, ie.db.Files, path, fio.Path())
-					if err != nil {
-						hadError = true
-						ie.processedEntry(UserData, item.ID, err)
-					}
-				}
-				if !hadError {
-					ie.processedEntry(UserData, item.ID, nil)
 				}
 			}
 		} else {
