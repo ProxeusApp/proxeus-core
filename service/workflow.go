@@ -4,8 +4,6 @@ import (
 	"log"
 	"strings"
 
-	"github.com/ProxeusApp/proxeus-core/sys"
-
 	extNode "github.com/ProxeusApp/proxeus-core/externalnode"
 	"github.com/ProxeusApp/proxeus-core/storage"
 	"github.com/ProxeusApp/proxeus-core/sys/model"
@@ -62,17 +60,11 @@ func NewWorkflowService(userService UserService) *DefaultWorkflowService {
 
 // List returns a list of all WorkflowItem that match "contains" and the provided storage.Options
 func (me *DefaultWorkflowService) List(auth model.Auth, contains string, options storage.Options) ([]*model.WorkflowItem, error) {
-	if auth.(*sys.Session) == nil {
-		return nil, model.ErrAuthorityMissing
-	}
 	return workflowDB().List(auth, contains, options)
 }
 
 // ListPublished returns a list of published WorkflowItem that match "contains" and the provided storage.Options
 func (me *DefaultWorkflowService) ListPublished(auth model.Auth, contains string, options storage.Options) ([]*model.WorkflowItem, error) {
-	if auth.(*sys.Session) == nil {
-		return nil, model.ErrAuthorityMissing
-	}
 	return workflowDB().ListPublished(auth, contains, options)
 }
 
