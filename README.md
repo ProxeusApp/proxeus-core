@@ -133,4 +133,12 @@ For more info check the [XES-Payment Readme](docs/xes-payment.md).
 ### Smart contracts & Solidity
 For more info check the [Smart contracts & Solidity Readme](https://github.com/ProxeusApp/proxeus-contract).
 
+## License
 
+Licensed under the GNU GENERAL PUBLIC LICENSE. You may read a copy of the License [here](LICENSE)
+
+## Acknowledgements
+
+Like so many projects, this effort has roots in many places. 
+
+The list can be found [here](ACKNOWLEDGEMENTS)
