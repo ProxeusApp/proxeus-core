@@ -35,7 +35,7 @@ services:
       - ${PROXEUS_DATA_DIR:-./data}/proxeus-platform/settings:/root/.proxeus/settings
 
   document-service:
-    image: proxeus/document-service:latest
+    image: proxeus/document-service:staging
     container_name: xes_document_service
     networks:
       - xes-platform-network
