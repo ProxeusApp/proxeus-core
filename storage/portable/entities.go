@@ -2,6 +2,7 @@ package portable
 
 import (
 	"fmt"
+	"log"
 	"os"
 	"path/filepath"
 	"strings"
@@ -107,6 +108,7 @@ func (ie *ImportExport) exportTemplate(id ...string) error {
 	}
 	for i := 0; true; i++ {
 		items, err := ie.sysDB.Template.List(ie.auth, "", storage.IndexOptions(i).WithInclude(id))
+		log.Printf("[exportTemplate] found %d items for export", len(items))
 		if err == nil && len(items) > 0 {
 			wg := &sync.WaitGroup{}
 			wg.Add(1)
@@ -115,8 +117,10 @@ func (ie *ImportExport) exportTemplate(id ...string) error {
 				for _, item := range items {
 					for _, tmplItem := range item.Data {
 						path := filepath.Join(ie.db.Template.AssetsKey(), tmplItem.PathName())
+						log.Printf("[exportTemplate] exporting dstPath: %s | srcPath: %s ", path, tmplItem.Path())
 						_, err = storage.CopyFileAcross(ie.db.Files, ie.sysDB.Files, path, tmplItem.Path())
 						if err != nil {
+							log.Printf("[exportTemplate] storage.CopyFileAcross error | item.ID : %s,tmplItem.Name: %s | dstPath: %s | srcPath: %s | err: %s", item.ID, tmplItem.Name(), path, tmplItem.Path(), err.Error())
 							fileCopyErrs[item.ID] = err
 						}
 					}
@@ -126,6 +130,11 @@ func (ie *ImportExport) exportTemplate(id ...string) error {
 
 			for _, item := range items {
 				if !ie.isProcessed(Template, item.ID) {
+					err = ie.db.Template.Put(ie.auth, item)
+					if err != nil {
+						ie.processedEntry(Template, item.ID, err)
+						continue
+					}
 					item.Permissions.UserIdsMap(ie.neededUsers)
 					if err != nil {
 						ie.processedEntry(Template, item.ID, err)
@@ -158,6 +167,7 @@ func (ie *ImportExport) importTemplate() error {
 	}
 	for i := 0; true; i++ {
 		items, err := ie.db.Template.List(ie.auth, "", storage.IndexOptions(i))
+		log.Printf("[importTemplate] found %d items for import", len(items))
 		if err == nil && len(items) > 0 {
 			for _, item := range items {
 				if ie.skipExistingOnImport {
@@ -176,16 +186,21 @@ func (ie *ImportExport) importTemplate() error {
 				}
 				var fi *file.IO
 				hadError := false
+				log.Printf("[importTemplate] found %d items.Data for import", len(item.Data))
 				for lang, tmplItem := range item.Data {
+					log.Printf("[importTemplate] about to import lang: %s | tmplItem: %s", lang, tmplItem)
 					fi, err = ie.sysDB.Template.GetTemplate(ie.auth, item.ID, lang)
 					if err != nil {
+						log.Printf("[importTemplate] ie.sysDB.Template.GetTemplate error | item.ID : %s,tmplItem.Name: %s | err: %s", item.ID, tmplItem.Name(), err.Error())
 						hadError = true
 						ie.processedEntry(Template, item.ID, err)
 						continue
 					}
+					log.Printf("[importTemplate] importing dstPath: %s | srcPath: %s ", fi.Path(), tmplItem.Path())
 					n, err := storage.CopyFileAcross(ie.sysDB.Files, ie.db.Files, fi.Path(), tmplItem.Path())
 					fi.SetSize(n)
 					if err != nil {
+						log.Printf("[importTemplate] storage.CopyFileAcross error | item.ID : %s,tmplItem.Name: %s | err: %s", item.ID, tmplItem.Name(), err.Error())
 						hadError = true
 						ie.processedEntry(Template, item.ID, err)
 					}
@@ -839,6 +854,7 @@ func (ie *ImportExport) importUserData() error {
 	}
 	for i := 0; true; i++ {
 		items, err := ie.db.UserData.List(ie.auth, "", storage.IndexOptions(i), true)
+		log.Printf("[importUserData] found %d items for import", len(items))
 		if err == nil && len(items) > 0 {
 			for _, item := range items {
 				if ie.skipExistingOnImport {
@@ -856,6 +872,7 @@ func (ie *ImportExport) importUserData() error {
 				}
 				hadError := false
 				fios := ie.db.UserData.GetAllFileInfosOf(item)
+				log.Printf("[importUserData] found %d fileInfos(fios) for import", len(fios))
 				for _, fio := range fios {
 					path := filepath.Join(ie.sysDB.UserData.AssetsKey(), fio.PathName())
 					_, err = storage.CopyFileAcross(ie.sysDB.Files, ie.db.Files, path, fio.Path())

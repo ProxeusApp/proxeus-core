@@ -232,6 +232,10 @@ func (me *System) Export(writer io.Writer, s *Session, entities []portable.Entit
 		return nil, err
 	}
 	defer ie.Close()
+	err = ie.InitFilesDB()
+	if err != nil {
+		return nil, err
+	}
 	for _, entity := range entities {
 		err = ie.Export(entity)
 		if err != nil {
@@ -258,6 +262,10 @@ func (me *System) ExportSingle(writer io.Writer, s *Session, entity portable.Ent
 	dir := filepath.Join(os.TempDir(), s.GetSessionDir())
 	defer os.RemoveAll(dir)
 	ie, err := portable.NewImportExport(s, me.DB, dir)
+	if err != nil {
+		return nil, err
+	}
+	err = ie.InitFilesDB()
 	if err != nil {
 		return nil, err
 	}
@@ -292,6 +300,10 @@ func (me *System) Import(reader io.Reader, s *Session, skipExisting bool) (porta
 	defer ie.Close()
 	ie.SetSkipExistingOnImport(skipExisting)
 	err = ie.Extract(reader)
+	if err != nil {
+		return nil, err
+	}
+	err = ie.InitFilesDB()
 	if err != nil {
 		return nil, err
 	}

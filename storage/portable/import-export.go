@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
+	"log"
 	"os"
 	"path/filepath"
 
@@ -13,8 +14,6 @@ import (
 	"github.com/ProxeusApp/proxeus-core/storage/database"
 	"github.com/ProxeusApp/proxeus-core/sys/model"
 	"github.com/ProxeusApp/proxeus-core/sys/tar"
-
-	uuid "github.com/satori/go.uuid"
 )
 
 var ErrNotProxeusDB = fmt.Errorf("not a Proxeus DB file")
@@ -48,7 +47,6 @@ type importExportMeta struct {
 
 // NewImportExport creates a configuration to import and export database files
 func NewImportExport(auth model.Auth, dbSet *storage.DBSet, dir string) (*ImportExport, error) {
-	u := uuid.NewV4()
 	ie := &ImportExport{
 		sysDB:                          dbSet,
 		db:                             &storage.DBSet{},
@@ -56,7 +54,7 @@ func NewImportExport(auth model.Auth, dbSet *storage.DBSet, dir string) (*Import
 		neededUsers:                    map[string]bool{},
 		locatedSameUserWithDifferentID: map[string]string{},
 	}
-	ie.mainDir = filepath.Join(dir, u.String())
+	ie.mainDir = filepath.Join(dir, "export")
 	ie.dataDir = filepath.Join(ie.mainDir, "data")
 	err := os.MkdirAll(ie.dataDir, 0750)
 	if err != nil {
@@ -65,8 +63,15 @@ func NewImportExport(auth model.Auth, dbSet *storage.DBSet, dir string) (*Import
 	ie.settingsFile = filepath.Join(ie.dataDir, "settings", "main.json")
 	ie.auth = auth
 	ie.dbConfig = database.DBConfig{Engine: "storm", Dir: ie.dataDir}
-	ie.db.Files, err = database.NewFileDB(ie.dbConfig)
 	return ie, err
+}
+
+// Initialized the Files DB
+// Make sure the path exists before opening the db. E.g. in import first unpack the zip to the wanted path then open FileDB
+func (ie *ImportExport) InitFilesDB() error {
+	var err error
+	ie.db.Files, err = database.NewFileDB(ie.dbConfig)
+	return err
 }
 
 func (ie *ImportExport) SetSkipExistingOnImport(yes bool) {
@@ -185,6 +190,7 @@ func (ie *ImportExport) Extract(reader io.Reader) error {
 	var meta importExportMeta
 	err = ie.readProxeusIdentifier(&meta)
 	if err != nil {
+		log.Print("[ImportExport] Extract err: ", err.Error())
 		return ErrNotProxeusDB
 	}
 	return nil
