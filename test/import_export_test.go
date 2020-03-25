@@ -1,13 +1,15 @@
 package test
 
 import (
+	"bytes"
+	"fmt"
+	"github.com/ProxeusApp/proxeus-core/test/assets"
 	"net/http"
 )
 
 func testImportExport(s *session) {
 	u := registerTestUser(s)
 	login(s, u)
-
 	b1 := s.e.GET("/api/export").WithQueryString("include=UserData").
 		Expect().Status(http.StatusOK).Body().Raw()
 	s.e.POST("/api/import").WithQueryString("skipExisting=false").WithBytes([]byte(b1)).
@@ -28,7 +30,6 @@ func exportWorkflow(s *session, w *workflow) []byte {
 			ID:            id,
 			WantToBeFound: true,
 		}).Expect().Status(http.StatusOK)
-
 
 	// export by name
 	b1 := s.e.GET("/api/workflow/export").WithQueryString("include=workflow&contains=" + w.Name).
@@ -98,5 +99,42 @@ func testImportExportAdmin(s *session) {
 func testImportExportRoot(s *session) {
 	login(s, s.root)
 	exportImportEntity(s, "settings")
+	testExportImportTemplate(s)
 	logout(s)
+}
+
+func testExportImportTemplate(s *session) {
+	t1 := createSimpleTemplate(s, s.root, "template1-"+s.id, templateOdtPath)
+
+	// check template does exist
+	s.e.GET(fmt.Sprintf("/api/admin/template/%s", t1.ID)).
+		Expect().Status(http.StatusOK)
+
+	// export new template
+	b1 := s.e.GET("/api/template/export").WithQueryString("id=" + t1.ID).
+		Expect().Status(http.StatusOK).Body().Raw()
+
+	// delete template
+	s.e.GET(fmt.Sprintf("/api/admin/template/%s/delete", t1.ID)).
+		Expect().Status(http.StatusOK).Body().Raw()
+
+	// check template does not exist
+	s.e.GET(fmt.Sprintf("/api/admin/template/%s", t1.ID)).
+		Expect().Status(http.StatusNotFound)
+
+	// import template
+	s.e.POST("/api/import").WithQueryString("skipExisting=false").WithBytes([]byte(b1)).
+		Expect().Status(http.StatusOK)
+
+	// get template file
+	b2 := s.e.GET(fmt.Sprintf("/api/admin/template/download/%s/en", t1.ID)).WithQueryString("raw").
+		Expect().Status(http.StatusOK).Body().Raw()
+
+	odtFileBytes, err := assets.Asset(templateOdtPath)
+	if err != nil {
+		s.t.Errorf("Cannot read asset %s", err)
+	}
+	if !bytes.Equal(odtFileBytes, []byte(b2)) {
+		s.t.Error("Export or import failed. Imported a template but did not find it afterwards")
+	}
 }
