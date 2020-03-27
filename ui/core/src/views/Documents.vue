@@ -28,7 +28,7 @@
     </list-item-dialog>
   </div>
   <first-login-overlay keyz="documents"
-                       preview-url="https://docs.google.com/document/d/1PoJMmdBt8bu1tfqbOBJ3g87V-z1yjBrhlNZpOW2wQWk/preview">
+                       preview-url="$('First login documents', '')">
   </first-login-overlay>
 </div>
 </template>
