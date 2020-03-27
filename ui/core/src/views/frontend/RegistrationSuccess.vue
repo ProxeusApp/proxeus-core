@@ -7,7 +7,7 @@
      href="https://docs.google.com/document/d/1C3B1oNY6lOv8Q_AvbKhwlySrS6qTiRl3raPLV6OXr7w/preview"
      class="btn btn-primary">Handbook
   </a>
-  <a target="_blank" href="https://proxeus.com/en/privacy-policy/" class="btn btn-secondary ml-2">Privacy Policy</a>
+  <a target="_blank" :href="$t('Privacy Policy url','')"  class="btn btn-secondary ml-2">Privacy Policy</a>
 </div>
 </template>
 

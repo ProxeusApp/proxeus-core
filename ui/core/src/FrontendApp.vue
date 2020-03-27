@@ -16,7 +16,7 @@
                v-bind:href="$t('Handbook url')"
                class="footer-link">Handbook
             </a>
-            <a target="_blank" href="https://proxeus.com/en/privacy-policy/" class="footer-link ml-3">Privacy Policy</a>
+            <a target="_blank" :href="$t('Privacy Policy url','')" class="footer-link ml-3">Privacy Policy</a>
           <a target="_blank" v-bind:href="$t('Terms & Conditions link')" class="footer-link ml-3">Terms & Conditions</a>
           <a target="_blank" href="https://github.com/ProxeusApp/proxeus-core/blob/master/LICENSE" class="footer-link ml-3">License</a>
           <a target="_blank" href="https://github.com/ProxeusApp/proxeus-core/blob/master/ACKNOWLEDGEMENTS" class="footer-link ml-3">Acknowledgements</a>
