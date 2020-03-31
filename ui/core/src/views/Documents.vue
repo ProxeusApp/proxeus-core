@@ -28,7 +28,7 @@
     </list-item-dialog>
   </div>
   <first-login-overlay keyz="documents"
-                       preview-url="$('First login documents', '')">
+                       preview-url="$t('First login documents', '')">
   </first-login-overlay>
 </div>
 </template>
