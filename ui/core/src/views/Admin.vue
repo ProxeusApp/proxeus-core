@@ -8,7 +8,7 @@
       </main>
       <first-login-overlay
         keyz="admin"
-        preview-url="$t('First login admin', 'https://docs.google.com/document/d/1ZFWqwSUyCZ9f6Ts2jfFWU1lwegoctWWOjpXtAqP8NUI/preview')">
+        :preview-url="$t('First login admin', 'https://docs.google.com/document/d/1ZFWqwSUyCZ9f6Ts2jfFWU1lwegoctWWOjpXtAqP8NUI/preview')">
       </first-login-overlay>
     </div>
   </div>
