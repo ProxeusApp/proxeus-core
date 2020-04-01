@@ -1,51 +1,51 @@
 # Custom Workflow Nodes
 
-**Note: Creating custom workflow nodes requires access to the source code and will be available at a later time
-when the Proxeus github repositories will be publicly accessible**
+
+Custom workflow nodes are the primary method to extend Proxeus workflow to any use case.
+
+They must be running as an HTTP API, expose the following endpoints
 
 
-Custom workflow nodes are the primary method to extend Proxeus workflow to any use cases.
+| Method | Endpoint         | Description                                                                                   |
+|--------|------------------|-----------------------------------------------------------------------------------------------|
+| POST   | /node/:id/next   | This will receive the data send by Proxeus, will process it and return new data |
+| GET    | /node/:id/config | Read an eventual node configuration                                                                                              |
+| POST   | /node/:id/config | Change an eventual node configuration                                                                                              |
+| POST   | /node/:id/remove | Callback whenever the node is removed from Proxeus' side                                                                                              |
+| POST   | /node/:id/close  | Callback whenever the node is closed from Proxeus' side                                                                                             |
+| GET    | /health          | Proxeus will ping this healthcheck to know whether the node is running. A simple 200 should be returned"               |
 
-They are written in Golang and can
-* read the workflow data, 
-* execute any code and
-* updarte the workflow data.
+and register to Proxeus' via HTTP.
 
-Every node implement the following interface:
+A `POST` to `PROXEUS_URL/api/admin/external/register` sending a JSON in following format should be made to let Proxeus know there's a new node.
 
+```json
+{
+    "id": "any id",
+    "name": "Node name",
+    "detail": "Description",
+    "url": "http://YourNodeUrl.com",
+    "secret": "secret key"
+}
 ```
-NodeIF interface {
-		//Execute is being called when the node becomes the current target, doesn't matter whether it goes forward or backward.
-		//If the node was executed before and returned proceed = false, the same instance is being used again.
-		Execute(node *Node) (proceed bool, err error)
-		//Remove is being called when this node is not part of the path anymore. In other words, when it doesn't exist in the State
-		Remove(node *Node)
-		//Close will be called on the instance before the next node is being executed or when the end is reached
-		//Close is always the last called method either Execute()* -> Close() OR Execute()* -> Remove() -> Close().
-		//Execute() can be called n times before Close() or Remove() as it is controlled by the node impl.
-		//When it is called, the instance is released from the engine.
-		Close()
-	}
+
+To simplify this we provide (Golang only) some functions.
+
+### Register node
+
+Following code will register the node and retry a few times on failure.
+```gotemplate
+externalnode.Register(proxeusUrl, serviceName, serviceUrl, jwtSecret, description)
 ```
 
-## Workflow Context
-
-Each workflow node must have access to the `DocumentFlowInstance` context which gives full access to workflow data.
+For other util functions refer to `github.com/ProxeusApp/proxeus-core/externalnode` package
 
 
-
-<!--
 ## Examples
 
-You can find implementation example of this interface in the Proxeus repository under the [proxeus-core/main/app](https://github.com/ProxeusApp/proxeus-core/tree/master/main/app)
-directory:
+You can find some implementation examples here:
 
-* [mail_sender.go](https://github.com/ProxeusApp/proxeus-core/tree/master/main/app/mail_sender.go) shows how to read data from the workflow,
-* [price_retriever.go](https://github.com/ProxeusApp/proxeus-core/tree/master/main/app/price_retriever.go) shows how to update workflow data.
--->
-
-
-
-
-
-
+* [Balance Retriever](https://github.com/ProxeusApp/node-balance-retriever) retrieves ETH + ERC20 tokens balances
+* [Crypto Forex Rates](https://github.com/ProxeusApp/node-crypto-forex-rates) retrieves USD prices of given tokens
+* [Proof of Existence](https://github.com/ProxeusApp/node-proof-of-existence) proves existence of a tweet
+* [Mail sender](https://github.com/ProxeusApp/node-mail-sender) sends emails
