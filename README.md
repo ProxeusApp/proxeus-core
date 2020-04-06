@@ -7,6 +7,10 @@ Main repository of the proxeus platform.
 Proxeus combines a powerful document automation tool with the wide-ranging
 blockchain functionalities, enabling users to digitize and monetize their IP.
 
+## Source Code
+
+You can access the source code of this application on the [Proxeus GitHub repository](https://github.com/ProxeusApp).
+
 ## Quick Start with docker
 The quickest way to try Proxeus is to use `docker-compose`.
 

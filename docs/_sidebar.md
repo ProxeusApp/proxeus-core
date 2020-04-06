@@ -36,7 +36,9 @@
 
 - Workflow Extension
 
-    - [Custom Workflow Nodes](custom_workflow_nodes.md)
+    - [External Workflow Nodes](external_workflow_nodes.md)
+
+- [Database](database.md)
 
 - [Contributing](contributing.md)
     - [Code of Conduct](code_of_conduct.md)
