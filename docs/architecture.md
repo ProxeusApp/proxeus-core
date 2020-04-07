@@ -4,7 +4,7 @@
 
 Proxeus has a simple layered architecture.  A client, either the Proxeus web application or other client 
 executable access Proxeus Core through an HTTP interface to create and execute workflows.
-Proxeus Core will itself use external resources are the Ethereum blockchain, a database and external workflow 
+Proxeus Core itself will use external resources such as the Ethereum blockchain, a database and external workflow 
 node implementation to serve the client.
 
 Between client requests and the external resources, we have a classical layered architecture with its API, 
