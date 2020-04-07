@@ -23,5 +23,4 @@ Proxeus uses the following external dependencies:
 
 * [Infura](https://infura.io/): Ethereum node as a service. Please follow the [Geth](https://github.com/ethereum/go-ethereum/wiki/Command-Line-Options) or [Parity](https://wiki.parity.io/Parity-Ethereum) documentation for more information.
 * [SparkPost](https://www.sparkpost.com/): Email provider
-* [Metamask](https://metamask.io/): Front-end wallet for authentication, signature and payment.
-
+* [Metamask](https://metamask.io/): Browser wallet for authentication, signature and payment.
