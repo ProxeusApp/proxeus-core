@@ -2,9 +2,12 @@
 
 **By installing and using the Proxeus software you agree with the terms of the [Proxeus License Agreement](license.md).**
 
-The quickest way to try Proxeus is to use `docker-compose`.
+## Source Code
+
+You can access the source code of this application on the [Proxeus GitHub repository](https://github.com/ProxeusApp).
 
 ## Install docker and docker-compose
+The quickest way to try Proxeus is to use `docker-compose`.
 1. [Install Docker Engine](https://docs.docker.com/install/)
 2. [Install docker-compose](https://docs.docker.com/compose/install/)
 
