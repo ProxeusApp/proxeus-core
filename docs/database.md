@@ -8,8 +8,8 @@ Other database can be integrated by implementing the [DB](https://github.com/Pro
 
 ## BoltDB
 
-BoltDB is the default database integration.  It uses the [Storm](https://github.com/asdine/storm) toolkit to provide indexes and improved methods 
-to store and fetch data, and a advanced query system.
+BoltDB is the default database integration.  It uses the [Storm](https://github.com/asdine/storm) toolkit to provide indexes, improved methods 
+to store and fetch data, and an advanced query system.
 
 BoltDB directly stores its data on the filesystem.
 
