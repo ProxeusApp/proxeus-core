@@ -8,8 +8,8 @@ Proxeus Core will itself use external resources are the Ethereum blockchain, a d
 node implementation to serve the client.
 
 Between client requests and the external resources, we have a classical layered architecture with its API, 
-Service and System layers.  The System layer is itself responsible to encapsulate the blockchain, database and 
-external node interfaces and fors a SPI (service programing interface).  Developers can easily create new implementations of those system service layers.
+Service and System layers.  The System layer is itself responsible to encapsulate the blockchain, database, 
+external node interfaces and for a SPI (service programing interface).  Developers can easily create new implementations of those system service layers.
 
 ![architecture_overview](_media/architecture_overview_half.png)
 
