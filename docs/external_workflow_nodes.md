@@ -38,7 +38,7 @@ The JSON data exchanged during a Post to next or when reading/updating the confi
 ### Proxeus Core API
 
 To be available inside Proxeus, an external node must first register to the running Proxeus service using the `/api/admin/external/register`
-endpoint. In addition, the core provides a configuration store internace to simplify external nodes implementation even if they need 
+endpoint. In addition, the core provides a configuration store interface to simplify external nodes implementation even if they need 
 some configuration.  The configuration interface acts a memento: the configuration is not interpreted and returned verbatim.
 
 | Method | Endpoint         | Body | Description |
