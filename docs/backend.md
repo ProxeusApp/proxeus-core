@@ -81,23 +81,3 @@ Close is always the last called method either Execute()* -> Close() OR Execute()
 Execute() can be called n times before Close() or Remove() as it is controlled by the node impl.
 When it is called, the instance is released from the engine.
 
-#### Workflow example usage
-
-![node diagram](_media/workflow_example.png)
-
-Our Pizza application is being initialized as a user would like to order n Pizza’s.
-
-1. The user starts to choose the Pizza’s he likes and provides his address.
-2. The user pays for his order.
-3. A notification is being sent to the Pizza restaurant with the order.
-
-Application:
-
-
-It keeps all the instance specific things we need for node executions and everything else. Like caller, database access and other states. The responsibility of the application context is to provide a meaningful environment for node executions.
-
-Node implementations:
-
-
-In most cases, we need to have a reference of the application instance in the node, so we can change the memory state of the instance, access a database or similar. That’s why we can provide a function that initializes our node implementation at runtime. This way, we can structure the implementations how every we need to.
-
