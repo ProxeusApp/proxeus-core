@@ -203,8 +203,7 @@ func MainHostedAPI(e *echo.Echo, s *www.Security, version string) {
 		{POST, PUBLIC, "/api/admin/template/ide/upload/:id/:lang", template_ide.IdePostUploadHandler}, // Need session
 		{GET, PUBLIC, "/api/admin/template/ide/delete/:id/:lang", template_ide.IdeGetDeleteHandler},   // Need session
 		{GET, PUBLIC, "/api/admin/template/ide/download/:id", template_ide.IdeGetDownloadHandler},     // Need session
-		{GET, CREATOR, "/api/admin/template/ide/tmplAssistanceDownload", template_ide.IdeGetTmpAssDownload},
-		{GET, PUBLIC, "/api/admin/template/ide/form", template_ide.IdeFormHandler}, // Need session
+		{GET, PUBLIC, "/api/admin/template/ide/form", template_ide.IdeFormHandler},                    // Need session
 
 		// external node
 		{POST, PUBLIC, "/api/admin/external/register", api.ExternalRegister},

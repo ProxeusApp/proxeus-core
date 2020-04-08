@@ -218,22 +218,6 @@ func DownloadTemplateHandler(e echo.Context) error {
 	return c.NoContent(http.StatusOK)
 }
 
-// Initiates a template assistant manager download
-func IdeGetTmpAssDownload(e echo.Context) error {
-	c := e.(*www.Context)
-	dsResp, err := templateS.DownloadExtension(c.QueryParam("os"))
-	if err != nil {
-		fmt.Println("after download", err)
-		return err
-	}
-	resp := c.Response()
-	resp.Header().Set("Content-Type", dsResp.Header.Get("Content-Type"))
-	resp.Header().Set("Content-Length", dsResp.Header.Get("Content-Length"))
-	resp.Header().Set("Content-Disposition", dsResp.Header.Get("Content-Disposition"))
-	_, err = io.Copy(resp.Writer, dsResp.Body)
-	return err
-}
-
 // Remove the template with the given ID
 func DeleteHandler(e echo.Context) error {
 	c := e.(*www.Context)
