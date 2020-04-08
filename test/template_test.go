@@ -112,9 +112,6 @@ func templatePreviews(s *session, t *template, f *form) {
 			Status(http.StatusOK).Body().Length().Gt(1000)
 	}
 
-	s.e.GET("/api/admin/template/ide/tmplAssistanceDownload").Expect().
-		Status(http.StatusOK).Body().Length().Gt(1000)
-
 	// check if we can download what we've uploaded
 	odtFileBytes, err := assets.Asset(templateOdtPath)
 	if err != nil {
