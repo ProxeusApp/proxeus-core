@@ -125,10 +125,10 @@ services:
       SERVICE_PORT: 8015
       SERVICE_URL: "${SERVICE_DOMAIN:-http://node-proof-of-existence:8015}"
       JSON_SENDER_URL: http://url:123/endpoint
-      JSON_SENDER_CLIENT_ID: client_id
-      JSON_SENDER_TENANT_ID: tenant_id
-      JSON_SENDER_SECRET: secret
-      JSON_SENDER_OAUTH_URL: oauth_url
+      JSON_SENDER_HEADER_clientid: client_id
+      JSON_SENDER_HEADER_tenantid: tenant_id
+      JSON_SENDER_HEADER_secret: secret
+      JSON_SENDER_HEADER_oauthserverurl: oauth_url
       TZ: Europe/Zurich
     ports:
       - "8015:8015"
