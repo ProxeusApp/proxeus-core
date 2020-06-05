@@ -35,7 +35,7 @@ services:
       - ${PROXEUS_DATA_DIR:-./data}/proxeus-platform/settings:/root/.proxeus/settings
 
   document-service:
-    image: proxeus/document-service:staging
+    image: proxeus/document-service:latest
     container_name: xes_document_service
     networks:
       - xes-platform-network
@@ -49,7 +49,7 @@ services:
       - ${PROXEUS_DATA_DIR:-./data}/document-service/fonts:/document-service/fonts
 
   node-mail-sender:
-    image: proxeus/node-mail-sender
+    image: proxeus/node-mail-sender:latest
     container_name: xes_node-mail-sender
     networks:
       - xes-platform-network
