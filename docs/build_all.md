@@ -46,7 +46,7 @@ The project uses go modules.
 Clone the repository outside your GOPATH:
 ```
 cd <your workspace>
-git clone https://github.com/ProxeusApp/proxeus-core.git 
+git clone https://github.com/ProxeusApp/proxeus-core.git
 cd proxeus-core
 ```
 
@@ -71,6 +71,11 @@ To initialize dependencies run:
 make init
 ```
 
+To update go dependencies run:
+```
+make update
+```
+
 The make all command build the `server` and `ui`:
 ```
 make all
@@ -85,5 +90,3 @@ Run `server`.
 The platform will be available at the following URL: http://localhost:1323
 
 It is now time to [configure your platform](configure.md)
-
-
