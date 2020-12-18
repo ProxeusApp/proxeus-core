@@ -6,6 +6,8 @@ artifacts/*
 SHOULD_INIT
 
 main/handlers/assets/bindata.go
+go.mod
+go.sum
 
 *.db
 *.dmg
