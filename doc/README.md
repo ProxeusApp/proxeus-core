@@ -1,4 +1,8 @@
-# How to generate the ACKNOWLEDGEMENTS file 
+This README is only about the license loader of the project.
+
+Go to [docs/README](../docs/README.md) for developer instructions.
+
+# How to generate the ACKNOWLEDGEMENTS file
 
 The acknowledgement file is constructed automatically using the `create_acknowledgement.sh` bash script.
 
@@ -18,10 +22,9 @@ Run the following command to authenticate with Github:
 hub api user
 ```
 
-## Generate the file 
+## Generate the file
 
 Run the following command to generate the acknowledgement file:
 ```
 ./create_acknowledgment.sh > ACKNOWLEDGEMENTS
 ```
-
