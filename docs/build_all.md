@@ -56,7 +56,7 @@ All the build projects are stated in `./Makefile`.
 Before building Proxeus, make sure to set all [required environment variables](../README.md#quick-start-with-docker).
 ```
 export PROXEUS_DATA_DIR=./data
-export PROXEUS_INFURA_API_KEY=<Your Infura API key>
+export PROXEUS_INFURA_API_KEY=<Your Infura project ID>
 export PROXEUS_SPARKPOST_API_KEY=<Your SparkPost API Key>
 export PROXEUS_BLOCKCHAIN_CONTRACT_ADDRESS=0x1d3e5c81bf4bc60d41a8fbbb3d1bae6f03a75f71
 export PROXEUS_ALLOW_HTTP=true
