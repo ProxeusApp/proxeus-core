@@ -71,6 +71,11 @@ init:
 	go install github.com/wadey/gocovmerge
 	go install golang.org/x/tools/cmd/godoc
 
+.PHONY: update
+update:
+	echo "Updating all Go packages"
+	go get -u all
+
 .PHONY: ui
 ui:
 	$(MAKE) -C ui
