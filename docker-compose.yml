@@ -112,3 +112,23 @@ services:
       TZ: Europe/Zurich
     ports:
       - "8014:8014"
+
+  node-json-sender:
+    image: proxeus/node-json-sender:latest
+    container_name: xes_node-json-sender
+    networks:
+      - xes-platform-network
+    restart: unless-stopped
+    environment:
+      PROXEUS_INSTANCE_URL: "${PROXEUS_PLATFORM_DOMAIN:-http://xes-platform:1323}"
+      SERVICE_SECRET: secret
+      SERVICE_PORT: 8015
+      SERVICE_URL: "${SERVICE_DOMAIN:-http://node-proof-of-existence:8015}"
+      JSON_SENDER_URL: http://url:123/endpoint
+      JSON_SENDER_HEADER_clientid: client_id
+      JSON_SENDER_HEADER_tenantid: tenant_id
+      JSON_SENDER_HEADER_secret: secret
+      JSON_SENDER_HEADER_oauthserverurl: oauth_url
+      TZ: Europe/Zurich
+    ports:
+      - "8015:8015"
