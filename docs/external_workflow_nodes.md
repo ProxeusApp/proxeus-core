@@ -84,3 +84,5 @@ The implementation of the external nodes used can be found here:
 * [Crypto Forex Rates](https://github.com/ProxeusApp/node-crypto-forex-rates) retrieves USD prices of given tokens
 * [Proof of Existence](https://github.com/ProxeusApp/node-proof-of-existence) proves existence of a tweet
 * [Mail sender](https://github.com/ProxeusApp/node-mail-sender) sends emails
+* [JSON sender](https://github.com/ProxeusApp/node-json-sender) Sends form data to a REST endpoint via POST request
+

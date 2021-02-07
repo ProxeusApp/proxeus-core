@@ -24,6 +24,7 @@ require (
 	github.com/fasthttp-contrib/websocket v0.0.0-20160511215533-1f3b11f56072 // indirect
 	github.com/fatih/structs v1.1.0 // indirect
 	github.com/fjl/memsize v0.0.0-20190710130421-bcb5799ab5e5 // indirect
+	github.com/go-bindata/go-bindata v1.0.0 // indirect
 	github.com/go-sourcemap/sourcemap v2.1.2+incompatible // indirect
 	github.com/golang/mock v1.3.2-0.20191127180039-112dfb85f71e
 	github.com/google/go-querystring v1.0.0 // indirect

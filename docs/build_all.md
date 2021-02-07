@@ -46,7 +46,7 @@ The project uses go modules.
 Clone the repository outside your GOPATH:
 ```
 cd <your workspace>
-git clone https://github.com/ProxeusApp/proxeus-core.git 
+git clone https://github.com/ProxeusApp/proxeus-core.git
 cd proxeus-core
 ```
 
@@ -56,7 +56,7 @@ All the build projects are stated in `./Makefile`.
 Before building Proxeus, make sure to set all [required environment variables](../README.md#quick-start-with-docker).
 ```
 export PROXEUS_DATA_DIR=./data
-export PROXEUS_INFURA_API_KEY=<Your Infura API key>
+export PROXEUS_INFURA_API_KEY=<Your Infura project ID>
 export PROXEUS_SPARKPOST_API_KEY=<Your SparkPost API Key>
 export PROXEUS_BLOCKCHAIN_CONTRACT_ADDRESS=0x1d3e5c81bf4bc60d41a8fbbb3d1bae6f03a75f71
 export PROXEUS_ALLOW_HTTP=true
@@ -69,6 +69,11 @@ Make sure that the email domain for `PROXEUS_EMAIL_FROM` is a configured sending
 To initialize dependencies run:
 ```
 make init
+```
+
+To update go dependencies run:
+```
+make update
 ```
 
 The make all command build the `server` and `ui`:
@@ -85,5 +90,3 @@ Run `server`.
 The platform will be available at the following URL: http://localhost:1323
 
 It is now time to [configure your platform](configure.md)
-
-
