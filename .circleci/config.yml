@@ -93,7 +93,7 @@ jobs:
 
   test-integration-go:
     executor: docker-image-golang-dependencies
-    resource_class: large
+    resource_class: medium
     steps:
       - checkout
       - attach_workspace:
@@ -122,7 +122,7 @@ jobs:
 
   coverage-go:
     executor: docker-image-golang-dependencies
-    resource_class: large
+    resource_class: medium
     steps:
       - checkout
       - attach_workspace:
@@ -142,7 +142,7 @@ jobs:
 
   test-ui:
     executor: docker-image-golang-dependencies
-    resource_class: large
+    resource_class: medium
     steps:
       - checkout
       - attach_workspace:
@@ -212,12 +212,15 @@ jobs:
           name: Load archived Docker image
           command: docker load -i /tmp/workspace/image.tar
       - run:
-          name: Publish Docker Image to Docker Hub
+          name: Tag latest docker image
+          command: docker tag $CONTAINER_IMAGE_NAME $CONTAINER_IMAGE_NAME:latest
+      - run:
+          name: Publish latest Docker Image to Docker Hub
           command: |
             echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
-            docker push $CONTAINER_IMAGE_NAME
+            docker push $CONTAINER_IMAGE_NAME:latest
 
-  publish-stage:
+  publish-staging:
     executor: docker-publisher
     steps:
       - attach_workspace:
@@ -227,13 +230,13 @@ jobs:
           name: Load archived Docker image
           command: docker load -i /tmp/workspace/image.tar
       - run:
-          name: Tag docker image
-          command: docker tag $CONTAINER_IMAGE_NAME $CONTAINER_IMAGE_NAME:stage
+          name: Tag staging docker image
+          command: docker tag $CONTAINER_IMAGE_NAME $CONTAINER_IMAGE_NAME:staging
       - run:
-          name: Publish Docker Image to Docker Hub
+          name: Publish staging Docker Image to Docker Hub
           command: |
             echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
-            docker push $CONTAINER_IMAGE_NAME:stage
+            docker push $CONTAINER_IMAGE_NAME:staging
 
   publish-demo:
     executor: docker-publisher
@@ -245,10 +248,10 @@ jobs:
           name: Load archived Docker image
           command: docker load -i /tmp/workspace/image.tar
       - run:
-          name: Tag docker image
+          name: Tag demo docker image
           command: docker tag $CONTAINER_IMAGE_NAME $CONTAINER_IMAGE_NAME:demo
       - run:
-          name: Publish Docker Image to Docker Hub
+          name: Publish demo Docker Image to Docker Hub
           command: |
             echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
             docker push $CONTAINER_IMAGE_NAME:demo
@@ -263,10 +266,10 @@ jobs:
           name: Load archived Docker image
           command: docker load -i /tmp/workspace/image.tar
       - run:
-          name: Tag docker image
+          name: Tag handelsregister docker image
           command: docker tag $CONTAINER_IMAGE_NAME $CONTAINER_IMAGE_NAME:handelsregister
       - run:
-          name: Publish Docker Image to Docker Hub
+          name: Publish handelsregister Docker Image to Docker Hub
           command: |
             echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
             docker push $CONTAINER_IMAGE_NAME:handelsregister
@@ -313,23 +316,23 @@ workflows:
           filters:
             branches:
               only: master
-      - approve-stage:
+      - approve-staging:
           type: approval
           requires:
             - build-docker-image
           filters:
             branches:
               only: master
-      - publish-stage:
+      - publish-staging:
           requires:
-            - approve-stage
+            - approve-staging
           filters:
             branches:
               only: master
       - approve-demo:
           type: approval
           requires:
-            - build-docker-image
+            - publish-staging
           filters:
             branches:
               only: master
@@ -342,7 +345,7 @@ workflows:
       - approve-handelsregister:
           type: approval
           requires:
-            - build-docker-image
+            - publish-staging
           filters:
             branches:
               only: master

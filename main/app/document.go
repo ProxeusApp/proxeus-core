@@ -143,10 +143,6 @@ func (me *DocumentFlowInstance) init(wfd *workflow.Workflow, state []workflow.St
 		},
 	}
 
-	if os.Getenv("FF_IBM_SENDER_ENABLED") == "true" {
-		conf.NodeImpl["ibmsender"] = &workflow.NodeDef{InitImplFunc: me.newIBMSenderNodeImpl, Background: true}
-	}
-
 	var err error
 	me.wfContext, err = workflow.New(wfd, conf)
 	return err
@@ -220,10 +216,6 @@ func (me *DocumentFlowInstance) newFormNodeImpl(n *workflow.Node) (workflow.Node
 
 func (me *DocumentFlowInstance) newDocTmplNodeImpl(n *workflow.Node) (workflow.NodeIF, error) {
 	return &DocTmplNodeImpl{ctx: me}, nil
-}
-
-func (me *DocumentFlowInstance) newIBMSenderNodeImpl(n *workflow.Node) (workflow.NodeIF, error) {
-	return &IBMSenderNodeImpl{ctx: me}, nil
 }
 
 func (me *DocumentFlowInstance) getDataWithFiles() (d map[string]interface{}, files []string) {
