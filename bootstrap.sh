@@ -84,7 +84,7 @@ install-proxeus() {
 
     install-proxeus-from-source "$GIT_TAG"
   else
-    install-proxeus-from-source "release"
+    install-proxeus-from-source 
   fi
 }
 
