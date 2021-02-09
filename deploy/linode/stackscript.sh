@@ -1,6 +1,8 @@
 #!/bin/bash
 
-#<UDF name="fqdn" Label="FQDN" example="web.example.com" />
+# <UDF name="fqdn" Label="Fully Qualified Domain Name" example="web.example.com" />
+# <UDF name="infura" Label="Infura.io API key" example="a0e728c9fd444a123456789000b9370f" />
+# <UDF name="sparkpost" Label="Sparkpost.com API key" example="27ed8e1234567890000014863f9e2cf553a7bd87" />
 
 # Logs: tail -f /var/log/stackscript.log
 # Logs: cat /var/log/stackscript.log
@@ -65,24 +67,6 @@ apt-get update
 apt-get install -y docker-ce docker-ce-cli docker-compose containerd.io
 systemctl enable docker
 
-## ----------------------------------------------
-## Install & configure proxeus
-
-log "Installing Proxeus Core"
-wget https://raw.githubusercontent.com/loleg/proxeus-core/release/bootstrap.sh;
-bash bootstrap.sh
-
-cat <<END >start.sh
-export PROXEUS_BLOCKCHAIN_CONTRACT_ADDRESS="0x1d3e5c81bf4bc60d41a8fbbb3d1bae6f03a75f71"
-export PROXEUS_ALLOW_HTTP=true
-export PROXEUS_DATA_DIR=./data
-export PROXEUS_PLATFORM_DOMAIN="http://$fqdn:1323"
-
-cd proxeus
-docker-compose -f docker-compose.yml -f docker-compose-cloud.override.yml up -d
-
-END
-
 ## Set up fail2ban
 log "Installing fail2ban"
 apt-get install fail2ban -y
@@ -108,6 +92,31 @@ ufw enable
 
 systemctl enable ufw
 ufw logging off
+
+## ----------------------------------------------
+## Install & configure proxeus
+
+log "Installing Proxeus"
+mkdir -p /srv/proxeus
+cd /srv/proxeus
+
+wget https://raw.githubusercontent.com/loleg/proxeus-core/release/bootstrap.sh;
+bash bootstrap.sh
+
+cd proxeus-core
+cat <<END >.env.prod
+PROXEUS_BLOCKCHAIN_CONTRACT_ADDRESS="0x1d3e5c81bf4bc60d41a8fbbb3d1bae6f03a75f71"
+PROXEUS_ALLOW_HTTP=true
+PROXEUS_DATA_DIR=./data
+PROXEUS_INFURA_API_KEY="$infura"
+PROXEUS_SPARKPOST_API_KEY="$sparkpost"
+PROXEUS_PLATFORM_DOMAIN="http://$fqdn:1323"
+
+END
+
+log "Starting Proxeus Core"
+docker-compose --env-file .env.prod -f docker-compose.yml -f docker-compose-cloud.override.yml up -d
+
 
 # Open http://$fqdn:1323/init to configure your server
 log "Open http://$fqdn:1323/init to finish install"
