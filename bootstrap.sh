@@ -98,7 +98,7 @@ install-proxeus-from-source() {
   cd ./proxeus
   git fetch origin
   [[ -n $GIT_CHECKOUT ]] && git checkout "$GIT_CHECKOUT"
-  make install
+  make
 }
 
 main() {

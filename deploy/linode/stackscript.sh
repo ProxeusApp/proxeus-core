@@ -97,13 +97,13 @@ ufw logging off
 ## Install & configure proxeus
 
 log "Installing Proxeus"
-mkdir -p /srv/proxeus
-cd /srv/proxeus
+mkdir -p /srv
+cd /srv
 
 wget https://raw.githubusercontent.com/loleg/proxeus-core/release/bootstrap.sh;
 bash bootstrap.sh
 
-cd proxeus-core
+cd proxeus
 cat <<END >.env.prod
 PROXEUS_BLOCKCHAIN_CONTRACT_ADDRESS="0x1d3e5c81bf4bc60d41a8fbbb3d1bae6f03a75f71"
 PROXEUS_ALLOW_HTTP=true
