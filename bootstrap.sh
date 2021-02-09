@@ -8,12 +8,10 @@ set -eo pipefail
 # We encourage you to also add Dokku for managing your instance,
 # however this is not done by this script.
 
-# It expects to be run on Ubuntu 18.04/20.04, or CentOS 7 via 'sudo'
+# It expects to be run on Debian, Ubuntu, or CentOS 7 via 'sudo'
 
 # It checks out the proxeus source code from Github into ~/proxeus and then runs 'make install'.
 
-
-SUPPORTED_VERSIONS="Debian [9, 10], CentOS [7], Ubuntu [18.04, 20.04]"
 
 log-fail() {
   declare desc="log fail formatter"

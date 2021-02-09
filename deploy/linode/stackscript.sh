@@ -1,0 +1,117 @@
+#!/bin/bash
+
+#<UDF name="fqdn" Label="FQDN" example="web.example.com" />
+
+# Logs: tail -f /var/log/stackscript.log
+# Logs: cat /var/log/stackscript.log
+
+# Log to /var/log/stackscript.log for future troubleshooting
+
+# Logging set up
+exec 1> >(tee -a "/var/log/stackscript.log") 2>&1
+function log {
+  echo "### $1 -- `date '+%D %T'`"
+}
+
+# Common bash functions
+source <ssinclude StackScriptID=1>
+log "Common lib loaded"
+
+# Apply harden script
+source <ssinclude StackScriptID=394223>
+log "Hardening activated"
+
+log "Configuring System Updates"
+apt-get -o Acquire::ForceIPv4=true update -y
+DEBIAN_FRONTEND=noninteractive apt-get -y -o DPkg::options::="--force-confdef" -o DPkg::options::="--force-confold" install grub-pc
+apt-get -o Acquire::ForceIPv4=true update -y
+
+## Set hostname, configure apt and perform update/upgrade
+log "Setting hostname"
+IP=`hostname -I | awk '{print$1}'`
+hostnamectl set-hostname $fqdn
+echo $IP $fqdn  >> /etc/hosts
+
+log "Updating .."
+export DEBIAN_FRONTEND=noninteractive
+apt-get update -y
+
+## Remove older installations and get set for Docker install
+log "Getting ready to install Docker"
+sudo apt-get remove docker docker-engine docker.io containerd runc
+sudo apt-get update
+sudo apt-get install -y \
+    apt-transport-https \
+    ca-certificates \
+    curl \
+    make \
+    gnupg-agent \
+    software-properties-common \
+    apache2-utils
+
+log "Installing Docker Engine for $lsb_dist"
+lsb_dist="$(. /etc/os-release && echo "$ID")"
+lsb_dist="$(echo "$lsb_dist" | tr '[:upper:]' '[:lower:]')"
+
+## Add Docker’s official GPG key
+curl -fsSL "https://download.docker.com/linux/$lsb_dist/gpg" | sudo apt-key add -
+
+## Install stable docker as daemon
+add-apt-repository \
+   "deb [arch=amd64] https://download.docker.com/linux/$lsb_dist \
+   $(lsb_release -cs) \
+   stable"
+apt-get update
+apt-get install -y docker-ce docker-ce-cli docker-compose containerd.io
+systemctl enable docker
+
+## ----------------------------------------------
+## Install & configure proxeus
+
+log "Installing Proxeus Core"
+wget https://raw.githubusercontent.com/loleg/proxeus-core/release/bootstrap.sh;
+bash bootstrap.sh
+
+cat <<END >start.sh
+export PROXEUS_BLOCKCHAIN_CONTRACT_ADDRESS="0x1d3e5c81bf4bc60d41a8fbbb3d1bae6f03a75f71"
+export PROXEUS_ALLOW_HTTP=true
+export PROXEUS_DATA_DIR=./data
+export PROXEUS_PLATFORM_DOMAIN="http://$fqdn:1323"
+
+cd proxeus
+docker-compose -f docker-compose.yml -f docker-compose-cloud.override.yml up -d
+
+END
+
+## Set up fail2ban
+log "Installing fail2ban"
+apt-get install fail2ban -y
+cd /etc/fail2ban
+cp fail2ban.conf fail2ban.local
+cp jail.conf jail.local
+systemctl start fail2ban
+systemctl enable fail2ban
+
+## Set up firewall with port 1323 open to default Proxeus platform
+# Set up nginx separately to proxy to 443
+log "Configuring firewall"
+apt-get install ufw -y
+ufw default allow outgoing
+ufw default deny incoming
+
+ufw allow ssh
+ufw allow https
+ufw allow http
+ufw allow 1323
+
+ufw enable
+
+systemctl enable ufw
+ufw logging off
+
+# Open http://$fqdn:1323/init to configure your server
+log "Open http://$fqdn:1323/init to finish install"
+
+## ----------------------------------------------
+
+echo "Installation complete!"
