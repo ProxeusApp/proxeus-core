@@ -1,8 +1,8 @@
 #!/bin/bash
 
-# <UDF name="fqdn" Label="Fully Qualified Domain Name" example="web.example.com" />
-# <UDF name="infura" Label="Infura.io API key" example="a0e728c9fd444a123456789000b9370f" />
-# <UDF name="sparkpost" Label="Sparkpost.com API key" example="27ed8e1234567890000014863f9e2cf553a7bd87" />
+# <UDF name="FQDN" Label="Fully Qualified Domain Name" example="web.example.com" />
+# <UDF name="INFURA" Label="Infura.io API key" example="a0e728c9fd444a123456789000b9370f" />
+# <UDF name="SPARKPOST" Label="Sparkpost.com API key" example="27ed8e1234567890000014863f9e2cf553a7bd87" />
 
 # Logs: tail -f /var/log/stackscript.log
 # Logs: cat /var/log/stackscript.log
@@ -31,8 +31,8 @@ apt-get -o Acquire::ForceIPv4=true update -y
 ## Set hostname, configure apt and perform update/upgrade
 log "Setting hostname"
 IP=`hostname -I | awk '{print$1}'`
-hostnamectl set-hostname $fqdn
-echo $IP $fqdn  >> /etc/hosts
+hostnamectl set-hostname $FQDN
+echo $IP $FQDN  >> /etc/hosts
 
 log "Updating .."
 export DEBIAN_FRONTEND=noninteractive
@@ -108,18 +108,18 @@ cat <<END >.env.prod
 PROXEUS_BLOCKCHAIN_CONTRACT_ADDRESS="0x1d3e5c81bf4bc60d41a8fbbb3d1bae6f03a75f71"
 PROXEUS_ALLOW_HTTP=true
 PROXEUS_DATA_DIR=./data
-PROXEUS_INFURA_API_KEY="$infura"
-PROXEUS_SPARKPOST_API_KEY="$sparkpost"
-PROXEUS_PLATFORM_DOMAIN="http://$fqdn:1323"
+PROXEUS_INFURA_API_KEY="$INFURA"
+PROXEUS_SPARKPOST_API_KEY="$SPARKPOST"
+PROXEUS_PLATFORM_DOMAIN="http://$FQDN:1323"
 
 END
 
 log "Starting Proxeus Core"
-docker-compose --env-file .env.prod -f docker-compose.yml -f docker-compose-cloud.override.yml up -d
+docker-compose --env-file .env.prod -f docker-compose.yml -f docker-compose-cloud.override.yml up -d &
 
 
-# Open http://$fqdn:1323/init to configure your server
-log "Open http://$fqdn:1323/init to finish install"
+# Open http://$FQDN:1323/init to configure your server
+log "After a minute, open: http://$FQDN:1323/init"
 
 ## ----------------------------------------------
 
