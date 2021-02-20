@@ -2,23 +2,33 @@
 
 # Proxeus
 ----------------
-Main repository of the proxeus platform.
+Main repository of the Proxeus platform core.
 
 Proxeus combines a powerful document automation tool with the wide-ranging
 blockchain functionalities, enabling users to digitize and monetize their IP.
 
-## Source Code
+You can access the source code of this application and various extensions
+on [GitHub](https://github.com/ProxeusApp).
 
-You can access the source code of this application on the [Proxeus GitHub repository](https://github.com/ProxeusApp).
+# Quick Starts
 
-## Quick Start with docker
-The quickest way to try Proxeus is to use `docker-compose`.
+## One-click builds
+
+We are making facilitated build configurations available for select cloud platforms:
+
+- [Linode StackScript](deploy/linode/README.md)
+
+## Using Docker
+
+The quickest way to set up Proxeus for development is to use Docker, and the `docker-compose` tool.
 
 ### Install docker and docker-compose
+
 1. [Install Docker Engine](https://docs.docker.com/install/)
 2. [Install docker-compose](https://docs.docker.com/compose/install/)
 
 ### Get API Keys for Infura and SparkPost
+
 The Proxeus platform depends on [Infura](https://infura.io/) and [SparkPost](https://www.sparkpost.com/)
 for Ethereum and email integration respectively.
 
@@ -41,7 +51,7 @@ Proxeus platform.
 
 ## User manual
 
-The user manual is available here: [User Manual](https://docs.google.com/document/d/1SP0ZimG7uemfZ2cF2JkY5enUZnBJLDyfcJGZnyWOejQ)
+Get help to make the most of the platform in the [User Handbook](https://docs.google.com/document/d/e/2PACX-1vTchv7PotoQeH2cBA2VIHcqV0I0N_IQpFnbESR-8C19cgBikek3HAMVdPtfJJcYkANzPWbfy_S3bf8X/pub).
 
 ## Contributing
 

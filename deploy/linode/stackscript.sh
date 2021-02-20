@@ -104,18 +104,21 @@ wget https://raw.githubusercontent.com/loleg/proxeus-core/release/bootstrap.sh;
 bash bootstrap.sh
 
 cd proxeus
-cat <<END >.env.prod
-PROXEUS_BLOCKCHAIN_CONTRACT_ADDRESS="0x1d3e5c81bf4bc60d41a8fbbb3d1bae6f03a75f71"
+cat <<END >.env
+PROXEUS_BLOCKCHAIN_CONTRACT_ADDRESS=0x1d3e5c81bf4bc60d41a8fbbb3d1bae6f03a75f71
 PROXEUS_ALLOW_HTTP=true
 PROXEUS_DATA_DIR=./data
-PROXEUS_INFURA_API_KEY="$INFURA"
-PROXEUS_SPARKPOST_API_KEY="$SPARKPOST"
-PROXEUS_PLATFORM_DOMAIN="http://$FQDN:1323"
+PROXEUS_INFURA_API_KEY=$INFURA
+PROXEUS_SPARKPOST_API_KEY=$SPARKPOST
+PROXEUS_PLATFORM_DOMAIN=http://$FQDN:1323
 
 END
 
 log "Starting Proxeus Core"
-docker-compose --env-file .env.prod -f docker-compose.yml -f docker-compose-cloud.override.yml up -d &
+docker-compose up -d &
+
+# In a production setting you might want to use a separate env file and/or overrides
+# docker-compose --env-file .env.prod -f docker-compose.yml -f docker-compose-cloud.override.yml up -d &
 
 
 # Open http://$FQDN:1323/init to configure your server
