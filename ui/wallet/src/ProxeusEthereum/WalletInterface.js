@@ -19,7 +19,7 @@ class WalletInterface {
 
     // make sure we are using the web3 we want and not
     // the one provided by metamask
-    this.web3 = new Web3()
+    this.web3 = new Web3(Web3.givenProvider || 'ws://localhost:8545')
 
     this.web3.eth.getTransactionReceiptMined = getTransactionReceiptMined
     this.serviceConfig = serviceConfig[network]
