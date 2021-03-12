@@ -100,7 +100,7 @@ log "Installing Proxeus"
 mkdir -p /srv
 cd /srv
 
-wget https://raw.githubusercontent.com/loleg/proxeus-core/release/bootstrap.sh;
+wget https://raw.githubusercontent.com/ProxeusApp/proxeus-core/master/bootstrap.sh;
 bash bootstrap.sh
 
 cd proxeus
