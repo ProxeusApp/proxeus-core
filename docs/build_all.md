@@ -21,8 +21,9 @@ Here is the list of dependencies:
 
 
 #### Linux (Debian)
+
 ```
-sudo apt-get install make golang curl npm git license-finder-pip
+sudo apt-get install make golang curl npm git
 ```
 
 #### OSX
@@ -82,6 +83,7 @@ make all
 ```
 
 ### Start
+
 Run `server`.
 ```
 ./artifacts/proxeus

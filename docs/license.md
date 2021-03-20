@@ -4,6 +4,8 @@ The Proxeus software is covered by a GNU GPLv3 license.
 
 The license terms can be found on the [Proxeus GitHub](https://github.com/ProxeusApp/proxeus-core/blob/master/LICENSE) repository.
 
+Follow instructions at [pivotal/LicenseFinder](https://github.com/pivotal/LicenseFinder) to install a tool, and then use `make license` to check project licenses after you add any dependencies.
+
 ## Risk of cryptographic systems
 
 By interacting with the Software in any way, you represent that you understand the inherent risks

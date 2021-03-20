@@ -111,6 +111,7 @@ validate: init
 .PHONY: license
 license:
 	# https://github.com/pivotal/LicenseFinder
+	echo "Running LicenseFinder..."
 	license_finder
 
 .PHONY: doc
