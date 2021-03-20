@@ -18,6 +18,12 @@ ifeq ($(shell uname), Darwin)
 	DOCKER=docker
 endif
 
+# Load dotenv configuration
+ifneq (,$(wildcard ./.env))
+	include .env
+	export
+endif
+
 # Default proxeus environment
 export PROXEUS_TEST_MODE?=false
 export PROXEUS_ALLOW_HTTP?=true
