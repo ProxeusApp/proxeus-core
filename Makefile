@@ -18,6 +18,12 @@ ifeq ($(shell uname), Darwin)
 	DOCKER=docker
 endif
 
+# Load dotenv configuration
+ifneq (,$(wildcard ./.env))
+	include .env
+	export
+endif
+
 # Default proxeus environment
 export PROXEUS_TEST_MODE?=false
 export PROXEUS_ALLOW_HTTP?=true
@@ -66,7 +72,7 @@ all: ui server
 init:
 	@for d in $(dependencies); do (echo "Checking $$d is installed... " && which $$d ) || ( echo "Please install $$d before continuing" && exit 1 ); done
 	go install golang.org/x/tools/cmd/goimports
-	go install github.com/go-bindata/go-bindata/go-bindata
+	go install github.com/go-bindata/go-bindata/...
 	go install github.com/golang/mock/mockgen
 	go install github.com/wadey/gocovmerge
 	go install golang.org/x/tools/cmd/godoc
@@ -105,6 +111,7 @@ validate: init
 .PHONY: license
 license:
 	# https://github.com/pivotal/LicenseFinder
+	echo "Running LicenseFinder..."
 	license_finder
 
 .PHONY: doc

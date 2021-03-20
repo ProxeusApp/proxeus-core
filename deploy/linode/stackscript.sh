@@ -100,10 +100,6 @@ log "Installing Proxeus"
 mkdir -p /srv
 cd /srv
 
-wget https://raw.githubusercontent.com/ProxeusApp/proxeus-core/master/bootstrap.sh;
-bash bootstrap.sh
-
-cd proxeus
 cat <<END >.env
 PROXEUS_BLOCKCHAIN_CONTRACT_ADDRESS=0x1d3e5c81bf4bc60d41a8fbbb3d1bae6f03a75f71
 PROXEUS_ALLOW_HTTP=true
@@ -115,12 +111,13 @@ PROXEUS_VIRTUAL_HOST=$FQDN
 
 END
 
+wget https://raw.githubusercontent.com/ProxeusApp/proxeus-core/master/bootstrap.sh;
+bash bootstrap.sh
+
+cd /srv/proxeus
+
 log "Starting Proxeus Core"
-docker-compose up -d &
-
-# In a production setting you might want to use a separate env file and/or overrides
-# docker-compose --env-file .env.prod -f docker-compose.yml -f docker-compose-cloud.override.yml up -d &
-
+docker-compose --env-file .env -f docker-compose.yml -f docker-compose-cloud.override.yml up -d &
 
 # Open http://$FQDN:1323/init to configure your server
 log "After a minute, open: http://$FQDN:1323/init"

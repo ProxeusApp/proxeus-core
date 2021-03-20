@@ -12,9 +12,9 @@ on [GitHub](https://github.com/ProxeusApp).
 
 # Quick Starts
 
-## One-click builds
+## Automated builds
 
-We are making facilitated build configurations available for select cloud platforms:
+We are making facilitated "one click" build configurations available for select cloud platforms:
 
 - [Linode StackScript](deploy/linode/README.md)
 
@@ -30,11 +30,10 @@ The quickest way to set up Proxeus for development is to use Docker, and the `do
 ### Get API Keys for Infura and SparkPost
 
 The Proxeus platform depends on [Infura](https://infura.io/) and [SparkPost](https://www.sparkpost.com/)
-for Ethereum and email integration respectively.
+for Ethereum and email integration respectively. Create an account on those platforms
+to get API Keys. These keys need to be added to corresponding environment variables.
 
-Please create an account on those platform and get an API Keys.
-
-See the deployment instructions in [docs/README](docs/README.md) to set up your server.
+See further deployment instructions in [docs/docker](docs/docker.md) to set up your server using Docker.
 
 If all goes well, Proxeus should be available at http://localhost:1323
 

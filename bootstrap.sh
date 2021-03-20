@@ -34,11 +34,11 @@ ensure-environment() {
   if ! command -v apt-get &>/dev/null; then
     log-fail "This installation script supports Debian-based systems and expects apt-get."
   fi
-  
+
   if ! command -v docker &> /dev/null; then
     log-fail "Docker needs to be installed."
   fi
-  
+
   if ! command -v docker-compose &> /dev/null; then
     log-fail "Docker Compose needs to be installed."
   fi
@@ -69,11 +69,13 @@ install-requirements() {
       apt-get update -qq >/dev/null
       ;;
   esac
-  
+
   apt-get -qq -y --no-install-recommends install sudo git make software-properties-common
 }
 
 install-proxeus() {
+  echo "--> Starting Proxeus install"
+
   if [[ -n $GIT_BRANCH ]]; then
     install-proxeus-from-source "origin/$GIT_BRANCH"
   elif [[ -n $GIT_TAG ]]; then
@@ -84,7 +86,7 @@ install-proxeus() {
 
     install-proxeus-from-source "$GIT_TAG"
   else
-    install-proxeus-from-source 
+    install-proxeus-from-source
   fi
 }
 
@@ -96,6 +98,8 @@ install-proxeus-from-source() {
   fi
 
   cd ./proxeus
+  touch ../.env
+  cp ../.env .
   git fetch origin
   [[ -n $GIT_CHECKOUT ]] && git checkout "$GIT_CHECKOUT"
   make
@@ -117,4 +121,3 @@ main() {
 }
 
 main "$@"
-
