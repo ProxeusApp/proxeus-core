@@ -117,11 +117,7 @@ bash bootstrap.sh
 cd /srv/proxeus
 
 log "Starting Proxeus Core"
-docker-compose up -d &
-
-# In a production setting you might want to use a separate env file and/or overrides
-# docker-compose --env-file .env.prod -f docker-compose.yml -f docker-compose-cloud.override.yml up -d &
-
+docker-compose --env-file .env -f docker-compose.yml -f docker-compose-cloud.override.yml up -d &
 
 # Open http://$FQDN:1323/init to configure your server
 log "After a minute, open: http://$FQDN:1323/init"

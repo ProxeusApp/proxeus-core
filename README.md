@@ -33,7 +33,7 @@ The Proxeus platform depends on [Infura](https://infura.io/) and [SparkPost](htt
 for Ethereum and email integration respectively. Create an account on those platforms
 to get API Keys. These keys need to be added to corresponding environment variables.
 
-See the deployment instructions in [docs/build_docker](docs/build_docker.md) to set up your server using Docker.
+See further deployment instructions in [docs/docker](docs/docker.md) to set up your server using Docker.
 
 If all goes well, Proxeus should be available at http://localhost:1323
 
