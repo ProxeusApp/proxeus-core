@@ -51,6 +51,11 @@ $nav-max-width: 265px;
     padding-left: 1.7rem;
     padding-top: $spacer / 1.5;
     padding-bottom: $spacer / 3;
+    text-align:center;
+    img {
+      height: 3.75rem;
+      margin: 1rem auto;
+    }
   }
 
   .nav-link {
