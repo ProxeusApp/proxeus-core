@@ -92,3 +92,14 @@ Run `server`.
 The platform will be available at the following URL: http://localhost:1323
 
 It is now time to [configure your platform](configure.md)
+
+### Tips
+
+Update command failing? Try:
+
+- doing a quick verification and config-file check
+`go mod verify` / `go mod tidy`
+- clearing your module cache:
+`go clean -cache -modcache -i -r`
+- checking your dependency graph to isolate the issue:
+`go mod graph`
