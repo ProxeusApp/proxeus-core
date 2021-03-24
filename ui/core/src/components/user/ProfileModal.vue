@@ -125,7 +125,7 @@ export default {
     updateEthereumAddress () {
       this.walletErrorMessage = ''
       if (!this.challenge) {
-        if (typeof window.web3 !== "undefined" && window.web3 !== undefined) {
+        if (typeof window.web3 !== 'undefined' && window.web3 !== undefined) {
           axios.get('/api/challenge').then((response) => {
             this.challenge = response.data
             this.metamaskLogin()
