@@ -6,7 +6,7 @@ executors:
     environment:
       PROJECT_ROOT_FOLDER: ~/project
     docker:
-      - image: circleci/golang:1.16
+      - image: cimg/go:1.16-node
   docker-image-golang-dependencies:
     environment:
       PROJECT_ROOT_FOLDER: ~/project
