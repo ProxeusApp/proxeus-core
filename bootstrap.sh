@@ -78,6 +78,7 @@ install-proxeus() {
 
   if [[ -n $GIT_BRANCH ]]; then
     install-proxeus-from-source "origin/$GIT_BRANCH"
+
   elif [[ -n $GIT_TAG ]]; then
     local GIT_SEMVER="${GIT_TAG//v/}"
     major=$(echo "$GIT_SEMVER" | awk '{split($0,a,"."); print a[1]}')
@@ -85,6 +86,7 @@ install-proxeus() {
     patch=$(echo "$GIT_SEMVER" | awk '{split($0,a,"."); print a[3]}')
 
     install-proxeus-from-source "$GIT_TAG"
+
   else
     install-proxeus-from-source
   fi
@@ -102,7 +104,6 @@ install-proxeus-from-source() {
   cp ../.env .
   git fetch origin
   [[ -n $GIT_CHECKOUT ]] && git checkout "$GIT_CHECKOUT"
-  make
 }
 
 main() {
