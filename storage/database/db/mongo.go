@@ -77,15 +77,15 @@ func (s *MongoShim) nameToCollection(n string) (*mongo.Collection, error) {
 
 func (s *MongoShim) assureUniqueIndex(c *mongo.Collection) error {
 	i := mongo.IndexModel{
-		Keys: bson.M{
-			"K":    1,
-			"V.id": 1,
+		Keys: bson.D{
+			{"K", 1},
+			{"V.id", 1},
 		},
 		Options: options.Index().SetUnique(true).SetName("custom-keys"),
 	}
 	i2 := mongo.IndexModel{
-		Keys: bson.M{
-			"expireAt": 1,
+		Keys: bson.D{
+			{"expireAt", 1},
 		},
 		Options: options.Index().SetName("ttl-index").SetSparse(true).
 			SetExpireAfterSeconds(0),
