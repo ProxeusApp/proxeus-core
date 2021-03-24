@@ -1,6 +1,6 @@
 SHELL:= /bin/bash
 DEBUG_FLAG?=false
-GO_VERSION=1.13
+GO_VERSION=1.16
 
 ifeq ($(DEBUG), "true")
 	BINDATA_OPTS="-debug"
@@ -8,14 +8,6 @@ endif
 
 ifdef BUILD_ID
     GO_OPTS=-ldflags="-X main.ServerVersion=build-$(BUILD_ID)"
-endif
-
-DOCKER_GATEWAY=172.17.0.1
-DOCKER=sudo docker
-ifeq ($(shell uname), Darwin)
-	DOCKER_LINUX=docker run --rm -v "$(PWD):/usr/src" -w /usr/src golang:$(GO_VERSION)
-	DOCKER_GATEWAY=host.docker.internal
-	DOCKER=docker
 endif
 
 # Load dotenv configuration
@@ -39,6 +31,20 @@ export PROXEUS_DATABASE_ENGINE?=storm
 export PROXEUS_DATABASE_URI?=mongodb://localhost:27017
 
 #########################################################
+
+# Docker build set up
+
+DOCKER_GATEWAY=172.17.0.1
+DOCKER=sudo docker
+export BUILD_WITH_DOCKER?=false
+ifeq ($(shell uname), Darwin)
+	BUILD_WITH_DOCKER=true
+endif
+ifeq ($(BUILD_WITH_DOCKER), true)
+	DOCKER_LINUX=docker run --rm -v "$(PWD):/usr/src" -w /usr/src golang:$(GO_VERSION)
+	DOCKER_GATEWAY=host.docker.internal
+	DOCKER=docker
+endif
 
 #########################################################
 

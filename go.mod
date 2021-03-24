@@ -1,6 +1,6 @@
 module github.com/ProxeusApp/proxeus-core
 
-go 1.13
+go 1.16
 
 require (
 	github.com/DataDog/zstd v1.4.8 // indirect
@@ -62,7 +62,6 @@ require (
 	github.com/karalabe/usb v0.0.0-20191104083709-911d15fe12a9 // indirect
 	github.com/labstack/echo v3.3.10+incompatible
 	github.com/labstack/echo-contrib v0.9.0
-	github.com/labstack/echo/v4 v4.2.1 // indirect
 	github.com/olekukonko/tablewriter v0.0.5 // indirect
 	github.com/onsi/ginkgo v1.15.2 // indirect
 	github.com/peterh/liner v1.2.1 // indirect
@@ -76,6 +75,8 @@ require (
 	github.com/tklauser/go-sysconf v0.3.5 // indirect
 	github.com/tyler-smith/go-bip39 v1.1.0 // indirect
 	github.com/valyala/fasthttp v1.22.0 // indirect
+	github.com/valyala/fasttemplate v1.2.1 // indirect
+	github.com/wadey/gocovmerge v0.0.0-20160331181800-b5bfa59ec0ad // indirect
 	github.com/youmark/pkcs8 v0.0.0-20201027041543-1326539a0a0a // indirect
 	golang.org/x/image v0.0.0-20210220032944-ac19c3e999fb // indirect
 	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c // indirect
