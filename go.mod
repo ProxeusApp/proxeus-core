@@ -25,8 +25,6 @@ require (
 	github.com/imkira/go-interpol v1.1.0 // indirect
 	github.com/jackpal/go-nat-pmp v1.0.2 // indirect
 	github.com/klauspost/compress v1.11.12 // indirect
-	github.com/labstack/echo v3.3.10+incompatible
-	github.com/labstack/echo-contrib v0.9.0
 	github.com/labstack/gommon v0.3.0
 	github.com/mattn/go-colorable v0.1.8 // indirect
 	github.com/mattn/go-runewidth v0.0.10 // indirect
@@ -62,6 +60,8 @@ require (
 	github.com/golang/protobuf v1.5.1 // indirect
 	github.com/google/uuid v1.2.0 // indirect
 	github.com/karalabe/usb v0.0.0-20191104083709-911d15fe12a9 // indirect
+	github.com/labstack/echo v3.3.10+incompatible
+	github.com/labstack/echo-contrib v0.9.0
 	github.com/labstack/echo/v4 v4.2.1 // indirect
 	github.com/olekukonko/tablewriter v0.0.5 // indirect
 	github.com/onsi/ginkgo v1.15.2 // indirect
@@ -87,6 +87,7 @@ require (
 
 replace (
 	github.com/ProxeusApp/proxeus-core => ./
+	github.com/labstack/echo-contrib => github.com/labstack/echo-contrib v0.0.0-20180222075343-7d9d9632a4aa // fix https://github.com/ProxeusApp/proxeus-core/issues/216
 	gopkg.in/gavv/httpexpect.v2 => github.com/gavv/httpexpect/v2 v2.2.0 // fix https://github.com/gavv/httpexpect/issues/60
 	gopkg.in/urfave/cli.v1 => github.com/urfave/cli v1.22.5 // fix https://github.com/ProxeusApp/proxeus-core/issues/213
 )
