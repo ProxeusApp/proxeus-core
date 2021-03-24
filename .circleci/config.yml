@@ -151,7 +151,7 @@ jobs:
       - restore_cache:
           keys:
             - go-mod-v2-{{ checksum "go.sum" }}
-      - run: curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -
+      - run: curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
       - run: curl -sL https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
       - run: echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
       - run: sudo apt-get update && sudo apt-get install yarn

@@ -10,8 +10,8 @@ Here is the list of dependencies:
 + go (1.10+, 64bit for Windows)
 + GOBIN added to your PATH (to check your GOBIN: `echo $(go env GOPATH)/bin`)
 + curl
-+ yarn (1.12.3+)
-+ node (8.11.3+, node v12 is incompatible)
++ yarn (1.12+)
++ node (14)
 + vue-cli
 + git
 + docker-compose (18.06.0+)

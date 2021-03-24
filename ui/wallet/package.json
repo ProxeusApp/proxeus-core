@@ -2,7 +2,7 @@
   "name": "@proxeus/wallet",
   "version": "1.0.0",
   "description": "Proxeus UI",
-  "author": "david.matter@proxeus.com",
+  "author": "info@proxeus.com",
   "main": "src/index.js",
   "private": true,
   "scripts": {
@@ -91,7 +91,7 @@
     "webpack": "^4.25.1"
   },
   "engines": {
-    "node": ">= 8.11.3",
-    "yarn": ">= 1.12.3"
+    "node": ">= 14.15.0",
+    "yarn": ">= 1.22.0"
   }
 }
