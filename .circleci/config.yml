@@ -25,7 +25,7 @@ executors:
 jobs:
   build-ui:
     docker:
-      - image: node:10
+      - image: cimg/go:1.16-node
     steps:
       - checkout
       - restore_cache:
