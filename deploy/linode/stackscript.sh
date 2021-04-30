@@ -3,6 +3,7 @@
 # <UDF name="FQDN" Label="Fully Qualified Domain Name" example="web.example.com" />
 # <UDF name="INFURA" Label="Infura.io API key" example="a0e728c9fd444a123456789000b9370f" />
 # <UDF name="SPARKPOST" Label="Sparkpost.com API key" example="27ed8e1234567890000014863f9e2cf553a7bd87" />
+# <UDF name="ADMINEMAIL" Label="Admin e-mail address" example="admin@example.com" />
 
 # Logs: tail -f /var/log/stackscript.log
 # Logs: cat /var/log/stackscript.log
@@ -102,21 +103,27 @@ cd /srv
 
 cat <<END >.env
 PROXEUS_BLOCKCHAIN_CONTRACT_ADDRESS=0x1d3e5c81bf4bc60d41a8fbbb3d1bae6f03a75f71
-PROXEUS_ALLOW_HTTP=true
 PROXEUS_DATA_DIR=./data
+PROXEUS_ALLOW_HTTP=true
 PROXEUS_INFURA_API_KEY=$INFURA
 PROXEUS_SPARKPOST_API_KEY=$SPARKPOST
 PROXEUS_PLATFORM_DOMAIN=http://$FQDN:1323
 PROXEUS_VIRTUAL_HOST=$FQDN
+LETSENCRYPT_EMAIL=$ADMINEMAIL
 
 END
+
+log "Warning: you should disable port 80 in production by removing the PROXEUS_ALLOW_HTTP line in your .env"
 
 wget https://raw.githubusercontent.com/ProxeusApp/proxeus-core/master/bootstrap.sh;
 bash bootstrap.sh
 
 cd /srv/proxeus
 
-log "Starting Proxeus Core"
+# Compilation should not be necessary for a cloud install
+# make init server-docker
+
+log "Starting cloud deployment via docker-compose"
 docker-compose --env-file .env -f docker-compose.yml -f docker-compose-cloud.override.yml up -d &
 
 # Open http://$FQDN:1323/init to configure your server

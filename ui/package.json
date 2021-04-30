@@ -1,5 +1,5 @@
 {
-  "author": "david.matter@proxeus.com",
+  "author": "info@proxeus.com",
   "private": true,
   "workspaces": [
     "core",
@@ -9,8 +9,8 @@
     "check-node-version": "check-node-version --package"
   },
   "engines": {
-    "node": ">= 8.11.3",
-    "yarn": ">= 1.12.3"
+    "node": ">= 14.15.0",
+    "yarn": ">= 1.22.0"
   },
   "version": "0.0.0"
 }
