@@ -15,7 +15,7 @@ require (
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/disintegration/imaging v1.6.2
 	github.com/dop251/goja v0.0.0-20210427212725-462d53687b0d
-	github.com/ethereum/go-ethereum v1.10.1
+	github.com/ethereum/go-ethereum v1.9.25
 	github.com/fatih/structs v1.1.0 // indirect
 	github.com/golang/mock v1.5.0
 	github.com/google/go-querystring v1.1.0 // indirect
