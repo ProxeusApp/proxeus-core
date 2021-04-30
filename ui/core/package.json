@@ -1,21 +1,25 @@
 {
   "name": "@proxeus/core",
   "version": "1.0.0",
+  "private": true,
   "description": "Proxeus UI",
   "author": "info@proxeus.com",
-  "private": true,
   "scripts": {
-    "check-node-version": "check-node-version --package",
     "serve": "node --max_old_space_size=4096 node_modules/.bin/vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint",
     "test:unit": "vue-cli-service test:unit",
-    "test:e2e": "vue-cli-service test:e2e"
+    "test:e2e": "vue-cli-service test:e2e",
+    "lint": "vue-cli-service lint",
+    "check-node-version": "check-node-version --package"
   },
   "dependencies": {
     "@johmun/vue-tags-input": "^2.0.1",
     "@mdi/font": "^2.6.95",
     "@proxeus/wallet": "1.0.0",
+    "@vue/cli-plugin-babel": "~4.5.12",
+    "@vue/cli-plugin-e2e-cypress": "~4.5.12",
+    "@vue/cli-plugin-eslint": "~4.5.12",
+    "@vue/cli-service": "~4.5.12",
     "ajv": "^6.5.2",
     "async": "^2.6.0",
     "axios": "^0.21.1",
@@ -24,6 +28,7 @@
     "bootstrap-vue": "2.0.0-rc.12",
     "brace": "^0.11.1",
     "codemirror": "^5.39.2",
+    "core-js": "^3.6.5",
     "eth-lightwallet": "^3.0.1",
     "ethereumjs-util": "^5.2.0",
     "flatpickr": "^4.5.1",
@@ -84,12 +89,16 @@
     "@vue/cli-plugin-e2e-cypress": "^3.1.1",
     "@vue/cli-plugin-eslint": "^3.1.1",
     "@vue/cli-service": "^3.1.1",
-    "@vue/eslint-config-standard": "^4.0.0",
+    "@vue/eslint-config-standard": "^5.1.2",
     "autoprefixer": "^9.0.1",
-    "babel-eslint": "^10.0.1",
+    "babel-eslint": "^10.1.0",
     "check-node-version": "^3.2.0",
-    "eslint": "^5.8.0",
-    "eslint-plugin-vue": "^5.0.0-0",
+    "eslint": "^6.7.2",
+    "eslint-plugin-import": "^2.20.2",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-standard": "^4.0.0",
+    "eslint-plugin-vue": "^6.2.2",
     "file-loader": "^3.0.1",
     "less": "^3.8.1",
     "less-loader": "^4.1.0",
@@ -99,13 +108,13 @@
     "vue-template-compiler": "^2.5.17",
     "webpack": "^4.25.1"
   },
-  "engines": {
-    "node": ">= 14.15.0",
-    "yarn": ">= 1.22.0"
-  },
   "browserslist": [
     "last 2 Chrome versions",
     "last 2 Safari versions",
     "last 2 Firefox versions"
-  ]
+  ],
+  "engines": {
+    "node": ">= 14.15.0",
+    "yarn": ">= 1.22.0"
+  }
 }
