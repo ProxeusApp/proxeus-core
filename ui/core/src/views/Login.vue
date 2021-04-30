@@ -60,7 +60,7 @@ export default {
     }
   },
   created () {
-    if (typeof window.web3 !== 'undefined' && window.web3 !== undefined) {
+    if (typeof window.ethereum !== 'undefined') {
       this.metamaskLoginAvailable = true
     }
   },
