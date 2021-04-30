@@ -161,10 +161,10 @@ export default {
     },
     async hashFile (file) {
       return new Promise((resolve, reject) => {
-        let reader = new FileReader()
+        const reader = new FileReader()
 
         reader.onload = (e) => {
-          let hash = this.app.wallet.hashFile(reader.result)
+          const hash = this.app.wallet.hashFile(reader.result)
           resolve(hash)
         }
         reader.onerror = (e) => {

@@ -147,7 +147,7 @@ export default {
     },
     hasUnsavedChanges () {
       if (this.myFormBuilder) {
-        let frmData = this.myFormBuilder.getData()
+        const frmData = this.myFormBuilder.getData()
         if (frmData) {
           if (!this.form) {
             this.form = {}
@@ -188,7 +188,7 @@ export default {
       let formToSave
       this.form.data = this.myFormBuilder.getData()
       formToSave = this.form
-      let self = this
+      const self = this
       $.ajax({
         url: '/api/admin/form/update?id=' + this.$route.params.id,
         type: 'POST',
@@ -223,15 +223,15 @@ export default {
       })
     },
     initFb (store) {
-      let _this = this
+      const _this = this
       jQuery(function () {
-        let myHtmlEntry = function (id, langCode, text) {
+        const myHtmlEntry = function (id, langCode, text) {
           return '<div class="fb-i18n-entry"><p class="fb-i18n-key">' + id + '</p><span class="fb-i18n-lang">' +
               langCode + '</span><p class="fb-i18n-text">' + text + '</p></div>'
         }
-        let formSrc = _this.formSrc
+        const formSrc = _this.formSrc
 
-        let formBuilderOptions = {
+        const formBuilderOptions = {
           userAllowedToEditComponents: _this.superadmin,
           enableI18n: _this.superadmin,
           autoSaveSettings: true,
@@ -265,7 +265,7 @@ export default {
                 $form.fillForm(data)
               })
               setFormSrcFirstIfNecessary(formSrc)
-              let changeOptions = {
+              const changeOptions = {
                 beforeSend: function () {
                   setFormSrcFirstIfNecessary(formSrc)
                 },
@@ -281,7 +281,7 @@ export default {
               })
             },
             onSubmit: function (formEle, formSrc, cb) {
-              let d = formEle.serializeFormToObject()
+              const d = formEle.serializeFormToObject()
               $.ajax({
                 type: 'POST',
                 url: '/api/admin/form/test/data/' + _this.id + '?s=true',
@@ -301,7 +301,7 @@ export default {
                       redirectToLogin()
                     }
                     if (res.status === 412 || res.status === 422) {
-                      let data = res.responseJSON
+                      const data = res.responseJSON
                       formEle.showFieldErrors(data)
                     } else {
                       if ($.isFunction(cb)) {
@@ -341,7 +341,7 @@ export default {
             },
             onSearch: function (text, callback) {
               $.get('/api/admin/i18n/search?c=' + text).done(function (data) {
-                let dataList = []
+                const dataList = []
                 if (data) {
                   let id, langCode, dataIDObj, langText
                   for (id in data) {
@@ -379,13 +379,13 @@ export default {
               return { i18n: data }
             },
             onDisplay: function (data) {
-              if (typeof data === 'object' && data.hasOwnProperty('i18n') && data['i18n']) {
-                return data['i18n']
+              if (typeof data === 'object' && data.hasOwnProperty('i18n') && data.i18n) {
+                return data.i18n
               }
               return data
             },
             isCovered: function (data) {
-              return typeof data === 'object' && data.hasOwnProperty('i18n') && data['i18n']
+              return typeof data === 'object' && data.hasOwnProperty('i18n') && data.i18n
             }
             // TODO -------
           },
@@ -407,7 +407,7 @@ export default {
               }
             },
             searchComp: function (text, callback) {
-              let getOpts = {
+              const getOpts = {
                 type: 'GET',
                 thisCallback: callback,
                 url: '/api/admin/form/component?l=1000' + (text ? '&c=' + text : ''),
@@ -482,7 +482,7 @@ export default {
       let lastFromSrc
 
       function setFormSrcFirstIfNecessary (formSrc) {
-        let currentFormSrc = JSON.stringify(formSrc)
+        const currentFormSrc = JSON.stringify(formSrc)
         if (currentFormSrc !== lastFromSrc) {
           lastFromSrc = currentFormSrc
           $.ajax({

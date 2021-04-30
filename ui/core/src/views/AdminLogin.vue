@@ -110,7 +110,7 @@ export default {
       if (this.$t('Terms & Conditions link', '') == 'Terms & Conditions link') {
         return true
       }
-      let rememberAccept = localStorage.getItem('acc_' + this.account)
+      const rememberAccept = localStorage.getItem('acc_' + this.account)
       if (rememberAccept && rememberAccept === 'yes') {
         return true
       }

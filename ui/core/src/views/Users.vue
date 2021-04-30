@@ -185,7 +185,7 @@ export default {
     humanizeRole (role) {
       const unknownRole = this.$t('Unknown Role')
       if (this.app.roles) {
-        let roleConfig = this.app.roles.find(r => {
+        const roleConfig = this.app.roles.find(r => {
           return r.role === role
         })
         return roleConfig ? roleConfig.name : unknownRole

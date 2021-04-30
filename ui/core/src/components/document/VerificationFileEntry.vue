@@ -271,10 +271,10 @@ export default {
           result = false
         }
         if (result) {
-          let transaction = await this.wallet().web3.eth.getTransaction(result)
+          const transaction = await this.wallet().web3.eth.getTransaction(result)
           this.creator = transaction.from
           this.contract = transaction.to
-          let block = await this.wallet().web3.eth.getBlock(transaction.blockNumber)
+          const block = await this.wallet().web3.eth.getBlock(transaction.blockNumber)
           // *1000 is conversion to seconds
           this.timestamp = (new Date(block.timestamp * 1000)).toUTCString()
 
@@ -310,10 +310,10 @@ export default {
     },
     async hashFile (file) {
       return new Promise((resolve, reject) => {
-        let reader = new FileReader()
+        const reader = new FileReader()
 
         reader.onload = (e) => {
-          let hash = this.wallet().hashFile(reader.result)
+          const hash = this.wallet().hashFile(reader.result)
           resolve(hash)
         }
 

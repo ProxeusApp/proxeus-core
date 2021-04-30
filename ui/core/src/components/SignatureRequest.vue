@@ -127,7 +127,7 @@ export default {
       this.me = this.app.wallet.getCurrentAddress()
     },
     signerName (signerAddress) {
-      let myAccountTrans = this.$t('My Account', 'My Account')
+      const myAccountTrans = this.$t('My Account', 'My Account')
       return signerAddress === this.me ? myAccountTrans + ' (' + signerAddress + ')' : signerAddress
     },
     async getSigners () {
@@ -178,7 +178,7 @@ export default {
 
       this.nonce = await this.app.wallet.proxeusFS.web3.eth.getTransactionCount(this.me)
       this.nonce++
-      let self = this
+      const self = this
       this.app.wallet.proxeusFS.signFile({
         from: this.me,
         hash: this.doc.hash,
@@ -206,10 +206,10 @@ export default {
     },
     async hashFile (file) {
       return new Promise((resolve, reject) => {
-        let reader = new FileReader()
+        const reader = new FileReader()
 
         reader.onload = (e) => {
-          let hash = this.app.wallet.hashFile(reader.result)
+          const hash = this.app.wallet.hashFile(reader.result)
           resolve(hash)
         }
         reader.onerror = (e) => {

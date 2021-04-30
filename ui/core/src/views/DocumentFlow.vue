@@ -220,7 +220,7 @@ export default {
   },
   methods: {
     async setAccountEthAddress () {
-      let response = await axios.get('/api/me')
+      const response = await axios.get('/api/me')
       if (response.data.etherPK) {
         this.accountEthAddress = response.data.etherPK
       }
@@ -411,7 +411,7 @@ export default {
       }
     },
     submitDoc () {
-      let templateLanguageConfig = {}
+      const templateLanguageConfig = {}
       this.$children.forEach(pdfPreviewComp => {
         if (pdfPreviewComp.templateLanguage) {
           templateLanguageConfig[pdfPreviewComp.doc.id] = pdfPreviewComp.templateLanguage
@@ -446,7 +446,7 @@ export default {
     },
     confirmDoc (hash) {
       return new Promise(async (resolve, reject) => {
-        let account = this.wallet.getCurrentAddress()
+        const account = this.wallet.getCurrentAddress()
 
         if (account === null) {
           this.submitting = false
@@ -588,7 +588,7 @@ export default {
       this.initForm()
     },
     initForm () {
-      let self = this
+      const self = this
       const $form = $('.form-compiled > form')
       $form.on('dynamicFormScriptExecuted', function () {
         if ($form.length) {
@@ -607,7 +607,7 @@ export default {
       })
     },
     getFormData () {
-      let excludeFileFormFields = true
+      const excludeFileFormFields = true
       return $('.form-compiled > form').serializeFormToObject(excludeFileFormFields)
     },
     compile (form, cb) {

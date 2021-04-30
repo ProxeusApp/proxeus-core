@@ -70,7 +70,7 @@ export default {
     mapSize (obj) {
       let size = 0
       if (obj) {
-        for (let key in obj) {
+        for (const key in obj) {
           if (obj.hasOwnProperty(key)) {
             size++
           }

@@ -134,7 +134,7 @@ export default {
       })
     },
     async checkBlockchainNetwork () {
-      let r = await axios.get('/api/config')
+      const r = await axios.get('/api/config')
       if (!r.data) {
         return
       }
@@ -173,7 +173,7 @@ export default {
       }
     },
     async setAccountEthAddress () {
-      let response = await axios.get('/api/me')
+      const response = await axios.get('/api/me')
       if (response.data.etherPK) {
         this.accountEthAddress = response.data.etherPK
       }
@@ -250,7 +250,7 @@ export default {
 
       this.nonce = await this.app.wallet.proxeusFS.web3.eth.getTransactionCount(this.me)
       this.nonce++
-      let self = this
+      const self = this
 
       let response
       try {
@@ -266,7 +266,7 @@ export default {
       const xesAmountWei = web3.utils.toWei(this.workflow.price.toString(), 'ether')
 
       // eslint-disable-next-line handle-callback-err
-      let callback = async function (error, transactionHash) {
+      const callback = async function (error, transactionHash) {
         if (error) {
           console.log(error)
           return
@@ -285,7 +285,7 @@ export default {
       this.app.wallet.transferXES(this.workflow.ownerEthAddress, xesAmountWei, callback)
         .then(async (result) => {
           this.submitting = false
-          let txHash = result.transactionHash
+          const txHash = result.transactionHash
           let paymentReceived = false
           let tryCount = 0
           do {

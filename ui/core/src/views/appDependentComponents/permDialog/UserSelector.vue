@@ -75,11 +75,11 @@ export default {
     }
   },
   watch: {
-    'vueTagsInputTarget': 'vueTagsInputSearch'
+    vueTagsInputTarget: 'vueTagsInputSearch'
   },
   mounted () {
     if (this.$refs.main) {
-      let inputs = this.$refs.main.getElementsByClassName('ti-new-tag-input')
+      const inputs = this.$refs.main.getElementsByClassName('ti-new-tag-input')
       if (inputs && inputs.length === 1) {
         inputs[0].addEventListener('keydown', this.keyboardHandler)
       }
@@ -87,7 +87,7 @@ export default {
   },
   beforeDestroy () {
     if (this.$refs.main) {
-      let inputs = this.$refs.main.getElementsByClassName('ti-new-tag-input')
+      const inputs = this.$refs.main.getElementsByClassName('ti-new-tag-input')
       if (inputs && inputs.length === 1) {
         inputs[0].removeEventListener('keydown', this.keyboardHandler)
       }
@@ -118,7 +118,7 @@ export default {
     },
     autocompleteDropDownExists () {
       if (this.$refs.main) {
-        let a = this.$refs.main.getElementsByClassName('ti-autocomplete')
+        const a = this.$refs.main.getElementsByClassName('ti-autocomplete')
         return a && a.length === 1
       }
       return false
@@ -145,7 +145,7 @@ export default {
         }
         this.addresses = res.data
         // fixes vue-tag-input bug that does not display any items after adding one
-        let inputs = this.$refs.main.getElementsByClassName('ti-new-tag-input')
+        const inputs = this.$refs.main.getElementsByClassName('ti-new-tag-input')
         if (inputs && inputs.length === 1) {
           inputs[0].blur()
           inputs[0].focus()
@@ -156,7 +156,7 @@ export default {
       })
     },
     addGranted () {
-      let newGranted = []
+      const newGranted = []
       for (let i = 0; i < this.toBeGranted.length; i++) {
         if (this.toBeGranted[i] && this.toBeGranted[i].id && !this.exists(this.toBeGranted[i])) {
           newGranted.push(this.toBeGranted[i])

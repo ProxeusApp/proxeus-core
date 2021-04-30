@@ -132,7 +132,7 @@ export default {
   methods: {
     setListGroupHeight () {
       if (this.$refs.scrollable) {
-        let lg = $(this.$refs.scrollable)
+        const lg = $(this.$refs.scrollable)
         lg.css('height', ($(document.body).height() - 136) + 'px')
       }
     },
@@ -142,7 +142,7 @@ export default {
     mapSize (obj) {
       let size = 0
       if (obj) {
-        for (let key in obj) {
+        for (const key in obj) {
           if (obj.hasOwnProperty(key)) {
             size++
           }
@@ -151,8 +151,8 @@ export default {
       return size
     },
     exportClick () {
-      let params = this.getParams()
-      let entities = params.split(',')
+      const params = this.getParams()
+      const entities = params.split(',')
       entities.sort()
       let dbName = ''
       for (let i = 0; i < entities.length; i++) {
@@ -162,7 +162,7 @@ export default {
     },
     getParams () {
       let params = ''
-      for (let key in this.ex) {
+      for (const key in this.ex) {
         if (this.ex.hasOwnProperty(key) && this.ex[key]) {
           if (params !== '') {
             params += ',' + key

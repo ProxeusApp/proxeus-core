@@ -40,10 +40,10 @@ export default {
         return true
       }
       this.jsonCrawler(obj, {
-        'skipper': skipper,
-        'string': func,
-        'number': func,
-        'boolean': func
+        skipper: skipper,
+        string: func,
+        number: func,
+        boolean: func
       })
       sorted.sort()
       var newSnapshot = ''

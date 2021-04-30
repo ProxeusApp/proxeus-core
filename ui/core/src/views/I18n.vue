@@ -156,7 +156,7 @@ export default {
       this.resetEntries()
     },
     resetEntries () {
-      this.translations = { '-': { 'en': '' } }
+      this.translations = { '-': { en: '' } }
       if (this.triggerApi.start) {
         this.triggerApi.start()
       }
@@ -171,10 +171,10 @@ export default {
         axios.get(this.getReqLink(), { params: this.getFindParams() }).then(response => {
           if (this.mapSizeGreaterThan0(response.data)) {
             hideFunc()
-            let obj = response.data
-            for (let key in obj) {
+            const obj = response.data
+            for (const key in obj) {
               if (obj.hasOwnProperty(key)) {
-                for (let innerKey in obj[key]) {
+                for (const innerKey in obj[key]) {
                   if (obj[key].hasOwnProperty(innerKey)) {
                     if (!this.translations[key]) {
                       this.translations[key] = {}
@@ -265,7 +265,7 @@ export default {
     mapSizeGreaterThan0 (obj) {
       let size = 0
       if (obj) {
-        for (let key in obj) {
+        for (const key in obj) {
           if (obj.hasOwnProperty(key)) {
             size++
             break

@@ -154,7 +154,7 @@ export default {
       this.showActions = !this.showActions
     },
     showPdf () {
-      let $modal = $('#modal' + this._uid)
+      const $modal = $('#modal' + this._uid)
       $modal.unbind('shown.bs.modal')
       // this is needed as a workaround because sometimes the pdf canvas height and width stays 0
       $modal.on('shown.bs.modal', function (e) {
@@ -169,7 +169,7 @@ export default {
       return `/api/document/${this.wfId}/preview/${this.doc.id}/${this.selectedLanguage}/` + format
     },
     signature_request () {
-      let $smodal = $('#smodal' + this._uid)
+      const $smodal = $('#smodal' + this._uid)
       $smodal.modal('show')
       this.$nextTick(() => {
         this.$refs.pdfMod.load()

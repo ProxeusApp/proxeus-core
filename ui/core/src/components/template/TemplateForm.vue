@@ -24,7 +24,7 @@ export default {
     }
   },
   mounted () {
-    let self = this
+    const self = this
     $(document).ready(function () {
       $('#f-' + self.form.id).on('shown.bs.collapse', function () {
         self.$scrollTo('#f-' + self.form.id, 500, {
@@ -55,12 +55,12 @@ export default {
         }
         self.compiledForm = compiledForm
         self.$nextTick(() => {
-          let $form = $('#f-' + self.form.id + ' > form')
+          const $form = $('#f-' + self.form.id + ' > form')
           $form.on('dynamicFormScriptExecuted', function () {
             if (self.form.data && self.form.data.data) {
               $form.fillForm(self.form.data.data)
             }
-            let changeOptions = {
+            const changeOptions = {
               fileUrl: '/api/admin/form/test/file/' + self.form.id,
               url: '/api/admin/form/test/data/' + self.form.id,
               success: function (data, textStatus, xhr, myRe) {

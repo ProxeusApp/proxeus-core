@@ -294,7 +294,7 @@ export default {
     }
   },
   watch: {
-    'groupRole': 'updateGroupRightsSelector'
+    groupRole: 'updateGroupRightsSelector'
   },
   created () {
     if (this.setup) {
@@ -450,7 +450,7 @@ export default {
         this.item.publicByID = null
       }
       if (!this.compare(this.item)) {
-        let merger = this.value
+        const merger = this.value
         merger.owner = this.item.owner
         merger.groupAndOthers = this.item.groupAndOthers
         merger.grant = this.item.grant
@@ -493,19 +493,19 @@ export default {
       this.granted = this.granted.filter(item => item.id !== id)
     },
     OnSelectedShowIconOnly (strEl, change) {
-      let e = $(strEl)
+      const e = $(strEl)
       e.find('.my-explanation').remove()
       change($('<div>').append(e).html())
     },
     getMapOfExistingUsersInPermItem () {
       let size = 0
-      let include = {}
+      const include = {}
       if (this.item.owner) {
         include[this.item.owner] = true
         size++
       }
       if (this.item.grant) {
-        for (let key in this.item.grant) {
+        for (const key in this.item.grant) {
           if (this.item.grant.hasOwnProperty(key)) {
             include[key] = true
             size++
@@ -520,10 +520,10 @@ export default {
     refreshGrantList () {
       this.loading = true
       if (this.item) {
-        let include = this.getMapOfExistingUsersInPermItem()
+        const include = this.getMapOfExistingUsersInPermItem()
         if (include) {
           axios.post('/api/admin/user/list', { include: include }).then(response => {
-            let granted = []
+            const granted = []
             for (let i = 0; i < response.data.length; i++) {
               if (response.data[i].id === this.item.owner) {
                 this.owner = response.data[i]

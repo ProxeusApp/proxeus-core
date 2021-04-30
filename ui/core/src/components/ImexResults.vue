@@ -86,14 +86,14 @@ export default {
     res () {
       this.resultsArr = []
       this.errors = []
-      let results = this.imexResult.results
+      const results = this.imexResult.results
       if (results) {
-        for (let key in results) {
+        for (const key in results) {
           if (results.hasOwnProperty(key)) {
-            let errs = []
+            const errs = []
             this.resultsArr.push(
               { name: key, errCount: this.errCountOf(results[key]), count: this.mapSize(results[key]) })
-            for (let id in results[key]) {
+            for (const id in results[key]) {
               if (results[key].hasOwnProperty(id) && results[key][id]) {
                 errs.push({ id: id, err: results[key][id] })
               }
@@ -111,7 +111,7 @@ export default {
     mapSize (obj) {
       let size = 0
       if (obj) {
-        for (let key in obj) {
+        for (const key in obj) {
           if (obj.hasOwnProperty(key)) {
             size++
           }
@@ -121,7 +121,7 @@ export default {
     },
     errCountOf (item) {
       let size = 0
-      for (let id in item) {
+      for (const id in item) {
         if (item.hasOwnProperty(id) && item[id]) {
           size++
         }

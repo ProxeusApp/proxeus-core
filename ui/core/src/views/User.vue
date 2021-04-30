@@ -130,7 +130,7 @@ export default {
     saveUserForm () {
       this.saving = true
       // let formData = $('#userForm').serializeFormToObject()
-      let data = {
+      const data = {
         name: this.user.name,
         detail: this.user.detail,
         role: parseInt(this.user.role)
@@ -159,7 +159,7 @@ export default {
       return !this.compare(this.user)
     },
     updateUserForm () {
-      let self = this
+      const self = this
       axios.get('/api/admin/user/' + self.$route.params.id).then(response => {
         self.user = response.data
         self.snapshot(self.user)

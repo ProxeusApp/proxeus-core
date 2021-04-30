@@ -97,11 +97,11 @@ export default {
       })
     },
     reloadKeys () {
-      let include = {}
+      const include = {}
       include[this.user.id] = true
       axios.post('/api/admin/user/list', { include: include, limit: 1 }).then(response => {
         if (response.data && response.data.length === 1 && response.data[0].id === this.user.id) {
-          let usr = response.data[0]
+          const usr = response.data[0]
           this.user.apiKeys = usr.apiKeys
         }
       }, (err) => {
@@ -136,7 +136,7 @@ export default {
         return
       }
       axios.get('/api/user/create/api/key/' + this.user.id + '?name=' + this.newName).then(response => {
-        this.result = { 'Name': this.newName, 'Key': response.data }
+        this.result = { Name: this.newName, Key: response.data }
         this.newName = ''
         this.createNew = false
         this.reloadKeys()

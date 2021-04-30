@@ -6,13 +6,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define('bloodhound', [ 'jquery' ], function (a0) {
-      return root['Bloodhound'] = factory(a0)
+    define('bloodhound', ['jquery'], function (a0) {
+      return root.Bloodhound = factory(a0)
     })
   } else if (typeof exports === 'object') {
     module.exports = factory(require('jquery'))
   } else {
-    root['Bloodhound'] = factory(jQuery)
+    root.Bloodhound = factory(jQuery)
   }
 })(window, function ($) {
   var _ = (function () {
@@ -262,7 +262,7 @@
       LOCAL_STORAGE = null
     }
     function PersistentStorage (namespace, override) {
-      this.prefix = [ '__', namespace, '__' ].join('')
+      this.prefix = ['__', namespace, '__'].join('')
       this.ttlKey = '__ttl__'
       this.keyMatcher = new RegExp('^' + _.escapeRegExChars(this.prefix))
       this.ls = override || LOCAL_STORAGE
@@ -432,7 +432,7 @@
       },
       add: function (data) {
         var that = this
-        data = _.isArray(data) ? data : [ data ]
+        data = _.isArray(data) ? data : [data]
         _.each(data, function (datum) {
           var id, tokens
           that.datums[id = that.identify(datum)] = datum
@@ -919,7 +919,7 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define('typeahead.js', [ 'jquery' ], function (a0) {
+    define('typeahead.js', ['jquery'], function (a0) {
       return factory(a0)
     })
   } else if (typeof exports === 'object') {
@@ -1250,8 +1250,8 @@
       types = types.split(splitter)
       args = [].slice.call(arguments, 1)
       while ((type = types.shift()) && (callbacks = this._callbacks[type])) {
-        syncFlush = getFlush(callbacks.sync, this, [ type ].concat(args))
-        asyncFlush = getFlush(callbacks.async, this, [ type ].concat(args))
+        syncFlush = getFlush(callbacks.sync, this, [type].concat(args))
+        asyncFlush = getFlush(callbacks.async, this, [type].concat(args))
         syncFlush() && nextTick(asyncFlush)
       }
       return this
@@ -1305,7 +1305,7 @@
       if (!o.node || !o.pattern) {
         return
       }
-      o.pattern = _.isArray(o.pattern) ? o.pattern : [ o.pattern ]
+      o.pattern = _.isArray(o.pattern) ? o.pattern : [o.pattern]
       regex = getRegex(o.pattern, o.caseSensitive, o.wordsOnly)
       traverse(o.node, hightlightTextNode)
       function hightlightTextNode (textNode) {

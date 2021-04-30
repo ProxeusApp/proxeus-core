@@ -14,7 +14,7 @@ export default {
         i18n: {
           onTranslate: function (keyArray, callback, notAsync) {
             if (keyArray instanceof Array) {
-              let translations = []
+              const translations = []
               keyArray.forEach(key => {
                 translations.push(Vue.i18n.translate(key))
               })

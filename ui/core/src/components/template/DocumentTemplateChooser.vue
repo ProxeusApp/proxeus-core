@@ -232,7 +232,7 @@ export default {
       if (this.lang) {
         return this.lang
       }
-      return { 'Code': 'none' }
+      return { Code: 'none' }
     }
   },
   computed: {

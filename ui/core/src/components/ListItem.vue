@@ -74,9 +74,9 @@ export default {
   },
   methods: {
     goToLink () {
-      let p = typeof this.to === 'string' ? { path: this.to } : this.to
+      const p = typeof this.to === 'string' ? { path: this.to } : this.to
       if (this._blank) {
-        let routeData = this.$router.resolve(p)
+        const routeData = this.$router.resolve(p)
         window.open(routeData.href, '_blank')
         return
       }

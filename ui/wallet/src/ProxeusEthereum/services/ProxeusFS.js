@@ -103,7 +103,7 @@ export default class {
 
   createFileUndefinedSignersEstimateGas (
     { from, hash, data, mandatorySigners, expiry, replaces, providers }, cb, xes) {
-    let opt = from ? { from } : {}
+    const opt = from ? { from } : {}
     return this.contract.methods.registerFile(
       hash
     ).estimateGas(opt, cb)

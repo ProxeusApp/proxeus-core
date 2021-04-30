@@ -24,7 +24,7 @@ export default {
     }
   },
   watch: {
-    '$route': function (route) {
+    $route: function (route) {
       this.toggleSidebar()
     }
   },
