@@ -44,8 +44,8 @@
               <h2 class="text-white my-0 py-0">{{ getCurrentName()}}</h2>
             </div>
             <div id="docForm" class="card-body card-form-body bg-white border-0">
-              <div class="form form-compiled" v-append="formSrc" @appended="appended"
-                   v-show="isConfirmationStep === false"></div>
+              <div class="form form-compiled" @mounted="appended"
+                   v-show="isConfirmationStep === false">{{formSrc()}}</div>
             </div>
           </div>
 

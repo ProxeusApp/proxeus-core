@@ -48,7 +48,6 @@
     "vis": "^4.21.0",
     "vreme": "^3.0.2",
     "vue": "^2.5.17",
-    "vue-append": "^1.1.2",
     "vue-class-component": "^6.0.0",
     "vue-clipboard2": "^0.2.1",
     "vue-codemirror": "^4.0.5",

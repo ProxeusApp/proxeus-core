@@ -42,7 +42,7 @@
           <div class="col-sm-12">
             <hr>
           </div>
-          <form id="userForm" class="form-compiled" v-append="userForm" v-if="userForm"></form>
+          <form id="userForm" class="form-compiled" v-if="userForm">{{userForm()}}</form>
           <button type="button" class="btn btn-primary" :class="{saving:saving}"
                   @click="saveUserForm" v-if="user">
             Save
