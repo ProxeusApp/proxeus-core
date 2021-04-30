@@ -7,6 +7,7 @@ import (
 	"io"
 	"os"
 	"strings"
+	"sync"
 
 	"github.com/c2h5oh/datasize"
 	"github.com/h2non/filetype"
@@ -65,7 +66,7 @@ const vagueTypeFont = "font"
 
 type FTypes struct {
 	Vague map[string][]types.Type
-	Exact map[string]types.Type
+	Exact sync.Map
 }
 
 type FileType struct {

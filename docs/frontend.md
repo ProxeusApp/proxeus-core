@@ -1,13 +1,13 @@
 # Frontend Development
 
 ### Prerequisites
-+ yarn (1.12.*)
-+ node (8.11.3+, not working with node 12)
++ yarn (1.12+)
++ node (14+)
 + vue-cli
 
 > **Important**
 >
->  Only use yarn 1.12.*. For linking together local dependencies we use Yarn Workspaces:
+>  Only use yarn 1.12 or higher. For linking together local dependencies we use Yarn Workspaces:
 > https://yarnpkg.com/lang/en/docs/workspaces/
 >
 > Use yarn only from the /core/central/ui directory, as the common dependencies will be stored in
@@ -47,7 +47,7 @@ the latest production build. Use 3005 if you want to use the latest frontend fea
 
 - Progressive Web Apps https://developers.google.com/web/progressive-web-apps/
 - FileSystem API https://developer.mozilla.org/en-US/docs/Web/API/FileSystem
-- Web3 https://github.com/ethereum/web3.js/tree/v0.20.6 
+- Web3 https://github.com/ethereum/web3.js/tree/v0.20.6
 - ES6/ES7… https://codeburst.io/javascript-wtf-is-es6-es8-es-2017-ecmascript-dca859e4821c
 - Async/Await https://medium.com/@rafaelvidaurre/truly-understanding-async-await-491dd580500e
 - JavaScript https://developer.mozilla.org/bm/docs/Web/JavaScript

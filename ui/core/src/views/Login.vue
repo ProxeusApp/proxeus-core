@@ -60,7 +60,7 @@ export default {
     }
   },
   created () {
-    if (window.web3 !== undefined) {
+    if (typeof window.web3 !== "undefined" && window.web3 !== undefined) {
       this.metamaskLoginAvailable = true
     }
   },

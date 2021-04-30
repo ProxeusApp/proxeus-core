@@ -17,6 +17,10 @@ This script is maintained for the community by Proxeus Association
 
 Once your server is running, visit the [User Handbook](https://docs.google.com/document/d/e/2PACX-1vTchv7PotoQeH2cBA2VIHcqV0I0N_IQpFnbESR-8C19cgBikek3HAMVdPtfJJcYkANzPWbfy_S3bf8X/pub) to get started.
 
+To view the logs, log in with the Linode's built-in shell client ("Launch LISH console"), or connect to your instance using an SSH client program. Then paste this into the console to see the logs being updated in real time:
+
+`cd /srv/proxeus && docker-compose logs -f`
+
 ## References
 
 The basic set-up of a Debian or Ubuntu server is based roughly on Linode's [Basic OCA Helper One-Click](https://cloud.linode.com/stackscripts/401712).

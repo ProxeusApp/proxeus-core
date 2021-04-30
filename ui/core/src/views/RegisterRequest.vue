@@ -73,7 +73,7 @@ export default {
     }
   },
   created () {
-    if (window.web3 !== undefined) {
+    if (typeof window.web3 !== 'undefined' && window.web3 !== undefined) {
       this.metamaskLoginAvailable = true
     }
   },
@@ -128,7 +128,7 @@ export default {
     },
     loginWithSignature () {
       if (!this.challenge) {
-        if (window.web3 !== undefined) {
+        if (typeof window.web3 !== 'undefined' && window.web3 !== undefined) {
           this.metamaskLoginAvailable = true
           axios.get('/api/challenge').then((response) => {
             this.challenge = response.data

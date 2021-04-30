@@ -10,8 +10,8 @@ Here is the list of dependencies:
 + go (1.10+, 64bit for Windows)
 + GOBIN added to your PATH (to check your GOBIN: `echo $(go env GOPATH)/bin`)
 + curl
-+ yarn (1.12.3+)
-+ node (8.11.3+, node v12 is incompatible)
++ yarn (1.12+)
++ node (14)
 + vue-cli
 + git
 + docker-compose (18.06.0+)
@@ -92,3 +92,14 @@ Run `server`.
 The platform will be available at the following URL: http://localhost:1323
 
 It is now time to [configure your platform](configure.md)
+
+### Tips
+
+Update command failing? Try:
+
+- doing a quick verification and config-file check
+`go mod verify` / `go mod tidy`
+- clearing your module cache:
+`go clean -cache -modcache -i -r`
+- checking your dependency graph to isolate the issue:
+`go mod graph`
