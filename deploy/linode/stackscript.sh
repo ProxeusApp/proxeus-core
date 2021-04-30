@@ -77,8 +77,7 @@ cp jail.conf jail.local
 systemctl start fail2ban
 systemctl enable fail2ban
 
-## Set up firewall with port 1323 open to default Proxeus platform
-# Set up nginx separately to proxy to 443
+## Set up firewall with defaults ports of Proxeus platform
 log "Configuring firewall"
 apt-get install ufw -y
 ufw default allow outgoing
@@ -88,6 +87,7 @@ ufw allow ssh
 ufw allow https
 ufw allow http
 ufw allow 1323
+ufw allow 2115
 
 ufw enable
 
@@ -115,6 +115,7 @@ END
 
 log "Warning: you should disable port 80 in production by removing the PROXEUS_ALLOW_HTTP line in your .env"
 
+# Commence Proxeus installation
 wget https://raw.githubusercontent.com/ProxeusApp/proxeus-core/master/bootstrap.sh;
 bash bootstrap.sh
 
