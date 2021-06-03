@@ -77,6 +77,7 @@ all: ui server
 .PHONY: init
 init:
 	@for d in $(dependencies); do (echo "Checking $$d is installed... " && which $$d ) || ( echo "Please install $$d before continuing" && exit 1 ); done
+	go mod download golang.org/x/tools
 	go install golang.org/x/tools/cmd/goimports
 	go install github.com/golang/mock/mockgen
 	go install github.com/wadey/gocovmerge
