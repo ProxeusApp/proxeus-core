@@ -71,7 +71,11 @@ func NewWithSettings(settingsFile string, initialSettings *model.Settings) (*Sys
 		me.AllowHttp = true
 	}
 
-	err = me.init(me.GetSettings())
+	dbSettings := me.GetSettings()
+	syncedSettings := me.syncDBSettingsWithEnv(dbSettings, initialSettings)
+	me.PutSettings(syncedSettings)
+
+	err = me.init(syncedSettings)
 	if err != nil {
 		return nil, err
 	}
@@ -353,4 +357,32 @@ func (me *System) Shutdown() {
 		me.settingsDB.Close()
 	}
 	me.closeDBs()
+}
+
+func (me *System) syncDBSettingsWithEnv(dbStng, envStng *model.Settings) *model.Settings {
+
+	if envStng.DataDir != "" && dbStng.DataDir != envStng.DataDir {
+		dbStng.DataDir = envStng.DataDir
+	}
+	if envStng.InfuraApiKey != "" && dbStng.InfuraApiKey != envStng.InfuraApiKey {
+		dbStng.InfuraApiKey = envStng.InfuraApiKey
+	}
+	if envStng.SparkpostApiKey != "" && dbStng.SparkpostApiKey != envStng.SparkpostApiKey {
+		dbStng.SparkpostApiKey = envStng.SparkpostApiKey
+	}
+	if envStng.BlockchainContractAddress != "" && dbStng.BlockchainContractAddress != envStng.BlockchainContractAddress {
+		dbStng.BlockchainContractAddress = envStng.BlockchainContractAddress
+	}
+	if envStng.AllowHttp != "" && dbStng.AllowHttp != envStng.AllowHttp {
+		dbStng.AllowHttp = strings.ToLower(envStng.AllowHttp)
+	}
+	if envStng.PlatformDomain != "" && dbStng.PlatformDomain != envStng.PlatformDomain {
+		dbStng.PlatformDomain = envStng.PlatformDomain
+	}
+	if envStng.EmailFrom != "" && dbStng.EmailFrom != envStng.EmailFrom {
+		dbStng.EmailFrom = envStng.EmailFrom
+	}
+
+	return dbStng
+
 }
