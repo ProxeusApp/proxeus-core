@@ -1,13 +1,13 @@
 # Docker Deployment
 
-Proxeus docker deployment uses `docker-compose` and requires the following 
+Proxeus docker deployment uses `docker-compose` and requires the following
 dependencies:
 
 1. [Install Docker Engine](https://docs.docker.com/install/)
 2. [Install docker-compose](https://docs.docker.com/compose/install/)
 
 
-You easily deploy Proxeus using Docker.  The repository includes several `docker-compose` YAML files that can be 
+You easily deploy Proxeus using Docker.  The repository includes several `docker-compose` YAML files that can be
 used to deploy the platform in different context:
 
 * `docker-compose.yml`
@@ -15,10 +15,13 @@ used to deploy the platform in different context:
 * `docker-compose-cloud-override.yml`
 
 ## Simple Docker Compose
-This is the simplest method to experiment with Proxeus.  This will start a local Proxeus platform 
+
+This is the simplest method to experiment with Proxeus.  This will start a local Proxeus platform
 using images from Docker Hub.  
 
-### docker-compose.yml file 
+Please note that with SELinux enabled: a `:z` should be added to the end of volume declarations in docker-compose.yml.
+
+### docker-compose.yml file
 
 ```
 ---
@@ -75,7 +78,7 @@ services:
 ### Start
 
 ```
-docker-compose -f docker-compose.yml up 
+docker-compose -f docker-compose.yml up
 ```
 
 Environment:
@@ -91,6 +94,7 @@ Environment:
 |PROXEUS_ALLOW_HTTP:|`false`|Allow the use of HTTP instead of HTTPS =NOT FOR PRODUCTION=|
 
 ## Development Docker Compose
+
 This file will start the document service available from Docker Hub but will start
 the local Platform built from your local files.  This method is preferred during development.
 This is the default configuration when using `docker-compose up` from the project root directory.
@@ -118,7 +122,7 @@ docker-compose build
 docker-compose up
 ```
 
-Please not than in this case, you do not need to specify the docker-compose YAML files as reading the 
+Please not than in this case, you do not need to specify the docker-compose YAML files as reading the
 `docker-compose.yml` and `docker-compose.override.yml` is the default behaviour.
 
 Environment:
@@ -137,19 +141,19 @@ Environment:
 ## Cloud Docker Compose
 
 This is a docker compose override file, i.e. it must be used in conjunction
-with the `docker-compose.yml` file as described in [Multiple Compose files](https://docs.docker.com/compose/extends/#multiple-compose-files). 
-It will add the required configuration to deploy Proxeus on a hosted VM for example on Google Cloud or AWS, 
+with the `docker-compose.yml` file as described in [Multiple Compose files](https://docs.docker.com/compose/extends/#multiple-compose-files).
+It will add the required configuration to deploy Proxeus on a hosted VM for example on Google Cloud or AWS,
 including
-* [nginx](https://hub.docker.com/r/jwilder/nginx-proxy/) reverse proxy, 
-* [letsencrypt ](https://hub.docker.com/r/jrcs/letsencrypt-nginx-proxy-companion/) HTTPS provider and 
+* [nginx](https://hub.docker.com/r/jwilder/nginx-proxy/) reverse proxy,
+* [letsencrypt ](https://hub.docker.com/r/jrcs/letsencrypt-nginx-proxy-companion/) HTTPS provider and
 * [watchtower](https://hub.docker.com/r/v2tec/watchtower/) automatic container update.
 
-Please refer to [Use Compose in production](https://docs.docker.com/compose/production/) for more information about 
+Please refer to [Use Compose in production](https://docs.docker.com/compose/production/) for more information about
 running docker compose in production.
 
 This is the method that we use to deploy the Proxeus Demo site.
 
-### docker-compose-cloud.override.yml 
+### docker-compose-cloud.override.yml
 
 ```
 ---
@@ -257,7 +261,7 @@ services:
 docker-compose -f docker-compose.yml -f docker-compose-cloud.override.yml -d up
 ```
 
-To simplify your deployment, you can rename `docker-compose-cloud.override.yml` to 
+To simplify your deployment, you can rename `docker-compose-cloud.override.yml` to
 `docker-compose.override.yml` and avoid having to specify the file names in the command.
 
 Environment:
@@ -278,6 +282,4 @@ Environment:
 ## Custom Docker Deployment
 
 The first method to adapt Proxeus to your infrastructure need is to define the environment variables corresponding to your situation.
-The next level will be to customize a `docker-compose.yml` file. 
-
-
+The next level will be to customize a `docker-compose.yml` file.
