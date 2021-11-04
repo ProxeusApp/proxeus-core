@@ -5,7 +5,6 @@ go 1.16
 require (
 	github.com/DataDog/zstd v1.4.8 // indirect
 	github.com/SparkPost/gosparkpost v0.2.0
-	github.com/allegro/bigcache v1.2.1 // indirect
 	github.com/asdine/storm v0.0.0-20190418133842-e0f77eada154
 	github.com/btcsuite/btcd v0.21.0-beta // indirect
 	github.com/c2h5oh/datasize v0.0.0-20200825124411-48ed595a09d2
@@ -15,7 +14,7 @@ require (
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/disintegration/imaging v1.6.2
 	github.com/dop251/goja v0.0.0-20210322220816-6fc852574a34
-	github.com/ethereum/go-ethereum v1.9.25
+	github.com/ethereum/go-ethereum v1.10.9
 	github.com/fatih/structs v1.1.0 // indirect
 	github.com/golang/mock v1.5.0
 	github.com/google/go-querystring v1.1.0 // indirect
@@ -25,7 +24,6 @@ require (
 	github.com/imkira/go-interpol v1.1.0 // indirect
 	github.com/jackpal/go-nat-pmp v1.0.2 // indirect
 	github.com/labstack/gommon v0.3.0
-	github.com/mattn/go-colorable v0.1.8 // indirect
 	github.com/mattn/go-runewidth v0.0.10 // indirect
 	github.com/onsi/gomega v1.11.0
 	github.com/patrickmn/go-cache v2.1.0+incompatible
@@ -50,39 +48,23 @@ require (
 require (
 	github.com/Sereal/Sereal v0.0.0-20200820125258-a016b7cda3f3 // indirect
 	github.com/StackExchange/wmi v0.0.0-20210224194228-fe8f1750fd46 // indirect
-	github.com/VictoriaMetrics/fastcache v1.5.8 // indirect
 	github.com/fasthttp/websocket v1.4.3-rc.10 // indirect
 	github.com/gballet/go-libpcsclite v0.0.0-20191108122812-4678299bea08 // indirect
-	github.com/go-bindata/go-bindata/v3 v3.1.3 // indirect
-	github.com/go-kit/kit v0.10.0 // indirect
 	github.com/go-ole/go-ole v1.2.5 // indirect
 	github.com/golang/protobuf v1.5.1 // indirect
-	github.com/karalabe/usb v0.0.0-20191104083709-911d15fe12a9 // indirect
-	github.com/kisielk/errcheck v1.6.0 // indirect
+	github.com/gorilla/context v1.1.1 // indirect
 	github.com/labstack/echo v3.3.10+incompatible
 	github.com/labstack/echo-contrib v0.9.0
-	github.com/olekukonko/tablewriter v0.0.5 // indirect
 	github.com/onsi/ginkgo v1.15.2 // indirect
-	github.com/peterh/liner v1.2.1 // indirect
 	github.com/prometheus/tsdb v0.10.0 // indirect
 	github.com/rivo/uniseg v0.2.0 // indirect
 	github.com/rjeczalik/notify v0.9.2 // indirect
 	github.com/sergi/go-diff v1.1.0 // indirect
-	github.com/shirou/gopsutil v3.21.2+incompatible // indirect
 	github.com/status-im/keycard-go v0.0.0-20200402102358-957c09536969 // indirect
-	github.com/tklauser/go-sysconf v0.3.5 // indirect
 	github.com/tyler-smith/go-bip39 v1.1.0 // indirect
-	github.com/valyala/fasttemplate v1.2.1 // indirect
-	github.com/wadey/gocovmerge v0.0.0-20160331181800-b5bfa59ec0ad // indirect
 	github.com/youmark/pkcs8 v0.0.0-20201027041543-1326539a0a0a // indirect
-	github.com/yuin/goldmark v1.4.2 // indirect
 	golang.org/x/image v0.0.0-20210220032944-ac19c3e999fb // indirect
-	golang.org/x/lint v0.0.0-20210508222113-6edffad5e616 // indirect
-	golang.org/x/mod v0.5.1 // indirect
-	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c // indirect
 	golang.org/x/text v0.3.7 // indirect
-	golang.org/x/time v0.0.0-20210220033141-f8bda1e9f3ba // indirect
-	golang.org/x/tools v0.1.7 // indirect
 	google.golang.org/appengine v1.6.7 // indirect
 	gopkg.in/urfave/cli.v1 v1.22.5 // indirect
 	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b // indirect
