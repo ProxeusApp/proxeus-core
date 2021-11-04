@@ -2,7 +2,7 @@
 
 When starting the server for the first time, you will need to configure it.
 
-Open http://localhost:1323/init to configure your server.  Use the 
+Open http://localhost:1323/init to configure your server.  Use the
 configuration below as an example.
 
 ## Document Service URL
@@ -23,16 +23,22 @@ Generate a  [infura API Key](https://infura.io)
 ```
 no-reply@proxeus.com
 ```
-## sparkpost api key
-setup a free account on [SparkPost](https://www.sparkpost.com)
+## Sparkpost API Key
+
+Set up a free account on [SparkPost](https://www.sparkpost.com)
 
 ## Initial Email
+
 Use your email address for the root user and choose a secure password.
 ```
 youremail@address.com
 ```
 
-## Full Configuration
+## Encryption Secret Key
+
+This is a salt to hash your user's passwords in the database. You can use any value, with preference to hard generated strings. Make sure that it is exactly 32 characters long. Do not change the key on a running instance. This can only be set using an environment variable.
+
+# Full Configuration
 
 You can get the full list of configuration parameters using the `-h` parameter:
 
@@ -96,4 +102,3 @@ Usage of ./artifacts/proxeus:
   -XESContractAddress string
     	 (PROXEUS_XESCONTRACT_ADDRESS) (default "0x84E0b37e8f5B4B86d5d299b0B0e33686405A3919")
 ```
-
