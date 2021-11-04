@@ -29,7 +29,7 @@ export PROXEUS_EMAIL_FROM=no-reply@proxeus.com
 export PROXEUS_DATA_DIR?=./data
 export PROXEUS_DATABASE_ENGINE?=storm
 export PROXEUS_DATABASE_URI?=mongodb://localhost:27017
-export PROXEUS_ENCRYPTION_SECRET_KEY=734yvc2093dbc2vgdi93ljwwncshhd29
+export PROXEUS_ENCRYPTION_SECRET_KEY?=PleAsE_chAnGe_me_32_Characters++
 
 #########################################################
 
