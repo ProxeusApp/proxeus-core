@@ -60,6 +60,16 @@ func (se *SettingsDB) Put(s *model.Settings) error {
 	if err != nil {
 		return err
 	}
+	secret := os.Getenv("PROXEUS_ENCRYPTION_SECRET_KEY")
+	s.InfuraApiKey, err = EncryptWithAES(secret, s.InfuraApiKey)
+	if err != nil {
+		return err
+	}
+	s.SparkpostApiKey, err = EncryptWithAES(secret, s.SparkpostApiKey)
+	if err != nil {
+		return err
+	}
+
 	return se.jf.Put(s)
 }
 
@@ -67,6 +77,20 @@ func (se *SettingsDB) Put(s *model.Settings) error {
 func (se *SettingsDB) Get() (*model.Settings, error) {
 	var s model.Settings
 	err := se.jf.Get(&s)
+	if err != nil {
+		return &s, err
+	}
+
+	secret := os.Getenv("PROXEUS_ENCRYPTION_SECRET_KEY")
+	s.InfuraApiKey, err = DecryptWithAES(secret, s.InfuraApiKey)
+	if err != nil {
+		return &s, err
+	}
+	s.SparkpostApiKey, err = DecryptWithAES(secret, s.SparkpostApiKey)
+	if err != nil {
+		return &s, err
+	}
+
 	return &s, err
 }
 
