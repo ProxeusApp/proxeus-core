@@ -29,7 +29,7 @@ export PROXEUS_EMAIL_FROM=no-reply@proxeus.com
 export PROXEUS_DATA_DIR?=./data
 export PROXEUS_DATABASE_ENGINE?=storm
 export PROXEUS_DATABASE_URI?=mongodb://localhost:27017
-export PROXEUS_ENCRYPTION_SECRET_KEY=734yvc2093dbc2vgdi93ljwwncshhd29
+export PROXEUS_ENCRYPTION_SECRET_KEY?=PleAsE_chAnGe_me_32_Characters++
 
 #########################################################
 
@@ -79,12 +79,12 @@ all: ui server
 init:
 	@for d in $(dependencies); do (echo "Checking $$d is installed... " && which $$d ) || ( echo "Please install $$d before continuing" && exit 1 ); done
 	go get -u golang.org/x/tools/...
+	go get -u github.com/wadey/gocovmerge
+	go get -u github.com/go-bindata/go-bindata/v3/...
 	go install golang.org/x/tools/cmd/goimports
 	go install github.com/golang/mock/mockgen
-	go get -u github.com/wadey/gocovmerge
 	go install github.com/wadey/gocovmerge
 	go install golang.org/x/tools/cmd/godoc
-	go get -u github.com/go-bindata/go-bindata/v3/...
 
 .PHONY: update
 update:
