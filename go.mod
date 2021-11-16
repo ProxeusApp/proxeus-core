@@ -41,8 +41,8 @@ require (
 	go.etcd.io/bbolt v1.3.5 // indirect
 	go.mongodb.org/mongo-driver v1.7.3
 	golang.org/x/crypto v0.0.0-20210513164829-c07d793c2f9a
-	golang.org/x/net v0.0.0-20211101193420-4a448f8816b3
-	golang.org/x/sys v0.0.0-20211103235746-7861aae1554b // indirect
+	golang.org/x/net v0.0.0-20211112202133-69e39bad7dc2
+	golang.org/x/sys v0.0.0-20211116061358-0a5406a5449c // indirect
 	gopkg.in/gavv/httpexpect.v2 v2.2.0
 	gopkg.in/sourcemap.v1 v1.0.5 // indirect
 )
@@ -75,7 +75,7 @@ require (
 	github.com/valyala/fasttemplate v1.2.1 // indirect
 	github.com/wadey/gocovmerge v0.0.0-20160331181800-b5bfa59ec0ad // indirect
 	github.com/youmark/pkcs8 v0.0.0-20201027041543-1326539a0a0a // indirect
-	github.com/yuin/goldmark v1.4.2 // indirect
+	github.com/yuin/goldmark v1.4.4 // indirect
 	golang.org/x/image v0.0.0-20210220032944-ac19c3e999fb // indirect
 	golang.org/x/lint v0.0.0-20210508222113-6edffad5e616 // indirect
 	golang.org/x/mod v0.5.1 // indirect
