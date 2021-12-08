@@ -1893,6 +1893,7 @@ function condition(){
     $line: #eeeeee;
     $gridSize: 60px;
     $subdivisions: 3;
+    $gridSizeOverSubdivisions: 20px;
     $lineAlpha: .6;
     $sublineAlpha: .4;
 
@@ -1905,9 +1906,9 @@ function condition(){
         linear-gradient($trans 3px, $block 3px, $block $gridSize - 2, $trans $gridSize - 2), /*nub horiz*/
         linear-gradient(90deg, rgba($line, $lineAlpha) 3px, $trans 3px, $trans $gridSize - 2, rgba($line, $lineAlpha) $gridSize - 2) /*nub vert*/
     ;
-        background-size: $gridSize / $subdivisions $gridSize / $subdivisions,
+        background-size: $gridSizeOverSubdivisions $gridSizeOverSubdivisions,
         $gridSize $gridSize,
-        $gridSize / $subdivisions $gridSize / $subdivisions,
+        $gridSizeOverSubdivisions $gridSizeOverSubdivisions,
         $gridSize $gridSize,
         $gridSize $gridSize,
         $gridSize $gridSize;

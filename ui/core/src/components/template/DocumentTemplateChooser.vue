@@ -347,7 +347,7 @@ export default {
   .file_drop_box {
     border: none;
     min-width: 155px;
-    padding: $spacer / 2;
+    padding: $spacer * 0.5;
 
     &:after {
       content: '';

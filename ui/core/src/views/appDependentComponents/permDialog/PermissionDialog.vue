@@ -601,7 +601,7 @@ export default {
   .perm-change-parent {
     background: $gray-100;
     border: 1px solid #f5f5f5;
-    padding: $spacer / 2;
+    padding: $spacer * 0.5;
   }
 
   .perm-input input {
