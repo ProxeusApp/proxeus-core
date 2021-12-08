@@ -166,7 +166,7 @@ export default {
     font-size: 2rem;
   }
 
-  /deep/ .pdf-preview {
+  ::v-deep .pdf-preview {
     max-width: 150px !important;
     margin-left: 50px !important;
     margin-right: 20px !important;

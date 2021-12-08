@@ -254,7 +254,7 @@ export default {
     }
   }
 
-  .loading /deep/ .spinner {
+  .loading ::v-deep .spinner {
     position: relative;
     background: transparent;
 
@@ -264,7 +264,7 @@ export default {
     }
   }
 
-  .loading /deep/ .sk-circle .sk-child:before {
+  .loading ::v-deep .sk-circle .sk-child:before {
     background-color: #aaaaaa !important;
   }
 

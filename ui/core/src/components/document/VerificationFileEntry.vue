@@ -338,11 +338,11 @@ export default {
   .verification-file-entry {
     border-radius: $border-radius;
 
-    /deep/ .spinner {
+    ::v-deep .spinner {
       min-height: auto !important;
     }
 
-    /deep/ .sk-circle {
+    ::v-deep .sk-circle {
       width: 36px;
       height: 36px;
     }

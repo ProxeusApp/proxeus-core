@@ -664,7 +664,7 @@ export default {
     }
   }
 
-  /deep/ .navbar .dropdown .nav-link {
+  ::v-deep .navbar .dropdown .nav-link {
     color: white !important;
   }
 
