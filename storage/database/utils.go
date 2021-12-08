@@ -1,6 +1,13 @@
 package database
 
 import (
+	"crypto/aes"
+	"crypto/cipher"
+	"crypto/rand"
+	"encoding/hex"
+	"errors"
+	"fmt"
+	"io"
 	"regexp"
 	"strings"
 
@@ -111,4 +118,54 @@ func commonMatcher(auth model.Auth, contains string, params *simpleQuery) []q.Ma
 		}
 	}
 	return matchers
+}
+
+func EncryptWithAES(secret, stringToEncrypt string) (string, error) {
+
+	key := []byte(secret)
+	plaintext := []byte(stringToEncrypt)
+
+	block, err := aes.NewCipher(key)
+	if err != nil {
+		return "", err
+	}
+	aesGCM, err := cipher.NewGCM(block)
+	if err != nil {
+		panic(err.Error())
+	}
+	nonce := make([]byte, aesGCM.NonceSize())
+	if _, err = io.ReadFull(rand.Reader, nonce); err != nil {
+		return "", err
+	}
+
+	ciphertext := aesGCM.Seal(nonce, nonce, plaintext, nil)
+	return fmt.Sprintf("%x", ciphertext), nil
+}
+
+func DecryptWithAES(secret, encryptedString string) (string, error) {
+
+	key := []byte(secret)
+	enc, _ := hex.DecodeString(encryptedString)
+
+	block, err := aes.NewCipher(key)
+	if err != nil {
+		return "", err
+	}
+	aesGCM, err := cipher.NewGCM(block)
+	if err != nil {
+		return "", err
+	}
+	nonceSize := aesGCM.NonceSize()
+	if len(enc) < nonceSize {
+		return "", errors.New("decrypted key is corrupted")
+	}
+	nonce, ciphertext := enc[:nonceSize], enc[nonceSize:]
+
+	plaintext, err := aesGCM.Open(nil, nonce, ciphertext, nil)
+	if err != nil {
+		return "", err
+	}
+
+	pt := string(plaintext)
+	return pt, nil
 }

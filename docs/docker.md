@@ -47,6 +47,7 @@ services:
       PROXEUS_BLOCKCHAIN_CONTRACT_ADDRESS: "${PROXEUS_BLOCKCHAIN_CONTRACT_ADDRESS}"
       PROXEUS_INFURA_API_KEY: "${PROXEUS_INFURA_API_KEY}"
       PROXEUS_SPARKPOST_API_KEY: "${PROXEUS_SPARKPOST_API_KEY}"
+      PROXEUS_ENCRYPTION_SECRET_KEY: "${PROXEUS_ENCRYPTION_SECRET_KEY}"
       PROXEUS_EMAIL_FROM: "${PROXEUS_EMAIL_FROM:-no-reply@example.com}"
       PROXEUS_AIRDROP_WALLET_FILE: "${PROXEUS_AIRDROP_WALLET_FILE:-/root/.proxeus/settings/airdropwallet.json}"
       PROXEUS_AIRDROP_WALLET_KEY: "${PROXEUS_AIRDROP_WALLET_KEY:-/root/.proxeus/settings/airdropwallet.key}"
@@ -86,6 +87,7 @@ Environment:
 |Name           | Default Value | Description |
 |---------------|-----------------------|------------------------------|
 |PROXEUS_DATA_DIR| `./data` | Path to the directory to use a data store.|
+|PROXEUS_ENCRYPTION_SECRET_KEY|*A random string*|Use a hard key to ensure your database is safe.|
 |PROXEUS_BLOCKCHAIN_CONTRACT_ADDRESS|*0x1d3e5c81bf4bc60d41a8fbbb3d1bae6f03a75f71*|The address of the Proxeus contract.|
 |PROXEUS_INFURA_API_KEY|*Your Infura API Key*|An Infura API Key for Ethereum integration.|
 |PROXEUS_SPARKPOST_API_KEY|*Your SpartPost Key*|A SparkPost API Key for email integration.|
@@ -130,6 +132,7 @@ Environment:
 |Name           | Default Value | Description |
 |---------------|-----------------------|------------------------------|
 |PROXEUS_DATA_DIR| `./data` | Path to the directory to use a data store.|
+|PROXEUS_ENCRYPTION_SECRET_KEY|*A random string*|Use a hard key to ensure your database is safe.|
 |PROXEUS_BLOCKCHAIN_CONTRACT_ADDRESS|*0x1d3e5c81bf4bc60d41a8fbbb3d1bae6f03a75f71*|The address of the Proxeus contract.|
 |PROXEUS_INFURA_API_KEY|*Your Infura API Key*|An Infura API Key for Ethereum integration.|
 |PROXEUS_SPARKPOST_API_KEY|*Your SpartPost Key*|A SparkPost API Key for email integration.|
@@ -269,6 +272,7 @@ Environment:
 |Name           | Default Value | Description |
 |---------------|-----------------------|------------------------------|
 |PROXEUS_DATA_DIR| `./data` | Path to the directory to use a data store.|
+|PROXEUS_ENCRYPTION_SECRET_KEY|*A random string*|Use a hard key to ensure your database is safe.|
 |PROXEUS_BLOCKCHAIN_CONTRACT_ADDRESS|*0x1d3e5c81bf4bc60d41a8fbbb3d1bae6f03a75f71*|The address of the Proxeus contract.|
 |PROXEUS_INFURA_API_KEY|*Your Infura API Key*|An Infura API Key for Ethereum integration.|
 |PROXEUS_SPARKPOST_API_KEY|*Your SpartPost Key*|A SparkPost API Key for email integration.|
@@ -283,3 +287,5 @@ Environment:
 
 The first method to adapt Proxeus to your infrastructure need is to define the environment variables corresponding to your situation.
 The next level will be to customize a `docker-compose.yml` file.
+
+For more information see the [Configuration docs](./configure.md).
