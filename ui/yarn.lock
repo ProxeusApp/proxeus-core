@@ -3980,7 +3980,7 @@ core-js@^2.4.0, core-js@^2.6.5:
   resolved "https://registry.yarnpkg.com/core-js/-/core-js-2.6.12.tgz#d9333dfa7b065e347cc5682219d6f690859cc2ec"
   integrity sha512-Kb2wC0fvsWfQrgk8HU5lW6U/Lcs8+9aaYcy4ZFc6DDlo4nZ7n70dEgE5rtR0oG6ufKDUnrwfWL1mXR5ljDatrQ==
 
-core-js@^3.6.5:
+core-js@^3.19.3, core-js@^3.6.5:
   version "3.19.3"
   resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.19.3.tgz#6df8142a996337503019ff3235a7022d7cdf4559"
   integrity sha512-LeLBMgEGSsG7giquSzvgBrTS7V5UL6ks3eQlUSbN8dJStlLFiRzUm5iqsRyzUB8carhfKjkJ2vzKqE6z1Vga9g==
@@ -11806,6 +11806,13 @@ vreme@^3.0.2:
   resolved "https://registry.yarnpkg.com/vreme/-/vreme-3.0.2.tgz#4721376b449457fefde8a849d3340933b90b5686"
   integrity sha1-RyE3a0SUV/796KhJ0zQJM7kLVoY=
 
+vue-append@^2.2.0:
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/vue-append/-/vue-append-2.2.0.tgz#b5081d966f41e6fd8894443adf294c0e3bf19aea"
+  integrity sha512-bqVWyZe8AxP4Zupb0GUSE6dW7UtbilAtD2IE7e+fopbtWI9cZEmRANM/b91IdoewXz1J8Eql0GEodGLsOkVuhg==
+  dependencies:
+    vue "^2.3.2"
+
 vue-class-component@^6.0.0, vue-class-component@^6.2.0:
   version "6.3.2"
   resolved "https://registry.yarnpkg.com/vue-class-component/-/vue-class-component-6.3.2.tgz#e6037e84d1df2af3bde4f455e50ca1b9eec02be6"
@@ -12039,7 +12046,7 @@ vue-tour@^1.0.1:
     popper.js "^1.16.0"
     vue "^2.6.10"
 
-vue@^2.5.17, vue@^2.6.10:
+vue@^2.3.2, vue@^2.5.17, vue@^2.6.10:
   version "2.6.14"
   resolved "https://registry.yarnpkg.com/vue/-/vue-2.6.14.tgz#e51aa5250250d569a3fbad3a8a5a687d6036e235"
   integrity sha512-x2284lgYvjOMj3Za7kqzRcUSxBboHqtgRE2zlos1qWaOye5yUmHn42LB1250NJBLRwEcdrB0JRwyPTEPhfQjiQ==
