@@ -146,6 +146,7 @@ export default {
           text: 'There was an error while revoking the signature request. Please try again or if the error persists contact the platform operator.',
           type: 'error'
         })
+        console.log(err)
         return false
       }).catch(e => {
         console.log(e)

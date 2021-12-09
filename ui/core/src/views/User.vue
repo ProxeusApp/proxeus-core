@@ -56,7 +56,7 @@
 
 <script>
 import TopNav from '@/components/layout/TopNav'
-import FT_FormBuilderCompiler from '../libs/legacy/formbuilder-compiler'
+// import FT_FormBuilderCompiler from '../libs/legacy/formbuilder-compiler'
 
 import SimpleSelect from '../components/SimpleSelect'
 import AnimatedInput from '../components/AnimatedInput'

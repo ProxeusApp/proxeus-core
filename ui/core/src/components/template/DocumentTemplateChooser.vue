@@ -71,7 +71,7 @@
 
 <script>
 import bModal from 'bootstrap-vue/es/components/modal/modal'
-import bBtn from 'bootstrap-vue/es/components/button/button'
+// import bBtn from 'bootstrap-vue/es/components/button/button'
 import bModalDirective from 'bootstrap-vue/es/directives/modal/modal'
 import mafdc from '@/mixinApp'
 
@@ -85,8 +85,8 @@ export default {
   mixins: [mafdc],
   name: 'document-template-chooser',
   components: {
-    'b-modal': bModal,
-    'b-btn': bBtn
+    'b-modal': bModal
+    // 'b-btn': bBtn
   },
   directives: {
     'b-modal': bModalDirective

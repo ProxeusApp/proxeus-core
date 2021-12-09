@@ -81,7 +81,7 @@
           </div>
         </div>
       </div>
-      <template scope="element">
+      <template slot-scope="element">
       <td class="tdmax impcnt" style="width:10%">
         <div>{{humanizeRole(element.role)}}</div>
         <small class="light-text">{{$t('Role')}}</small>
@@ -98,7 +98,7 @@ import bModal from 'bootstrap-vue/es/components/modal/modal'
 import bModalDirective from 'bootstrap-vue/es/directives/modal/modal'
 import TopNav from '@/components/layout/TopNav'
 import ListGroup from '../components/ListGroup'
-import ListItem from '../components/ListItem'
+// import ListItem from '../components/ListItem'
 import mafdc from '@/mixinApp'
 import AnimatedInput from '../components/AnimatedInput'
 import SimpleSelect from '../components/SimpleSelect'
@@ -110,7 +110,7 @@ export default {
     SimpleSelect,
     AnimatedInput,
     ListGroup,
-    ListItem,
+    // ListItem,
     TopNav,
     'b-modal': bModal
   },

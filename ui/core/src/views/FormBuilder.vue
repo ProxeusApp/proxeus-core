@@ -36,7 +36,7 @@ import _ from 'lodash'
 import FT_FormBuilder from '../libs/legacy/formbuilder'
 import NameAndDetailInput from '../components/NameAndDetailInput'
 import PermissionDialog from './appDependentComponents/permDialog/PermissionDialog'
-import SaveBtn from './appDependentComponents/SaveBtn'
+// import SaveBtn from './appDependentComponents/SaveBtn'
 import mafdc from '@/mixinApp'
 import formChangeAlert from '../mixins/form-change-alert'
 export default {
@@ -44,7 +44,7 @@ export default {
   name: 'form-builder',
   props: ['userSrc', 'modal'],
   components: {
-    SaveBtn,
+    // SaveBtn,
     PermissionDialog,
     NameAndDetailInput,
     TopNav
@@ -185,9 +185,8 @@ export default {
       if (!this.app.amIWriteGrantedFor(this.form)) {
         return
       }
-      let formToSave
       this.form.data = this.myFormBuilder.getData()
-      formToSave = this.form
+      const formToSave = this.form
       const self = this
       $.ajax({
         url: '/api/admin/form/update?id=' + this.$route.params.id,
@@ -346,10 +345,11 @@ export default {
                   let id, langCode, dataIDObj, langText
                   for (id in data) {
                     dataIDObj = data[id]
-                    if (data.hasOwnProperty(id) && dataIDObj) {
+                    const hasDataProp = Object.prototype.hasOwnProperty.call(data, id)
+                    if (hasDataProp && dataIDObj) {
                       for (langCode in dataIDObj) {
                         langText = dataIDObj[langCode]
-                        if (data.hasOwnProperty(id) && langText) {
+                        if (langText) {
                           dataList.push({
                             id: id,
                             name: myHtmlEntry(id, langCode, langText)
@@ -379,13 +379,15 @@ export default {
               return { i18n: data }
             },
             onDisplay: function (data) {
-              if (typeof data === 'object' && data.hasOwnProperty('i18n') && data.i18n) {
+              const hasDatai18n = Object.prototype.hasOwnProperty.call(data, 'i18n')
+              if (typeof data === 'object' && hasDatai18n && data.i18n) {
                 return data.i18n
               }
               return data
             },
             isCovered: function (data) {
-              return typeof data === 'object' && data.hasOwnProperty('i18n') && data.i18n
+              const hasDatai18n = Object.prototype.hasOwnProperty.call(data, 'i18n')
+              return typeof data === 'object' && hasDatai18n && data.i18n
             }
             // TODO -------
           },

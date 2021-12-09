@@ -57,20 +57,20 @@
 
 <script>
 import AnimatedInput from '../AnimatedInput'
-import Checkbox from '../Checkbox'
+// import Checkbox from '../Checkbox'
 import mafdc from '@/mixinApp'
 
 export default {
   mixins: [mafdc],
   name: 'api-key',
   components: {
-    Checkbox,
+    // Checkbox,
     AnimatedInput
   },
   props: {
     user: {
       type: Object,
-      default: {}
+      default: () => {}
     }
   },
   data () {

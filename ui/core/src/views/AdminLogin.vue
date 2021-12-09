@@ -107,7 +107,7 @@ export default {
       }
     },
     checkTermsAndConditions () {
-      if (this.$t('Terms & Conditions link', '') == 'Terms & Conditions link') {
+      if (this.$t('Terms & Conditions link', '') === 'Terms & Conditions link') {
         return true
       }
       const rememberAccept = localStorage.getItem('acc_' + this.account)

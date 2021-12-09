@@ -143,7 +143,7 @@ export default {
       let size = 0
       if (obj) {
         for (const key in obj) {
-          if (obj.hasOwnProperty(key)) {
+          if (Object.prototype.hasOwnProperty.call(obj, key)) {
             size++
           }
         }
@@ -163,7 +163,8 @@ export default {
     getParams () {
       let params = ''
       for (const key in this.ex) {
-        if (this.ex.hasOwnProperty(key) && this.ex[key]) {
+        const exHasProp = Object.prototype.hasOwnProperty.call(this.ex, key)
+        if (exHasProp && this.ex[key]) {
           if (params !== '') {
             params += ',' + key
           } else {

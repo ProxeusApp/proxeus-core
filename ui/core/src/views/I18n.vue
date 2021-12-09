@@ -112,7 +112,7 @@
 import TopNav from '@/components/layout/TopNav'
 import Translation from '@/views/appDependentComponents/i18n/Translation'
 import I18nLangCell from '@/views/appDependentComponents/i18n/I18nLangCell'
-import I18nTransCell from '@/views/appDependentComponents/i18n/I18nTransCell'
+// import I18nTransCell from '@/views/appDependentComponents/i18n/I18nTransCell'
 import LanguageDropDown from '@/views/appDependentComponents/LanguageDropDown'
 import Trigger from '../components/Trigger'
 import mafdc from '@/mixinApp'
@@ -125,7 +125,7 @@ export default {
     AnimatedInput,
     Trigger,
     I18nLangCell,
-    I18nTransCell,
+    // I18nTransCell,
     Translation,
     TopNav,
     LanguageDropDown
@@ -173,9 +173,9 @@ export default {
             hideFunc()
             const obj = response.data
             for (const key in obj) {
-              if (obj.hasOwnProperty(key)) {
+              if (Object.prototype.hasOwnProperty.call(obj, key)) {
                 for (const innerKey in obj[key]) {
-                  if (obj[key].hasOwnProperty(innerKey)) {
+                  if (Object.prototype.hasOwnProperty.call(obj[key], innerKey)) {
                     if (!this.translations[key]) {
                       this.translations[key] = {}
                     }
@@ -266,7 +266,7 @@ export default {
       let size = 0
       if (obj) {
         for (const key in obj) {
-          if (obj.hasOwnProperty(key)) {
+          if (Object.prototype.hasOwnProperty.call(obj, key)) {
             size++
             break
           }

@@ -209,7 +209,8 @@ export default {
       this.delExsUrl = ''
       if (res && res.results) {
         for (const key in res.results) {
-          if (res.results.hasOwnProperty(key) && key.toLowerCase() === this.nodeType.toLowerCase()) {
+          const resHasOwnProp = Object.prototype.hasOwnProperty.call(res.results, key)
+          if (resHasOwnProp && key.toLowerCase() === this.nodeType.toLowerCase()) {
             if (res.results[key]) {
               this.lastExs = res.results[key]
               this.delExsUrl = 'delete=' + key
@@ -223,7 +224,8 @@ export default {
       this.delImpsUrl = ''
       if (res && res.results) {
         for (const key in res.results) {
-          if (res.results.hasOwnProperty(key) && key.toLowerCase() === this.nodeType.toLowerCase()) {
+          const resHasOwnProp = Object.prototype.hasOwnProperty.call(res.results, key)
+          if (resHasOwnProp && key.toLowerCase() === this.nodeType.toLowerCase()) {
             if (res.results[key]) {
               this.lastImps = res.results[key]
               this.delImpsUrl = 'delete=' + key
