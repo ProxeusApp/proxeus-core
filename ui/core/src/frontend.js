@@ -49,7 +49,7 @@ Vue.use(ErrorPage, {
   tagName: 'frontend-view'
 })
 
-Vue({
+const vm = new Vue({ // eslint-disable-line no-unused-vars
   el: '#frontend-app',
   router,
   store,
