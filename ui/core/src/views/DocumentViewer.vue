@@ -55,8 +55,8 @@
 
 <script>
 import PdfPreview from '@/components/document/PdfPreview'
-import SearchBox from '@/components/SearchBox'
-import ListGroup from '@/components/ListGroup'
+// import SearchBox from '@/components/SearchBox'
+// import ListGroup from '@/components/ListGroup'
 import TopNav from '@/components/layout/TopNav'
 import NameAndDetailInput from '@/components/NameAndDetailInput'
 import mafdc from '@/mixinApp'
@@ -73,8 +73,8 @@ export default {
   components: {
     NameAndDetailInput,
     PdfPreview,
-    SearchBox,
-    ListGroup,
+    // SearchBox,
+    // ListGroup,
     TopNav,
     SignatureRequestList
   },
@@ -132,6 +132,7 @@ export default {
         setTimeout(() => {
           axios.post('/api/document/' + this.id + '/name', { name: this.document.name, detail: this.document.detail })
             .then(response => {
+              // Request succeeded
             }, (err) => {
               this.app.handleError(err)
               this.$notify({

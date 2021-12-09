@@ -8,7 +8,7 @@
       <router-link slot="addBtn" :to="{name:'document-create'}" class="btn btn-primary">
         Create document
       </router-link>
-      <template scope="element">
+      <template slot-scope="element">
           <div v-if="element.finished === false" class="easy-read"><span
             class="badge badge-info">{{$t('inline draft badge','Draft')}}</span></div>
           <div v-else></div>
@@ -36,7 +36,7 @@
 <script>
 import ListGroup from '@/components/ListGroup'
 import TopNav from '@/components/layout/TopNav'
-import ListItem from '../components/ListItem'
+// import ListItem from '../components/ListItem'
 import mafdc from '@/mixinApp'
 import ListItemDialog from './appDependentComponents/ListItemDialog'
 import FirstLoginOverlay from '@/views/FirstLoginOverlay'
@@ -46,7 +46,7 @@ export default {
   name: 'documents',
   components: {
     ListItemDialog,
-    ListItem,
+    // ListItem,
     ListGroup,
     TopNav,
     FirstLoginOverlay

@@ -111,8 +111,9 @@ export default {
         // custom messages are not supported anymore in beforeunload
         // https://stackoverflow.com/questions/38879742/is-it-possible-to-display-a-custom-message-in-the-beforeunload-popup
         // this return value is going to be used as a flag on the new browsers
-        return e.returnValue = this.$t('Blockchain progress alert warning 2',
+        e.returnValue = this.$t('Blockchain progress alert warning 2',
           'Its highly recommended to stay on this page until the metamask transaction has been confirmed, else your payment might not be successfully processed. ')
+        return e.returnValue
       }
     },
     checkPaymentAndRedirectIfExists () {
