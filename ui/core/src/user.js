@@ -64,7 +64,7 @@ Vue.use(ErrorPage, {
   }
 })
 
-Vue({
+const vm = new Vue({ // eslint-disable-line no-unused-vars
   el: '#document-app',
   router,
   store,

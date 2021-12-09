@@ -471,7 +471,7 @@ export default {
         libreHub.updateFileName(file.name)
       }
       this.interval = setInterval(() => {
-        if (file && this.lastModified &&
+        if (file && this.lastModified && file.lastModifiedDate &&
           file.lastModifiedDate.getTime() !== this.lastModified.getTime() &&
           this.activeFileSize !== file.size
         ) {
