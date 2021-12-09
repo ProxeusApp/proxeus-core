@@ -384,7 +384,7 @@ export default {
           if (response.data) {
             const elements = []
             for (const key in response.data) {
-              if (response.data.hasOwnProperty(key)) {
+              if (Object.prototype.hasOwnProperty.call(response.data, key)) {
                 const item = response.data[key].Item
                 if (item) {
                   item.getLink = function () {
@@ -791,7 +791,7 @@ function condition(){
             _.nodeData = {}
             _.lastSearchTime = new Date().getTime()
             for (var k in _.nodeIconMap) {
-              if (_.nodeIconMap.hasOwnProperty(k)) {
+              if (Object.prototype.hasOwnProperty.call(_.nodeIconMap, k)) {
                 _.searchNodeSpecific(k, v)
               }
             }
@@ -870,7 +870,7 @@ function condition(){
             if (!this.$legend) {
               var rows = ''
               for (var k in this.nodeIconMap) {
-                if (this.nodeIconMap.hasOwnProperty(k)) {
+                if (Object.prototype.hasOwnProperty.call(this.nodeIconMap, k)) {
                   rows += this._createFinderItem({ name: k, kind: k })
                 }
               }

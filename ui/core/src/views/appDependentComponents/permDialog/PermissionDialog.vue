@@ -220,12 +220,12 @@
 </template>
 
 <script>
-import VueTagsInput from '@johmun/vue-tags-input'
+// import VueTagsInput from '@johmun/vue-tags-input'
 import bModal from 'bootstrap-vue/es/components/modal/modal'
 import bModalDirective from 'bootstrap-vue/es/directives/modal/modal'
 import SimpleSelect from '@/components/SimpleSelect'
 import ReadWriteSelector from './ReadWriteSelector'
-import UserItem from './UserItem'
+// import UserItem from './UserItem'
 import mafdc from '@/mixinApp'
 import formChangeAlert from '../../../mixins/form-change-alert'
 import UserSelector from './UserSelector'
@@ -235,10 +235,10 @@ export default {
   name: 'permission-dialog',
   components: {
     UserSelector,
-    UserItem,
+    // UserItem,
     ReadWriteSelector,
     SimpleSelect,
-    'vue-tags-input': VueTagsInput,
+    // 'vue-tags-input': VueTagsInput,
     'b-modal': bModal
   },
   directives: {
@@ -395,10 +395,10 @@ export default {
           this.grantEnabled = true
           this.publicEnabled = true
         } else if (this.item.groupAndOthers &&
-          (this.item.groupAndOthers.group <= me.role && this.item.groupAndOthers.rights &&
-            this.item.groupAndOthers.rights.length > 0 && this.item.groupAndOthers.rights[0] === 2 ||
-            this.item.groupAndOthers.rights && this.item.groupAndOthers.rights.length > 1 &&
-            this.item.groupAndOthers.rights[1] === 2)) {
+          ((this.item.groupAndOthers.group <= me.role && this.item.groupAndOthers.rights &&
+            this.item.groupAndOthers.rights.length > 0 && this.item.groupAndOthers.rights[0] === 2) ||
+          (this.item.groupAndOthers.rights && this.item.groupAndOthers.rights.length > 1 &&
+            this.item.groupAndOthers.rights[1] === 2))) {
           this.publicEnabled = true
           this.grantEnabled = true
         } else if (this.item.grant && this.item.grant[me.id] && this.item.grant[me.id][0] === 2) {
@@ -506,7 +506,7 @@ export default {
       }
       if (this.item.grant) {
         for (const key in this.item.grant) {
-          if (this.item.grant.hasOwnProperty(key)) {
+          if (Object.prototype.hasOwnProperty.call(this.item.grant, key)) {
             include[key] = true
             size++
           }

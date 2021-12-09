@@ -61,7 +61,7 @@ export default {
       }
       if (typeof obj === 'object') {
         for (var i in obj) {
-          if (obj.hasOwnProperty(i)) {
+          if (Object.prototype.hasOwnProperty.call(obj, i)) {
             if (typeof obj[i] === 'object') {
               try {
                 if (options[(typeof obj[i]) + ''](obj[i], i, obj,
@@ -105,7 +105,8 @@ export default {
         // custom messages are not supported anymore in beforeunload
         // https://stackoverflow.com/questions/38879742/is-it-possible-to-display-a-custom-message-in-the-beforeunload-popup
         // this return value is going to be used as a flag on the new browsers
-        return e.returnValue = 'Do you really want to leave? You have unsaved changes!'
+        e.returnValue = 'Do you really want to leave? You have unsaved changes!'
+        return e.returnValue
       }
     },
     hasUnsavedChangesMethodImplemented () {
