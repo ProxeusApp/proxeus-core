@@ -39,9 +39,10 @@
             <small class="ellipsis">{{$t('Language')}}</small>
           </label>
         </div>
-        <select class="custom-select custom-select-sm maxwidth" style="padding: .2rem .4rem;" v-model="selectedLanguage"
+        <select class="custom-select custom-select-sm maxwidth" style="padding: .2rem .4rem;"
+                v-model="selectedLanguage"
                 id="inputGroupSelect01" @change="error=false">
-          <option v-if="langAvailable(lang)" v-for="lang in languages" :key="lang" :value="lang">{{ lang }}</option>
+          <option v-for="lang in getAvailableLangs(languages)" :key="lang" :value="lang">{{ lang }}</option>
         </select>
       </div>
     </div>
@@ -129,6 +130,9 @@ export default {
   methods: {
     langAvailable (lang) {
       return this.app.isLangAvailable(lang)
+    },
+    getAvailableLangs (languages) {
+      return languages.filter((l) => { this.langAvailable(l) })
     },
     getSrcForTmplRef (format) {
       if (this.item && this.item.ref) {
