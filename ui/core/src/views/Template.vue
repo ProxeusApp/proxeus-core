@@ -4,21 +4,23 @@
       :title="$t('Template title prefix', 'Proxeus - ')+(template && template.name || $t('Template title', 'Template'))"/>
     <top-nav :title="template && template.name ? template.name : $t('Template')" :sm="true"
              :returnToRoute="{name:'Templates'}">
-      <div slot="buttons" v-if="hasRenderedDocument" v-for="(type, i) in downloadButtons" :key="i">
-        <a :href="`/api/admin/template/ide/download/${id}?format=${type}`"
-           class="filedownload-btn px-2" target="_blank">
-          <table style="text-align: center;">
-            <tr>
-              <td><span class="d-block text-uppercase">{{ type }}</span></td>
-            </tr>
-            <tr>
-              <td>
-                <i class="mdi mdi-download text-info"></i>
-              </td>
-            </tr>
-          </table>
-        </a>
-      </div>
+      <span v-if="hasRenderedDocument">
+        <div slot="buttons" v-for="(type, i) in downloadButtons" :key="i">
+          <a :href="`/api/admin/template/ide/download/${id}?format=${type}`"
+             class="filedownload-btn px-2" target="_blank">
+            <table style="text-align: center;">
+              <tr>
+                <td><span class="d-block text-uppercase">{{ type }}</span></td>
+              </tr>
+              <tr>
+                <td>
+                  <i class="mdi mdi-download text-info"></i>
+                </td>
+              </tr>
+            </table>
+          </a>
+        </div>
+      </span>
       <a target="_blank"
          href="https://docs.google.com/document/d/1-vJsTrU3w8dEcDr3-nV5owtxqHWSjzEf2uk6m9-cMIs/preview"
          class="btn btn-link btn-sm"><span
@@ -63,8 +65,8 @@
               </document-template-chooser>
             </div>
           </div>
-          <div class="row mt-3" v-if="meta !== null">
-            <div class="col" v-for="lang in meta.activeLangs" :key="lang.Code" v-if="template && meta">
+          <div class="row mt-3" v-if="meta !== null && meta && template">
+            <div class="col" v-for="lang in meta.activeLangs" :key="lang.Code">
               <document-template-chooser :readOnly="template && !app.amIWriteGrantedFor(template)"
                                          :lang="lang"
                                          :is-active="lang.active"
@@ -84,10 +86,11 @@
           <div class="row">
             <div class="col-sm-12" id="formsContainer">
               <search-box v-on:search="search"></search-box>
-              <template-form v-for="form in forms" :form="form" :key="form.id"
-                             :comps="components"
-                             @updatedFormField="handleFormUpdate"
-                             v-if="form && components"/>
+              <span v-for="form in forms" :form="form" :key="form.id">
+                <template-form v-if="form && components"
+                               :comps="components"
+                               @updatedFormField="handleFormUpdate" />
+              </span>
               <div style="display: none">
                 <div id="log"></div>
                 <div id="inputContainer">
@@ -132,8 +135,8 @@ import TemplateForm from '@/components/template/TemplateForm'
 import _ from 'lodash'
 import Spinner from '@/components/Spinner'
 import SearchBox from '@/components/SearchBox'
-import bModal from 'bootstrap-vue/es/components/modal/modal'
-import bBtn from 'bootstrap-vue/es/components/button/button'
+// import bModal from 'bootstrap-vue/es/components/modal/modal'
+// import bBtn from 'bootstrap-vue/es/components/button/button'
 import bModalDirective from 'bootstrap-vue/es/directives/modal/modal'
 import libreHub from '../libs/libreTmplAssistance.min.js'
 
@@ -163,9 +166,9 @@ export default {
     DocumentTemplateChooser,
     Spinner,
     SearchBox,
-    TemplateForm,
-    'b-modal': bModal,
-    'b-btn': bBtn
+    TemplateForm
+    // 'b-modal': bModal,
+    // 'b-btn': bBtn
   },
   directives: {
     'b-modal': bModalDirective
@@ -343,6 +346,7 @@ export default {
               })
             }
           }, (err) => {
+            console.log(err)
           })
       }
     },
@@ -524,7 +528,7 @@ export default {
       }
       delete this.unpersistedBoxes[lang.Code]
       for (var prop in this.unpersistedBoxes) {
-        if (!this.unpersistedBoxes.hasOwnProperty(prop)) continue
+        if (!Object.prototype.hasOwnProperty.call(this.unpersistedBoxes, prop)) continue
         this.hasUnpersistedBoxes = true
         return
       }
@@ -545,7 +549,7 @@ export default {
     fileUploadSuccess (lang, file) {
       delete this.unpersistedBoxes[lang]
       for (var prop in this.unpersistedBoxes) {
-        if (this.unpersistedBoxes.hasOwnProperty(prop)) {
+        if (Object.prototype.hasOwnProperty.call(this.unpersistedBoxes, prop)) {
           this.hasUnpersistedBoxes = true
           return
         }
