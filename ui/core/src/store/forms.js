@@ -1,4 +1,4 @@
-import Vue from 'vue'
+import Vue from 'vue' // eslint-disable-line no-unused-vars
 
 const state = {
   components: [

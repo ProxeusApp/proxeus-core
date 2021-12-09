@@ -4,10 +4,10 @@
  *
  */
 import Vue from 'vue'
-import Web3 from 'web3'
+import Web3 from 'web3' // eslint-disable-line no-unused-vars
 import ErrorPage from 'vue-error-page'
 
-import FTG from './libs/legacy/global.js'
+import FTG from './libs/legacy/global.js' // eslint-disable-line no-unused-vars
 
 /*
  *
@@ -49,7 +49,7 @@ Vue.use(ErrorPage, {
   tagName: 'frontend-view'
 })
 
-new Vue({
+Vue({
   el: '#frontend-app',
   router,
   store,
