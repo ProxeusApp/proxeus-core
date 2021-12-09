@@ -52,7 +52,6 @@
 
 <script>
 import mafdc from '@/mixinApp'
-import PdfPreview from '@/components/document/PdfPreview'
 import moment from 'moment'
 
 export default {

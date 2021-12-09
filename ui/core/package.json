@@ -62,7 +62,7 @@
     "vue-multiselect": "^2.1.0",
     "vue-notification": "^1.3.12",
     "vue-password-strength-meter": "^1.3.2",
-    "vue-pdf": "github:davematter/vue-pdf#master",
+    "vue-pdf": "^4.3.0",
     "vue-property-decorator": "^7.0.0",
     "vue-range-slider": "^0.6.0",
     "vue-router": "^3.0.1",
@@ -99,7 +99,8 @@
     "postcss-loader": "^3.0.0",
     "sass-loader": "^10.1.1",
     "vue-template-compiler": "^2.5.17",
-    "webpack": "^4.25.1"
+    "webpack": "^4",
+    "worker-loader": "^3"
   },
   "browserslist": [
     "last 2 Chrome versions",
