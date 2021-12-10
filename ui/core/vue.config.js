@@ -87,7 +87,17 @@ module.exports = {
       options.fix = true
       return options
     })
-    config.plugins.delete('friendly-errors')
+    // remove vue-cli-service error output
+    // config.plugins.delete('friendly-errors')
+    // remove vue-cli-service's progress output
+    // config.plugins.delete('progress')
+    // optionally replace with another progress output plugin
+    // `npm i -D simple-progress-webpack-plugin` to use
+    // config.plugin('simple-progress-webpack-plugin').use(require.resolve('simple-progress-webpack-plugin'), [
+    //   {
+    //     format: 'compact', // options are minimal, compact, expanded, verbose
+    //   },
+    // ])
   },
   configureWebpack: function (config) {
     config.output.globalObject = 'this'

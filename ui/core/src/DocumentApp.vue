@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import SidebarUser from '@/views/appDependentComponents/SidebarUser'
+// import SidebarUser from '@/views/appDependentComponents/SidebarUser'
 import baseApp from './baseApp'
 import Blocker from './components/Blocker'
 
@@ -18,8 +18,8 @@ export default {
   mixins: [baseApp],
   name: 'document-app',
   components: {
-    Blocker,
-    SidebarUser
+    Blocker
+    // SidebarUser
   },
   created () {
     this.$root.$on('service-on', this.onServiceOn)
@@ -39,7 +39,7 @@ export default {
     }
   },
   watch: {
-    '$route': function (route) {
+    $route: function (route) {
       this.toggleSidebar()
     }
   },

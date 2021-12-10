@@ -1,4 +1,4 @@
-import Vue from 'vue'
+import Vue from 'vue' // eslint-disable-line no-unused-vars
 
 const state = {
   components: [
@@ -101,7 +101,7 @@ const mutations = {
     state.components = components
   },
   SET_FORMCOMPONENT_SETTING (state, { component, setting }) {
-    let fc = state.formComponents.find(
+    const fc = state.formComponents.find(
       formComponent => formComponent.id === component.id
     )
     // fc.settings[setting.k] = setting.v
@@ -110,12 +110,12 @@ const mutations = {
     state.formComponents.splice(state.formComponents.indexOf(fc), 1, component)
   },
   SET_FORMCOMPONENT_SETTINGS (state, { component, setting }) {
-    let fc = state.formComponents.find(
+    const fc = state.formComponents.find(
       formComponent => formComponent.cid === component.cid)
     fc.settings = settings
   },
   SET_COMPONENT_CODE (state, { component, code }) {
-    let comp = getters.byId(component.id)
+    const comp = getters.byId(component.id)
     // console.log(comp)
     // component.code = code
     if (comp) {

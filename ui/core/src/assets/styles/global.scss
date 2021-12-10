@@ -212,7 +212,7 @@ body {
 
 .sub-title {
   border-bottom: 2px solid $gray-300;
-  margin-bottom: $spacer / 4;
+  margin-bottom: $spacer * 0.25;
 }
 
 .mlist-group {
@@ -229,7 +229,7 @@ body {
 }
 
 .mlist-item > td {
-  padding: $spacer / 2 $spacer;
+  padding: $spacer * 0.5 $spacer;
 }
 
 .mlist-item > td:first-child {

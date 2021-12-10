@@ -3,7 +3,7 @@
      aria-labelledby="myLargeModalLabel"
      aria-hidden="true">
   <div class="modal-dialog modal-lg">
-    <div class="modal-content">
+    <div class="modal-content" v-if="src">
       <spinner v-show="loadingPdf" background="transparent"></spinner>
       <a v-if="download && filename" :href="src" class="btn btn-primary"><span class="align-middle"><small
         class="text-truncate file-name text-white" v-if="filename">{{ filename }}</small></span>
@@ -15,7 +15,6 @@
         :src="pdfSrc"
         @error="errorHandler"
         :page="i"
-        v-if="src"
       ></pdf>
     </div>
   </div>
@@ -52,6 +51,7 @@ export default {
         this.loadingPdf = false
       }, (err) => {
         this.loadingPdf = false
+        console.log(err)
       })
     },
     errorHandler (e) {

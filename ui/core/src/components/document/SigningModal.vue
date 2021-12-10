@@ -97,7 +97,7 @@ export default {
       this.granted = this.granted.filter(item => item.id !== id)
     },
     OnSelectedShowIconOnly (strEl, change) {
-      let e = $(strEl)
+      const e = $(strEl)
       e.find('.my-explanation').remove()
       change($('<div>').append(e).html())
     },

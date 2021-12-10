@@ -42,7 +42,7 @@
           <div class="col-sm-12">
             <hr>
           </div>
-          <form id="userForm" class="form-compiled" v-append="userForm" v-if="userForm"></form>
+          <form id="userForm" class="form-compiled" v-if="userForm">{{userForm()}}</form>
           <button type="button" class="btn btn-primary" :class="{saving:saving}"
                   @click="saveUserForm" v-if="user">
             Save
@@ -56,7 +56,7 @@
 
 <script>
 import TopNav from '@/components/layout/TopNav'
-import FT_FormBuilderCompiler from '../libs/legacy/formbuilder-compiler'
+// import FT_FormBuilderCompiler from '../libs/legacy/formbuilder-compiler'
 
 import SimpleSelect from '../components/SimpleSelect'
 import AnimatedInput from '../components/AnimatedInput'
@@ -130,7 +130,7 @@ export default {
     saveUserForm () {
       this.saving = true
       // let formData = $('#userForm').serializeFormToObject()
-      let data = {
+      const data = {
         name: this.user.name,
         detail: this.user.detail,
         role: parseInt(this.user.role)
@@ -159,7 +159,7 @@ export default {
       return !this.compare(this.user)
     },
     updateUserForm () {
-      let self = this
+      const self = this
       axios.get('/api/admin/user/' + self.$route.params.id).then(response => {
         self.user = response.data
         self.snapshot(self.user)

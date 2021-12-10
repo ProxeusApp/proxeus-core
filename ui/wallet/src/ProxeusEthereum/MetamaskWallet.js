@@ -9,7 +9,7 @@ class MetamaskWallet {
   }
 
   async signMessage (message) {
-    let address = this.getCurrentAddress()
+    const address = this.getCurrentAddress()
     return this.web3.eth.personal.sign(message, address)
   }
 

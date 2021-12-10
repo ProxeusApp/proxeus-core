@@ -6,7 +6,7 @@
  *
  */
 import Vue from 'vue'
-import Web3 from 'web3'
+import Web3 from 'web3' // eslint-disable-line no-unused-vars
 
 /*
  *
@@ -68,7 +68,7 @@ Vue.use(ErrorPage, {
   }
 })
 
-new Vue({
+const vm = new Vue({ // eslint-disable-line no-unused-vars
   el: '#app',
   router,
   components: { InitialApp },

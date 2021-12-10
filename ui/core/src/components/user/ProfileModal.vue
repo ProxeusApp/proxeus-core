@@ -113,7 +113,7 @@ export default {
   methods: {
     async deleteAccount () {
       try {
-        let result = await axios.post('/api/user/delete')
+        const result = await axios.post('/api/user/delete')
         if (result.status === 200) {
           window.location.href = '/'
           return
