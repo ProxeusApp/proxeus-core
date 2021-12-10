@@ -170,7 +170,7 @@ export default {
   },
   computed: {
     defaultUserRoles () {
-      return this.app.roles.map(roleObj => { return { 'name': roleObj.name, 'role': roleObj.name.toLowerCase() } })
+      return this.app.roles.map(roleObj => { return { name: roleObj.name, role: roleObj.name.toLowerCase() } })
     }
   },
   methods: {

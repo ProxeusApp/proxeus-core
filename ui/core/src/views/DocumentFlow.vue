@@ -44,8 +44,8 @@
               <h2 class="text-white my-0 py-0">{{ getCurrentName()}}</h2>
             </div>
             <div id="docForm" class="card-body card-form-body bg-white border-0">
-              <div class="form form-compiled" v-append="formSrc" @appended="appended"
-                   v-show="isConfirmationStep === false"></div>
+              <div class="form form-compiled" @mounted="appended"
+                   v-show="isConfirmationStep === false">{{formSrc()}}</div>
             </div>
           </div>
 
@@ -114,8 +114,8 @@
         </div>
       </div>
       <div class="col-md-3 mt-3 document-scroll-view" :class="{'has-pdf':documentPreviews != null}">
-        <div class="d-flex flex-row flex-wrap">
-          <pdf-preview v-if="documentPreviews && anyLangAvailable(doc)" v-for="doc in documentPreviews" :key="doc.id"
+        <div class="d-flex flex-row flex-wrap" v-if="documentPreviews && anyLangAvailable(doc)">
+          <pdf-preview v-for="doc in documentPreviews" :key="doc.id"
                        :name="doc.name" :languages="doc.langs" :doc="doc" :wfId="id" :locale="locale"
                        :langSelectorVisible="isConfirmationStep === false"/>
         </div>
@@ -127,14 +127,14 @@
 
 <script>
 import TopNav from '@/components/layout/TopNav'
-import PdfModal from '@/components/document/PdfModal'
+// import PdfModal from '@/components/document/PdfModal'
 import PdfPreview from '@/components/document/PdfPreview'
-import ButtonSpinner from '@/components/ButtonSpinner'
+// import ButtonSpinner from '@/components/ButtonSpinner'
 import Spinner from '@/components/Spinner'
 import LanguageDropDown from '@/views/appDependentComponents/LanguageDropDown'
 
 import formCompilerAdapter from '../libs/formcompiler-adapter'
-import TopRightProfile from '../components/user/TopRightProfile'
+// import TopRightProfile from '../components/user/TopRightProfile'
 import mafdc from '@/mixinApp'
 import AnimatedInput from '../components/AnimatedInput'
 
@@ -143,10 +143,10 @@ export default {
   name: 'document-flow',
   components: {
     AnimatedInput,
-    TopRightProfile,
-    ButtonSpinner,
+    // TopRightProfile,
+    // ButtonSpinner,
     Spinner,
-    PdfModal,
+    // PdfModal,
     PdfPreview,
     TopNav,
     LanguageDropDown
@@ -220,7 +220,7 @@ export default {
   },
   methods: {
     async setAccountEthAddress () {
-      let response = await axios.get('/api/me')
+      const response = await axios.get('/api/me')
       if (response.data.etherPK) {
         this.accountEthAddress = response.data.etherPK
       }
@@ -411,7 +411,7 @@ export default {
       }
     },
     submitDoc () {
-      let templateLanguageConfig = {}
+      const templateLanguageConfig = {}
       this.$children.forEach(pdfPreviewComp => {
         if (pdfPreviewComp.templateLanguage) {
           templateLanguageConfig[pdfPreviewComp.doc.id] = pdfPreviewComp.templateLanguage
@@ -444,44 +444,43 @@ export default {
       /* sha3 */
       return this.wallet.verifyHash(hash)
     },
-    confirmDoc (hash) {
-      return new Promise(async (resolve, reject) => {
-        let account = this.wallet.getCurrentAddress()
+    async confirmDoc (hash) {
+      const account = this.wallet.getCurrentAddress()
 
-        if (account === null) {
-          this.submitting = false
-          this.$notify({
-            group: 'app',
-            title: this.$t('Error'),
-            text: this.$t('Please login to your wallet.'),
-            type: 'error'
-          })
-          reject(new Error(this.$t('Please login to your wallet.')))
-        }
-
-        this.nonce = await this.wallet.proxeusFS.web3.eth.getTransactionCount(account)
-        this.nonce++
-        this.wallet.proxeusFS.createFileUndefinedSigners({
-          from: account,
-          hash,
-          data: (this.data === '' ? '0x00' : web3.fromAscii(this.data)),
-          mandatorySigners: 0,
-          expiry: 0,
-          providers: [],
-          nonce: this.nonce,
-          xes: 0
-        }).then((result) => {
-          resolve(result.transactionHash)
-        }).catch((error) => {
-          this.$notify({
-            group: 'app',
-            title: this.$t('Error'),
-            text: this.$t('Could not register document. Please try again or if the error persists contact the platform operator.'),
-            type: 'error'
-          })
-          this.submitting = false
-          reject(new Error(this.$t('Could not create transaction. Please try again or if the error persists contact the platform operator.')))
+      if (account === null) {
+        this.submitting = false
+        this.$notify({
+          group: 'app',
+          title: this.$t('Error'),
+          text: this.$t('Please login to your wallet.'),
+          type: 'error'
         })
+        reject(new Error(this.$t('Please login to your wallet.')))
+      }
+
+      this.nonce = await this.wallet.proxeusFS.web3.eth.getTransactionCount(account)
+      this.nonce++
+      this.wallet.proxeusFS.createFileUndefinedSigners({
+        from: account,
+        hash,
+        data: (this.data === '' ? '0x00' : web3.fromAscii(this.data)),
+        mandatorySigners: 0,
+        expiry: 0,
+        providers: [],
+        nonce: this.nonce,
+        xes: 0
+      }).then((result) => {
+        resolve(result.transactionHash)
+      }).catch((error) => {
+        console.warn(error.stack)
+        this.$notify({
+          group: 'app',
+          title: this.$t('Error'),
+          text: this.$t('Could not register document. Please try again or if the error persists contact the platform operator.'),
+          type: 'error'
+        })
+        this.submitting = false
+        reject(new Error(this.$t('Could not create transaction. Please try again or if the error persists contact the platform operator.')))
       })
     },
     async confirm () {
@@ -588,7 +587,7 @@ export default {
       this.initForm()
     },
     initForm () {
-      let self = this
+      const self = this
       const $form = $('.form-compiled > form')
       $form.on('dynamicFormScriptExecuted', function () {
         if ($form.length) {
@@ -607,7 +606,7 @@ export default {
       })
     },
     getFormData () {
-      let excludeFileFormFields = true
+      const excludeFileFormFields = true
       return $('.form-compiled > form').serializeFormToObject(excludeFileFormFields)
     },
     compile (form, cb) {
@@ -664,7 +663,7 @@ export default {
     }
   }
 
-  /deep/ .navbar .dropdown .nav-link {
+  ::v-deep .navbar .dropdown .nav-link {
     color: white !important;
   }
 

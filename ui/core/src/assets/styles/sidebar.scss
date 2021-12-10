@@ -1,3 +1,5 @@
+@use "sass:math";
+
 $nav-max-width: 265px;
 
 @mixin toggle {
@@ -49,8 +51,8 @@ $nav-max-width: 265px;
   .navbar-brand {
     overflow: hidden;
     padding-left: 1.7rem;
-    padding-top: $spacer / 1.5;
-    padding-bottom: $spacer / 3;
+    padding-top: math.div($spacer, 1.5);
+    padding-bottom: math.div($spacer, 3);
     text-align:center;
     img {
       height: 3.75rem;

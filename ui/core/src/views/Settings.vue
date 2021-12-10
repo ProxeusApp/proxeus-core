@@ -16,7 +16,7 @@
 
 <script>
 import TopNav from '@/components/layout/TopNav'
-import LanguageDropDown from '@/views/appDependentComponents/LanguageDropDown'
+// import LanguageDropDown from '@/views/appDependentComponents/LanguageDropDown'
 import SettingsInner from './appDependentComponents/SettingsInner'
 
 import mafdc from '@/mixinApp'
@@ -26,8 +26,8 @@ export default {
   name: 'settings',
   components: {
     SettingsInner,
-    TopNav,
-    LanguageDropDown
+    TopNav
+    // LanguageDropDown
   },
   created () {
   },

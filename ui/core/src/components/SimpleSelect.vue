@@ -203,7 +203,7 @@ export default {
         return
       }
       if (e.which === 38 || e.keyCode === 38) { // up
-        let li = this.getTargetLI()
+        const li = this.getTargetLI()
         if (li) {
           if (li.previousSibling) {
             this.changeTargetLI(li.previousSibling)
@@ -247,13 +247,13 @@ export default {
         this.justHide(e)
       } else if (e.which === 13 || e.keyCode === 13) { // enter
         // select
-        let target = this.getTargetLI()
+        const target = this.getTargetLI()
         if (target === this.$refs.unselect) {
           this.unselectClick()
           this.removeTargetClass(target)
         } else {
-          let dummyEv = { target: target }
-          let index = this.getIndexOfLI(dummyEv.target)
+          const dummyEv = { target: target }
+          const index = this.getIndexOfLI(dummyEv.target)
           if (index !== -1) {
             this.select(dummyEv, this.options[index], index)
           }
@@ -415,7 +415,7 @@ export default {
         return
       }
       if (ev && ev.target) {
-        let t = this.getDPLi(ev.target)
+        const t = this.getDPLi(ev.target)
         if (t && t.outerHTML) {
           this.selectedIndex = id
           this.selectedKey = this.get(item, this.idProp)
@@ -437,7 +437,7 @@ export default {
       }
     },
     changeTargetLI (li) {
-      let t = this.getTargetLI()
+      const t = this.getTargetLI()
       if (t !== li) {
         if (t) {
           t.className = t.className.replace(/\blitarget\b/g, '')
@@ -445,8 +445,8 @@ export default {
         this.lastTargetLi = li
       }
       try {
-        let name = 'litarget'
-        let arr = li.className.split(' ')
+        const name = 'litarget'
+        const arr = li.className.split(' ')
         if (arr.indexOf(name) === -1) {
           li.className += ' ' + name
         }
@@ -460,8 +460,8 @@ export default {
     },
     setActive (li) {
       try {
-        let name = 'liactive'
-        let arr = li.className.split(' ')
+        const name = 'liactive'
+        const arr = li.className.split(' ')
         if (arr.indexOf(name) === -1) {
           li.className += ' ' + name
         }
@@ -480,9 +480,9 @@ export default {
       if (!li || !li.outerHTML) {
         return
       }
-      let n = li.outerHTML.replace(/<li[^>]+>/m, '').replace(/\<\/li\>$/, '')
+      const n = li.outerHTML.replace(/<li[^>]+>/m, '').replace(/\<\/li\>$/, '')
       let newSelectedItem
-      let before = function (custom) {
+      const before = function (custom) {
         if (custom) {
           newSelectedItem = custom
           return

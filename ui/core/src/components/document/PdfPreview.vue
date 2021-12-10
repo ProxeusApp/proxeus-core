@@ -39,9 +39,10 @@
             <small class="ellipsis">{{$t('Language')}}</small>
           </label>
         </div>
-        <select class="custom-select custom-select-sm maxwidth" style="padding: .2rem .4rem;" v-model="selectedLanguage"
+        <select class="custom-select custom-select-sm maxwidth" style="padding: .2rem .4rem;"
+                v-model="selectedLanguage"
                 id="inputGroupSelect01" @change="error=false">
-          <option v-if="langAvailable(lang)" v-for="lang in languages" :key="lang" :value="lang">{{ lang }}</option>
+          <option v-for="lang in getAvailableLangs(languages)" :key="lang" :value="lang">{{ lang }}</option>
         </select>
       </div>
     </div>
@@ -130,6 +131,9 @@ export default {
     langAvailable (lang) {
       return this.app.isLangAvailable(lang)
     },
+    getAvailableLangs (languages) {
+      return languages.filter((l) => { this.langAvailable(l) })
+    },
     getSrcForTmplRef (format) {
       if (this.item && this.item.ref) {
         return this.src.replace(/[^\/]+$/, this.item.ref) + '?format=' + format
@@ -154,7 +158,7 @@ export default {
       this.showActions = !this.showActions
     },
     showPdf () {
-      let $modal = $('#modal' + this._uid)
+      const $modal = $('#modal' + this._uid)
       $modal.unbind('shown.bs.modal')
       // this is needed as a workaround because sometimes the pdf canvas height and width stays 0
       $modal.on('shown.bs.modal', function (e) {
@@ -169,7 +173,7 @@ export default {
       return `/api/document/${this.wfId}/preview/${this.doc.id}/${this.selectedLanguage}/` + format
     },
     signature_request () {
-      let $smodal = $('#smodal' + this._uid)
+      const $smodal = $('#smodal' + this._uid)
       $smodal.modal('show')
       this.$nextTick(() => {
         this.$refs.pdfMod.load()

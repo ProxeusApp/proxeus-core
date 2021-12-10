@@ -35,7 +35,7 @@ export default {
     I18nTransCell
   },
   watch: {
-    'translation': 'updateProxy'
+    translation: 'updateProxy'
   },
   computed: {},
   methods: {
@@ -48,7 +48,7 @@ export default {
       this.hasChanges = true
     },
     saveTranslation () {
-      let t = {}
+      const t = {}
       if (this.translations[this.lk]) {
         t[this.lk] = this.translations[this.lk]
         if (this.lk.length <= 4) {

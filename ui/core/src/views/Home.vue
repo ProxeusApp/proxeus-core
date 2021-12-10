@@ -29,15 +29,15 @@
 </template>
 
 <script>
-import FileDropBox from '@/components/template/FileDropBox'
+// import FileDropBox from '@/components/template/FileDropBox'
 import Verification from '@/components/document/Verification'
-import FrontendNavbar from '@/components/frontend/FrontendNavbar'
+// import FrontendNavbar from '@/components/frontend/FrontendNavbar'
 
 export default {
   name: 'home',
   components: {
-    FileDropBox,
-    FrontendNavbar,
+    // FileDropBox,
+    // FrontendNavbar,
     Verification
   },
   data () {

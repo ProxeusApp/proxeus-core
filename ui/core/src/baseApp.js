@@ -235,7 +235,7 @@ export default {
         } else {
           name = 'Proxeus-' + name
         }
-        let now = new Date()
+        const now = new Date()
         name += '_' + now.getDate() + '-' + (now.getMonth() + 1) + '-' +
           now.getFullYear() + '_' + now.getHours() + '-' + now.getMinutes()
         link.setAttribute('download', name + '.db')
@@ -401,7 +401,7 @@ export default {
     }
   },
   created () {
-    let tmpLangToPreventFromWarnings = 'en'
+    const tmpLangToPreventFromWarnings = 'en'
     this.$i18n.fallback(tmpLangToPreventFromWarnings)
     this.$i18n.set(tmpLangToPreventFromWarnings)
     this.loadMeta()

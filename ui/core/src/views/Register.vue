@@ -79,7 +79,7 @@ export default {
         if (err.response && err.response.status === 422) {
           $(this.$refs.inputPassword).showFieldErrors({ errors: err.response.data })
         } else if (err.response && err.response.status === 400) {
-          $(this.$refs.inputPassword).showFieldErrors({ errors: { 'password': [{ msg: this.$t('Please sign up first.') }] } })
+          $(this.$refs.inputPassword).showFieldErrors({ errors: { password: [{ msg: this.$t('Please sign up first.') }] } })
           this.pwResetRequest = true
         } else {
           this.$notify({

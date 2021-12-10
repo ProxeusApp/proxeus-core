@@ -11,7 +11,7 @@ export default {
   },
   methods: {
     onInput (e) {
-      let t = e.target
+      const t = e.target
       if (t.scrollHeight > t.clientHeight) t.style.height = (t.scrollHeight + 20) + 'px'
     }
   },

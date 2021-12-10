@@ -9,16 +9,16 @@
 </template>
 
 <script>
-import SearchBox from '@/components/SearchBox'
-import ListGroup from '@/components/ListGroup'
+// import SearchBox from '@/components/SearchBox'
+// import ListGroup from '@/components/ListGroup'
 import TopNav from '@/components/layout/TopNav'
 import Verification from '@/components/document/Verification'
 
 export default {
   name: 'document-verification',
   components: {
-    SearchBox,
-    ListGroup,
+    // SearchBox,
+    // ListGroup,
     TopNav,
     Verification
   }

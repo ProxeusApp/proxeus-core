@@ -24,7 +24,7 @@ class MetamaskUtil {
     this.multiple = new this.ethUtil.BN('10000', 10)
 
     this.bnTable = {}
-    for (let currency in this.valueTable) {
+    for (const currency in this.valueTable) {
       this.bnTable[currency] = new this.ethUtil.BN(this.valueTable[currency],
         10)
     }

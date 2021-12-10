@@ -121,14 +121,14 @@ class WalletInterface {
   exportWalletToBlob (password = '') {
     if (password === '') {
       try {
-        let authObj = localStorage.getItem('mnidmao')
+        const authObj = localStorage.getItem('mnidmao')
         password = JSON.parse(atob(authObj)).password
       } catch (e) {
         return false
       }
     }
 
-    let encryptedKeystore = this.exportKeystore(password)
+    const encryptedKeystore = this.exportKeystore(password)
     if (encryptedKeystore.length === 0) {
       return false
     }
@@ -141,15 +141,15 @@ class WalletInterface {
   }
 
   importWalletFromBlob (blob, password) {
-    let reader = new FileReader()
+    const reader = new FileReader()
     // first set the reader event listener and wrap it in a promise
-    let promise = new Promise((resolve, reject) => {
+    const promise = new Promise((resolve, reject) => {
       reader.addEventListener('loadend', () => {
         try {
-          let decoder = new TextDecoder()
-          let parsed = JSON.parse(atob(decoder.decode(reader.result)))
+          const decoder = new TextDecoder()
+          const parsed = JSON.parse(atob(decoder.decode(reader.result)))
 
-          let importedKeystore = this.importKeystore(parsed.keystore, password)
+          const importedKeystore = this.importKeystore(parsed.keystore, password)
 
           if (importedKeystore) {
             this.web3.eth.accounts.wallet.PGPKeys = parsed.pgpKeys
@@ -217,7 +217,7 @@ class WalletInterface {
    * @param password - the password that protects the keystore
    */
   loadWallet (password = '') {
-    let authObj = localStorage.getItem('mnidmao')
+    const authObj = localStorage.getItem('mnidmao')
     let pgp = localStorage.getItem('mnidmpgp')
     let encryptedKeystore = this.getKeystoreFromLocalStorage()
 
@@ -270,7 +270,7 @@ class WalletInterface {
 
   getPasswordFromLocalStorage () {
     try {
-      let authObj = localStorage.getItem('mnidmao')
+      const authObj = localStorage.getItem('mnidmao')
       return JSON.parse(atob(authObj)).password
     } catch (e) {
       return false
@@ -349,9 +349,9 @@ class WalletInterface {
    * @return array of past contract instances
    */
   getAllProxeusFsServices () {
-    let proxeusFSPastContracts = []
-    for (let address of this.serviceConfig.PROXEUS_FS_PAST_ADDRESSES) {
-      let proxeusFSContract = new this.web3.eth.Contract(
+    const proxeusFSPastContracts = []
+    for (const address of this.serviceConfig.PROXEUS_FS_PAST_ADDRESSES) {
+      const proxeusFSContract = new this.web3.eth.Contract(
         PROXEUS_FS_ABI,
         address,
         { gas: this.serviceConfig.DEFAULT_GAS_REGULAR }
@@ -372,18 +372,18 @@ class WalletInterface {
   }
 
   async XESAmountPerFile ({ providers }) {
-    let tokensRaw = await this.proxeusFS.XESAmountPerFile({ providers })
+    const tokensRaw = await this.proxeusFS.XESAmountPerFile({ providers })
     return this.metamaskUtil.formatBalance(this.web3.utils.toHex(tokensRaw))
   }
 
   async verifyHash (hash) {
-    let result = await this.proxeusFS.fileVerify(hash)
+    const result = await this.proxeusFS.fileVerify(hash)
 
     if (result && result[0] === true) {
       return this.getDocumentRegistrationTx(hash)
     } else {
-      for (let proxeusFSPastContract of this.getAllProxeusFsServices()) {
-        let result = await proxeusFSPastContract.fileVerify(hash)
+      for (const proxeusFSPastContract of this.getAllProxeusFsServices()) {
+        const result = await proxeusFSPastContract.fileVerify(hash)
         if (result && result[0] === true) {
           return this.getDocumentRegistrationTx(hash, proxeusFSPastContract)
         }
@@ -393,13 +393,13 @@ class WalletInterface {
   }
 
   async fileVerify (hash) {
-    let result = await this.proxeusFS.fileVerify(hash)
+    const result = await this.proxeusFS.fileVerify(hash)
 
     if (result && result[0] === true) {
       return result
     } else {
-      for (let proxeusFSPastContract of this.getAllProxeusFsServices()) {
-        let result = await proxeusFSPastContract.fileVerify(hash)
+      for (const proxeusFSPastContract of this.getAllProxeusFsServices()) {
+        const result = await proxeusFSPastContract.fileVerify(hash)
         if (result && result[0] === true) {
           return result
         }
@@ -438,7 +438,7 @@ class WalletInterface {
     if (address === undefined) {
       address = this.getCurrentAddress()
     }
-    let tokensRaw = await this.xesTokenContract.methods.balanceOf(address)
+    const tokensRaw = await this.xesTokenContract.methods.balanceOf(address)
       .call()
 
     return this.formatBalance(decimalsToKeep, tokensRaw)
@@ -452,7 +452,7 @@ class WalletInterface {
 
   async getAllowance ({ spender, decimalsToKeep }) {
     const owner = this.getCurrentAddress()
-    let tokensRaw = await this.xesTokenContract.methods.allowance(owner,
+    const tokensRaw = await this.xesTokenContract.methods.allowance(owner,
       spender).call()
 
     if (decimalsToKeep === undefined) {
@@ -468,7 +468,7 @@ class WalletInterface {
   }
 
   async getFileSignedEvent (signerAddress) {
-    let arrEvents = await this.proxeusFSContract.getPastEvents(
+    const arrEvents = await this.proxeusFSContract.getPastEvents(
       'FileSignedEvent', {
         filter: { signer: signerAddress },
         fromBlock: 0
@@ -477,7 +477,7 @@ class WalletInterface {
   }
 
   async getRegistrationTxBlock (signerAddress) {
-    let event = await this.getFileSignedEvent(signerAddress)
+    const event = await this.getFileSignedEvent(signerAddress)
     if (event === null) {
       return null
     }

@@ -71,7 +71,7 @@
 
 <script>
 import bModal from 'bootstrap-vue/es/components/modal/modal'
-import bBtn from 'bootstrap-vue/es/components/button/button'
+// import bBtn from 'bootstrap-vue/es/components/button/button'
 import bModalDirective from 'bootstrap-vue/es/directives/modal/modal'
 import mafdc from '@/mixinApp'
 
@@ -85,8 +85,8 @@ export default {
   mixins: [mafdc],
   name: 'document-template-chooser',
   components: {
-    'b-modal': bModal,
-    'b-btn': bBtn
+    'b-modal': bModal
+    // 'b-btn': bBtn
   },
   directives: {
     'b-modal': bModalDirective
@@ -232,7 +232,7 @@ export default {
       if (this.lang) {
         return this.lang
       }
-      return { 'Code': 'none' }
+      return { Code: 'none' }
     }
   },
   computed: {
@@ -347,7 +347,7 @@ export default {
   .file_drop_box {
     border: none;
     min-width: 155px;
-    padding: $spacer / 2;
+    padding: $spacer * 0.5;
 
     &:after {
       content: '';

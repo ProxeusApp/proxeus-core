@@ -112,7 +112,7 @@
 import TopNav from '@/components/layout/TopNav'
 import Translation from '@/views/appDependentComponents/i18n/Translation'
 import I18nLangCell from '@/views/appDependentComponents/i18n/I18nLangCell'
-import I18nTransCell from '@/views/appDependentComponents/i18n/I18nTransCell'
+// import I18nTransCell from '@/views/appDependentComponents/i18n/I18nTransCell'
 import LanguageDropDown from '@/views/appDependentComponents/LanguageDropDown'
 import Trigger from '../components/Trigger'
 import mafdc from '@/mixinApp'
@@ -125,7 +125,7 @@ export default {
     AnimatedInput,
     Trigger,
     I18nLangCell,
-    I18nTransCell,
+    // I18nTransCell,
     Translation,
     TopNav,
     LanguageDropDown
@@ -156,7 +156,7 @@ export default {
       this.resetEntries()
     },
     resetEntries () {
-      this.translations = { '-': { 'en': '' } }
+      this.translations = { '-': { en: '' } }
       if (this.triggerApi.start) {
         this.triggerApi.start()
       }
@@ -171,11 +171,11 @@ export default {
         axios.get(this.getReqLink(), { params: this.getFindParams() }).then(response => {
           if (this.mapSizeGreaterThan0(response.data)) {
             hideFunc()
-            let obj = response.data
-            for (let key in obj) {
-              if (obj.hasOwnProperty(key)) {
-                for (let innerKey in obj[key]) {
-                  if (obj[key].hasOwnProperty(innerKey)) {
+            const obj = response.data
+            for (const key in obj) {
+              if (Object.prototype.hasOwnProperty.call(obj, key)) {
+                for (const innerKey in obj[key]) {
+                  if (Object.prototype.hasOwnProperty.call(obj[key], innerKey)) {
                     if (!this.translations[key]) {
                       this.translations[key] = {}
                     }
@@ -265,8 +265,8 @@ export default {
     mapSizeGreaterThan0 (obj) {
       let size = 0
       if (obj) {
-        for (let key in obj) {
-          if (obj.hasOwnProperty(key)) {
+        for (const key in obj) {
+          if (Object.prototype.hasOwnProperty.call(obj, key)) {
             size++
             break
           }

@@ -48,9 +48,9 @@ if (!String.prototype.startsWith) {
     }
     if (defineProperty) {
       defineProperty(String.prototype, 'startsWith', {
-        'value': startsWith,
-        'configurable': true,
-        'writable': true
+        value: startsWith,
+        configurable: true,
+        writable: true
       })
     } else {
       String.prototype.startsWith = startsWith
@@ -125,12 +125,12 @@ function VisFlowchart (wfData, pOptions) {
       con: {}
     },
     events: {
-      'hoverIn': null/* function(){} */,
-      'hoverOut': null/* function(){} */,
-      'insert': null/* function(){} */,
-      'remove': null/* function(){} */,
-      'click': null/* function(){} */,
-      'dblclick': null/* function(){} */
+      hoverIn: null/* function(){} */,
+      hoverOut: null/* function(){} */,
+      insert: null/* function(){} */,
+      remove: null/* function(){} */,
+      click: null/* function(){} */,
+      dblclick: null/* function(){} */
     },
     node: {
       connections: {
@@ -181,8 +181,8 @@ function VisFlowchart (wfData, pOptions) {
         nn = {}
         $.extend(true, nn, this.options.node, this.options.nodes[nk],
           { connections: null, events: null })
-        delete nn['connections']
-        delete nn['events']
+        delete nn.connections
+        delete nn.events
       }
       nNodeOptions[nk] = nn
     }
@@ -211,7 +211,7 @@ function VisFlowchart (wfData, pOptions) {
       },
       smooth: {
         enabled: true,
-        'forceDirection': 'none'
+        forceDirection: 'none'
       }
     },
     nodes: {
@@ -229,12 +229,12 @@ function VisFlowchart (wfData, pOptions) {
         fit: false
       },
       barnesHut: {
-        'gravitationalConstant': -850,
-        'centralGravity': 0.00001,
-        'springLength': 200,
-        'springConstant': 0.0885,
-        'damping': 0.6,
-        'avoidOverlap': 0
+        gravitationalConstant: -850,
+        centralGravity: 0.00001,
+        springLength: 200,
+        springConstant: 0.0885,
+        damping: 0.6,
+        avoidOverlap: 0
       },
       repulsion: {
         centralGravity: 0.002,
@@ -268,7 +268,7 @@ VisFlowchart.prototype.workflowDataToVis = function (wfData) {
   var dataResult = { nodes: [], edges: [] }
   var startCon = this.getConnectionSettings('start')
   var newNode = {
-    'id': this.s.startId,
+    id: this.s.startId,
     label: 'start',
     physics: false,
     group: 'start',
@@ -324,7 +324,7 @@ VisFlowchart.prototype.workflowDataToVis = function (wfData) {
           }
         } else {
           this.mergeConnectionFromSettings(newNode, { value: newNode.id }, 0)
-          newNode['uriName'] = w.uriName
+          newNode.uriName = w.uriName
           this.createConNode(dataResult, newNode, 0)
         }
         this.mergeNodeEvents(newNode)
@@ -394,37 +394,37 @@ VisFlowchart.prototype._initUI = function () {
       }
       fullscreenEl.removeAttr('style')
       _.ui.fullscreen = false
-      $(this).find('i').css({ 'color': 'black' })
+      $(this).find('i').css({ color: 'black' })
     } else {
       _.ui.fullscreen = true
       if (fullscreenWrapperEl && fullscreenWrapperEl.length) {
         fullscreenWrapperEl.css({
-          'position': 'fixed',
+          position: 'fixed',
           'z-index': 990000,
-          'width': '100%',
-          'height': '100%',
-          'left': 0,
-          'top': 0,
-          'bottom': 0,
-          'right': 0
+          width: '100%',
+          height: '100%',
+          left: 0,
+          top: 0,
+          bottom: 0,
+          right: 0
         })
         fullscreenEl.css({
-          'width': '100%',
-          'height': '100%'
+          width: '100%',
+          height: '100%'
         })
       } else {
         fullscreenEl.css({
-          'position': 'fixed',
+          position: 'fixed',
           'z-index': 990000,
-          'width': '100%',
-          'height': '100%',
-          'left': 0,
-          'top': 0,
-          'bottom': 0,
-          'right': 0
+          width: '100%',
+          height: '100%',
+          left: 0,
+          top: 0,
+          bottom: 0,
+          right: 0
         })
       }
-      $(this).find('i').css({ 'color': 'green' })
+      $(this).find('i').css({ color: 'green' })
       mainEl.css({ height: '100%', width: '100%' })
     }
   })
@@ -505,7 +505,7 @@ VisFlowchart.prototype.createConFromNode = function (node, i, from) {
     e.hidden = true
     e.physics = false
   }
-  from['ne'] = {
+  from.ne = {
     n: n,
     e: e,
     hide: function (fc, f) {
@@ -533,7 +533,7 @@ VisFlowchart.prototype.createConFromNode = function (node, i, from) {
       }
     }
   }
-  return from['ne']
+  return from.ne
 }
 
 VisFlowchart.prototype.getMergedNode = function (node, i, from) {
@@ -595,7 +595,7 @@ VisFlowchart.prototype.getFlowData = function () {
   var id, i, c, e, conn
   if (startNode && startNode.edges && startNode.edges.length) {
     layoutNode = startNode
-    startP = { 'x': layoutNode.x, 'y': layoutNode.y }
+    startP = { x: layoutNode.x, y: layoutNode.y }
     output.start.p = startP
     if (startNode.edges && startNode.edges.length > 0) {
       for (i = 0; i < startNode.edges.length; ++i) {
@@ -621,7 +621,7 @@ VisFlowchart.prototype.getFlowData = function () {
               name: targetNode.label,
               detail: targetNode.detail ? targetNode.detail : '',
               type: targetNode.group,
-              p: { 'x': layoutNode.x, 'y': layoutNode.y },
+              p: { x: layoutNode.x, y: layoutNode.y },
               conns: []
             }
     if (targetNode._cases) {
@@ -634,9 +634,9 @@ VisFlowchart.prototype.getFlowData = function () {
       e = layoutNode.edges[c].options
       if (!e.id.startsWith(this.s.conEdge) && e.to !== targetNode.id) {
         e = this.getEdgeById(e.id)
-        conn = { 'id': e.to/*, "data":{"label": e.label, "value": e.cvalue} */ }
+        conn = { id: e.to/*, "data":{"label": e.label, "value": e.cvalue} */ }
         if (ioNode.id !== e.cvalue) {
-          conn['value'] = e.cvalue
+          conn.value = e.cvalue
         }
         ioNode.conns.push(conn)
       }
@@ -654,7 +654,7 @@ VisFlowchart.prototype.setFlowData = function (wfData) {
   var dataResult = { nodes: [], edges: [] }
   var startCon = this.getConnectionSettings('start')
   var newNode = {
-    'id': this.s.startId,
+    id: this.s.startId,
     label: 'start',
     physics: false,
     group: 'start',
@@ -780,10 +780,10 @@ VisFlowchart.prototype.setFlowData = function (wfData) {
 
 VisFlowchart.prototype._storeSeed = function (wfData) {
   try {
-    if (!wfData[0]['p']) {
-      wfData[0]['p'] = {}
+    if (!wfData[0].p) {
+      wfData[0].p = {}
     }
-    wfData[0]['p'].seed = this.network.getSeed()
+    wfData[0].p.seed = this.network.getSeed()
   } catch (dontCare) {
   }
 }
@@ -1046,7 +1046,7 @@ VisFlowchart.prototype._initEvents = function () {
     $('#single-input-dialog #modal-button').unbind().click(buttonFunc)
     $('#single-input-dialog').modal({ show: true, backdrop: true })
 
-    let input = $('#single-input-dialog #modal-input')
+    const input = $('#single-input-dialog #modal-input')
     input.typeahead('destroy')
     input.val(inputValue)
 
@@ -1070,7 +1070,7 @@ VisFlowchart.prototype._initEvents = function () {
 
   this.network.on('oncontext', function (ev, b, c, d) {
     if (ev.nodes && ev.nodes.length == 1) {
-      let node = _.getNodeById(ev.nodes[0])
+      const node = _.getNodeById(ev.nodes[0])
       ev.event.preventDefault()
       $('.custom-menu li').unbind().click(function () {
         if (!node._data) {
@@ -1096,9 +1096,9 @@ VisFlowchart.prototype._initEvents = function () {
               })
             break
           case 'connectorFunc':
-            let varConnectorsList = function (text, process) {
+            const varConnectorsList = function (text, process) {
               $.get('/api/admin/connector/' + node.id + '/functions', function (data) {
-                let l = data.reduce((res, x) => {
+                const l = data.reduce((res, x) => {
                   if (x.includes(text)) {
                     res.push(x)
                   }
@@ -1282,7 +1282,7 @@ VisFlowchart.prototype.addNode = function (data) {
     newNode._data = {}
   }
   this.mergeNodeEvents(newNode)
-  newNode['uriName'] = data.uriName
+  newNode.uriName = data.uriName
   for (var i = 0; i < newNode.connections.from.length; i++) {
     var ne = this.createConFromNode(newNode, i, newNode.connections.from[i])
     this.network.body.data.nodes.getDataSet().add(ne.n)
@@ -1388,9 +1388,9 @@ VisFlowchart.prototype._createNode = function (w, id) {
     w.detail = w.description
   }
   var n = {
-    'id': w.id,
-    'label': w.name,
-    'detail': w.detail,
+    id: w.id,
+    label: w.name,
+    detail: w.detail,
     group: w.type,
     connections: con
   }

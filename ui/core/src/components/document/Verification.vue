@@ -87,7 +87,7 @@ export default {
 <style lang="scss" scoped>
   @import "../../assets/styles/variables";
 
-  /deep/ .file_drop_box {
+  ::v-deep .file_drop_box {
     border: 2px dashed #dddddd;
     min-width: 155px;
     vertical-align: middle;

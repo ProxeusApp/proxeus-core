@@ -23,7 +23,7 @@
 <script>
 import bModal from 'bootstrap-vue/es/components/modal/modal'
 import bModalDirective from 'bootstrap-vue/es/directives/modal/modal'
-import ListGroup from '@/components/ListGroup'
+// import ListGroup from '@/components/ListGroup'
 import ListItem from '@/components/ListItem'
 
 import mafdc from '@/mixinApp'
@@ -33,7 +33,7 @@ export default {
   name: 'list-item-dialog',
   components: {
     ListItem,
-    ListGroup,
+    // ListGroup,
     'b-modal': bModal
   },
   directives: {
