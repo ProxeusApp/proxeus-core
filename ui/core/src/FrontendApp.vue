@@ -12,17 +12,16 @@
       <div class="footer p-3 col-sm-12 d-flex justify-content-between">
         <div></div>
         <div>
-            <a target="_blank"
-               v-bind:href="$t('Handbook url')"
+            <a target="_blank" href="https://github.com/ProxeusApp/community/blob/master/handbook/handbook.md"
                class="footer-link">Handbook
             </a>
             <a target="_blank" :href="$t('Privacy Policy url','')" class="footer-link ml-3">Privacy Policy</a>
-          <a target="_blank" v-bind:href="$t('Terms & Conditions link')" class="footer-link ml-3">Terms & Conditions</a>
+          <a target="_blank" v-bind:href="$t('Terms & Conditions link')" class="footer-link ml-3">Terms &amp; Conditions</a>
           <a target="_blank" href="https://github.com/ProxeusApp/proxeus-core/blob/master/LICENSE" class="footer-link ml-3">License</a>
-          <a target="_blank" href="https://github.com/ProxeusApp/proxeus-core/blob/master/ACKNOWLEDGEMENTS" class="footer-link ml-3">Acknowledgements</a>
+          <a target="_blank" href="https://github.com/ProxeusApp/proxeus-core" class="footer-link ml-3">Source Code</a>
         </div>
         <div>
-            <a target="_blank" href="https://proxeus.com/" class="footer-link ml-3 small">
+            <a target="_blank" href="https://proxeus.org/" class="footer-link ml-3 small">
               {{$t('Powered by')}} <img src="/static/proxeus-logo-white.svg" alt="" />
             </a>
         </div>
