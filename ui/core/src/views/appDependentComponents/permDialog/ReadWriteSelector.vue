@@ -56,14 +56,14 @@ export default {
     }
   },
   data () {
-    let $t = this.$t
+    const $t = this.$t
     return {
       options: [{ id: 0, label: $t('None') }, { id: 1, label: $t('Can read') }, { id: 2, label: $t('Can write') }],
       valueProxy: null
     }
   },
   watch: {
-    'valueProxy': 'updateSelected'
+    valueProxy: 'updateSelected'
   },
   methods: {
     updateSelected () {

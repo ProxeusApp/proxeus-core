@@ -52,7 +52,6 @@
 
 <script>
 import mafdc from '@/mixinApp'
-import PdfPreview from '@/components/document/PdfPreview'
 import moment from 'moment'
 
 export default {
@@ -147,6 +146,7 @@ export default {
           text: 'There was an error while revoking the signature request. Please try again or if the error persists contact the platform operator.',
           type: 'error'
         })
+        console.log(err)
         return false
       }).catch(e => {
         console.log(e)
@@ -161,10 +161,10 @@ export default {
     },
     async hashFile (file) {
       return new Promise((resolve, reject) => {
-        let reader = new FileReader()
+        const reader = new FileReader()
 
         reader.onload = (e) => {
-          let hash = this.app.wallet.hashFile(reader.result)
+          const hash = this.app.wallet.hashFile(reader.result)
           resolve(hash)
         }
         reader.onerror = (e) => {

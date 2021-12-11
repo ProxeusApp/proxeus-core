@@ -4,8 +4,7 @@
      :href="'#f-'+form.id"
      role="button" aria-expanded="false" :aria-controls="'#f-'+form.id">{{ form.name }}
   </a>
-  <form class="card-body collapse form-compiled" data-parent="#formsContainer" :id="'f-'+form.id"
-        v-append="compiledForm"></form>
+  <form class="card-body collapse form-compiled" data-parent="#formsContainer" :id="'f-'+form.id">{{compiledForm()}}</form>
 </div>
 </template>
 
@@ -24,8 +23,9 @@ export default {
     }
   },
   mounted () {
-    let self = this
+    const self = this
     $(document).ready(function () {
+      if (!self.form) return
       $('#f-' + self.form.id).on('shown.bs.collapse', function () {
         self.$scrollTo('#f-' + self.form.id, 500, {
           container: '.layout-fixed-scroll-view',
@@ -35,7 +35,7 @@ export default {
     })
   },
   created () {
-    if (this.form.data && this.form.data.formSrc) {
+    if (this.form && this.form.data && this.form.data.formSrc) {
       this.compileForm()
     }
   },
@@ -55,12 +55,12 @@ export default {
         }
         self.compiledForm = compiledForm
         self.$nextTick(() => {
-          let $form = $('#f-' + self.form.id + ' > form')
+          const $form = $('#f-' + self.form.id + ' > form')
           $form.on('dynamicFormScriptExecuted', function () {
             if (self.form.data && self.form.data.data) {
               $form.fillForm(self.form.data.data)
             }
-            let changeOptions = {
+            const changeOptions = {
               fileUrl: '/api/admin/form/test/file/' + self.form.id,
               url: '/api/admin/form/test/data/' + self.form.id,
               success: function (data, textStatus, xhr, myRe) {

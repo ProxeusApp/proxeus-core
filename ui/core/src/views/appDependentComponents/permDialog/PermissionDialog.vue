@@ -220,12 +220,12 @@
 </template>
 
 <script>
-import VueTagsInput from '@johmun/vue-tags-input'
+// import VueTagsInput from '@johmun/vue-tags-input'
 import bModal from 'bootstrap-vue/es/components/modal/modal'
 import bModalDirective from 'bootstrap-vue/es/directives/modal/modal'
 import SimpleSelect from '@/components/SimpleSelect'
 import ReadWriteSelector from './ReadWriteSelector'
-import UserItem from './UserItem'
+// import UserItem from './UserItem'
 import mafdc from '@/mixinApp'
 import formChangeAlert from '../../../mixins/form-change-alert'
 import UserSelector from './UserSelector'
@@ -235,10 +235,10 @@ export default {
   name: 'permission-dialog',
   components: {
     UserSelector,
-    UserItem,
+    // UserItem,
     ReadWriteSelector,
     SimpleSelect,
-    'vue-tags-input': VueTagsInput,
+    // 'vue-tags-input': VueTagsInput,
     'b-modal': bModal
   },
   directives: {
@@ -294,7 +294,7 @@ export default {
     }
   },
   watch: {
-    'groupRole': 'updateGroupRightsSelector'
+    groupRole: 'updateGroupRightsSelector'
   },
   created () {
     if (this.setup) {
@@ -395,10 +395,10 @@ export default {
           this.grantEnabled = true
           this.publicEnabled = true
         } else if (this.item.groupAndOthers &&
-          (this.item.groupAndOthers.group <= me.role && this.item.groupAndOthers.rights &&
-            this.item.groupAndOthers.rights.length > 0 && this.item.groupAndOthers.rights[0] === 2 ||
-            this.item.groupAndOthers.rights && this.item.groupAndOthers.rights.length > 1 &&
-            this.item.groupAndOthers.rights[1] === 2)) {
+          ((this.item.groupAndOthers.group <= me.role && this.item.groupAndOthers.rights &&
+            this.item.groupAndOthers.rights.length > 0 && this.item.groupAndOthers.rights[0] === 2) ||
+          (this.item.groupAndOthers.rights && this.item.groupAndOthers.rights.length > 1 &&
+            this.item.groupAndOthers.rights[1] === 2))) {
           this.publicEnabled = true
           this.grantEnabled = true
         } else if (this.item.grant && this.item.grant[me.id] && this.item.grant[me.id][0] === 2) {
@@ -450,7 +450,7 @@ export default {
         this.item.publicByID = null
       }
       if (!this.compare(this.item)) {
-        let merger = this.value
+        const merger = this.value
         merger.owner = this.item.owner
         merger.groupAndOthers = this.item.groupAndOthers
         merger.grant = this.item.grant
@@ -493,20 +493,20 @@ export default {
       this.granted = this.granted.filter(item => item.id !== id)
     },
     OnSelectedShowIconOnly (strEl, change) {
-      let e = $(strEl)
+      const e = $(strEl)
       e.find('.my-explanation').remove()
       change($('<div>').append(e).html())
     },
     getMapOfExistingUsersInPermItem () {
       let size = 0
-      let include = {}
+      const include = {}
       if (this.item.owner) {
         include[this.item.owner] = true
         size++
       }
       if (this.item.grant) {
-        for (let key in this.item.grant) {
-          if (this.item.grant.hasOwnProperty(key)) {
+        for (const key in this.item.grant) {
+          if (Object.prototype.hasOwnProperty.call(this.item.grant, key)) {
             include[key] = true
             size++
           }
@@ -520,10 +520,10 @@ export default {
     refreshGrantList () {
       this.loading = true
       if (this.item) {
-        let include = this.getMapOfExistingUsersInPermItem()
+        const include = this.getMapOfExistingUsersInPermItem()
         if (include) {
           axios.post('/api/admin/user/list', { include: include }).then(response => {
-            let granted = []
+            const granted = []
             for (let i = 0; i < response.data.length; i++) {
               if (response.data[i].id === this.item.owner) {
                 this.owner = response.data[i]
@@ -601,7 +601,7 @@ export default {
   .perm-change-parent {
     background: $gray-100;
     border: 1px solid #f5f5f5;
-    padding: $spacer / 2;
+    padding: $spacer * 0.5;
   }
 
   .perm-input input {

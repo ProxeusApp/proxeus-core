@@ -1,4 +1,5 @@
 <template>
+<!-- eslint-disable -->
 <div>
   <div v-if="imexResult && mapSize(imexResult.results)===0" class="text-muted"
        style="text-align: center;">{{$t('Processed none')}}
@@ -63,12 +64,12 @@
 </template>
 
 <script>
-import moment from 'moment'
+// import moment from 'moment'
 
 export default {
   name: 'imex-results',
   components: {
-    moment
+    // moment
   },
   props: {
     imexResult: {
@@ -84,21 +85,26 @@ export default {
   },
   computed: {
     res () {
+      // eslint-disable-next-line
       this.resultsArr = []
+      // eslint-disable-next-line
       this.errors = []
-      let results = this.imexResult.results
+      const results = this.imexResult.results
       if (results) {
-        for (let key in results) {
-          if (results.hasOwnProperty(key)) {
-            let errs = []
+        for (const key in results) {
+          if (Object.prototype.hasOwnProperty.call(results, key)) {
+            const errs = []
+            // eslint-disable-next-line
             this.resultsArr.push(
               { name: key, errCount: this.errCountOf(results[key]), count: this.mapSize(results[key]) })
-            for (let id in results[key]) {
-              if (results[key].hasOwnProperty(id) && results[key][id]) {
+            for (const id in results[key]) {
+              const resKeyHasProp = Object.prototype.hasOwnProperty.call(results[key], id)
+              if (resKeyHasProp && results[key][id]) {
                 errs.push({ id: id, err: results[key][id] })
               }
             }
             if (errs.length > 0) {
+              // eslint-disable-next-line
               this.errors.push({ name: key, errs: errs })
             }
           }
@@ -111,8 +117,8 @@ export default {
     mapSize (obj) {
       let size = 0
       if (obj) {
-        for (let key in obj) {
-          if (obj.hasOwnProperty(key)) {
+        for (const key in obj) {
+          if (Object.prototype.hasOwnProperty.call(obj, key)) {
             size++
           }
         }
@@ -121,8 +127,8 @@ export default {
     },
     errCountOf (item) {
       let size = 0
-      for (let id in item) {
-        if (item.hasOwnProperty(id) && item[id]) {
+      for (const id in item) {
+        if (Object.prototype.hasOwnProperty.call(item, id) && item[id]) {
           size++
         }
       }

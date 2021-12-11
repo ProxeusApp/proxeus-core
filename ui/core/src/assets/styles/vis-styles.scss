@@ -1,6 +1,8 @@
 /*.vis-network {*/
 /*box-shadow: inset 1px 1px 10px rgba(0,0,0,.1);*/
 /*}*/
+@use "sass:math";
+
 .vis-network:focus {
   outline: none;
 }
@@ -771,12 +773,12 @@ input.flow-chart-finder-input {
 }
 
 .fcf-grid {
-  padding: $spacer / 2;
+  padding: $spacer * 0.5;
 }
 
 .flow-chart-finder-cnt.fcf-grid .flow-chart-node {
   display: inline-block;
-  margin: $spacer / 3;
+  margin: math.div($spacer, 3);
 }
 
 .flow-chart-finder-cnt.fcf-grid .fcfr-body .fci-node {
@@ -816,11 +818,11 @@ input.flow-chart-finder-input {
 
 .wfchart-snavi .wfc-snn .flow-chart-node.flow-chart-node-condition {
   .flow-chart-node-inner {
-    padding: $spacer / 2;
+    padding: $spacer * 0.5;
   }
 
   .node-icon {
-    margin-right: $spacer / 2;
+    margin-right: $spacer * 0.5;
   }
 }
 

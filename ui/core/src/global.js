@@ -13,8 +13,8 @@ import Notifications from 'vue-notification'
 import VueCookie from 'vue-cookie'
 import vueHeadful from 'vue-headful'
 
-import translationEN from './components/i18n/en.js'
-import translationDE from './components/i18n/de.js'
+import translationEN from './components/i18n/en.js' // eslint-disable-line no-unused-vars
+import translationDE from './components/i18n/de.js' // eslint-disable-line no-unused-vars
 
 /*
  *

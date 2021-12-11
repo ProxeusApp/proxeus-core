@@ -94,7 +94,7 @@ export default {
       if (this.$t('Terms & Conditions link', '') == 'Terms & Conditions link') {
         return true
       }
-      let rememberAccept = localStorage.getItem('acc_' + this.account)
+      const rememberAccept = localStorage.getItem('acc_' + this.account)
       if (rememberAccept && rememberAccept === 'yes') {
         return true
       }
@@ -128,8 +128,8 @@ export default {
       }
       axios.get('/api/challenge').then((response) => {
         this.signing = true
-        let challenge = response.data
-        let account = this.wallet.getCurrentAddress()
+        const challenge = response.data
+        const account = this.wallet.getCurrentAddress()
         this.account = account
         if (this.account === undefined) {
           this.walletErrorMessage = 'Please log in to MetaMask.'

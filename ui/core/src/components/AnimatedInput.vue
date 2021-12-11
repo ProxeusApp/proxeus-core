@@ -64,7 +64,7 @@ export default {
     }
   },
   watch: {
-    'value': 'valueChanged'
+    value: 'valueChanged'
   },
   mounted () {
     if (this.$refs.field && this.value) {

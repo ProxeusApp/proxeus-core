@@ -147,7 +147,7 @@ export default {
   },
   watch: {
     selectedAll (newValue) {
-      let self = this
+      const self = this
       this.elements && this.elements.map((value, key) => {
         // Use Vue $set so Vue can react to the new object keys
         self.$set(self.elements[key], 'selected', newValue)
@@ -208,8 +208,9 @@ export default {
       this.lastExs = null
       this.delExsUrl = ''
       if (res && res.results) {
-        for (let key in res.results) {
-          if (res.results.hasOwnProperty(key) && key.toLowerCase() === this.nodeType.toLowerCase()) {
+        for (const key in res.results) {
+          const resHasOwnProp = Object.prototype.hasOwnProperty.call(res.results, key)
+          if (resHasOwnProp && key.toLowerCase() === this.nodeType.toLowerCase()) {
             if (res.results[key]) {
               this.lastExs = res.results[key]
               this.delExsUrl = 'delete=' + key
@@ -222,8 +223,9 @@ export default {
       this.lastImps = null
       this.delImpsUrl = ''
       if (res && res.results) {
-        for (let key in res.results) {
-          if (res.results.hasOwnProperty(key) && key.toLowerCase() === this.nodeType.toLowerCase()) {
+        for (const key in res.results) {
+          const resHasOwnProp = Object.prototype.hasOwnProperty.call(res.results, key)
+          if (resHasOwnProp && key.toLowerCase() === this.nodeType.toLowerCase()) {
             if (res.results[key]) {
               this.lastImps = res.results[key]
               this.delImpsUrl = 'delete=' + key
@@ -259,7 +261,7 @@ export default {
       if (this.searchTerm) {
         params += '&contains=' + this.searchTerm
       }
-      let url = '/api/' + this.nodeType.toLowerCase() + '/export'
+      const url = '/api/' + this.nodeType.toLowerCase() + '/export'
       this.app.exportData(params, null, url, this.nodeType)
     },
     createParams () {
@@ -351,7 +353,7 @@ export default {
     bottomTrigger (startFunc, stopFunc, hideFunc) {
       if (!this.reachedTheEnd) {
         this.loading = true
-        let searchTermBeforeReq = this.searchTerm
+        const searchTermBeforeReq = this.searchTerm
         axios.get(this.getReqLink()).then(response => {
           if (searchTermBeforeReq === this.searchTerm && response.data && response.data.length > 0) {
             hideFunc()
@@ -407,7 +409,7 @@ export default {
     },
     setListGroupHeight () {
       if (this.$refs.listGroup) {
-        let lg = $(this.$refs.listGroup)
+        const lg = $(this.$refs.listGroup)
         lg.css('height', ($(document.body).height() - 166) + 'px')
       }
     }

@@ -1,5 +1,5 @@
 .mod-nav-tabs {
-  margin-top: $spacer / 2;
+  margin-top: $spacer * 0.5;
 
   .nav {
     border-bottom: 2px solid $gray-300;
@@ -12,7 +12,7 @@
       font-weight: 500;
       border: none;
       border-bottom: 2px transparent;
-      padding: $spacer / 2;
+      padding: $spacer * 0.5;
       margin-right: 0;
       margin-bottom: -3px;
       color: $text-muted;
@@ -45,7 +45,7 @@
   }
 
   .tabs-content {
-    padding: $spacer $spacer $spacer / 2 $spacer;
+    padding: $spacer $spacer $spacer * 0.5 $spacer;
     border: 1px solid $gray-300;
   }
 }

@@ -103,7 +103,7 @@ export default {
       // get the full item first as we are loading only meta data into the list
       axios.get('/api/admin/form/' + item.id).then(response => {
         if (response.data) {
-          let item = response.data
+          const item = response.data
           // empty id to ensure a new entry is created
           item.id = ''
           item.name = item.name + this.$t(' Copy')

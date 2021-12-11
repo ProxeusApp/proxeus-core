@@ -81,7 +81,7 @@ export default {
           $(this.$refs.inputPassword).showFieldErrors({ errors: err.response.data })
         } else if (err.response && err.response.status === 400) {
           $(this.$refs.inputPassword)
-            .showFieldErrors({ errors: { 'password': [{ msg: this.$t('Please request a password reset.') }] } })
+            .showFieldErrors({ errors: { password: [{ msg: this.$t('Please request a password reset.') }] } })
           this.pwResetRequest = true
         } else {
           this.$notify({

@@ -45,9 +45,9 @@ function transform (wfData) {
       }
       if (defineProperty) {
         defineProperty(String.prototype, 'startsWith', {
-          'value': startsWith,
-          'configurable': true,
-          'writable': true
+          value: startsWith,
+          configurable: true,
+          writable: true
         })
       } else {
         String.prototype.startsWith = startsWith
@@ -166,12 +166,12 @@ function transform (wfData) {
         con: {}
       },
       events: {
-        'hoverIn': null/* function(){} */,
-        'hoverOut': null/* function(){} */,
-        'insert': null/* function(){} */,
-        'remove': null/* function(){} */,
-        'click': null/* function(){} */,
-        'dblclick': null/* function(){} */
+        hoverIn: null/* function(){} */,
+        hoverOut: null/* function(){} */,
+        insert: null/* function(){} */,
+        remove: null/* function(){} */,
+        click: null/* function(){} */,
+        dblclick: null/* function(){} */
       },
       node: {
         connections: {
@@ -227,8 +227,8 @@ function transform (wfData) {
           nn = {}
           nn = extend(true, nn, this.options.node, this.options.nodes[nk],
             { connections: null, events: null })
-          delete nn['connections']
-          delete nn['events']
+          delete nn.connections
+          delete nn.events
         }
         nNodeOptions[nk] = nn
       }
@@ -254,7 +254,7 @@ function transform (wfData) {
         },
         smooth: {
           enabled: true,
-          'forceDirection': 'none'
+          forceDirection: 'none'
         }
       },
       nodes: {
@@ -275,12 +275,12 @@ function transform (wfData) {
           fit: true
         },
         barnesHut: {
-          'gravitationalConstant': -850,
-          'centralGravity': 0.00001,
-          'springLength': 200,
-          'springConstant': 0.0885,
-          'damping': 0.6,
-          'avoidOverlap': 0
+          gravitationalConstant: -850,
+          centralGravity: 0.00001,
+          springLength: 200,
+          springConstant: 0.0885,
+          damping: 0.6,
+          avoidOverlap: 0
         },
         repulsion: {
           centralGravity: 0.002,
@@ -302,7 +302,7 @@ function transform (wfData) {
     var dataResult = { nodes: [], edges: [] }
     var startCon = this.getConnectionSettings('start')
     var newNode = {
-      'id': this.s.startId,
+      id: this.s.startId,
       label: 'start',
       physics: false,
       group: 'start',
@@ -357,7 +357,7 @@ function transform (wfData) {
             }
           } else {
             this.mergeConnectionFromSettings(newNode, { value: newNode.id }, 0)
-            newNode['uriName'] = w.uriName
+            newNode.uriName = w.uriName
             this.createConNode(dataResult, newNode, 0)
           }
           this.mergeNodeEvents(newNode)
@@ -423,11 +423,11 @@ function transform (wfData) {
       e.hidden = true
       e.physics = false
     }
-    from['ne'] = {
+    from.ne = {
       n: n,
       e: e
     }
-    return from['ne']
+    return from.ne
   }
 
   VisFlowchart.prototype.getMergedNode = function (node, i, from) {
@@ -467,7 +467,7 @@ function transform (wfData) {
     var startNodeToId = this.getStartNodeId()
     if (startNode && startNodeToId) {
       layoutNode = startNode
-      startP = { 'x': layoutNode.x, 'y': layoutNode.y }
+      startP = { x: layoutNode.x, y: layoutNode.y }
       output.start.p = startP
       output.start.node = startNodeToId
     }
@@ -485,7 +485,7 @@ function transform (wfData) {
           name: targetNode.label,
           detail: targetNode.detail ? targetNode.detail : '',
           type: targetNode.group,
-          p: { 'x': layoutNode.x, 'y': layoutNode.y },
+          p: { x: layoutNode.x, y: layoutNode.y },
           conns: []
         }
       if (targetNode._cases) {
@@ -501,9 +501,9 @@ function transform (wfData) {
         e = edg[c]
         if (!e.id.startsWith(this.s.conEdge) && e.to !== targetNode.id) {
           e = this.getEdgeById(e.id)
-          conn = { 'id': e.to/*, "data":{"label": e.label, "value": e.cvalue} */ }
+          conn = { id: e.to/*, "data":{"label": e.label, "value": e.cvalue} */ }
           if (ioNode.id !== e.cvalue) {
-            conn['value'] = e.cvalue
+            conn.value = e.cvalue
           }
           ioNode.conns.push(conn)
         }
@@ -552,9 +552,9 @@ function transform (wfData) {
       w.detail = w.description
     }
     var n = {
-      'id': w.id,
-      'label': w.name,
-      'detail': w.detail,
+      id: w.id,
+      label: w.name,
+      detail: w.detail,
       group: w.type,
       connections: con
     }

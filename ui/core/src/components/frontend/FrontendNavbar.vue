@@ -39,14 +39,14 @@
 </template>
 
 <script>
-import Wallet from '@/components/wallet/Wallet'
+// import Wallet from '@/components/wallet/Wallet'
 import TopRightProfile from '../user/TopRightProfile'
 
 export default {
   name: 'frontend-navbar',
   components: {
-    TopRightProfile,
-    Wallet
+    TopRightProfile
+    // Wallet
   }
 }
 </script>
