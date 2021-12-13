@@ -39,8 +39,8 @@ require (
 	go.etcd.io/bbolt v1.3.5 // indirect
 	go.mongodb.org/mongo-driver v1.7.3
 	golang.org/x/crypto v0.0.0-20210513164829-c07d793c2f9a
-	golang.org/x/net v0.0.0-20211101193420-4a448f8816b3
-	golang.org/x/sys v0.0.0-20211103235746-7861aae1554b // indirect
+	golang.org/x/net v0.0.0-20211209124913-491a49abca63
+	golang.org/x/sys v0.0.0-20211209171907-798191bca915 // indirect
 	gopkg.in/gavv/httpexpect.v2 v2.2.0
 	gopkg.in/sourcemap.v1 v1.0.5 // indirect
 )

@@ -257,7 +257,7 @@ export default {
     },
     // eslint-disable-next-line vue/no-async-in-computed-properties
     async docUrl () {
-      let url = window.location.href
+      const url = window.location.href
       return url.replace('admin/workflow', 'document')
     }
   },
@@ -382,10 +382,10 @@ export default {
         if (response.status === 207) {
           // show collected errors
           if (response.data) {
-            let elements = []
-            for (let key in response.data) {
-              if (response.data.hasOwnProperty(key)) {
-                let item = response.data[key].Item
+            const elements = []
+            for (const key in response.data) {
+              if (Object.prototype.hasOwnProperty.call(response.data, key)) {
+                const item = response.data[key].Item
                 if (item) {
                   item.getLink = function () {
                     if (this.id && this.type && (/workflow|form|template/.test(this.type))) {
@@ -430,10 +430,10 @@ export default {
     },
     togglePriceErrorModal (show) {
       if (show === true) {
-        $(this.$refs['priceErrorModal']).show()
+        $(this.$refs.priceErrorModal).show()
         return
       }
-      $(this.$refs['priceErrorModal']).hide()
+      $(this.$refs.priceErrorModal).hide()
     },
     save () {
       if (!this.app.amIWriteGrantedFor(this.workflow)) {
@@ -478,11 +478,11 @@ export default {
       })
     },
     init (writeRights) {
-      let self = this
-      let myWFM = {
+      const self = this
+      const myWFM = {
         urlPrefix: '/api/admin',
         frontendUrlPrefix: '/admin',
-        initUsedNodesMap: { 'workflow': { [self.id]: true } },
+        initUsedNodesMap: { workflow: { [self.id]: true } },
         usedNodesMap: null,
         $main: null,
         $chartMain: null,
@@ -491,15 +491,15 @@ export default {
         localLayoutSettings: null,
         nodeData: null,
         leftMenuNodes: {
-          'collection': {
-            'detail': '',
-            'type': 'collection',
-            'name': 'collection'
+          collection: {
+            detail: '',
+            type: 'collection',
+            name: 'collection'
           },
-          'condition': {
-            'detail': '',
-            'type': 'condition',
-            'name': self.$t('condition')
+          condition: {
+            detail: '',
+            type: 'condition',
+            name: self.$t('condition')
           }
 
         },
@@ -628,8 +628,8 @@ function condition(){
   }
 }
                                         `
-              if (node._data && node._data['js']) {
-                js = node._data['js']
+              if (node._data && node._data.js) {
+                js = node._data.js
               }
               this.jsEditor.getSession().setValue(js, -1)
               var cases = `
@@ -676,7 +676,7 @@ function condition(){
                 if (!this.currentNode._data) {
                   this.currentNode._data = {}
                 }
-                this.currentNode._data['js'] = js
+                this.currentNode._data.js = js
                 this.currentNode.label = this.$dialog.find('[name=\'condition.name\']').val()
                 this.currentNode.name = this.currentNode.label
                 this.currentNode.detail = this.$dialog.find('[name=\'condition.detail\']').val()
@@ -731,7 +731,7 @@ function condition(){
           try {
             _.localLayoutSettings = $.parseJSON(Cookies.get(window.location.pathname))
           } catch (e) {
-            _.localLayoutSettings = { 'layout': 'row' }
+            _.localLayoutSettings = { layout: 'row' }
           }
           if (_.localLayoutSettings.layout === 'row') {
             rowBtn.click()
@@ -791,7 +791,7 @@ function condition(){
             _.nodeData = {}
             _.lastSearchTime = new Date().getTime()
             for (var k in _.nodeIconMap) {
-              if (_.nodeIconMap.hasOwnProperty(k)) {
+              if (Object.prototype.hasOwnProperty.call(_.nodeIconMap, k)) {
                 _.searchNodeSpecific(k, v)
               }
             }
@@ -823,7 +823,7 @@ function condition(){
               i: 0,
               l: 20,
               e: JSON.stringify(myWFM._makeGetParamOfExcludes(nodeKind)),
-              q: JSON.stringify({ 'metaOnly': true })
+              q: JSON.stringify({ metaOnly: true })
             },
             url: '/api/admin/' + nodeKind + '/list',
             error: function (res) {
@@ -870,7 +870,7 @@ function condition(){
             if (!this.$legend) {
               var rows = ''
               for (var k in this.nodeIconMap) {
-                if (this.nodeIconMap.hasOwnProperty(k)) {
+                if (Object.prototype.hasOwnProperty.call(this.nodeIconMap, k)) {
                   rows += this._createFinderItem({ name: k, kind: k })
                 }
               }
@@ -1237,11 +1237,11 @@ function condition(){
           this.network.fit()
         },
         drawWf: function (wfData) {
-          let _ = this
+          const _ = this
           this.destroy()
           this.resetUsedNodesMap()
           this.network = new VisFlowchart(wfData, {
-            'html': {
+            html: {
               $wrapper: _.$main,
               $container: _.$chartMain
             },
@@ -1343,15 +1343,15 @@ function condition(){
                   color: '#0eaa64'
                 },
                 events: {
-                  'hoverIn': function () {
+                  hoverIn: function () {
                   },
-                  'hoverOut': function () {
+                  hoverOut: function () {
                   },
-                  'remove': function () {
+                  remove: function () {
                   },
-                  'click': function () {
+                  click: function () {
                   },
-                  'dblclick': _.onDblClick
+                  dblclick: _.onDblClick
                 }
               },
               ibmsender: {
@@ -1395,15 +1395,15 @@ function condition(){
                   color: '#5353c0'
                 },
                 events: {
-                  'hoverIn': function () {
+                  hoverIn: function () {
                   },
-                  'hoverOut': function () {
+                  hoverOut: function () {
                   },
-                  'remove': function () {
+                  remove: function () {
                   },
-                  'click': function () {
+                  click: function () {
                   },
-                  'dblclick': function () {
+                  dblclick: function () {
                   }
                 }
               },
@@ -1448,15 +1448,15 @@ function condition(){
                   color: '#5353c0'
                 },
                 events: {
-                  'hoverIn': function () {
+                  hoverIn: function () {
                   },
-                  'hoverOut': function () {
+                  hoverOut: function () {
                   },
-                  'remove': function () {
+                  remove: function () {
                   },
-                  'click': function () {
+                  click: function () {
                   },
-                  'dblclick': function () {
+                  dblclick: function () {
                   }
                 }
               },
@@ -1501,15 +1501,15 @@ function condition(){
                   color: '#5150c0'
                 },
                 events: {
-                  'hoverIn': function () {
+                  hoverIn: function () {
                   },
-                  'hoverOut': function () {
+                  hoverOut: function () {
                   },
-                  'remove': function () {
+                  remove: function () {
                   },
-                  'click': function () {
+                  click: function () {
                   },
-                  'dblclick': function () {
+                  dblclick: function () {
                   }
                 }
               },
@@ -1554,7 +1554,7 @@ function condition(){
                   color: '#5150c0'
                 },
                 events: {
-                  'dblclick': _.onDblClickWithName
+                  dblclick: _.onDblClickWithName
                 }
               },
               condition: {
@@ -1589,7 +1589,7 @@ function condition(){
                   color: '#f0a30a'
                 },
                 events: {
-                  'dblclick': _.conditionDblClick
+                  dblclick: _.conditionDblClick
                 }
               },
               workflow: {
@@ -1616,7 +1616,7 @@ function condition(){
                   color: '#e40070'
                 },
                 events: {
-                  'dblclick': _.onDblClick
+                  dblclick: _.onDblClick
                 }
               },
               user: {
@@ -1643,7 +1643,7 @@ function condition(){
                   color: '#7200ff'
                 },
                 events: {
-                  'dblclick': function () {
+                  dblclick: function () {
                   }
                 }
               },
@@ -1679,12 +1679,12 @@ function condition(){
                   color: '#ff30ec'
                 },
                 events: {
-                  'dblclick': _.onDblClick
+                  dblclick: _.onDblClick
                 }
               }
             },
             events: {
-              'insert': function (n) {
+              insert: function (n) {
                 var g = n.group
                 if (g === 'step') {
                   g = 'form'
@@ -1694,7 +1694,7 @@ function condition(){
                 }
                 myWFM.usedNodesMap[g][n.id] = true
               },
-              'remove': function (n) {
+              remove: function (n) {
                 var g = n.group
                 if (g === 'step') {
                   g = 'form'
@@ -1893,6 +1893,7 @@ function condition(){
     $line: #eeeeee;
     $gridSize: 60px;
     $subdivisions: 3;
+    $gridSizeOverSubdivisions: 20px;
     $lineAlpha: .6;
     $sublineAlpha: .4;
 
@@ -1905,9 +1906,9 @@ function condition(){
         linear-gradient($trans 3px, $block 3px, $block $gridSize - 2, $trans $gridSize - 2), /*nub horiz*/
         linear-gradient(90deg, rgba($line, $lineAlpha) 3px, $trans 3px, $trans $gridSize - 2, rgba($line, $lineAlpha) $gridSize - 2) /*nub vert*/
     ;
-        background-size: $gridSize / $subdivisions $gridSize / $subdivisions,
+        background-size: $gridSizeOverSubdivisions $gridSizeOverSubdivisions,
         $gridSize $gridSize,
-        $gridSize / $subdivisions $gridSize / $subdivisions,
+        $gridSizeOverSubdivisions $gridSizeOverSubdivisions,
         $gridSize $gridSize,
         $gridSize $gridSize,
         $gridSize $gridSize;

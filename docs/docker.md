@@ -19,6 +19,8 @@ used to deploy the platform in different context:
 This is the simplest method to experiment with Proxeus.  This will start a local Proxeus platform
 using images from Docker Hub.  
 
+Please note that with SELinux enabled: a `:z` should be added to the end of volume declarations in docker-compose.yml.
+
 ### docker-compose.yml file
 
 ```
@@ -94,6 +96,7 @@ Environment:
 |PROXEUS_ALLOW_HTTP:|`false`|Allow the use of HTTP instead of HTTPS =NOT FOR PRODUCTION=|
 
 ## Development Docker Compose
+
 This file will start the document service available from Docker Hub but will start
 the local Platform built from your local files.  This method is preferred during development.
 This is the default configuration when using `docker-compose up` from the project root directory.

@@ -63,7 +63,7 @@ export default {
   },
   methods: {
     async checkBlockchainNetwork () {
-      let r = await axios.get('/api/config')
+      const r = await axios.get('/api/config')
       if (!r.data) {
         return
       }
@@ -79,7 +79,7 @@ export default {
       }
     },
     async setAccountEthAddress () {
-      let response = await axios.get('/api/me')
+      const response = await axios.get('/api/me')
       if (response.data.etherPK) {
         this.accountEthAddress = response.data.etherPK
       }

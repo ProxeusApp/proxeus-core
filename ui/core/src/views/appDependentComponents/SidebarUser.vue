@@ -111,7 +111,7 @@ export default {
       })
     },
     async getSigners (docHash) {
-      let signers = await this.app.wallet.proxeusFS.getFileSigners(docHash)
+      const signers = await this.app.wallet.proxeusFS.getFileSigners(docHash)
       return signers
     },
     getSigningRequests () {
@@ -120,7 +120,7 @@ export default {
           let sigCount = 0
           this.documents = response.data
           for (let i = 0, len = this.documents.length; i < len; i++) {
-            let response2 = await this.getSigners(this.documents[i].hash)
+            const response2 = await this.getSigners(this.documents[i].hash)
             console.log(response2)
             if (!response2.includes(this.me.etherPK)) {
               if (!this.documents[i].rejected) {

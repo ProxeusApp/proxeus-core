@@ -3,7 +3,7 @@ import ReconnectingWebSocket from './ReconnectingWebsocket'
 var ChannelHub = function (url, protocols) {
   this.channels = {}
   this.sysChanls = {}
-  if (window && window['WebSocket']) {
+  if (window && window.WebSocket) {
     var _ = this
     if (!(/^wss?:\/\/.*/.test(url))) {
       if (!(/^\/.*/.test(url))) {
@@ -89,8 +89,8 @@ var ChannelHub = function (url, protocols) {
         var chanl = this.ch._getchanl(cid)
         var msg = this
         this.promiseExe = function (ok, err) {
-          msg['_ok'] = ok
-          msg['_err'] = err
+          msg._ok = ok
+          msg._err = err
           chanl.send(msg)
         }
         this.promise = new Promise(this.promiseExe)
@@ -140,7 +140,7 @@ var ChannelHub = function (url, protocols) {
     return {
       ch: this,
       id: id,
-      'public': null,
+      public: null,
       msgs: {},
       msgIndex: 0,
       onMessage: function (cMsg) {
@@ -187,7 +187,7 @@ var ChannelHub = function (url, protocols) {
           } else {
             this.msgIndex++
             msg.rid = this.msgIndex
-            if (this['ok'] === undefined) {
+            if (this.ok === undefined) {
               if (this.ch.sysChanls[msg.cid]) {
                 this.errResp(msg)
               } else {
