@@ -1,22 +1,44 @@
 ![](docs/_media/logo.png)
 
-# Proxeus
+# Proxeus Core
 ----------------
-Main repository of the Proxeus platform core.
+Main repository of the Proxeus core platform.
 
 Proxeus combines a powerful document automation tool with the wide-ranging
 blockchain functionalities, enabling users to digitize and monetize their IP.
-
 You can access the source code of this application and various extensions
 on [GitHub](https://github.com/ProxeusApp).
 
-## Quickstart
+## User guides
 
-We are making facilitated "one-click" automated build configurations available for select cloud platforms. Please contact us if you are interested in additional providers on this list:
+Get help to make the most of the platform in the **[User Handbook](https://github.com/ProxeusApp/community/blob/master/handbook/handbook.md)**.
+
+For detailed information about payment setup, check the [XES-Payment Readme](docs/xes-payment.md).
+
+To learn more about Smart Contracts, see the documentation in the [Solidity Readme](https://github.com/ProxeusApp/proxeus-contract).
+
+### Quickstart
+
+You can get all the information to run Proxeus here. In addition to the Docker installation documented below, we are making facilitated "one-click" automated build configurations available for select cloud platforms.
 
 - [Linode StackScript](deploy/linode/README.md)
 
-## Installation using Docker
+Please [contact us](https://github.com/ProxeusApp/community/discussions/3) if you are interested in additional providers on this list.
+
+### Contributing
+
+As an open-source project, we welcome any kind of community involvement, whether that is by contributing code, reporting issues or
+engaging in insightful discussions. Especially, we are looking forward to receiving contributions for external workflow nodes.
+
+See the **[Contributing Guide](docs/contributing.md)** for further directions.
+
+## Development guide
+
+Please read the [Developer Manual](https://doc.proxeus.com) to learn more about the Proxeus platform.
+
+If you wish to build the project form the source code, follow the instructions in [Build all](docs/build_all.md)
+
+### Installation using Docker
 
 The quickest way to set up Proxeus for development is to use Docker, and the `docker-compose` tool.
 
@@ -36,30 +58,7 @@ Please note that the domain you set up on SparkPost MUST match the **reply-to** 
 
 If all goes well, Proxeus should be available at http://localhost:1323. The next step will be to [configure](docs/configure.md) your instance for the first time.
 
-## User manual
-
-Get help to make the most of the platform in the [User Handbook](https://docs.google.com/document/d/e/2PACX-1vTchv7PotoQeH2cBA2VIHcqV0I0N_IQpFnbESR-8C19cgBikek3HAMVdPtfJJcYkANzPWbfy_S3bf8X/pub).
-
-### XES Payments
-For detailed information about payments setup, check the [XES-Payment Readme](docs/xes-payment.md).
-
-### Smart contracts
-Check the [Smart contracts & Solidity Readme](https://github.com/ProxeusApp/proxeus-contract) to learn more.
-
-## Development guide
-
-Please read the [Developer Manual](https://doc.proxeus.com) to learn more about the Proxeus platform.
-
-If you wish to build the project form the source code, follow the instructions in [Build all](docs/build_all.md)
-
-## Contributing
-
-As an open-source project, we welcome any kind of community involvement, whether that is by contributing code, reporting issues or
-engaging in insightful discussions. Especially, we are looking forward to receiving contributions for external workflow nodes.
-
-See the [Contributing](docs/contributing.md) section for instructions on how to contribute.
-
-## Security Issues
+### Security Issues
 
 If you find a vulnerability that may affect live or testnet deployments please DO NOT file a public issue - send your report privately to info@proxeus.org
 
