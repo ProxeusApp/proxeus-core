@@ -19,6 +19,7 @@ type ETHDiallerIF interface {
 type ETHClientIF interface {
 	bind.ContractBackend
 	HeaderByNumber(ctx context.Context, number *big.Int) (*types.Header, error)
+	SuggestGasTipCap(ctx context.Context) (*big.Int, error)
 }
 
 type FakeETHDialler struct {
@@ -98,4 +99,7 @@ func (me *FakeETHClient) SubscribeFilterLogs(ctx context.Context, query ethereum
 	}
 
 	return me.SubscribeFilterLogsStub(ctx, query, ch)
+}
+func (me *FakeETHClient) SuggestGasTipCap(ctx context.Context) (*big.Int, error) {
+	panic("implement me")
 }

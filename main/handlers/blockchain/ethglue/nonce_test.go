@@ -53,6 +53,9 @@ func (_ pendingNonceMock) HeaderByNumber(ctx context.Context, number *big.Int) (
 func (_ pendingNonceMock) PendingNonceAt(ctx context.Context, account common.Address) (uint64, error) {
 	return 1, nil
 }
+func (_ pendingNonceMock) SuggestGasTipCap(ctx context.Context) (*big.Int, error) {
+	panic("implement me")
+}
 
 func TestNonceManagerSequence(t *testing.T) {
 	var m NonceManager

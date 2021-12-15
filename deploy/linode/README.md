@@ -15,7 +15,7 @@ This script is maintained for the community by Proxeus Association
 1. It takes a few minutes for the server to boot and install, then you should be able to open `http://<your Linode's IP address or domain>:1323/init`
 1. A configuration screen will be shown where you can set up an admin account and check settings.
 
-Once your server is running, visit the [User Handbook](https://docs.google.com/document/d/e/2PACX-1vTchv7PotoQeH2cBA2VIHcqV0I0N_IQpFnbESR-8C19cgBikek3HAMVdPtfJJcYkANzPWbfy_S3bf8X/pub) to get started.
+Once your server is running, visit the [User Handbook](https://github.com/ProxeusApp/community/blob/master/handbook/handbook.md) to get started.
 
 To view the logs, log in with the Linode's built-in shell client ("Launch LISH console"), or connect to your instance using an SSH client program. Then paste this into the console to see the logs being updated in real time:
 
