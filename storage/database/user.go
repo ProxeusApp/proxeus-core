@@ -101,7 +101,13 @@ func (me *UserDB) APIKey(key string) (*model.User, error) {
 		return nil, model.ErrAuthorityMissing
 	}
 	var userID string
-	err := me.db.Get(userApiKeyBucket, key, &userID)
+	tmpHashedKey := &model.ApiKey{
+		Name: "",
+		Key:  key,
+	}
+	tmpHashedKey.HideKey()
+
+	err := me.db.Get(userApiKeyBucket, tmpHashedKey.Key, &userID)
 	if err != nil {
 		return nil, model.ErrAuthorityMissing
 	}
@@ -433,12 +439,12 @@ func (me *UserDB) updateApiKeys(u *model.User, tx db.DB) error {
 
 	for _, a := range u.ApiKeys {
 		if me.keyIsNew(existingKeys, a) {
+			a.HideKey()
 			newKeys = append(newKeys, *a)
 			err := tx.Set(userApiKeyBucket, a.Key, u.ID)
 			if err != nil {
 				return err
 			}
-			a.HideKey()
 		}
 	}
 
@@ -457,10 +463,10 @@ func (me *UserDB) updateApiKeys(u *model.User, tx db.DB) error {
 func (me *UserDB) keyIsNew(existingKeys []model.ApiKey, apiKey *model.ApiKey) bool {
 	exists := false
 	var tmp model.ApiKey
+	tmp.Key = apiKey.Key
+	tmp.HideKey()
 	for _, k := range existingKeys {
-		tmp.Key = apiKey.Key
-		tmp.HideKey()
-		if tmp.Key == k.Key {
+		if k.Key == tmp.Key {
 			exists = true
 			break
 		}
