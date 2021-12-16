@@ -428,8 +428,11 @@ func (me *UserDB) save(u *model.User, tx db.DB) error {
 
 func (me *UserDB) updateApiKeys(u *model.User, tx db.DB) error {
 	newKeys := make([]model.ApiKey, 0)
+	var existingKeys []model.ApiKey
+	_ = tx.Get(userApiKeysBucket, u.ID, &existingKeys)
+
 	for _, a := range u.ApiKeys {
-		if a.IsNew() {
+		if me.keyIsNew(existingKeys, a) {
 			newKeys = append(newKeys, *a)
 			err := tx.Set(userApiKeyBucket, a.Key, u.ID)
 			if err != nil {
@@ -438,9 +441,8 @@ func (me *UserDB) updateApiKeys(u *model.User, tx db.DB) error {
 			a.HideKey()
 		}
 	}
+
 	if len(newKeys) > 0 {
-		var existingKeys []model.ApiKey
-		_ = tx.Get(userApiKeysBucket, u.ID, &existingKeys)
 		if len(existingKeys) > 0 {
 			newKeys = append(newKeys, existingKeys...)
 		}
@@ -450,6 +452,20 @@ func (me *UserDB) updateApiKeys(u *model.User, tx db.DB) error {
 		}
 	}
 	return nil
+}
+
+func (me *UserDB) keyIsNew(existingKeys []model.ApiKey, apiKey *model.ApiKey) bool {
+	exists := false
+	var tmp model.ApiKey
+	for _, k := range existingKeys {
+		tmp.Key = apiKey.Key
+		tmp.HideKey()
+		if tmp.Key == k.Key {
+			exists = true
+			break
+		}
+	}
+	return !exists
 }
 
 func (me *UserDB) setTinyUserIconBase64(item *model.User) error {
