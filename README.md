@@ -1,5 +1,3 @@
-![](docs/_media/logo.png)
-
 # Proxeus Core
 ----------------
 Main repository of the Proxeus core platform.
@@ -11,11 +9,11 @@ on [GitHub](https://github.com/ProxeusApp).
 
 ## User guides
 
-Get help to make the most of the platform in the **[User Handbook](https://github.com/ProxeusApp/community/blob/master/handbook/handbook.md)**.
+Get help to make the most of the platform in the [User Handbook](https://github.com/ProxeusApp/community/blob/master/handbook/handbook.md#table-of-contents).
 
-For detailed information about payment setup, check the [XES-Payment Readme](docs/xes-payment.md).
+For detailed information about payment setup, check the [Payment Readme](https://github.com/ProxeusApp/community/blob/master/docs/xes-payment.md#xes-payment-specification).
 
-To learn more about Smart Contracts, see the documentation in the [Solidity Readme](https://github.com/ProxeusApp/proxeus-contract).
+To learn more about Smart Contracts, see the documentation in the [Solidity Readme](https://github.com/ProxeusApp/proxeus-contract#proxeusfs-contract).
 
 ### Quickstart
 
@@ -28,15 +26,17 @@ Please [contact us](https://github.com/ProxeusApp/community/discussions/3) if yo
 ### Contributing
 
 As an open-source project, we welcome any kind of community involvement, whether that is by contributing code, reporting issues or
-engaging in insightful discussions. Especially, we are looking forward to receiving contributions for external workflow nodes.
+engaging in insightful discussions. We are particularly looking forward to receiving contributions for external workflow nodes.
 
-See the **[Contributing Guide](docs/contributing.md)** for further directions.
+Visit the [Proxeus Community](https://github.com/ProxeusApp/community) for further directions.
 
 ## Development guide
 
-Please read the [Developer Manual](https://doc.proxeus.com) to learn more about the Proxeus platform.
+Please read the [Developer Manual](https://docs.proxeus.org) to learn more background about the Proxeus platform. 
 
-If you wish to build the project form the source code, follow the instructions in [Build all](docs/build_all.md)
+### Installation from Source
+
+If you wish to build the project from the source code, follow the instructions in the [Build all](https://github.com/ProxeusApp/community/blob/master/docs/build_all.md#building-backend-and-frontend) reference.
 
 ### Installation using Docker
 
@@ -45,7 +45,7 @@ The quickest way to set up Proxeus for development is to use Docker, and the `do
 1. [Install Docker Engine](https://docs.docker.com/install/)
 2. [Install docker-compose](https://docs.docker.com/compose/install/)
 
-See further deployment instructions in [docs/docker](docs/docker.md) to set up your server using Docker.
+See further deployment instructions in the [developer docs](https://github.com/ProxeusApp/community/blob/master/docs/docker.md) to set up your server using Docker.
 
 ### Infura and SparkPost
 
@@ -56,7 +56,7 @@ entered when deploying a "one-click" instance.
 
 Please note that the domain you set up on SparkPost MUST match the **reply-to** e-mail address that you configure in the next step in order to create accounts and receive e-mails on your instance.
 
-If all goes well, Proxeus should be available at http://localhost:1323. The next step will be to [configure](docs/configure.md) your instance for the first time.
+If all goes well, Proxeus should be available at http://localhost:1323. The next step will be to [configure](https://github.com/ProxeusApp/community/blob/master/docs/configure.md) your instance for the first time.
 
 ### Security Issues
 

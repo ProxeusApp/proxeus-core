@@ -1,6 +1,6 @@
 This README is only about the license loader of the project.
 
-Go to [docs/README](../docs/README.md) for developer instructions.
+Go to [community/docs](https://github.com/ProxeusApp/community/tree/master/docs) for developer instructions.
 
 # How to generate the ACKNOWLEDGEMENTS file
 
