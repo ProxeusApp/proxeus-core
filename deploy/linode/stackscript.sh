@@ -117,7 +117,7 @@ END
 log "Warning: you should disable port 80 in production by removing the PROXEUS_ALLOW_HTTP line in your .env"
 
 # Commence Proxeus installation
-wget https://raw.githubusercontent.com/ProxeusApp/proxeus-core/master/bootstrap.sh;
+wget https://raw.githubusercontent.com/ProxeusApp/proxeus-core/master/deploy/bootstrap.sh;
 bash bootstrap.sh
 
 cd /srv/proxeus
