@@ -41,9 +41,9 @@
                   <td style="text-align: left;">
                       <span>{{item.Name}}</span>
                   </td>
-                  <td style="text-align: left;">
+                  <!-- <td style="text-align: left;">
                       <span>{{item.Key}}</span>
-                  </td>
+                  </td> -->
                   <td v-if="app.me && (app.me.role >= 100 || app.me.id === user.id)" style="text-align: right;padding-right: 10px;">
                       <button style="float:right;padding:2px;" :title="$t('Delete API key')" type="button" @click="deleteApiKey(item.Key);" class="btn btn-danger btn-sm">
                           Remove

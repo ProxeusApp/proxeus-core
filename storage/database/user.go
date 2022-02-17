@@ -101,7 +101,13 @@ func (me *UserDB) APIKey(key string) (*model.User, error) {
 		return nil, model.ErrAuthorityMissing
 	}
 	var userID string
-	err := me.db.Get(userApiKeyBucket, key, &userID)
+	tmpHashedKey := &model.ApiKey{
+		Name: "",
+		Key:  key,
+	}
+	tmpHashedKey.HideKey()
+
+	err := me.db.Get(userApiKeyBucket, tmpHashedKey.Key, &userID)
 	if err != nil {
 		return nil, model.ErrAuthorityMissing
 	}
@@ -428,19 +434,21 @@ func (me *UserDB) save(u *model.User, tx db.DB) error {
 
 func (me *UserDB) updateApiKeys(u *model.User, tx db.DB) error {
 	newKeys := make([]model.ApiKey, 0)
+	var existingKeys []model.ApiKey
+	_ = tx.Get(userApiKeysBucket, u.ID, &existingKeys)
+
 	for _, a := range u.ApiKeys {
-		if a.IsNew() {
+		if me.keyIsNew(existingKeys, a) {
+			a.HideKey()
 			newKeys = append(newKeys, *a)
 			err := tx.Set(userApiKeyBucket, a.Key, u.ID)
 			if err != nil {
 				return err
 			}
-			a.HideKey()
 		}
 	}
+
 	if len(newKeys) > 0 {
-		var existingKeys []model.ApiKey
-		_ = tx.Get(userApiKeysBucket, u.ID, &existingKeys)
 		if len(existingKeys) > 0 {
 			newKeys = append(newKeys, existingKeys...)
 		}
@@ -450,6 +458,20 @@ func (me *UserDB) updateApiKeys(u *model.User, tx db.DB) error {
 		}
 	}
 	return nil
+}
+
+func (me *UserDB) keyIsNew(existingKeys []model.ApiKey, apiKey *model.ApiKey) bool {
+	exists := false
+	var tmp model.ApiKey
+	tmp.Key = apiKey.Key
+	tmp.HideKey()
+	for _, k := range existingKeys {
+		if k.Key == tmp.Key {
+			exists = true
+			break
+		}
+	}
+	return !exists
 }
 
 func (me *UserDB) setTinyUserIconBase64(item *model.User) error {
