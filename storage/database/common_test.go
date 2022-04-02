@@ -64,6 +64,11 @@ func TestMain(m *testing.M) {
 		}
 	}
 
+	// Alert user about configuration
+	if (len(os.Getenv("PROXEUS_ENCRYPTION_SECRET_KEY")) != 32) {
+		fmt.Println("Warning: PROXEUS_ENCRYPTION_SECRET_KEY should be 32 chars!")
+	}
+
 	se, err := NewSettingsDB(filepath.Join(dir, "settings/main.json"), dummySettings())
 	maybeFail(err)
 	err = se.Put(dummySettings())
