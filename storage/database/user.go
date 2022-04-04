@@ -100,12 +100,11 @@ func (me *UserDB) APIKey(key string) (*model.User, error) {
 	if len(key) != model.ApiKeyLength {
 		return nil, model.ErrAuthorityInvalid
 	}
+	// Generate a temporary key
 	tmpHashedKey := &model.ApiKey{
 		Name: "",
 		Key:  key,
 	}
-
-	// Encrypt the temporary key
 	// tmpHashedKey.HideKey()
 
 	// Look up in the key database

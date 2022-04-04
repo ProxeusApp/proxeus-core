@@ -60,7 +60,7 @@ func TestUser(t *testing.T) {
 	val, err := us.CreateApiKey(dummySuperAdmin, item2.ID, key)
 	Expect(err).To(Succeed())
 	Expect(val).ToNot(Equal(key))
-	t.Log("Looking up user by key", val)
+	// t.Log("Looking up user by key", val)
 	testKeyItem, err := us.APIKey(val)
 	Expect(err).To(Succeed())
 	item2.ApiKeys = []*model.ApiKey{{Name: key, Key: val}}
