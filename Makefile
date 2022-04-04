@@ -191,6 +191,10 @@ test-ui: server ui
 		rm -fr $(testdir); \
 		exit $$ret
 
+.PHONY: test-storage
+test-storage: generate
+	go test $(COVERAGE_OPTS)  ./storage/... 
+
 
 .PHONY: coverage
 coverage:
