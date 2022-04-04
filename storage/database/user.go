@@ -465,7 +465,6 @@ func (me *UserDB) updateApiKeys(u *model.User, tx db.DB) error {
 
 	for _, a := range u.ApiKeys {
 		if me.keyIsNew(existingKeys, a) {
-			// a.HideKey()
 			newKeys = append(newKeys, *a)
 			err := tx.Set(userApiKeyBucket, a.Key, u.ID)
 			if err != nil {
@@ -490,7 +489,6 @@ func (me *UserDB) keyIsNew(existingKeys []model.ApiKey, apiKey *model.ApiKey) bo
 	exists := false
 	var tmp model.ApiKey
 	tmp.Key = apiKey.Key
-	// tmp.HideKey()
 	for _, k := range existingKeys {
 		if k.Key == tmp.Key {
 			exists = true
