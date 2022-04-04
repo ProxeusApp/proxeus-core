@@ -29,7 +29,7 @@ func createApiKey(s *session, u *user, name string) (string, string) {
 		Name: "",
 		Key:  key,
 	}
-	tmpHashedKey.HideKey()
+	// tmpHashedKey.HideKey()
 	s.e.GET("/api/me").Expect().Status(http.StatusOK).JSON().Path("$..Key").Array().Contains(tmpHashedKey.Key)
 
 	return key, tmpHashedKey.Key
