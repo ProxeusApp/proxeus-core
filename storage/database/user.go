@@ -98,19 +98,24 @@ func (me *UserDB) Login(name, pw string) (*model.User, error) {
 // APIKey tries to authenticate the user with the supplied API key and returns the user object or an error
 func (me *UserDB) APIKey(key string) (*model.User, error) {
 	if len(key) != model.ApiKeyLength {
-		return nil, model.ErrAuthorityMissing
+		return nil, model.ErrAuthorityInvalid
 	}
-	var userID string
 	tmpHashedKey := &model.ApiKey{
 		Name: "",
 		Key:  key,
 	}
-	tmpHashedKey.HideKey()
 
+	// Encrypt the temporary key
+	// tmpHashedKey.HideKey()
+
+	// Look up in the key database
+	var userID string
 	err := me.db.Get(userApiKeyBucket, tmpHashedKey.Key, &userID)
 	if err != nil {
-		return nil, model.ErrAuthorityMissing
+		return nil, model.ErrAuthorityNotFound
 	}
+
+	// Look up user by located userid
 	var user model.User
 	err = me.db.One("ID", userID, &user)
 	if err != nil {
@@ -128,19 +133,24 @@ func (me *UserDB) CreateApiKey(auth model.Auth, userId, apiKeyName string) (stri
 	if auth.UserID() != userItem.ID {
 		return "", model.ErrAuthorityMissing
 	}
-	apiKey, err := userItem.NewApiKey(apiKeyName)
+
+	// generate a key and store in profile
+	apiKey, err := userItem.SetApiKey(apiKeyName)
 	if err != nil {
 		return "", err
 	}
-	initiallyReadableApiKey := apiKey.Key
 
-	//store the new api key
+	// encrypt the key
+	// apiKey.HideKey()
+
+	// store the updated user profile
 	err = me.Put(auth, userItem)
 	if err != nil {
 		return "", err
 	}
 
-	return initiallyReadableApiKey, nil
+	// return initially readable key
+	return apiKey.Key, nil
 }
 
 // DeleteApiKey removes an existing API key
@@ -439,7 +449,7 @@ func (me *UserDB) updateApiKeys(u *model.User, tx db.DB) error {
 
 	for _, a := range u.ApiKeys {
 		if me.keyIsNew(existingKeys, a) {
-			a.HideKey()
+			// a.HideKey()
 			newKeys = append(newKeys, *a)
 			err := tx.Set(userApiKeyBucket, a.Key, u.ID)
 			if err != nil {
@@ -464,7 +474,7 @@ func (me *UserDB) keyIsNew(existingKeys []model.ApiKey, apiKey *model.ApiKey) bo
 	exists := false
 	var tmp model.ApiKey
 	tmp.Key = apiKey.Key
-	tmp.HideKey()
+	// tmp.HideKey()
 	for _, k := range existingKeys {
 		if k.Key == tmp.Key {
 			exists = true
