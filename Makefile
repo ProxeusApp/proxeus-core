@@ -173,6 +173,7 @@ test-api: server
 		$(stopproxeus); \
 		[ -e  $(testdir)/ds-started ] && docker-compose down; \
 		$(if $(cid), docker rm -f $(cid);) \
+		echo "Removing temp folder $(testdir)" \
 		rm -fr $(testdir); \
 		exit $$ret
 
@@ -193,7 +194,7 @@ test-ui: server ui
 
 .PHONY: test-storage
 test-storage: generate
-	go test $(COVERAGE_OPTS)  ./storage/... 
+	go test $(COVERAGE_OPTS)  ./storage/...
 
 
 .PHONY: coverage
