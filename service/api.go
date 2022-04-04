@@ -17,7 +17,6 @@ type (
 
 		// AuthenticateApiKeyForUser tries to authenticate with supplied API key and user ID
 		AuthenticateApiKeyForUser(apiKey string, userId string) (*model.User, error)
-
 	}
 	defaultApiService struct {
 	}
