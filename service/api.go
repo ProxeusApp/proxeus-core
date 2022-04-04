@@ -14,6 +14,10 @@ type (
 
 		// AuthenticateWithApiKey tries to authenticate the user with the supplied API key and returns the user object or an error
 		AuthenticateWithApiKey(apiKey string) (*model.User, error)
+
+		// AuthenticateApiKeyForUser tries to authenticate with supplied API key and user ID
+		AuthenticateApiKeyForUser(apiKey string, userId string) (*model.User, error)
+
 	}
 	defaultApiService struct {
 	}
@@ -35,5 +39,10 @@ func (me *defaultApiService) DeleteApiKey(auth model.Auth, userId, hiddenApiKey 
 
 // AuthenticateWithApiKey tries to authenticate the user with the supplied API key and returns the user object or an error
 func (me *defaultApiService) AuthenticateWithApiKey(apiKey string) (*model.User, error) {
-	return userDB().APIKey(apiKey)
+	return userDB().GetByApiKey(apiKey, "")
+}
+
+// AuthenticateApiKeyForUser tries to authenticate with supplied API key and user ID
+func (me *defaultApiService) AuthenticateApiKeyForUser(apiKey string, userId string) (*model.User, error) {
+	return userDB().GetByApiKey(apiKey, userId)
 }

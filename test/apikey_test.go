@@ -3,8 +3,6 @@ package test
 import (
 	"encoding/base64"
 	"net/http"
-
-	"github.com/ProxeusApp/proxeus-core/sys/model"
 )
 
 func testApiKey(s *session) {
@@ -24,15 +22,8 @@ func testApiKey(s *session) {
 
 func createApiKey(s *session, u *user, name string) (string, string) {
 	key := s.e.GET("/api/user/create/api/key/{id}").WithPath("id", u.uuid).WithQuery("name", name).Expect().Status(http.StatusOK).Body().Raw()
-
-	tmpHashedKey := &model.ApiKey{
-		Name: "",
-		Key:  key,
-	}
-	// tmpHashedKey.HideKey()
-	s.e.GET("/api/me").Expect().Status(http.StatusOK).JSON().Path("$..Key").Array().Contains(tmpHashedKey.Key)
-
-	return key, tmpHashedKey.Key
+	hashed := s.e.GET("/api/me").Expect().Status(http.StatusOK).JSON().Path("$..Key").Array().First().String().NotEmpty().Raw()
+	return key, hashed
 }
 
 func getSessionToken(s *session, username, apiKey string) string {

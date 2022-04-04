@@ -56,15 +56,20 @@ func TestUser(t *testing.T) {
 	Expect(err).To(Succeed())
 
 	// api keys
-	const key = "f235122f9a1e4884123456788a2126f8dd76996b"
-	val, err := us.CreateApiKey(dummySuperAdmin, item2.ID, key)
+	const keyName = "test key"
+	val, err := us.CreateApiKey(dummySuperAdmin, item2.ID, keyName)
 	Expect(err).To(Succeed())
-	Expect(val).ToNot(Equal(key))
-	// t.Log("Looking up user by key", val)
-	testKeyItem, err := us.APIKey(val)
+	Expect(val).ToNot(Equal(keyName))
+	testKeyItem, err := us.GetByApiKey(val, item2.ID)
 	Expect(err).To(Succeed())
-	item2.ApiKeys = []*model.ApiKey{{Name: key, Key: val}}
-	// item2.ApiKeys[0].HideKey()
+
+	// api key without user id provided
+	testKeyItem2, err := us.GetByApiKey(val, "")
+	Expect(err).To(Succeed())
+	Expect(testKeyItem2.ID).To(Equal(item2.ID))
+	item2.ApiKeys = []*model.ApiKey{{Name: keyName, Key: testKeyItem.ApiKeys[0].Key}}
 	Expect(testKeyItem).To(equalJSON(item2))
+
+	// delete api key
 	Expect(us.DeleteApiKey(dummySuperAdmin, item2.ID, item2.ApiKeys[0].Key)).To(Succeed())
 }

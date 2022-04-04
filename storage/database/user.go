@@ -96,31 +96,45 @@ func (me *UserDB) Login(name, pw string) (*model.User, error) {
 }
 
 // APIKey tries to authenticate the user with the supplied API key and returns the user object or an error
-func (me *UserDB) APIKey(key string) (*model.User, error) {
+func (me *UserDB) GetByApiKey(key string, userID string) (*model.User, error) {
 	if len(key) != model.ApiKeyLength {
 		return nil, model.ErrAuthorityInvalid
 	}
-	// Generate a temporary key
-	tmpHashedKey := &model.ApiKey{
-		Name: "",
-		Key:  key,
-	}
-	// tmpHashedKey.HideKey()
 
 	// Look up in the key database
-	var userID string
-	err := me.db.Get(userApiKeyBucket, tmpHashedKey.Key, &userID)
-	if err != nil {
+	if userID != "" {
+
+		// Look up user by provided userid
+		var user model.User
+		err := me.db.One("ID", userID, &user)
+		if err != nil {
+			return nil, model.ErrAuthorityMissing
+		}
+		// Check all users keys
+		for _, a := range user.ApiKeys {
+			if model.MatchesApiKey(a.Key, key) {
+				return &user, nil
+			}
+		}
+
 		return nil, model.ErrAuthorityNotFound
 	}
 
-	// Look up user by located userid
-	var user model.User
-	err = me.db.One("ID", userID, &user)
+	// Look up across all users and keys
+	var allUsers []*model.User
+	err := me.db.All(&allUsers)
 	if err != nil {
-		return nil, model.ErrAuthorityMissing
+		return nil, err
 	}
-	return &user, nil
+	for _, user := range allUsers {
+		for _, a := range user.ApiKeys {
+			if model.MatchesApiKey(a.Key, key) {
+				return user, nil
+			}
+		}
+	}
+
+	return nil, model.ErrAuthorityNotFound
 }
 
 // CreateApiKey saves and returns a newly created random api key for a user
@@ -140,7 +154,8 @@ func (me *UserDB) CreateApiKey(auth model.Auth, userId, apiKeyName string) (stri
 	}
 
 	// encrypt the key
-	// apiKey.HideKey()
+	readableKey := apiKey.Key
+	apiKey.HideKey()
 
 	// store the updated user profile
 	err = me.Put(auth, userItem)
@@ -149,10 +164,10 @@ func (me *UserDB) CreateApiKey(auth model.Auth, userId, apiKeyName string) (stri
 	}
 
 	// return initially readable key
-	return apiKey.Key, nil
+	return readableKey, nil
 }
 
-// DeleteApiKey removes an existing API key
+// DeleteApiKey removes an existing API key by name or value
 func (me *UserDB) DeleteApiKey(auth model.Auth, userId, hiddenApiKey string) error {
 	userItem, err := me.Get(auth, userId)
 	if err != nil {
@@ -162,14 +177,16 @@ func (me *UserDB) DeleteApiKey(auth model.Auth, userId, hiddenApiKey string) err
 		return model.ErrAuthorityMissing
 	}
 	targetIndex := -1
+	var anApiKeyValue string = ""
 	for i, a := range userItem.ApiKeys {
-		if a.Key == hiddenApiKey {
+		if a.Key == hiddenApiKey || a.Name == hiddenApiKey {
 			targetIndex = i
+			anApiKeyValue = a.Key
 			break
 		}
 	}
 	if targetIndex == -1 {
-		return errors.New("api key not found")
+		return errors.New("API key not found")
 	}
 	// replace the target element with the last one
 	userItem.ApiKeys[targetIndex] = userItem.ApiKeys[len(userItem.ApiKeys)-1]
@@ -199,7 +216,7 @@ func (me *UserDB) DeleteApiKey(auth model.Auth, userId, hiddenApiKey string) err
 	var apiKey string
 	targetIndex = -1
 	for i, a := range existingApiKeys {
-		if model.MatchesApiKey(hiddenApiKey, a.Key) {
+		if model.MatchesApiKey(anApiKeyValue, a.Key) {
 			targetIndex = i
 			apiKey = a.Key
 		}
