@@ -91,7 +91,7 @@ func (me *User) GetVersion() int {
 	return userVersion
 }
 
-func (me *User) NewApiKey(name string) (*ApiKey, error) {
+func (me *User) SetApiKey(name string) (*ApiKey, error) {
 	apiKey, err := NewApiKey(name, me.ID)
 	if err != nil {
 		return nil, err

@@ -133,7 +133,7 @@ jobs:
             - go-mod-v2-{{ checksum "go.sum" }}
       - run:
           name: Run tests with coverage
-          command: make init test test-integration test-api coverage=true
+          command: make init test coverage=true
       - run:
           name: Generage coverage files
           command: make coverage

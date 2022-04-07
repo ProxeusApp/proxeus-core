@@ -96,21 +96,45 @@ func (me *UserDB) Login(name, pw string) (*model.User, error) {
 }
 
 // APIKey tries to authenticate the user with the supplied API key and returns the user object or an error
-func (me *UserDB) APIKey(key string) (*model.User, error) {
+func (me *UserDB) GetByApiKey(key string, userID string) (*model.User, error) {
 	if len(key) != model.ApiKeyLength {
-		return nil, model.ErrAuthorityMissing
+		return nil, model.ErrAuthorityInvalid
 	}
-	var userID string
-	err := me.db.Get(userApiKeyBucket, key, &userID)
+
+	// Look up in the key database
+	if userID != "" {
+
+		// Look up user by provided userid
+		var user model.User
+		err := me.db.One("ID", userID, &user)
+		if err != nil {
+			return nil, model.ErrAuthorityMissing
+		}
+		// Check all users keys
+		for _, a := range user.ApiKeys {
+			if model.MatchesApiKey(a.Key, key) {
+				return &user, nil
+			}
+		}
+
+		return nil, model.ErrAuthorityNotFound
+	}
+
+	// Look up across all users and keys
+	var allUsers []*model.User
+	err := me.db.All(&allUsers)
 	if err != nil {
-		return nil, model.ErrAuthorityMissing
+		return nil, err
 	}
-	var user model.User
-	err = me.db.One("ID", userID, &user)
-	if err != nil {
-		return nil, model.ErrAuthorityMissing
+	for _, user := range allUsers {
+		for _, a := range user.ApiKeys {
+			if model.MatchesApiKey(a.Key, key) {
+				return user, nil
+			}
+		}
 	}
-	return &user, nil
+
+	return nil, model.ErrAuthorityNotFound
 }
 
 // CreateApiKey saves and returns a newly created random api key for a user
@@ -122,22 +146,28 @@ func (me *UserDB) CreateApiKey(auth model.Auth, userId, apiKeyName string) (stri
 	if auth.UserID() != userItem.ID {
 		return "", model.ErrAuthorityMissing
 	}
-	apiKey, err := userItem.NewApiKey(apiKeyName)
+
+	// generate a key and store in profile
+	apiKey, err := userItem.SetApiKey(apiKeyName)
 	if err != nil {
 		return "", err
 	}
-	initiallyReadableApiKey := apiKey.Key
 
-	//store the new api key
+	// encrypt the key
+	readableKey := apiKey.Key
+	apiKey.HideKey()
+
+	// store the updated user profile
 	err = me.Put(auth, userItem)
 	if err != nil {
 		return "", err
 	}
 
-	return initiallyReadableApiKey, nil
+	// return initially readable key
+	return readableKey, nil
 }
 
-// DeleteApiKey removes an existing API key
+// DeleteApiKey removes an existing API key by name or value
 func (me *UserDB) DeleteApiKey(auth model.Auth, userId, hiddenApiKey string) error {
 	userItem, err := me.Get(auth, userId)
 	if err != nil {
@@ -147,14 +177,16 @@ func (me *UserDB) DeleteApiKey(auth model.Auth, userId, hiddenApiKey string) err
 		return model.ErrAuthorityMissing
 	}
 	targetIndex := -1
+	var anApiKeyValue string = ""
 	for i, a := range userItem.ApiKeys {
-		if a.Key == hiddenApiKey {
+		if a.Key == hiddenApiKey || a.Name == hiddenApiKey {
 			targetIndex = i
+			anApiKeyValue = a.Key
 			break
 		}
 	}
 	if targetIndex == -1 {
-		return errors.New("api key not found")
+		return errors.New("API key not found")
 	}
 	// replace the target element with the last one
 	userItem.ApiKeys[targetIndex] = userItem.ApiKeys[len(userItem.ApiKeys)-1]
@@ -184,7 +216,7 @@ func (me *UserDB) DeleteApiKey(auth model.Auth, userId, hiddenApiKey string) err
 	var apiKey string
 	targetIndex = -1
 	for i, a := range existingApiKeys {
-		if model.MatchesApiKey(hiddenApiKey, a.Key) {
+		if model.MatchesApiKey(anApiKeyValue, a.Key) {
 			targetIndex = i
 			apiKey = a.Key
 		}
@@ -428,19 +460,20 @@ func (me *UserDB) save(u *model.User, tx db.DB) error {
 
 func (me *UserDB) updateApiKeys(u *model.User, tx db.DB) error {
 	newKeys := make([]model.ApiKey, 0)
+	var existingKeys []model.ApiKey
+	_ = tx.Get(userApiKeysBucket, u.ID, &existingKeys)
+
 	for _, a := range u.ApiKeys {
-		if a.IsNew() {
+		if me.keyIsNew(existingKeys, a) {
 			newKeys = append(newKeys, *a)
 			err := tx.Set(userApiKeyBucket, a.Key, u.ID)
 			if err != nil {
 				return err
 			}
-			a.HideKey()
 		}
 	}
+
 	if len(newKeys) > 0 {
-		var existingKeys []model.ApiKey
-		_ = tx.Get(userApiKeysBucket, u.ID, &existingKeys)
 		if len(existingKeys) > 0 {
 			newKeys = append(newKeys, existingKeys...)
 		}
@@ -450,6 +483,19 @@ func (me *UserDB) updateApiKeys(u *model.User, tx db.DB) error {
 		}
 	}
 	return nil
+}
+
+func (me *UserDB) keyIsNew(existingKeys []model.ApiKey, apiKey *model.ApiKey) bool {
+	exists := false
+	var tmp model.ApiKey
+	tmp.Key = apiKey.Key
+	for _, k := range existingKeys {
+		if k.Key == tmp.Key {
+			exists = true
+			break
+		}
+	}
+	return !exists
 }
 
 func (me *UserDB) setTinyUserIconBase64(item *model.User) error {

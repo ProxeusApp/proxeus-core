@@ -1167,19 +1167,19 @@ func (mr *MockUserIFMockRecorder) PutProfilePhoto(auth, id, reader interface{}) 
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "PutProfilePhoto", reflect.TypeOf((*MockUserIF)(nil).PutProfilePhoto), auth, id, reader)
 }
 
-// APIKey mocks base method
-func (m *MockUserIF) APIKey(key string) (*model.User, error) {
+// GetByApiKey mocks base method
+func (m *MockUserIF) GetByApiKey(key string, id string) (*model.User, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "APIKey", key)
+	ret := m.ctrl.Call(m, "GetByApiKey", key, id)
 	ret0, _ := ret[0].(*model.User)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// APIKey indicates an expected call of APIKey
-func (mr *MockUserIFMockRecorder) APIKey(key interface{}) *gomock.Call {
+// GetByApiKey indicates an expected call of GetByApiKey
+func (mr *MockUserIFMockRecorder) GetByApiKey(key interface{}, id interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "APIKey", reflect.TypeOf((*MockUserIF)(nil).APIKey), key)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetByApiKey", reflect.TypeOf((*MockUserIF)(nil).GetByApiKey), key, id)
 }
 
 // CreateApiKey mocks base method

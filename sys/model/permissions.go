@@ -8,6 +8,8 @@ import (
 )
 
 var ErrAuthorityMissing = fmt.Errorf("authority missing")
+var ErrAuthorityInvalid = fmt.Errorf("invalid authority key")
+var ErrAuthorityNotFound = fmt.Errorf("user not found for key")
 
 //Permission holds an byte slice for the pattern --/rw or ----/r-r- and so on
 // none     read    write

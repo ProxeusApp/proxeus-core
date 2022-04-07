@@ -261,7 +261,7 @@ type UserIF interface {
 	PutProfilePhoto(auth model.Auth, id string, reader io.Reader) error
 
 	// APIKey tries to authenticate the user with the supplied API key and returns the user object or an error
-	APIKey(key string) (*model.User, error)
+	GetByApiKey(key string, id string) (*model.User, error)
 
 	// CreateApiKey saves and returns a newly created random api key for a user
 	CreateApiKey(auth model.Auth, userId, apiKeyName string) (string, error)
