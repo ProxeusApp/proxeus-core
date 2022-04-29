@@ -3,7 +3,7 @@ variables:
   AWS_ECR: "true"
   AWS_REGION: us-east-1
   USER: root
-#   DEV_SERVER_ADDR: 164.92.133.65
+  DEV_SERVER_ADDR: 164.92.189.73
 #   STAGE_SERVER_ADDR: 164.92.249.95
 #   PREPROD_SERVER_ADDR: 165.227.138.155
   # PROD_SERVER_ADDR:
@@ -14,6 +14,8 @@ variables:
   
   DOCKERFILE_PATH: ./Dockerfile
   VERSION_PATH: ./version.yml
+
+
   
 include:
   project: devops/ci-library
