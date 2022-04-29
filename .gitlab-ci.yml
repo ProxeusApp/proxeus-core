@@ -1,0 +1,25 @@
+### Default S-Pro Pipeline of DevOps Team
+variables:
+  AWS_ECR: "true"
+  AWS_REGION: us-east-1
+  USER: root
+#   DEV_SERVER_ADDR: 164.92.133.65
+#   STAGE_SERVER_ADDR: 164.92.249.95
+#   PREPROD_SERVER_ADDR: 165.227.138.155
+  # PROD_SERVER_ADDR:
+  DEV_BRANCH: develop
+  STAGE_BRANCH: stage
+  PREPROD_BRANCH: preprod
+  PROD_BRANCH: master
+  
+  DOCKERFILE_PATH: ./Dockerfile
+  VERSION_PATH: ./version.yml
+  
+include:
+  project: devops/ci-library
+  ref: ProxeusApp
+  file:
+    - common/.gitlab-ci.yml
+    - ProxeusApp/.gitlab-ci.yml
+    # - docker/.gitlab-ci.yml
+    # - deploy/docker-compose/.gitlab-ci.yml
