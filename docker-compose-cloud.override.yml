@@ -34,8 +34,8 @@ services:
       - nginx-share:/etc/nginx/vhost.d
       - nginx-share:/usr/share/nginx/html
       - ./nginx-timeout.conf:/etc/nginx/conf.d/nginx-timeout.conf
-      - ${PROXEUS_DATA_DIR:-./data}/certs:/etc/nginx/certs:ro
-      - ${DOCKER_SOCK:-/var/run/docker.sock}:/tmp/docker.sock:ro
+      - ./data/certs:/etc/nginx/certs:ro
+      - /var/run/docker.sock:/tmp/docker.sock:ro
     networks:
       - reverse-proxy
     labels:
@@ -54,8 +54,8 @@ services:
     volumes:
       - nginx-share:/etc/nginx/vhost.d
       - nginx-share:/usr/share/nginx/html
-      - ${PROXEUS_DATA_DIR:-./data}/certs:/etc/nginx/certs:rw
-      - ${DOCKER_SOCK:-/var/run/docker.sock}:/var/run/docker.sock:ro
+      - ./data/certs:/etc/nginx/certs:rw
+      - /var/run/docker.sock:/var/run/docker.sock:ro
     restart: unless-stopped
 
   platform:
@@ -65,11 +65,11 @@ services:
       com.centurylinklabs.watchtower.enable: "true"
     environment:
       # Replace values for reverse-proxy
-      VIRTUAL_HOST: ${PROXEUS_VIRTUAL_HOST:-proxeus.example.com}
+      VIRTUAL_HOST: core.proxeusapp.dev.scenario-projects.com
       VIRTUAL_PORT: 1323
       # Replace values for letsencrypt
-      LETSENCRYPT_HOST: ${PROXEUS_VIRTUAL_HOST:-proxeus.example.com}
-      LETSENCRYPT_EMAIL: ${LETSENCRYPT_EMAIL:-admin@example.com}
+      LETSENCRYPT_HOST: core.proxeusapp.dev.scenario-projects.com
+      LETSENCRYPT_EMAIL: devops@s-pro.io
 
   document-service:
     networks:
