@@ -86,11 +86,9 @@
           <div class="row">
             <div class="col-sm-12" id="formsContainer">
               <search-box v-on:search="search"></search-box>
-              <span v-for="form in forms" :form="form" :key="form.id">
-                <template-form v-if="form && components"
-                               :comps="components"
-                               @updatedFormField="handleFormUpdate" />
-              </span>
+              <template-form v-for="form in forms" :form="form" :key="form.id"
+                             :comps="components"
+                             @updatedFormField="handleFormUpdate" />
               <div style="display: none">
                 <div id="log"></div>
                 <div id="inputContainer">
