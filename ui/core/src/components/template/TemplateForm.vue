@@ -26,6 +26,7 @@ export default {
   mounted () {
     const self = this
     $(document).ready(function () {
+      if (!self.form) return
       $('#f-' + self.form.id).on('shown.bs.collapse', function () {
         self.$scrollTo('#f-' + self.form.id, 500, {
           container: '.layout-fixed-scroll-view',
@@ -35,7 +36,7 @@ export default {
     })
   },
   created () {
-    if (this.form.data && this.form.data.formSrc) {
+    if (this.form && this.form.data && this.form.data.formSrc) {
       this.compileForm()
     }
   },
