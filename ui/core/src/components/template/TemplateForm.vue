@@ -1,11 +1,12 @@
-<template>
-<div class="card" v-if="compiledForm">
-  <a class="card-header" data-toggle="collapse"
-     :href="'#f-'+form.id"
-     role="button" aria-expanded="false" :aria-controls="'#f-'+form.id">{{ form.name }}
-  </a>
-  <form class="card-body collapse form-compiled" data-parent="#formsContainer" :id="'f-'+form.id">{{compiledForm()}}</form>
-</div>
+<template v-if="form && components">
+  <div class="card" v-if="compiledForm">
+    <a class="card-header" data-toggle="collapse"
+       :href="'#f-'+form.id"
+       role="button" aria-expanded="false" :aria-controls="'#f-'+form.id">{{ form.name }}
+    </a>
+    <form class="card-body collapse form-compiled" data-parent="#formsContainer" :id="'f-'+form.id"
+          v-append="compiledForm"></form>
+  </div>
 </template>
 
 <script>
@@ -25,7 +26,6 @@ export default {
   mounted () {
     const self = this
     $(document).ready(function () {
-      if (!self.form) return
       $('#f-' + self.form.id).on('shown.bs.collapse', function () {
         self.$scrollTo('#f-' + self.form.id, 500, {
           container: '.layout-fixed-scroll-view',
@@ -35,7 +35,7 @@ export default {
     })
   },
   created () {
-    if (this.form && this.form.data && this.form.data.formSrc) {
+    if (this.form.data && this.form.data.formSrc) {
       this.compileForm()
     }
   },
@@ -104,52 +104,52 @@ export default {
 
 <style lang="scss">
 
+.var-box {
+  /*display: none;*/
+  position: absolute;
+  right: 21px;
+  top: 12px;
+  > span {
+    border: 1px solid;
+  }
+  > i {
+    /*position: absolute;*/
+    right: -6px;
+    font-size: 13px;
+    color: #00829d;
+    background: rgba(255, 255, 255, 0.72);
+    border-radius: 4px;
+    padding: 2px;
+    cursor: pointer;
+  }
+
+  .var-path {
+    font-family: monospace, serif;
+    color: #00778f;
+    background: rgba(255, 255, 255, 0.72);
+    padding: 5px;
+    border-radius: 4px;
+    white-space: nowrap;
+
+    > span.e {
+      color: #000000;
+    }
+
+    > span.v {
+      color: #062a85;
+    }
+
+    > span.d {
+      color: #7a00ff;
+      font-weight: bold;
+    }
+  }
+}
+
+.form-group:hover {
   .var-box {
-    /*display: none;*/
-    position: absolute;
-    right: 21px;
-    top: 12px;
-    > span {
-      border: 1px solid;
-    }
-    > i {
-      /*position: absolute;*/
-      right: -6px;
-      font-size: 13px;
-      color: #00829d;
-      background: rgba(255, 255, 255, 0.72);
-      border-radius: 4px;
-      padding: 2px;
-      cursor: pointer;
-    }
-
-    .var-path {
-      font-family: monospace, serif;
-      color: #00778f;
-      background: rgba(255, 255, 255, 0.72);
-      padding: 5px;
-      border-radius: 4px;
-      white-space: nowrap;
-
-      > span.e {
-        color: #000000;
-      }
-
-      > span.v {
-        color: #062a85;
-      }
-
-      > span.d {
-        color: #7a00ff;
-        font-weight: bold;
-      }
-    }
+    display: block;
   }
-
-  .form-group:hover {
-    .var-box {
-      display: block;
-    }
-  }
+}
 
 </style>
