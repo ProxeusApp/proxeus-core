@@ -1,3 +1,16 @@
+stages:
+  - init
+  - check
+  - build
+  - push
+  - security
+  - report
+  - deploy
+  - update
+  - status
+  - clean
+  - release
+
 ### Default S-Pro Pipeline of DevOps Team
 variables:
   AWS_ECR: "true"
