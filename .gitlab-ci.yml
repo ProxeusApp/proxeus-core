@@ -16,6 +16,66 @@ variables:
   DOCKERFILE_PATH: ./Dockerfile
   VERSION_PATH: ./version.yml
 
+Common:Env:
+  stage: init
+  image: core.s-pro.io/devops-images/dd-container:${DD_CONTAINER_TAG}
+  interruptible: true
+  rules:
+    - if: '$CI_COMMIT_BRANCH == $DEV_BRANCH'
+    - if: '$CI_COMMIT_BRANCH == $STAGE_BRANCH'
+    - if: '$CI_COMMIT_BRANCH == $PREPROD_BRANCH'
+    - if: '$CI_COMMIT_BRANCH == $PROD_BRANCH'
+
+  script:
+    - NAMESPACE=$(echo "$CI_PROJECT_NAMESPACE" | tr '[:upper:]' '[:lower:]'| sed "s/\//-/" )
+    - echo "NAMESPACE=$(echo "$CI_PROJECT_NAMESPACE" | tr '[:upper:]' '[:lower:]'| sed "s/\//-/" )" >> common.env
+    - echo "DEV_BRANCH=${DEV_BRANCH}" >> common.env
+    - echo "STAGE_BRANCH=${STAGE_BRANCH}" >> common.env
+    - echo "PREPROD_BRANCH=${PREPROD_BRANCH}" >> common.env
+    - echo "PROD_BRANCH=${PROD_BRANCH}" >> common.env
+    - kubectl config get-contexts
+    - echo "K8S_DEV_CONTEXT=$(kubectl config get-contexts | grep ${K8S_DEV_CLUSTER_CONTEXT} | awk '{print$1}')" >> common.env
+    - echo "K8S_STAGE_CONTEXT=$(kubectl config get-contexts | grep ${K8S_STAGE_CLUSTER_CONTEXT} | awk '{print$1}')" >> common.env
+    - echo "K8S_PREPROD_CONTEXT=$(kubectl config get-contexts | grep ${K8S_PREPROD_CLUSTER_CONTEXT} | awk '{print$1}')" >> common.env
+    - echo "K8S_PROD_CONTEXT=$(kubectl config get-contexts | grep ${K8S_PROD_CLUSTER_CONTEXT} | awk '{print$1}')" >> common.env
+    - echo "PROJECT_NAME=$(echo "$CI_PROJECT_NAME" | tr '[:upper:]' '[:lower:]'| sed "s/\//-/" | sed 's/[[:blank:]]*$//' | sed 's/\r$//' )" >> common.env
+    - |-
+        if [ "$UMBRELLA_CHART_NAME" == "null" ]
+        then
+            echo "UMBRELLA_CHART_NAME=${NAMESPACE}" >> common.env
+        else
+            echo "UMBRELLA_CHART_NAME=${UMBRELLA_CHART_NAME}" >> common.env
+        fi
+    - |-
+        FILE=${VERSION_PATH}
+        if [ -f "$FILE" ];
+        then
+            VERSION_FILE=${VERSION_PATH}
+        else
+            VERSION_FILE="${CHART_DIR}/Chart.yaml"
+            CHART_NAME=$(yq eval .name "${VERSION_FILE}")
+            echo "CHART_NAME=${CHART_NAME}" >> common.env
+        fi
+    - |-
+        if [ "$CI_PIPELINE_SOURCE" == "merge_request_event" ];
+        then
+          RC_SUFFIX=-rc.${CI_PIPELINE_ID}
+          OLD_TAG=$(yq eval .version "${VERSION_FILE}")
+          echo "IMAGE_TAG=${OLD_TAG}${RC_SUFFIX}" >> common.env
+          echo "CHART_TAG=${OLD_TAG}${RC_SUFFIX}" >> common.env
+          echo "OLD_TAG=${OLD_TAG}" >> common.env
+        else
+          RC_SUFFIX=-rc.${CI_PIPELINE_ID}
+          OLD_TAG=$(yq eval .version "${VERSION_FILE}")
+          echo "IMAGE_TAG=${OLD_TAG}${RC_SUFFIX}" >> common.env
+          echo "CHART_TAG=${OLD_TAG}${RC_SUFFIX}" >> common.env
+          echo "OLD_TAG=${OLD_TAG}" >> common.env
+        fi
+  artifacts:
+    name: "EnvVars"
+    reports:
+      dotenv: common.env
+
 # Docker:Build:
 #   stage: build
 Docker:Init:
@@ -47,7 +107,6 @@ Docker:Init:
   needs:
     - job: Common:Env
       artifacts: true
-    - job: Common:Check
   artifacts:
     paths:
     - ./artifacts/proxeus-docker
