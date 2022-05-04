@@ -2,6 +2,7 @@
 variables:
   AWS_ECR: "true"
   AWS_REGION: us-east-1
+  DD_CONTAINER_TAG: 0.6.0
   USER: root
   DEV_SERVER_ADDR: 164.92.189.73
 #   STAGE_SERVER_ADDR: 164.92.249.95
@@ -15,13 +16,140 @@ variables:
   DOCKERFILE_PATH: ./Dockerfile
   VERSION_PATH: ./version.yml
 
+# Docker:Build:
+#   stage: build
+Docker:Init:
+  stage: init
+  interruptible: true
+  image:
+    name: cimg/go:1.16-node
+    entrypoint: [""]
+  script:
+    - |-
+        make ui
+        make init validate
+        make init test
+        make init server
+        make init server-docker
+  rules:
+    - if: '$CI_COMMIT_BRANCH == $DEV_BRANCH'
+      variables:
+        ENV: 'dev'
+    - if: '$CI_COMMIT_BRANCH == $STAGE_BRANCH'
+      variables:
+        ENV: 'stage'
+    - if: '$CI_COMMIT_BRANCH == $PREPROD_BRANCH'
+      variables:
+        ENV: 'preprod'
+    - if: '$CI_COMMIT_BRANCH == $PROD_BRANCH'
+      variables:
+        ENV: 'prod'
+  needs:
+    - job: Common:Env
+      artifacts: true
+    - job: Common:Check
+  artifacts:
+    paths:
+    - ./artifacts/proxeus-docker
 
-  
-include:
-  project: devops/ci-library
-  ref: ProxeusApp
-  file:
-    - common/.gitlab-ci.yml
-    - ProxeusApp/.gitlab-ci.yml
-    # - docker/.gitlab-ci.yml
-    # - deploy/docker-compose/.gitlab-ci.yml
+Docker:Build:
+  stage: build
+  interruptible: true
+  image:
+    name: gcr.io/kaniko-project/executor:debug
+    entrypoint: [""]
+  script:
+    - |-
+            /kaniko/executor \
+            --context $CI_PROJECT_DIR \
+            --dockerfile $DOCKERFILE_PATH \
+            --no-push \
+            --destination ${AWS_DOCKER_REGISTRY_URL}\/${NAMESPACE}\/${ENV}\/${PROJECT_NAME}:latest \
+            --tarPath image.tar
+  rules:
+    - if: '$CI_COMMIT_BRANCH == $DEV_BRANCH'
+      variables:
+        ENV: 'dev'
+    - if: '$CI_COMMIT_BRANCH == $STAGE_BRANCH'
+      variables:
+        ENV: 'stage'
+    - if: '$CI_COMMIT_BRANCH == $PREPROD_BRANCH'
+      variables:
+        ENV: 'preprod'
+    - if: '$CI_COMMIT_BRANCH == $PROD_BRANCH'
+      variables:
+        ENV: 'prod'
+  needs:
+    - job: Docker:Init
+      artifacts: true
+  artifacts:
+    paths:
+    - image.tar
+
+Docker:Push:
+  stage: push
+  interruptible: true
+  image:
+    name: core.s-pro.io/devops-images/dd-container:${DD_CONTAINER_TAG}
+    entrypoint: [""]
+  script:
+    - |-
+          aws ecr get-login-password --region us-east-1 | crane auth login -u AWS --password-stdin ${AWS_DOCKER_REGISTRY_URL}
+          crane push image.tar ${AWS_DOCKER_REGISTRY_URL}\/${NAMESPACE}\/${ENV}\/${PROJECT_NAME}:latest
+  rules:
+    - if: '$CI_COMMIT_BRANCH == $DEV_BRANCH'
+      variables:
+        ENV: 'dev'
+    - if: '$CI_COMMIT_BRANCH == $STAGE_BRANCH'
+      variables:
+        ENV: 'stage'
+    - if: '$CI_COMMIT_BRANCH == $PREPROD_BRANCH'
+      variables:
+        ENV: 'preprod'
+    - if: '$CI_COMMIT_BRANCH == $PROD_BRANCH'
+      variables:
+        ENV: 'prod'
+  needs:
+    - job: Common:Env
+      artifacts: true
+    - job: Docker:Build
+      artifacts: true
+
+Deploy:Docker:Compose:
+  image: core.s-pro.io/devops-images/dd-container:${DD_CONTAINER_TAG}
+  stage: deploy
+  before_script:
+    - export ECR_TOKEN=$(aws ecr get-login-password --region ${AWS_ECR_REGION})
+  script:
+    - chmod 600 $GITLAB_SSH
+    - scp -i $GITLAB_SSH -o StrictHostKeyChecking=no -r ./.[!.]* ./* ${USER}@${SERVER_ADDR}:${CI_TARGET_DIR}
+    - |-
+      ssh -i $GITLAB_SSH -o StrictHostKeyChecking=no ${USER}@${SERVER_ADDR} \
+        " cd $CI_TARGET_DIR
+          rm -rf .git/
+          echo "$ECR_TOKEN" | docker login -u AWS --password-stdin ${AWS_DOCKER_REGISTRY_URL}; \
+          docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v /etc:/etc:ro spotify/docker-gc; \
+          docker-compose -f docker-compose.yml -f docker-compose-cloud.override.yml pull; \
+          docker-compose -f docker-compose.yml -f docker-compose-cloud.override.yml down --remove-orphans; \
+          docker-compose -f docker-compose.yml -f docker-compose-cloud.override.yml up -d; \
+          docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v /etc:/etc:ro spotify/docker-gc; \
+          docker logout ${AWS_DOCKER_REGISTRY_URL}; \
+          docker system prune -f
+        "
+  rules:
+    - if: '$CI_COMMIT_BRANCH == $DEV_BRANCH'
+      variables:
+        ENV: 'DEV'
+        SERVER_ADDR: $DEV_SERVER_ADDR
+    - if: '$CI_COMMIT_BRANCH == $STAGE_BRANCH'
+      variables:
+        ENV: 'STAGE'
+        SERVER_ADDR: $STAGE_SERVER_ADDR
+    - if: '$CI_COMMIT_BRANCH == $PREPROD_BRANCH'
+      variables:
+        ENV: 'PREPROD'
+        SERVER_ADDR: $PREPROD_SERVER_ADDR
+    - if: '$CI_COMMIT_BRANCH == $PROD_BRANCH'
+      variables:
+        ENV: 'PROD'
+        SERVER_ADDR: $PROD_SERVER_ADDR
