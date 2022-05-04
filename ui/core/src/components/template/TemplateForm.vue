@@ -1,10 +1,10 @@
-<template>
+<template v-if="form && components">
 <div class="card" v-if="compiledForm">
   <a class="card-header" data-toggle="collapse"
      :href="'#f-'+form.id"
      role="button" aria-expanded="false" :aria-controls="'#f-'+form.id">{{ form.name }}
   </a>
-  <form class="card-body collapse form-compiled" data-parent="#formsContainer" :id="'f-'+form.id">{{compiledForm()}}</form>
+  <form class="card-body collapse form-compiled" data-parent="#formsContainer" :id="'f-'+form.id" v-append="compiledForm"></form>
 </div>
 </template>
 
