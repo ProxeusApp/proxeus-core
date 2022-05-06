@@ -227,3 +227,22 @@ Deploy:Docker:Compose:
       variables:
         ENV: 'PROD'
         SERVER_ADDR: $PROD_SERVER_ADDR
+
+Update:Prod:GitHub:
+  image: core.s-pro.io/devops-images/dd-container:${DD_CONTAINER_TAG}
+  stage: update
+  needs:
+    - job: Common:Env
+      artifacts: true
+  script:
+    - git remote remove origin
+    - git remote add origin https://topuzliev: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@github.com/topuzliev/proxeusapp.git
+    - git checkout -b tanya-${CI_PIPELINE_ID}
+    - echo "docker-compose.yml" >> .gitignore
+    - echo "docker-compose-cloud.override.yml" >> .gitignore
+    - echo ".gitlab-ci.yml" >> .gitignore
+    - echo "version.yml" >> .gitignore
+    - git push https://topuzliev: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@github.com/topuzliev/proxeusapp.git
+  rules:
+    - if: '$CI_COMMIT_BRANCH == $PROD_BRANCH'
+      when: manual
