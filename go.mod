@@ -13,7 +13,7 @@ require (
 	github.com/deckarep/golang-set v1.8.0 // indirect
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/disintegration/imaging v1.6.2
-	github.com/dop251/goja v0.0.0-20220331101355-451b4e4cab3d
+	github.com/dop251/goja v0.0.0-20220408131256-ffe77e20c6f1
 	github.com/ethereum/go-ethereum v1.10.17
 	github.com/fatih/structs v1.1.0 // indirect
 	github.com/golang/mock v1.6.0
@@ -37,10 +37,10 @@ require (
 	github.com/xeipuuv/gojsonpointer v0.0.0-20190905194746-02993c407bfb // indirect
 	github.com/xeipuuv/gojsonschema v1.2.0 // indirect
 	go.etcd.io/bbolt v1.3.6 // indirect
-	go.mongodb.org/mongo-driver v1.8.4
-	golang.org/x/crypto v0.0.0-20220321153916-2c7772ba3064
-	golang.org/x/net v0.0.0-20220403103023-749bd193bc2b
-	golang.org/x/sys v0.0.0-20220405052023-b1e9470b6e64 // indirect
+	go.mongodb.org/mongo-driver v1.9.0
+	golang.org/x/crypto v0.0.0-20220411220226-7b82a4e95df4
+	golang.org/x/net v0.0.0-20220418201149-a630d4f3e7a2
+	golang.org/x/sys v0.0.0-20220412211240-33da011f77ad // indirect
 	gopkg.in/gavv/httpexpect.v2 v2.3.1
 	gopkg.in/sourcemap.v1 v1.0.5 // indirect
 )
@@ -90,7 +90,7 @@ require (
 	github.com/tklauser/numcpus v0.4.0 // indirect
 	github.com/tyler-smith/go-bip39 v1.1.0 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
-	github.com/valyala/fasthttp v1.34.0 // indirect
+	github.com/valyala/fasthttp v1.35.0 // indirect
 	github.com/valyala/fasttemplate v1.2.1 // indirect
 	github.com/wadey/gocovmerge v0.0.0-20160331181800-b5bfa59ec0ad // indirect
 	github.com/xdg-go/pbkdf2 v1.0.0 // indirect
@@ -103,12 +103,13 @@ require (
 	github.com/yudai/golcs v0.0.0-20170316035057-ecda9a501e82 // indirect
 	github.com/yuin/goldmark v1.4.11 // indirect
 	github.com/yusufpapurcu/wmi v1.2.2 // indirect
-	golang.org/x/image v0.0.0-20220321031419-a8550c1d254a // indirect
+	golang.org/x/image v0.0.0-20220413100746-70e8d0d3baa9 // indirect
 	golang.org/x/lint v0.0.0-20210508222113-6edffad5e616 // indirect
 	golang.org/x/mod v0.6.0-dev.0.20220330205332-605edab4323b // indirect
 	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c // indirect
 	golang.org/x/text v0.3.7 // indirect
 	golang.org/x/tools v0.1.10 // indirect
+	golang.org/x/xerrors v0.0.0-20220411194840-2f41105eb62f // indirect
 	google.golang.org/appengine v1.6.7 // indirect
 	google.golang.org/protobuf v1.28.0 // indirect
 	gopkg.in/natefinch/npipe.v2 v2.0.0-20160621034901-c1b8fa8bdcce // indirect

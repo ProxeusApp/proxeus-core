@@ -15,7 +15,7 @@ class WalletInterface {
   // TODO improve checking that current network matches what is expected
   // TODO: network param only for compatibility reasons with blockchain/dapp
   constructor (network = 'ropsten', proxeusFSAddress, forceProxeusWallet = false) {
-    this.useProxeusWallet = forceProxeusWallet || typeof window.ethereum !== 'undefined'
+    this.useProxeusWallet = forceProxeusWallet || typeof window.ethereum === 'undefined'
 
     // make sure we are using the web3 we want and not the one provided by metamask
     this.web3 = new Web3(Web3.givenProvider || 'ws://localhost:8545')
