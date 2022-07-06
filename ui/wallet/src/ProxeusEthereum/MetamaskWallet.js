@@ -5,7 +5,7 @@ class MetamaskWallet {
   }
 
   async setupDefaultAccount () {
-    this.web3.eth.defaultAccount = (await this.web3.eth.getAccounts())[0]
+    this.web3.eth.defaultAccount = (await this.web3.eth.requestAccounts())[0]
   }
 
   async signMessage (message) {
