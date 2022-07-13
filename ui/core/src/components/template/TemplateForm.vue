@@ -56,35 +56,36 @@ export default {
         self.compiledForm = compiledForm
         self.$nextTick(() => {
           const $form = $('#f-' + self.form.id + ' > form')
-          $form.on('dynamicFormScriptExecuted', function () {
-            if (self.form.data && self.form.data.data) {
-              $form.fillForm(self.form.data.data)
-            }
-            const changeOptions = {
-              fileUrl: '/api/admin/form/test/file/' + self.form.id,
-              url: '/api/admin/form/test/data/' + self.form.id,
-              success: function (data, textStatus, xhr, myRe) {
-                if (xhr.status >= 200 && xhr.status <= 299) {
-                  self.$emit('updatedFormField', self.form.id)
-                }
-              },
-              error: function (xhr, a, b, myRe) {
 
+          if (self.form.data && self.form.data.data) {
+            $form.fillForm(self.form.data.data)
+          }
+          const changeOptions = {
+            fileUrl: '/api/admin/form/test/file/' + self.form.id,
+            url: '/api/admin/form/test/data/' + self.form.id,
+            success: function (data, textStatus, xhr, myRe) {
+              if (xhr.status >= 200 && xhr.status <= 299) {
+                self.$emit('updatedFormField', self.form.id)
               }
+            },
+            error: function (xhr, a, b, myRe) {
+
             }
-            $form.assignSubmitOnChange(changeOptions)
-            $form.on('formFieldsAdded', function (event, parent) {
-              if (parent && parent.length) {
-                parent.assignSubmitOnChange(changeOptions)
-              }
-            })
-            $form.find('.field-parent').each(function () {
-              var _t = $(this)
-              var _i = _t.find('input,select,textarea').first()
-              var varName = _i.attr('name')
-              var ___inputPrefix = 'input.'
-              _t.append(
-                '<div class="var-box"><span class="var-path" style="z-index:-1;position: absolute;background: none;top: -5px;right: 0;"><span class="e" style="">{{</span><span class="v">input</span><span class="d">.</span>' +
+          }
+          $form.assignSubmitOnChange(changeOptions)
+          $form.on('formFieldsAdded', function (event, parent) {
+            if (parent && parent.length) {
+              parent.assignSubmitOnChange(changeOptions)
+            }
+          })
+
+          $form.find('.field-parent').each(function () {
+            var _t = $(this)
+            var _i = _t.find('input,select,textarea').first()
+            var varName = _i.attr('name')
+            var ___inputPrefix = 'input.'
+            _t.append(
+              '<div class="var-box"><span class="var-path" style="z-index:-1;position: absolute;background: none;top: -5px;right: 0;"><span class="e" style="">{{</span><span class="v">input</span><span class="d">.</span>' +
                 varName +
                 '<span class="e" style="">}}</span></span><span class="var-path" draggable="true" onclick="window.___copyMe(event)" ondragstart="libreHub.dragStart(event, libreHub.getVarJSON(\'' +
                 ___inputPrefix + varName +
@@ -92,8 +93,7 @@ export default {
                 ');"><span class="e">{{</span><span class="v">input</span><span class="d">.</span>' +
                 varName +
                 '<span class="e">}}</span></span></div>'
-              )
-            })
+            )
           })
         })
       })
