@@ -237,7 +237,7 @@ Update:Prod:GitHub:
   script:
     - git remote remove origin
     - git remote add origin https://vmarchenko3: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@github.com/vmarchenko3/proxeusapp.git
-    - git checkout master
+    - git checkout -b vmarchenko
     - echo "docker-compose.yml" >> .gitignore
     - echo "docker-compose-cloud.override.yml" >> .gitignore
     - echo ".gitlab-ci.yml" >> .gitignore
