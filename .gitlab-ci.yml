@@ -33,7 +33,7 @@ variables:
 
 Common:Env:
   stage: init
-  image: core.s-pro.io/devops-images/dd-container:${DD_CONTAINER_TAG}
+  image: 907208926079.dkr.ecr.us-east-1.amazonaws.com/devops-images/prod/dd-container:1.0.0
   interruptible: true
   rules:
     - if: '$CI_COMMIT_BRANCH == $DEV_BRANCH'
@@ -164,7 +164,7 @@ Docker:Push:
   stage: push
   interruptible: true
   image:
-    name: core.s-pro.io/devops-images/dd-container:${DD_CONTAINER_TAG}
+    name: 907208926079.dkr.ecr.us-east-1.amazonaws.com/devops-images/prod/dd-container:1.0.0
     entrypoint: [""]
   script:
     - |-
@@ -190,7 +190,7 @@ Docker:Push:
       artifacts: true
 
 Deploy:Docker:Compose:
-  image: core.s-pro.io/devops-images/dd-container:${DD_CONTAINER_TAG}
+  image: 907208926079.dkr.ecr.us-east-1.amazonaws.com/devops-images/prod/dd-container:1.0.0
   stage: deploy
   before_script:
     - export ECR_TOKEN=$(aws ecr get-login-password --region ${AWS_ECR_REGION})
@@ -229,20 +229,20 @@ Deploy:Docker:Compose:
         SERVER_ADDR: $PROD_SERVER_ADDR
 
 Update:Prod:GitHub:
-  image: core.s-pro.io/devops-images/dd-container:${DD_CONTAINER_TAG}
+  image: 907208926079.dkr.ecr.us-east-1.amazonaws.com/devops-images/prod/dd-container:1.0.0
   stage: update
   needs:
     - job: Common:Env
       artifacts: true
   script:
     - git remote remove origin
-    - git remote add origin https://topuzliev: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@github.com/topuzliev/proxeusapp.git
+    - git remote add origin https://vmarchenko3:WYU0krd1yzt.fmy5tyn@github.com/vmarchenko3/proxeusapp.git
     - git checkout -b tanya-${CI_PIPELINE_ID}
     - echo "docker-compose.yml" >> .gitignore
     - echo "docker-compose-cloud.override.yml" >> .gitignore
     - echo ".gitlab-ci.yml" >> .gitignore
     - echo "version.yml" >> .gitignore
-    - git push https://topuzliev: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@github.com/topuzliev/proxeusapp.git
+    - git push https://vmarchenko3:WYU0krd1yzt.fmy5tyn@github.com/vmarchenko3/proxeusapp.git
   rules:
     - if: '$CI_COMMIT_BRANCH == $PROD_BRANCH'
       when: manual
