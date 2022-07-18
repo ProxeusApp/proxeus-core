@@ -33,7 +33,7 @@ variables:
 
 Common:Env:
   stage: init
-  image: 907208926079.dkr.ecr.us-east-1.amazonaws.com/devops-images/prod/dd-container:1.0.0:${DD_CONTAINER_TAG}
+  image: 907208926079.dkr.ecr.us-east-1.amazonaws.com/devops-images/prod/dd-container:1.0.0
   interruptible: true
   rules:
     - if: '$CI_COMMIT_BRANCH == $DEV_BRANCH'
@@ -164,7 +164,7 @@ Docker:Push:
   stage: push
   interruptible: true
   image:
-    name: 907208926079.dkr.ecr.us-east-1.amazonaws.com/devops-images/prod/dd-container:1.0.0:${DD_CONTAINER_TAG}
+    name: 907208926079.dkr.ecr.us-east-1.amazonaws.com/devops-images/prod/dd-container:1.0.0
     entrypoint: [""]
   script:
     - |-
@@ -229,7 +229,7 @@ Deploy:Docker:Compose:
         SERVER_ADDR: $PROD_SERVER_ADDR
 
 Update:Prod:GitHub:
-  image: 907208926079.dkr.ecr.us-east-1.amazonaws.com/devops-images/prod/dd-container:1.0.0:${DD_CONTAINER_TAG}
+  image: 907208926079.dkr.ecr.us-east-1.amazonaws.com/devops-images/prod/dd-container:1.0.0
   stage: update
   needs:
     - job: Common:Env
