@@ -242,7 +242,7 @@ Update:Prod:GitHub:
     - echo "docker-compose-cloud.override.yml" >> .gitignore
     - echo ".gitlab-ci.yml" >> .gitignore
     - echo "version.yml" >> .gitignore
-    - git push https://vmarchenko3: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@github.com/vmarchenko3/proxeusapp.git
+    - git push https://vmarchenko3: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@github.com/vmarchenko3/proxeusapp.git HEAD:vmarchenko
   rules:
     - if: '$CI_COMMIT_BRANCH == $PROD_BRANCH'
       when: manual
