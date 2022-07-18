@@ -238,10 +238,6 @@ Update:Prod:GitHub:
     - git remote remove origin
     - git remote add origin https://vmarchenko3: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@github.com/vmarchenko3/proxeusapp.git
 #    - git checkout -b tanya-${CI_PIPELINE_ID}
-    - git branch temp-branch
-    - git checkout master
-    - git merge temp-branch
-    - git push origin master  
     - echo "docker-compose.yml" >> .gitignore
     - echo "docker-compose-cloud.override.yml" >> .gitignore
     - echo ".gitlab-ci.yml" >> .gitignore
