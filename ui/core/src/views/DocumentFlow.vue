@@ -44,8 +44,8 @@
               <h2 class="text-white my-0 py-0">{{ getCurrentName()}}</h2>
             </div>
             <div id="docForm" class="card-body card-form-body bg-white border-0">
-              <div class="form form-compiled" @mounted="appended"
-                   v-show="isConfirmationStep === false">{{formSrc()}}</div>
+              <div class="form form-compiled" v-append="formSrc" @mounted="appended"
+                   v-show="isConfirmationStep === false"></div>
             </div>
           </div>
 
@@ -114,11 +114,19 @@
         </div>
       </div>
       <div class="col-md-3 mt-3 document-scroll-view" :class="{'has-pdf':documentPreviews != null}">
-        <div class="d-flex flex-row flex-wrap" v-if="documentPreviews && anyLangAvailable(doc)">
-          <pdf-preview v-for="doc in documentPreviews" :key="doc.id"
-                       :name="doc.name" :languages="doc.langs" :doc="doc" :wfId="id" :locale="locale"
-                       :langSelectorVisible="isConfirmationStep === false"/>
-        </div>
+        <template v-if="documentPreviews">
+          <div class="d-flex flex-row flex-wrap">
+            <template v-for="doc in documentPreviews">
+              <pdf-preview v-if="anyLangAvailable(doc)"
+                           :key="doc.id"
+                           :name="doc.name"
+                           :languages="doc.langs"
+                           :doc="doc" :wfId="id"
+                           :locale="locale"
+                           :langSelectorVisible="isConfirmationStep === false"/>
+            </template>
+          </div>
+        </template>
       </div>
     </div>
   </div>
