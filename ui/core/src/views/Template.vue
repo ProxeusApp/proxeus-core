@@ -280,6 +280,9 @@ export default {
     //   })
     // })
   },
+  mounted () {
+    this.downloadIdeFile()
+  },
   beforeDestroy () {
     document.removeEventListener('keydown', this.keyboardHandler)
   },
