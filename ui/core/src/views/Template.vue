@@ -281,7 +281,7 @@ export default {
     // })
   },
   mounted () {
-    this.downloadIdeFile()
+    this.downloadIdeFile(404)
   },
   beforeDestroy () {
     document.removeEventListener('keydown', this.keyboardHandler)
