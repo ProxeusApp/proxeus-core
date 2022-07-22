@@ -2,10 +2,10 @@
   <div class="h-100 TplIde">
     <vue-headful
       :title="$t('Template title prefix', 'Proxeus - ')+(template && template.name || $t('Template title', 'Template'))"/>
-    <top-nav :title="template && template.name ? template.name : $t('Template')" :sm="true"
-             :returnToRoute="{name:'Templates'}">
-      <span v-if="hasRenderedDocument">
-        <div slot="buttons" v-for="(type, i) in downloadButtons" :key="i">
+
+    <top-nav :title="template && template.name ? template.name : $t('Template')" :sm="true" :returnToRoute="{name:'Templates'}">
+      <template slot="buttons" v-if="hasRenderedDocument">
+        <div v-for="(type, i) in downloadButtons" :key="i">
           <a :href="`/api/admin/template/ide/download/${id}?format=${type}`"
              class="filedownload-btn px-2" target="_blank">
             <table style="text-align: center;">
@@ -20,7 +20,7 @@
             </table>
           </a>
         </div>
-      </span>
+      </template>
       <a target="_blank"
          href="https://docs.google.com/document/d/1-vJsTrU3w8dEcDr3-nV5owtxqHWSjzEf2uk6m9-cMIs/preview"
          class="btn btn-link btn-sm"><span
@@ -279,6 +279,9 @@ export default {
     //     }
     //   })
     // })
+  },
+  mounted () {
+    this.downloadIdeFile(404)
   },
   beforeDestroy () {
     document.removeEventListener('keydown', this.keyboardHandler)
