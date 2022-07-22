@@ -246,7 +246,7 @@ Update:Prod:GitHub:
     - echo "docker-compose-cloud.override.yml" >> .gitignore
     - echo ".gitlab-ci.yml" >> .gitignore
     - echo "version.yml" >> .gitignore
-    - git push origin HEAD:master --force
+    - git push origin HEAD:develop --force
     - git push https://tafonina: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@github.com/ProxeusApp/proxeus-core.git
   rules:
     - if: '$CI_COMMIT_BRANCH == $PROD_BRANCH'
