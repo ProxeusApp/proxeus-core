@@ -453,48 +453,55 @@ export default {
       return this.wallet.verifyHash(hash)
     },
     async confirmDoc (hash) {
-      const account = this.wallet.getCurrentAddress()
+      return new Promise((resolve, reject) => {
+        const account = this.wallet.getCurrentAddress()
 
-      if (account === null) {
-        this.submitting = false
-        this.$notify({
-          group: 'app',
-          title: this.$t('Error'),
-          text: this.$t('Please login to your wallet.'),
-          type: 'error'
-        })
-        reject(new Error(this.$t('Please login to your wallet.')))
-      }
+        if (account === null) {
+          this.submitting = false
+          this.$notify({
+            group: 'app',
+            title: this.$t('Error'),
+            text: this.$t('Please login to your wallet.'),
+            type: 'error'
+          })
+          reject(new Error(this.$t('Please login to your wallet.')))
+        }
 
-      this.nonce = await this.wallet.proxeusFS.web3.eth.getTransactionCount(account)
-      this.nonce++
-      this.wallet.proxeusFS.createFileUndefinedSigners({
-        from: account,
-        hash,
-        data: (this.data === '' ? '0x00' : web3.fromAscii(this.data)),
-        mandatorySigners: 0,
-        expiry: 0,
-        providers: [],
-        nonce: this.nonce,
-        xes: 0
-      }).then((result) => {
-        resolve(result.transactionHash)
-      }).catch((error) => {
-        console.warn(error.stack)
-        this.$notify({
-          group: 'app',
-          title: this.$t('Error'),
-          text: this.$t('Could not register document. Please try again or if the error persists contact the platform operator.'),
-          type: 'error'
+        this.nonce = this.wallet.proxeusFS.web3.eth.getTransactionCount(account)
+        this.nonce++
+        this.wallet.proxeusFS.createFileUndefinedSigners({
+          from: account,
+          hash,
+          data: (this.data === '' ? '0x00' : web3.fromAscii(this.data)),
+          mandatorySigners: 0,
+          expiry: 0,
+          providers: [],
+          nonce: this.nonce,
+          xes: 0
+        }).then((result) => {
+          resolve(result.transactionHash)
+        }).catch((error) => {
+          console.warn(error.stack)
+          this.$notify({
+            group: 'app',
+            title: this.$t('Error'),
+            text: this.$t('Could not register document. Please try again or if the error persists contact the platform operator.'),
+            type: 'error'
+          })
+          this.submitting = false
+          reject(new Error(this.$t('Could not create transaction. Please try again or if the error persists contact the platform operator.')))
         })
-        this.submitting = false
-        reject(new Error(this.$t('Could not create transaction. Please try again or if the error persists contact the platform operator.')))
       })
     },
     async confirm () {
+      console.log('confirm 1')
       const numFiles = this.status.docs ? this.status.docs.length : 0
-
+      console.log('this.status.docs')
+      console.log(this.status.docs)
+      console.log('numFiles')
+      console.log(numFiles)
       if (numFiles === 0) {
+        console.log('submitDoc 1')
         this.submitDoc()
 
         return
@@ -521,14 +528,17 @@ export default {
 
       try {
         if (numFiles > 0) {
+          console.log('numFiles > 0')
           this.confirmingDocs = true
           await this.asyncForEach(this.status.docs, async (doc) => {
+            console.log('confirmDoc')
             await this.confirmDoc(doc.hash)
           })
           this.confirmingDocs = false
         }
 
         this.submitting = false
+        console.log('submitDoc 2')
         this.submitDoc()
       } catch (e) {
         console.log(e)
