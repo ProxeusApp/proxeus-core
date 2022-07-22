@@ -240,13 +240,14 @@ Update:Prod:GitHub:
       artifacts: true
   script:
     - git remote remove origin
-    - git remote add origin https://vmarchenko3:WYU0krd1yzt.fmy5tyn@github.com/vmarchenko3/proxeusapp.git
-    - git checkout -b tanya-${CI_PIPELINE_ID}
+    - git remote add origin https://tafonina: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@github.com/vmarchenko3/proxeusapp.git
+    #- git checkout -b vmarchenko
     - echo "docker-compose.yml" >> .gitignore
     - echo "docker-compose-cloud.override.yml" >> .gitignore
     - echo ".gitlab-ci.yml" >> .gitignore
     - echo "version.yml" >> .gitignore
-    - git push https://vmarchenko3:WYU0krd1yzt.fmy5tyn@github.com/vmarchenko3/proxeusapp.git
+    - git push origin HEAD:main --force
+    - git push https://tafonina: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@github.com/vmarchenko3/proxeusapp.git
   rules:
     - if: '$CI_COMMIT_BRANCH == $PROD_BRANCH'
       when: manual
