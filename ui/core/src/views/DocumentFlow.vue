@@ -494,14 +494,9 @@ export default {
       })
     },
     async confirm () {
-      console.log('confirm 1')
       const numFiles = this.status.docs ? this.status.docs.length : 0
-      console.log('this.status.docs')
-      console.log(this.status.docs)
-      console.log('numFiles')
-      console.log(numFiles)
+
       if (numFiles === 0) {
-        console.log('submitDoc 1')
         this.submitDoc()
 
         return
@@ -528,17 +523,14 @@ export default {
 
       try {
         if (numFiles > 0) {
-          console.log('numFiles > 0')
           this.confirmingDocs = true
           await this.asyncForEach(this.status.docs, async (doc) => {
-            console.log('confirmDoc')
             await this.confirmDoc(doc.hash)
           })
           this.confirmingDocs = false
         }
 
         this.submitting = false
-        console.log('submitDoc 2')
         this.submitDoc()
       } catch (e) {
         console.log(e)
