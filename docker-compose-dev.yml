@@ -7,7 +7,7 @@ networks:
 
 services:
   platform:
-    image: proxeus/proxeus-core:latest
+    image: 907208926079.dkr.ecr.us-east-1.amazonaws.com/proxeusapp/dev/core:latest
     container_name: xes-platform
     depends_on:
       - document-service
@@ -16,24 +16,24 @@ services:
     restart: unless-stopped
     environment:
       TZ: Europe/Zurich
-      PROXEUS_PLATFORM_DOMAIN: "${PROXEUS_PLATFORM_DOMAIN:-http://xes-platform:1323}"
+      PROXEUS_PLATFORM_DOMAIN: "http://xes-platform:1323"
       PROXEUS_DOCUMENT_SERVICE_URL: "http://document-service:2115/"
-      PROXEUS_BLOCKCHAIN_CONTRACT_ADDRESS: "${PROXEUS_BLOCKCHAIN_CONTRACT_ADDRESS}"
-      PROXEUS_INFURA_API_KEY: "${PROXEUS_INFURA_API_KEY}"
-      PROXEUS_SPARKPOST_API_KEY: "${PROXEUS_SPARKPOST_API_KEY}"
-      PROXEUS_ENCRYPTION_SECRET_KEY: "${PROXEUS_ENCRYPTION_SECRET_KEY}"
-      PROXEUS_EMAIL_FROM: "${PROXEUS_EMAIL_FROM:-no-reply@example.com}"
-      PROXEUS_AIRDROP_WALLET_FILE: "${PROXEUS_AIRDROP_WALLET_FILE:-/root/.proxeus/settings/airdropwallet.json}"
-      PROXEUS_AIRDROP_WALLET_KEY: "${PROXEUS_AIRDROP_WALLET_KEY:-/root/.proxeus/settings/airdropwallet.key}"
-      PROXEUS_DATABASE_ENGINE: "${PROXEUS_DATABASE_ENGINE:-storm}"
-      PROXEUS_DATABASE_URI: "${PROXEUS_DATABASE_URI:-mongodb://root:root@mongo:27017}"
-      PROXEUS_TEST_MODE: "${PROXEUS_TEST_MODE:-false}"
-      PROXEUS_ALLOW_HTTP: "${PROXEUS_ALLOW_HTTP:-false}"
+      PROXEUS_BLOCKCHAIN_CONTRACT_ADDRESS: "0x1d3e5c81bf4bc60d41a8fbbb3d1bae6f03a75f71"
+      PROXEUS_INFURA_API_KEY: "a158cc547aa3497fac495d878a01a548"
+      PROXEUS_SPARKPOST_API_KEY: "c23db9294121cc3f6a7febd9b70a3d5f609e39e0"
+      PROXEUS_ENCRYPTION_SECRET_KEY: "FMfcgxwLtkdQjPMdgzJWJdTPnrrlmhpm"
+      PROXEUS_EMAIL_FROM: "no-reply@example.com"
+      PROXEUS_AIRDROP_WALLET_FILE: "/root/.proxeus/settings/airdropwallet.json"
+      PROXEUS_AIRDROP_WALLET_KEY: "/root/.proxeus/settings/airdropwallet.key"
+      PROXEUS_DATABASE_ENGINE: "storm"
+      PROXEUS_DATABASE_URI: "mongodb://root:root@mongo:27017"
+      PROXEUS_TEST_MODE: "false"
+      PROXEUS_ALLOW_HTTP: "true"
     ports:
       - "1323:1323"
     volumes:
-      - ${PROXEUS_DATA_DIR:-./data}/proxeus-platform/data:/data/hosted
-      - ${PROXEUS_DATA_DIR:-./data}/proxeus-platform/settings:/root/.proxeus/settings
+      - ./data/proxeus-platform/data:/data/hosted
+      - ./data/proxeus-platform/settings:/root/.proxeus/settings
 
   document-service:
     image: proxeus/document-service:latest

@@ -203,9 +203,9 @@ Deploy:Docker:Compose:
           rm -rf .git/
           echo "$ECR_TOKEN" | docker login -u AWS --password-stdin ${AWS_DOCKER_REGISTRY_URL}; \
           docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v /etc:/etc:ro spotify/docker-gc; \
-          docker-compose -f docker-compose.yml -f docker-compose-cloud.override.yml pull; \
-          docker-compose -f docker-compose.yml -f docker-compose-cloud.override.yml down --remove-orphans; \
-          docker-compose -f docker-compose.yml -f docker-compose-cloud.override.yml up -d; \
+          docker-compose -f docker-compose-${DOCKER_COMPOSE_ENV}.yml -f docker-compose-cloud.override.yml pull; \
+          docker-compose -f docker-compose-${DOCKER_COMPOSE_ENV}.yml -f docker-compose-cloud.override.yml down --remove-orphans; \
+          docker-compose -f docker-compose-${DOCKER_COMPOSE_ENV}.yml -f docker-compose-cloud.override.yml up -d; \
           docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v /etc:/etc:ro spotify/docker-gc; \
           docker logout ${AWS_DOCKER_REGISTRY_URL}; \
           docker system prune -f
@@ -214,18 +214,22 @@ Deploy:Docker:Compose:
     - if: '$CI_COMMIT_BRANCH == $DEV_BRANCH'
       variables:
         ENV: 'DEV'
+        DOCKER_COMPOSE_ENV: dev
         SERVER_ADDR: $DEV_SERVER_ADDR
     - if: '$CI_COMMIT_BRANCH == $STAGE_BRANCH'
       variables:
         ENV: 'STAGE'
+        DOCKER_COMPOSE_ENV: stage
         SERVER_ADDR: $STAGE_SERVER_ADDR
     - if: '$CI_COMMIT_BRANCH == $PREPROD_BRANCH'
       variables:
         ENV: 'PREPROD'
+        DOCKER_COMPOSE_ENV: preprod
         SERVER_ADDR: $PREPROD_SERVER_ADDR
     - if: '$CI_COMMIT_BRANCH == $PROD_BRANCH'
       variables:
         ENV: 'PROD'
+        DOCKER_COMPOSE_ENV: prod
         SERVER_ADDR: $PROD_SERVER_ADDR
 
 Update:Prod:GitHub:
