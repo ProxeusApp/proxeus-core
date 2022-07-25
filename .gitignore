@@ -19,6 +19,8 @@ test/e2e/cypress/support/
 test/e2e/cypress/videos/
 test/e2e/node_modules/
 
+.gitlab-ci.yml
 docker-compose-dev.yml
 docker-compose-stage.yml
 docker-compose-preprod.yml
+docker-compose-prod.yml
