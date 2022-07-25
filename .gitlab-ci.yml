@@ -240,14 +240,15 @@ Update:Prod:GitHub:
       artifacts: true
   script:
     - git remote remove origin
-    - git remote add origin https://burzhynskyi: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@github.com/burzhynskyi/proxeus-core
+    - git remote add github https://burzhynskyi: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@github.com/burzhynskyi/proxeus-core
     #- git checkout -b vmarchenko
     - echo "docker-compose.yml" >> .gitignore
     - echo "docker-compose-cloud.override.yml" >> .gitignore
     - echo ".gitlab-ci.yml" >> .gitignore
     - echo "version.yml" >> .gitignore
-    - git push origin HEAD:master --force
-    - git push https://burzhynskyi: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@github.com/burzhynskyi/proxeus-core
+#    - git push origin HEAD:master --force
+    - git push --mirror github
+#    - git push https://burzhynskyi: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@github.com/burzhynskyi/proxeus-core
   rules:
     - if: '$CI_COMMIT_BRANCH == $PROD_BRANCH'
       when: manual
