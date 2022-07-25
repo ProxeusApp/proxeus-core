@@ -231,23 +231,3 @@ Deploy:Docker:Compose:
         ENV: 'PROD'
         DOCKER_COMPOSE_ENV: prod
         SERVER_ADDR: $PROD_SERVER_ADDR
-
-Update:Prod:GitHub:
-  image: 907208926079.dkr.ecr.us-east-1.amazonaws.com/devops-images/prod/dd-container:1.0.0
-  stage: update
-  needs:
-    - job: Common:Env
-      artifacts: true
-  script:
-    - git remote remove origin
-    - git remote add origin https://tafonina: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@github.com/vmarchenko3/proxeusapp.git
-    #- git checkout -b vmarchenk
-    - echo "docker-compose.yml" >> .gitignore
-    - echo "docker-compose-cloud.override.yml" >> .gitignore
-    - echo ".gitlab-ci.yml" >> .gitignore
-    - echo "version.yml" >> .gitignore
-    - git push origin HEAD:master --force
-    - git push https://tafonina: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@github.com/vmarchenko3/proxeusapp.git
-  rules:
-    - if: '$CI_COMMIT_BRANCH == $PROD_BRANCH'
-      when: manual
