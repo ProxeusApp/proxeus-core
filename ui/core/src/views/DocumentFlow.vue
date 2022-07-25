@@ -44,8 +44,8 @@
               <h2 class="text-white my-0 py-0">{{ getCurrentName()}}</h2>
             </div>
             <div id="docForm" class="card-body card-form-body bg-white border-0">
-              <div class="form form-compiled" @mounted="appended"
-                   v-show="isConfirmationStep === false">{{formSrc()}}</div>
+              <div class="form form-compiled" v-append="formSrc" @mounted="appended"
+                   v-show="isConfirmationStep === false"></div>
             </div>
           </div>
 
@@ -114,11 +114,19 @@
         </div>
       </div>
       <div class="col-md-3 mt-3 document-scroll-view" :class="{'has-pdf':documentPreviews != null}">
-        <div class="d-flex flex-row flex-wrap" v-if="documentPreviews && anyLangAvailable(doc)">
-          <pdf-preview v-for="doc in documentPreviews" :key="doc.id"
-                       :name="doc.name" :languages="doc.langs" :doc="doc" :wfId="id" :locale="locale"
-                       :langSelectorVisible="isConfirmationStep === false"/>
-        </div>
+        <template v-if="documentPreviews">
+          <div class="d-flex flex-row flex-wrap">
+            <template v-for="doc in documentPreviews">
+              <pdf-preview v-if="anyLangAvailable(doc)"
+                           :key="doc.id"
+                           :name="doc.name"
+                           :languages="doc.langs"
+                           :doc="doc" :wfId="id"
+                           :locale="locale"
+                           :langSelectorVisible="isConfirmationStep === false"/>
+            </template>
+          </div>
+        </template>
       </div>
     </div>
   </div>
@@ -445,42 +453,44 @@ export default {
       return this.wallet.verifyHash(hash)
     },
     async confirmDoc (hash) {
-      const account = this.wallet.getCurrentAddress()
+      return new Promise((resolve, reject) => {
+        const account = this.wallet.getCurrentAddress()
 
-      if (account === null) {
-        this.submitting = false
-        this.$notify({
-          group: 'app',
-          title: this.$t('Error'),
-          text: this.$t('Please login to your wallet.'),
-          type: 'error'
-        })
-        reject(new Error(this.$t('Please login to your wallet.')))
-      }
+        if (account === null) {
+          this.submitting = false
+          this.$notify({
+            group: 'app',
+            title: this.$t('Error'),
+            text: this.$t('Please login to your wallet.'),
+            type: 'error'
+          })
+          reject(new Error(this.$t('Please login to your wallet.')))
+        }
 
-      this.nonce = await this.wallet.proxeusFS.web3.eth.getTransactionCount(account)
-      this.nonce++
-      this.wallet.proxeusFS.createFileUndefinedSigners({
-        from: account,
-        hash,
-        data: (this.data === '' ? '0x00' : web3.fromAscii(this.data)),
-        mandatorySigners: 0,
-        expiry: 0,
-        providers: [],
-        nonce: this.nonce,
-        xes: 0
-      }).then((result) => {
-        resolve(result.transactionHash)
-      }).catch((error) => {
-        console.warn(error.stack)
-        this.$notify({
-          group: 'app',
-          title: this.$t('Error'),
-          text: this.$t('Could not register document. Please try again or if the error persists contact the platform operator.'),
-          type: 'error'
+        this.nonce = this.wallet.proxeusFS.web3.eth.getTransactionCount(account)
+        this.nonce++
+        this.wallet.proxeusFS.createFileUndefinedSigners({
+          from: account,
+          hash,
+          data: (this.data === '' ? '0x00' : web3.fromAscii(this.data)),
+          mandatorySigners: 0,
+          expiry: 0,
+          providers: [],
+          nonce: this.nonce,
+          xes: 0
+        }).then((result) => {
+          resolve(result.transactionHash)
+        }).catch((error) => {
+          console.warn(error.stack)
+          this.$notify({
+            group: 'app',
+            title: this.$t('Error'),
+            text: this.$t('Could not register document. Please try again or if the error persists contact the platform operator.'),
+            type: 'error'
+          })
+          this.submitting = false
+          reject(new Error(this.$t('Could not create transaction. Please try again or if the error persists contact the platform operator.')))
         })
-        this.submitting = false
-        reject(new Error(this.$t('Could not create transaction. Please try again or if the error persists contact the platform operator.')))
       })
     },
     async confirm () {
