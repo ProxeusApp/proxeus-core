@@ -28,9 +28,6 @@ variables:
   PREPROD_BRANCH: preprod
   PROD_BRANCH: master
 
-  PROXEUS_VIRTUAL_HOST: core.proxeusapp.dev.scenario-projects.com
-  LETSENCRYPT_EMAIL: admin@core.proxeusapp.dev.scenario-projects.com
-
   DOCKERFILE_PATH: ./Dockerfile
   VERSION_PATH: ./version.yml
 
@@ -209,9 +206,9 @@ Deploy:Docker:Compose:
           rm -rf .git/
           echo "$ECR_TOKEN" | docker login -u AWS --password-stdin ${AWS_DOCKER_REGISTRY_URL}; \
           docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v /etc:/etc:ro spotify/docker-gc; \
-          docker-compose -f docker-compose-${DOCKER_COMPOSE_ENV}.yml -f docker-compose-cloud.override.yml pull; \
-          docker-compose -f docker-compose-${DOCKER_COMPOSE_ENV}.yml -f docker-compose-cloud.override.yml down --remove-orphans; \
-          docker-compose -f docker-compose-${DOCKER_COMPOSE_ENV}.yml -f docker-compose-cloud.override.yml up -d; \
+          docker-compose -f docker-compose-${DOCKER_COMPOSE_ENV}.yml -f docker-compose-cloud-${DOCKER_COMPOSE_ENV}.override.yml pull; \
+          docker-compose -f docker-compose-${DOCKER_COMPOSE_ENV}.yml -f docker-compose-cloud-${DOCKER_COMPOSE_ENV}.override.yml down --remove-orphans; \
+          docker-compose -f docker-compose-${DOCKER_COMPOSE_ENV}.yml -f docker-compose-cloud-${DOCKER_COMPOSE_ENV}.override.yml up -d; \
           docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v /etc:/etc:ro spotify/docker-gc; \
           docker logout ${AWS_DOCKER_REGISTRY_URL}; \
           docker system prune -f
