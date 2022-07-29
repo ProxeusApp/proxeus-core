@@ -27,9 +27,6 @@ variables:
   STAGE_BRANCH: stage
   PREPROD_BRANCH: preprod
   PROD_BRANCH: master
-  
-  PROXEUS_VIRTUAL_HOST: core.proxeusapp.dev.scenario-projects.com
-  LETSENCRYPT_EMAIL: admin@core.proxeusapp.dev.scenario-projects.com
 
   DOCKERFILE_PATH: ./Dockerfile
   VERSION_PATH: ./version.yml
@@ -221,6 +218,8 @@ Deploy:Docker:Compose:
       variables:
         ENV: 'DEV'
         DOCKER_COMPOSE_ENV: dev
+        PROXEUS_VIRTUAL_HOST: core.proxeusapp.dev.scenario-projects.com
+        LETSENCRYPT_EMAIL: admin@core.proxeusapp.dev.scenario-projects.com
         SERVER_ADDR: $DEV_SERVER_ADDR
     - if: '$CI_COMMIT_BRANCH == $STAGE_BRANCH'
       variables:
