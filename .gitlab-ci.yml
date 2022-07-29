@@ -27,6 +27,9 @@ variables:
   STAGE_BRANCH: stage
   PREPROD_BRANCH: preprod
   PROD_BRANCH: master
+  
+  PROXEUS_VIRTUAL_HOST: core.proxeusapp.dev.scenario-projects.com
+  LETSENCRYPT_EMAIL: admin@core.proxeusapp.dev.scenario-projects.com
 
   DOCKERFILE_PATH: ./Dockerfile
   VERSION_PATH: ./version.yml
