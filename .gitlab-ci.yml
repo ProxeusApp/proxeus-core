@@ -200,6 +200,9 @@ Deploy:Docker:Compose:
     - |-
       ssh -i $GITLAB_SSH -o StrictHostKeyChecking=no ${USER}@${SERVER_ADDR} \
         " cd $CI_TARGET_DIR
+          echo $CI_TARGET_DIR
+          env
+          pwd
           rm -rf .git/
           echo "$ECR_TOKEN" | docker login -u AWS --password-stdin ${AWS_DOCKER_REGISTRY_URL}; \
           docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v /etc:/etc:ro spotify/docker-gc; \
