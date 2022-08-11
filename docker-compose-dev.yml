@@ -1,3 +1,4 @@
+---
 version: '3.7'
 
 networks:
@@ -19,7 +20,7 @@ services:
       PROXEUS_DOCUMENT_SERVICE_URL: "http://document-service:2115/"
       PROXEUS_BLOCKCHAIN_CONTRACT_ADDRESS: "0x1d3e5c81bf4bc60d41a8fbbb3d1bae6f03a75f71"
       PROXEUS_INFURA_API_KEY: "a158cc547aa3497fac495d878a01a548"
-      PROXEUS_SPARKPOST_API_KEY: "c23db9294121cc3f6a7febd9b70a3d5f609e39e0"
+      PROXEUS_SPARKPOST_API_KEY: "76ba0d40809df48cbed94cb14149b2f54ad38643"
       PROXEUS_ENCRYPTION_SECRET_KEY: "FMfcgxwLtkdQjPMdgzJWJdTPnrrlmhpm"
       PROXEUS_EMAIL_FROM: "no-reply@example.com"
       PROXEUS_AIRDROP_WALLET_FILE: "/root/.proxeus/settings/airdropwallet.json"
