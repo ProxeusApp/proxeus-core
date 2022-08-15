@@ -169,7 +169,7 @@ Docker:Push:
   script:
     - |-
       aws ecr get-login-password --region us-east-1 | crane auth login -u AWS --password-stdin ${AWS_DOCKER_REGISTRY_URL}
-      crane push image.tar ${AWS_DOCKER_REGISTRY_URL}\/${NAMESPACE}\/${ENV}\/${PROJECT_NAME}:latest
+      crane push image.tar ${AWS_DOCKER_REGISTRY_URL}\/${ENV}\/${PROJECT_NAME}:latest
   rules:
     - if: '$CI_COMMIT_BRANCH == $DEV_BRANCH'
       variables:
