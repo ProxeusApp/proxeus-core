@@ -39,11 +39,7 @@
             <small class="ellipsis">{{$t('Language')}}</small>
           </label>
         </div>
-        <select class="custom-select custom-select-sm maxwidth" style="padding: .2rem .4rem;"
-                v-model="selectedLanguage"
-                id="inputGroupSelect01" @change="error=false">
-          <option v-for="lang in getAvailableLangs(languages)" :key="lang" :value="lang">{{ lang }}</option>
-        </select>
+
       </div>
     </div>
     <div class="error w-100 d-flex flex-column align-items-center justify-content-center" v-if="error === true">
