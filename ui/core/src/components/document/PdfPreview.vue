@@ -90,6 +90,8 @@ export default {
   },
   computed: {
     getSrc () {
+      console.log('this.src', this.src)
+      console.log('this.dynamicLangPreviewSrc', this.dynamicLangPreviewSrc)
       return this.src ? this.src + '?format=pdf' : this.dynamicLangPreviewSrc
     },
     canDownload () {
