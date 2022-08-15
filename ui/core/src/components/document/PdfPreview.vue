@@ -50,15 +50,15 @@
       <i class="material-icons">error</i>
       <p class="mt-1">{{$t('Could not load PDF')}}</p>
     </div>
-    <spinner v-show="loaded !== true && error !== true" :margin="0" background="transparent" color="#333"
+    <spinner v-show="false" :margin="0" background="transparent" color="#333"
              cls="position-relative no-padding-top mt-0"/>
-    <button v-show="loaded && error === false" class="btn btn-link p-0 border-0" @click.prevent="mainAction">
+    <button class="btn btn-link p-0 border-0" @click.prevent="mainAction">
       <pdf :src="getSrc" @loaded="pdfLoaded" @error="pdfError"/>
       <span class="filename d-inline-block t-ellipsis" v-if="filename"><small :title="filename">{{ filename }}</small></span>
     </button>
-    <pdf-modal class="pdfwkaround" :src="getSrc" :mid="'modal' + _uid" ref="pdfMod" :filename="filename"
+    <pdf-modal class="pdfwkaround" :mid="'modal' + _uid" ref="pdfMod" :filename="filename"
                :download="canDownload"/>
-    <signing-modal :src="getSrc" :mid="'smodal' + _uid" ref="signMod"/>
+    <signing-modal  :mid="'smodal' + _uid" ref="signMod"/>
   </div>
 </div>
 </template>
@@ -91,8 +91,8 @@ export default {
   computed: {
     getSrc () {
       console.log('this.src', this.src)
-      console.log('this.dynamicLangPreviewSrc', this.dynamicLangPreviewSrc)
-      return this.src ? this.src + '?format=pdf' : this.dynamicLangPreviewSrc
+      // console.log('this.dynamicLangPreviewSrc', this.dynamicLangPreviewSrc)
+      return this.src ? this.src : this.dynamicLangPreviewSrc
     },
     canDownload () {
       return !!this.src
