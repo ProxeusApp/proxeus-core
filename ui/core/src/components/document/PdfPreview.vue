@@ -52,8 +52,8 @@
     </div>
     <spinner v-show="loaded !== true && error !== true" :margin="0" background="transparent" color="#333"
              cls="position-relative no-padding-top mt-0"/>
-    <button v-show="error === false" class="btn btn-link p-0 border-0" @click.prevent="mainAction">
-      <pdf :src="getSrc" @loaded="pdfLoaded" @error="pdfError"/>
+    <button v-show="loaded && error === false" class="btn btn-link p-0 border-0" @click.prevent="mainAction">
+      <pdf :src="getSrc" :key="pdfRenderKey" @loaded="pdfLoaded" @error="pdfError"/>
       <span class="filename d-inline-block t-ellipsis" v-if="filename"><small :title="filename">{{ filename }}</small></span>
     </button>
     <pdf-modal class="pdfwkaround" :src="getSrc" :mid="'modal' + _uid" ref="pdfMod" :filename="filename"
@@ -85,7 +85,8 @@ export default {
       loaded: false,
       error: false,
       lang: null,
-      showActions: false
+      showActions: false,
+      pdfRenderKey: 0
     }
   },
   computed: {
@@ -126,6 +127,9 @@ export default {
     dynamicLangPreviewSrc () {
       return this.dynamicDownloadSrc('pdf')
     }
+  },
+  created () {
+    this.checkPdfLoaded()
   },
   methods: {
     langAvailable (lang) {
@@ -178,8 +182,12 @@ export default {
       this.$nextTick(() => {
         this.$refs.pdfMod.load()
       })
+    },
+    checkPdfLoaded () {
+      setTimeout(() => {
+        this.pdfRenderKey++
+      }, 5000)
     }
-
   }
 }
 </script>
