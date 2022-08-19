@@ -1,10 +1,10 @@
 #!/bin/bash
+#specify values for local variables
 
-# <UDF name="FQDN" Label="Fully Qualified Domain Name" example="web.example.com" />
-# <UDF name="INFURA" Label="Infura.io API key" example="a0e728c9fd444a123456789000b9370f" />
-# <UDF name="SPARKPOST" Label="Sparkpost.com API key" example="27ed8e1234567890000014863f9e2cf553a7bd87" />
-# <UDF name="ADMINEMAIL" Label="Admin e-mail address" example="admin@example.com" />
-
+#FQDN=<value>
+#INFURA=<value>
+#SPARKPOST=<value>
+#ADMINEMAIL=<value>
 
 
 log "Configuring System Updates"
