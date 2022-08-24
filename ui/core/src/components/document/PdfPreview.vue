@@ -91,7 +91,14 @@ export default {
   },
   computed: {
     getSrc () {
-      return this.src ? this.src + '?format=pdf' : this.dynamicDownloadSrc('pdf')
+      console.log('getSrc: ')
+      console.log('this.src: ', this.src)
+      console.log('dynamicDownloadSrc: ', this.dynamicDownloadSrc('pdf'))
+
+      const src = this.src ? this.src + '?format=pdf' : this.dynamicDownloadSrc('pdf')
+
+      console.log('src: ', src)
+      return src
     },
     canDownload () {
       return !!this.src
@@ -148,6 +155,8 @@ export default {
       this.loaded = true
     },
     pdfError (doc) {
+      console.log('pdfError')
+      console.log(doc)
       this.loaded = true
       this.error = true
     },
@@ -185,8 +194,10 @@ export default {
     },
     checkPdfLoaded () {
       setTimeout(() => {
+        console.log('checkPdfLoaded: ')
+        console.log(this.getSrc)
         this.pdfRenderKey++
-      }, 5000)
+      }, 6000)
     }
   }
 }

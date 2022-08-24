@@ -550,6 +550,8 @@ export default {
       }
     },
     handleDocumentResponse (response) {
+      console.log('handleDocumentResponse')
+      console.log(response)
       if (!response.data) {
         return
       }
