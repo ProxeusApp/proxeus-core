@@ -52,7 +52,7 @@
     </div>
     <spinner v-show="loaded !== true && error !== true" :margin="0" background="transparent" color="#333"
              cls="position-relative no-padding-top mt-0"/>
-    <button v-show="error === false" class="btn btn-link p-0 border-0" @click.prevent="mainAction">
+    <button v-show="loaded && error === false" class="btn btn-link p-0 border-0" @click.prevent="mainAction">
       <pdf :src="getSrc" @loaded="pdfLoaded" @error="pdfError"/>
       <span class="filename d-inline-block t-ellipsis" v-if="filename"><small :title="filename">{{ filename }}</small></span>
     </button>
@@ -90,7 +90,7 @@ export default {
   },
   computed: {
     getSrc () {
-      return this.src ? this.src + '?format=pdf' : this.dynamicDownloadSrc('pdf')
+      return this.src ? this.src + '?format=pdf' : this.dynamicLangPreviewSrc
     },
     canDownload () {
       return !!this.src
