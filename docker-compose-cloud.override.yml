@@ -69,7 +69,7 @@ services:
       VIRTUAL_PORT: 1323
       # Replace values for letsencrypt
       LETSENCRYPT_HOST: ${PROXEUS_VIRTUAL_HOST:-proxeus.example.com}
-      LETSENCRYPT_EMAIL: ${LETSENCRYPT_EMAIL:-admin@example.com}
+      LETSENCRYPT_EMAIL: ${LETSENCRYPT_EMAIL:-admin@proxeus.example.com}
 
   document-service:
     networks:
