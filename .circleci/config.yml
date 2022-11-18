@@ -6,12 +6,12 @@ executors:
     environment:
       PROJECT_ROOT_FOLDER: ~/project
     docker:
-      - image: cimg/go:1.16-node
+      - image: cimg/go:1.17-node
   docker-image-golang-dependencies:
     environment:
       PROJECT_ROOT_FOLDER: ~/project
     docker:
-      - image: cimg/go:1.16-node
+      - image: cimg/go:1.17-node
       - image: proxeus/node-crypto-forex-rates
       - image: proxeus/document-service
       - image: proxeus/mongo-dev-cluster
@@ -25,7 +25,7 @@ executors:
 jobs:
   build-ui:
     docker:
-      - image: cimg/go:1.16-node
+      - image: cimg/go:1.17-node
     steps:
       - checkout
       - restore_cache:
