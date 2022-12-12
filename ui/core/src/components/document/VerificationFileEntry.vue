@@ -214,7 +214,7 @@ export default {
       isFileInvalidated: undefined,
       tx: undefined,
       hash: undefined,
-      network: process.env.VUE_APP_BLOCKCHAIN_NET === 'ropsten' ? 'ropsten.' : '',
+      network: process.env.VUE_APP_BLOCKCHAIN_NET === 'goerli' ? 'goerli.' : '',
       timestamp: undefined,
       creator: undefined,
       signatures: [],

@@ -66,7 +66,7 @@
           <tab title="Blockchain settings">
             <animated-input name="settings.blockchainNet" :max="100" :label="$t('Blockchain net')"
                             v-model="settings.blockchainNet">
-              <span class="text-muted">{{$t('Blockchain net explanation','Set the ethereum blockchain net like mainnet or ropsten.')}}</span>
+              <span class="text-muted">{{$t('Blockchain net explanation','Set the ethereum blockchain net like mainnet or goerli.')}}</span>
             </animated-input>
             <animated-input name="settings.infuraApiKey" :max="100" :label="$t('Infura API Key')"
                             v-model="settings.infuraApiKey">
@@ -81,7 +81,7 @@
               <simple-select :unselect="false" style="margin-top: 15px;" name="settings.airdropEnabled"
                              v-model="settings.airdropEnabled" :idProp="'value'" :labelProp="'label'"
                              :options="this.airdropoptions"/>
-              <span class="text-muted">{{$t('Airdrop Enable Explanation','Enables/Disables the XES & Ether airdrop feature for new users on ropsten. The Amount and Wallet to be used is configured in the platform configuration.')}}</span>
+              <span class="text-muted">{{$t('Airdrop Enable Explanation','Enables/Disables the XES & Ether airdrop feature for new users on testnet (goerli, mumbai). The Amount and Wallet to be used is configured in the platform configuration.')}}</span>
             </div>
             <animated-input :disabled="settings.airdropEnabled!='true'" name="settings.airdropAmountXES" :max="100"
                             :label="$t('Airdrop Amount XES')" v-model="settings.airdropAmountXES">
@@ -281,7 +281,7 @@ export default {
       results: null,
       airdropoptions: [
         {
-          label: 'Airdrop enabled on Ropsten',
+          label: 'Airdrop enabled on Testnet (goerli or mumbai)',
           value: 'true'
         },
         {

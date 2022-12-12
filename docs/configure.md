@@ -13,9 +13,9 @@ https://dev-ds.proxeus.com/
 ## Infura API Key
 Generate a  [infura API Key](https://infura.io)
 
-## Blockchain contract address (ropsten)
+## Blockchain contract address (goerli)
 ```
-0x8d654e67694fda572c08edd55a86008b0c20002d
+0x66FF4FBF80D4a3C85a54974446309a2858221689
 ```
 (alternatively deploy own smart contract from ProxeusFS.sol)
 
@@ -50,7 +50,7 @@ Usage of ./artifacts/proxeus:
   -AirdropAmountXES string
     	Amount of XES to airdrop to newly registered users. (PROXEUS_AIRDROP_AMOUNT_XES) (default "0")
   -AirdropEnabled string
-    	Enables/Disables the XES & Ether airdrop feature on ropsten. (PROXEUS_AIRDROP_ENABLED) (default "false")
+    	Enables/Disables the XES & Ether airdrop feature on test network. (PROXEUS_AIRDROP_ENABLED) (default "false")
   -AirdropWalletfile string
     	Path to File containing Private Key of the Wallet to fund Airdrops of XES and Ether. (PROXEUS_AIRDROP_WALLETFILE)
   -AirdropWalletkey string
@@ -62,7 +62,7 @@ Usage of ./artifacts/proxeus:
   -BlockchainContractAddress string
     	Ethereum contract address which will be used to register files and verify them. (PROXEUS_BLOCKCHAIN_CONTRACT_ADDRESS)
   -BlockchainNet string
-    	Ethereum blockchain net like mainnet or ropsten. (PROXEUS_BLOCKCHAIN_NET) (default "ropsten")
+    	Ethereum blockchain net like mainnet/goerli/polygon-mumbai/polygon-mainnet. (PROXEUS_BLOCKCHAIN_NET) (default "goerli")
   -CacheExpiry string
     	Common cache expiry which will be used for email tokens or similar. (PROXEUS_CACHE_EXPIRY) (default "24h")
   -DataDir string
@@ -80,9 +80,9 @@ Usage of ./artifacts/proxeus:
   -EmailFrom string
     	Email that is being used to send out emails. (PROXEUS_EMAIL_FROM)
   -EthClientURL string
-    	Ethereum client URL (PROXEUS_ETH_CLIENT_URL) (default "https://ropsten.infura.io/v3/")
+    	Ethereum client URL (PROXEUS_ETH_CLIENT_URL) (default "https://goerli.infura.io/v3/")
   -EthWebSocketURL string
-    	Ethereum websocket URL (PROXEUS_ETH_WEB_SOCKET_URL) (default "wss://ropsten.infura.io/ws/v3/")
+    	Ethereum websocket URL (PROXEUS_ETH_WEB_SOCKET_URL) (default "wss://goerli.infura.io/ws/v3/")
   -InfuraApiKey string
     	API Key to access Infura node. (PROXEUS_INFURA_API_KEY)
   -LogPath string
