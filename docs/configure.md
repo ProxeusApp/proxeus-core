@@ -9,16 +9,9 @@ configuration below as an example.
 
 ## Infura API Key
 
-Generate an [Infura API Key](https://infura.io)
-
-## Blockchain File Storage contract address 
-
-You can switch between the networks using the environment configuration `PROXEUS_BLOCKCHAIN_NET`.
-For your convenience, a smart contract is deployed on several networks at the following addresses:
-
-### Sepolia
+## Blockchain contract address (goerli)
 ```
-0x9bc518Fd070BE3DBB07399261688015744a7FB02
+0x66FF4FBF80D4a3C85a54974446309a2858221689
 ```
 [Verify on Etherscan](https://sepolia.etherscan.io/address/0x9bc518Fd070BE3DBB07399261688015744a7FB02#code)
 
@@ -102,7 +95,7 @@ Usage of ./artifacts/proxeus:
   -BlockchainContractAddress string
     	Ethereum contract address which will be used to register files and verify them. (PROXEUS_BLOCKCHAIN_CONTRACT_ADDRESS)
   -BlockchainNet string
-    	Ethereum blockchain net like mainnet/goerli/sepolia/polygon-mumbai/polygon-mainnet. (PROXEUS_BLOCKCHAIN_NET) (default "sepolia")
+    	Ethereum blockchain net like mainnet/goerli/polygon-mumbai/polygon-mainnet. (PROXEUS_BLOCKCHAIN_NET) (default "goerli")
   -CacheExpiry string
     	Common cache expiry which will be used for email tokens or similar. (PROXEUS_CACHE_EXPIRY) (default "24h")
   -DataDir string
@@ -120,9 +113,9 @@ Usage of ./artifacts/proxeus:
   -EmailFrom string
     	Email that is being used to send out emails. (PROXEUS_EMAIL_FROM)
   -EthClientURL string
-    	Ethereum client URL (PROXEUS_ETH_CLIENT_URL) (default "https://sepolia.infura.io/v3/")
+    	Ethereum client URL (PROXEUS_ETH_CLIENT_URL) (default "https://goerli.infura.io/v3/")
   -EthWebSocketURL string
-    	Ethereum websocket URL (PROXEUS_ETH_WEB_SOCKET_URL) (default "wss://sepolia.infura.io/ws/v3/")
+    	Ethereum websocket URL (PROXEUS_ETH_WEB_SOCKET_URL) (default "wss://goerli.infura.io/ws/v3/")
   -InfuraApiKey string
     	API Key to access Infura node. (PROXEUS_INFURA_API_KEY)
   -LogPath string

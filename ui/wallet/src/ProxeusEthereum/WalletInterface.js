@@ -19,7 +19,9 @@ import getTransactionReceiptMined from './helpers/getTransactionReceiptMined'
 class WalletInterface {
   // TODO improve checking that current network matches what is expected
   // TODO: network param only for compatibility reasons with blockchain/dapp
-  constructor (network = 'sepolia', proxeusFSAddress, forceProxeusWallet = false) {
+  constructor (network = 'goerli', proxeusFSAddress, forceProxeusWallet = false) {
+    this.useProxeusWallet = forceProxeusWallet || typeof window.ethereum === 'undefined'
+
     // make sure we are using the web3 we want and not the one provided by metamask
     this.web3 = new Web3(Web3.givenProvider || 'ws://localhost:8545')
     this.systemNetworkId = this.getNetworkIdByName(network)
@@ -415,7 +417,18 @@ class WalletInterface {
    */
   async getClientProvidedNetwork () {
     const netId = await this.web3.eth.getChainId()
-    return this.getNetworkNameById(netId)
+    switch (netId) {
+      case 5:
+        return 'goerli'
+      case 11155111:
+        return 'sepolia'
+      case 137:
+        return 'polygon-mainnet'
+      case 80001:
+        return 'polygon-mumbai'
+      default:
+        return 'mainnet'
+    }
   }
 
   getNetworkNameById (netId) {

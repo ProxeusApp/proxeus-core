@@ -95,11 +95,7 @@ func (me *System) init(stngs *model.Settings) error {
 	}
 	me.settingsInUse.SparkpostApiKey = stngs.SparkpostApiKey
 
-	if stngs.BlockchainNet == "sepolia" {
-		cfg.Config.XESContractAddress = "0x61a26381a8ca72870ab4E4108d5D3982a89D7fd0"
-		cfg.Config.EthClientURL = "https://sepolia.infura.io/v3/" + stngs.InfuraApiKey
-		cfg.Config.EthWebSocketURL = "wss://sepolia.infura.io/ws/v3/" + stngs.InfuraApiKey
-	} else if stngs.BlockchainNet == "goerli" {
+	if stngs.BlockchainNet == "goerli" {
 		cfg.Config.XESContractAddress = "0x15FeA089CC48B4f4596242c138156e3B53579B37"
 		cfg.Config.EthClientURL = "https://goerli.infura.io/v3/" + stngs.InfuraApiKey
 		cfg.Config.EthWebSocketURL = "wss://goerli.infura.io/ws/v3/" + stngs.InfuraApiKey
@@ -111,10 +107,10 @@ func (me *System) init(stngs *model.Settings) error {
 		cfg.Config.XESContractAddress = "0xf94BdC648A30719fF0cf91B436f9819F7804e1a0"
 		cfg.Config.EthClientURL = "https://polygon-mumbai.infura.io/v3/" + stngs.InfuraApiKey
 		cfg.Config.EthWebSocketURL = "wss://polygon-mumbai.infura.io/ws/v3/" + stngs.InfuraApiKey
-	} else if stngs.BlockchainNet == "polygon" {
-		cfg.Config.XESContractAddress = "0x6B586cdC3f889AD4C9FA78000F99C54e88F66459"
-		cfg.Config.EthClientURL = "https://polygon-mainnet.infura.io/v3/" + stngs.InfuraApiKey
-		cfg.Config.EthWebSocketURL = "wss://polygon-mainnet.infura.io/ws/v3/" + stngs.InfuraApiKey
+	} else if stngs.BlockchainNet == "polygon-mainnet" {
+		// cfg.Config.XESContractAddress = "0xa017ac5fac5941f95010b12570b812c974469c2c"
+		// cfg.Config.EthClientURL = "https://polygon-mainnet.infura.io/v3/" + stngs.InfuraApiKey
+		// cfg.Config.EthWebSocketURL = "wss://polygon-mainnet.infura.io/ws/v3/" + stngs.InfuraApiKey
 	} else {
 		log.Println("Wrong blockchain network: ", stngs.BlockchainNet)
 	}

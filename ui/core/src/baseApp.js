@@ -6,7 +6,7 @@ export default {
       me: null,
       meta: null,
       translations: null,
-      blockchainNet: 'sepolia',
+      blockchainNet: 'goerli',
       blockchainProxeusFSAddress: '',
       roles: [],
       uiBlocked: false,
