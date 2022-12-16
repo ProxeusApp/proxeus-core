@@ -27,7 +27,7 @@ type Configuration struct {
 
 	AutoTLS bool `json:"autoTLS" default:"false" usage:"Automatically generate Let's Encrypt certificate (Server must be reachable on port 443 from public internet)."`
 
-	XESContractAddress string `json:"XESContractAddress" default:"0x84E0b37e8f5B4B86d5d299b0B0e33686405A3919"`
+	XESContractAddress string `json:"XESContractAddress" default:"0x15FeA089CC48B4f4596242c138156e3B53579B37"`
 
 	AirdropWalletfile string `json:"airdropWalletfile" usage:"Path to File containing Private Key of the Wallet to fund Airdrops of XES and Ether."`
 	AirdropWalletkey  string `json:"airdropWalletkey" usage:"Path to File containing the Key for the Airdrop Private Key."`

@@ -100,5 +100,5 @@ Usage of ./artifacts/proxeus:
   -TestMode string
     	Run the server in test mode =NOT FOR PRODUCTION=. (PROXEUS_TEST_MODE) (default "false")
   -XESContractAddress string
-    	 (PROXEUS_XESCONTRACT_ADDRESS) (default "0x84E0b37e8f5B4B86d5d299b0B0e33686405A3919")
+    	 (PROXEUS_XESCONTRACT_ADDRESS) (default "0x15FeA089CC48B4f4596242c138156e3B53579B37")
 ```
