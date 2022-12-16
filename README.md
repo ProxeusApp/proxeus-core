@@ -54,4 +54,8 @@ Licensed under the GNU GENERAL PUBLIC LICENSE. You may read a copy of the [Licen
 
 Like so many projects, this effort has roots in many places. The list can be found in [ACKNOWLEDGEMENTS](ACKNOWLEDGEMENTS).
 
-![](docs/_media/logo.png)
+## Supported Chains
+
+- goerli
+- mainnet
+- polygon-mumbai
