@@ -88,7 +88,7 @@ services:
     restart: unless-stopped
     environment:
       PROXEUS_INSTANCE_URL: "${PROXEUS_PLATFORM_DOMAIN:-http://xes-platform:1323}"
-      PROXEUS_ETH_CLIENT_URL: "${PROXEUS_ETH_CLIENT_URL:-https://ropsten.infura.io/v3/}"
+      PROXEUS_ETH_CLIENT_URL: "${PROXEUS_ETH_CLIENT_URL:-https://goerli.infura.io/v3/}"
       PROXEUS_INFURA_API_KEY: ${PROXEUS_INFURA_API_KEY}
       SERVICE_SECRET: secret
       SERVICE_PORT: 8012

@@ -60,9 +60,9 @@ func GiveTokens(toWallet string) {
 	FreeEth(toWallet)
 }
 
-// FreeXES sends ropsten XES to given wallet address
+// FreeXES sends testnet XES to given wallet address
 func FreeXES(walletAddress string) {
-	log.Println("[airdrop] [Ropsten] Prepare XES for addr:", walletAddress)
+	log.Println("[airdrop] [testnet] Prepare XES for addr:", walletAddress)
 
 	amountFloat := new(big.Float)
 	_, parsedF := amountFloat.SetString(config.Config.AirdropAmountXES)
@@ -105,11 +105,11 @@ func FreeXES(walletAddress string) {
 	if err != nil {
 		log.Panic("[airdrop] Failed to request token transfer:", err)
 	}
-	log.Println("[airdrop] [Ropsten] Sending XES with tx:", tx.Hash().String())
+	log.Println("[airdrop] [testnet] Sending XES with tx:", tx.Hash().String())
 }
 
 func FreeEth(walletAddress string) {
-	log.Println("[airdrop] [Ropsten] Prepare ETH for addr:", walletAddress)
+	log.Println("[airdrop] [testnet] Prepare ETH for addr:", walletAddress)
 
 	amountFloat := new(big.Float)
 	_, parsedF := amountFloat.SetString(config.Config.AirdropAmountEther)
@@ -149,7 +149,7 @@ func FreeEth(walletAddress string) {
 
 	nonce := nonceManager.NextNonce()
 	tx := types.NewTransaction(nonce.Uint64(), common.HexToAddress(walletAddress), amountInt, gasLimit, gasPrice, nil)
-	// chainid 3 = ropsten, see https://github.com/ethereum/EIPs/blob/master/EIPS/eip-155.md#list-of-chain-ids
+	// chainid 5 = goerli, see https://github.com/ethereum/EIPs/blob/master/EIPS/eip-155.md#list-of-chain-ids
 	signedTx, err := types.SignTx(tx, types.NewEIP155Signer(big.NewInt(3)), unlockedKey.PrivateKey)
 	if err != nil {
 		log.Panic("[airdrop] Failed to sign transaction:", err)
@@ -161,5 +161,5 @@ func FreeEth(walletAddress string) {
 		log.Panic("[airdrop] Failed to send transaction:", err)
 	}
 
-	log.Println("[airdrop] [Ropsten] Sending ETH with tx:", signedTx.Hash().String())
+	log.Println("[airdrop] [testnet] Sending ETH with tx:", signedTx.Hash().String())
 }
