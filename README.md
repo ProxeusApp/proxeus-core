@@ -2,9 +2,8 @@
 
 # Proxeus Core
 ----------------
-Main repository of the Proxeus platform.
 
-Proxeus combines a powerful document automation tool with the wide-ranging blockchain functionalities, enabling users to digitize, secure, and extract value from their IP. You can access the source code of this application and various extensions on [GitHub](https://github.com/ProxeusApp).
+Proxeus combines a powerful automation tool with a form builder, document generator and blockchain connection - enabling you to digitize, secure, and tap into the value of data flows. Access the full source code of available modules and extensions [@ProxeusApp](https://github.com/ProxeusApp).
 
 ![Screenshot of Proxeus workflow from the handbook](https://github.com/ProxeusApp/community/raw/master/handbook/Proxeus%20-%20The%20Complete%20Handbook_html_10299e76126cc024.png)
 
@@ -18,7 +17,7 @@ For detailed information about payment setup (currently unsupported), check the 
 
 ## Installation
 
-Proxeus is primarily a Web application, and is currently not intended for use on a desktop computer. The [Proxeus Association](https://proxeus.org) maintains a demo instances you can use to test the product, and can recommend a service provider to help you or your business get set up. 
+Proxeus is primarily a Web application, intended for access with a web browser. The [Proxeus Association](https://proxeus.org) maintains a demo instances you can use to test the product, and can recommend a service provider to help you or your business get set up. There is also a prototype [desktop application](https://github.com/ProxeusApp/storage-app/blob/master/docs/overview.md).
 
 In addition to the developer guidelines below, several "one-click" deployment configurations are available for select cloud platforms:
 
