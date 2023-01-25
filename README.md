@@ -62,11 +62,17 @@ If all goes well, Proxeus should be available at http://localhost:1323. The next
 
 If you find a vulnerability that may affect live or testnet deployments please DO NOT file a public issue - send your report privately to info@proxeus.org
 
-## License - test3
+## License
 
 Licensed under the GNU GENERAL PUBLIC LICENSE. You may read a copy of the [License here](LICENSE).
 
 ## Acknowledgements
 
 Like so many projects, this effort has roots in many places. The list can be found in [ACKNOWLEDGEMENTS](ACKNOWLEDGEMENTS).
-  
+
+## Supported Chains
+
+- goerli
+- mainnet
+- polygon-mumbai
+

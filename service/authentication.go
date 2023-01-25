@@ -90,7 +90,7 @@ func (me *defaultAuthenticationService) LoginWithWallet(challenge, signature str
 		usr, err = me.userService.GetByBCAddress(address)
 		if err == nil {
 			me.workflowService.CopyWorkflows(rootRole, usr)
-			if stngs.BlockchainNet == "ropsten" && stngs.AirdropEnabled == "true" {
+			if stngs.BlockchainNet == "goerli" && stngs.AirdropEnabled == "true" {
 				go func() {
 					defer func() {
 						if r := recover(); r != nil {
