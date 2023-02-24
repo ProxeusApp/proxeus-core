@@ -94,3 +94,4 @@ services:
       # Replace values for letsencrypt
       LETSENCRYPT_HOST: ${NODE_CRYPTO_FOREX_RATES_VIRTUAL_HOST:-proxeus.example.com}
       LETSENCRYPT_EMAIL: ${LETSENCRYPT_EMAIL:-admin@example.com}
+    restart: unless-stopped
