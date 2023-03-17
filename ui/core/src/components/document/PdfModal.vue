@@ -46,9 +46,11 @@ export default {
       this.pdfSrc = undefined
       this.numPages = undefined
       this.pdfSrc = pdf.createLoadingTask(this.src)
-      this.pdfSrc.then(pdf => {
+
+      this.pdfSrc.promise.then(pdf => {
         this.numPages = pdf.numPages
         this.loadingPdf = false
+        this.pdfSrc._worker.destroy()
       }, (err) => {
         this.loadingPdf = false
         console.log(err)

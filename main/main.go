@@ -112,7 +112,7 @@ func main() {
 	e := www.Setup(ServerVersion)
 
 	// Static route
-	e.GET("/static/*", StaticHandler)
+	e.GET("/*", StaticHandler)
 
 	// Initial config middleware
 	configured, err := system.Configured()

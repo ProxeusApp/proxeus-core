@@ -70,6 +70,7 @@ services:
       # Replace values for letsencrypt
       LETSENCRYPT_HOST: ${PROXEUS_VIRTUAL_HOST:-proxeus.example.com}
       LETSENCRYPT_EMAIL: ${LETSENCRYPT_EMAIL:-admin@proxeus.example.com}
+    restart: unless-stopped
 
   document-service:
     networks:
@@ -83,6 +84,7 @@ services:
       # Replace values for letsencrypt
       LETSENCRYPT_HOST: ${DOCUMENT_SERVICE_VIRTUAL_HOST:-proxeus.example.com}
       LETSENCRYPT_EMAIL: ${LETSENCRYPT_EMAIL:-admin@example.com}
+    restart: unless-stopped
 
   node-crypto-forex-rates:
     networks:
@@ -96,16 +98,4 @@ services:
       # Replace values for letsencrypt
       LETSENCRYPT_HOST: ${NODE_CRYPTO_FOREX_RATES_VIRTUAL_HOST:-proxeus.example.com}
       LETSENCRYPT_EMAIL: ${LETSENCRYPT_EMAIL:-admin@example.com}
-
-  # Add Watchtower
-  # https://hub.docker.com/r/v2tec/watchtower/
-  # Watches your containers and automatically restarts them whenever their
-  # image is refreshed
-  watchtower:
-    image: v2tec/watchtower
-    container_name: watchtower
-    restart: always
-    volumes:
-      - ${DOCKER_SOCK:-/var/run/docker.sock}:/var/run/docker.sock:ro
-      - ${DOCKER_CONFIG_FILE:-/root/.docker/config.json}:/config.json
-    command: --interval 60 --label-enable
+    restart: unless-stopped

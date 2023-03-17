@@ -9,14 +9,14 @@ type Settings struct {
 	DefaultRole               string `json:"defaultRole" default:"creator" usage:"Default role that is going to be used for new registrations. Value is case insensitive."`
 	SessionExpiry             string `json:"sessionExpiry" validate:"required=true" default:"1h" usage:"Session expiry like 1h as one hour, 1m as one minute or 1s as one second."`
 	CacheExpiry               string `json:"cacheExpiry" validate:"required=true" default:"24h" usage:"Common cache expiry which will be used for email tokens or similar."`
-	BlockchainNet             string `json:"blockchainNet" validate:"required=true" default:"ropsten" usage:"Ethereum blockchain net like mainnet or ropsten."`
+	BlockchainNet             string `json:"blockchainNet" validate:"required=true" default:"goerli" usage:"Ethereum blockchain net like mainnet or goerli."`
 	InfuraApiKey              string `json:"infuraApiKey" validate:"required=true" usage:"API Key to access Infura node."`
 	BlockchainContractAddress string `json:"blockchainContractAddress" validate:"required=true" default:"" usage:"Ethereum contract address which will be used to register files and verify them."`
 	SparkpostApiKey           string `json:"sparkpostApiKey" validate:"required=true" usage:"Sparkpost API key which will be used to send out emails."`
 	EmailFrom                 string `json:"emailFrom" validate:"required=true,email=true" usage:"Email that is being used to send out emails."`
 	LogPath                   string `json:"logPath" default:"./log" usage:"Location of the log file of this service."`
 	DefaultWorkflowIds        string `json:"defaultWorkflowIds" usage:"Workflow IDs to set to clone and add to a new user"`
-	AirdropEnabled            string `json:"airdropEnabled" validate:"required=true" default:"false" usage:"Enables/Disables the XES & Ether airdrop feature on ropsten."`
+	AirdropEnabled            string `json:"airdropEnabled" validate:"required=true" default:"false" usage:"Enables/Disables the XES & Ether airdrop feature."`
 	AirdropAmountXES          string `json:"airdropAmountXES" default:"0" usage:"Amount of XES to airdrop to newly registered users."`
 	AirdropAmountEther        string `json:"airdropAmountEther" default:"0" usage:"Amount of Ether to airdrop to newly registered users."`
 	DatabaseEngine            string `json:"databaseEngine" default:"storm" usage:"Selects database engine, supported values: storm, mongo."`

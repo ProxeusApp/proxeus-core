@@ -6,7 +6,7 @@ export default {
       me: null,
       meta: null,
       translations: null,
-      blockchainNet: 'ropsten',
+      blockchainNet: 'goerli',
       blockchainProxeusFSAddress: '',
       roles: [],
       uiBlocked: false,
@@ -409,14 +409,12 @@ export default {
     this.loadMe()
 
     // when accounts loaded register accountsChanged handler and reload page if user changes the account
-    web3.eth.getAccounts(() => {
-      window.ethereum.on('accountsChanged', function () {
-        window.location.reload()
-      })
-      window.ethereum.on('chainChanged', function (e) {
-        console.log('Chain changed')
-        window.location.reload()
-      })
+    window.ethereum.on('accountsChanged', function () {
+      window.location.reload()
+    })
+    window.ethereum.on('chainChanged', function (e) {
+      console.log('Chain changed')
+      window.location.reload()
     })
   }
 }

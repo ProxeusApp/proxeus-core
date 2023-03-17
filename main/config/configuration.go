@@ -20,14 +20,14 @@ const ProxeusEnvPrefix = "PROXEUS_"
 //2. Using the specified arguments in flag
 type Configuration struct {
 	SettingsFile    string `json:"settingsFile" default:"~/.proxeus/settings/main.json" usage:"Path to the settings file"`
-	EthClientURL    string `json:"ethClientURL" default:"https://ropsten.infura.io/v3/" usage:"Ethereum client URL"`
-	EthWebSocketURL string `json:"ethWebSocketURL" default:"wss://ropsten.infura.io/ws/v3/" usage:"Ethereum websocket URL"`
+	EthClientURL    string `json:"ethClientURL" default:"https://goerli.infura.io/v3/" usage:"Ethereum client URL"`
+	EthWebSocketURL string `json:"ethWebSocketURL" default:"wss://goerli.infura.io/ws/v3/" usage:"Ethereum websocket URL"`
 
 	ServiceAddress string `json:"serviceAddress" default:":1323" usage:"address and port of this service"`
 
 	AutoTLS bool `json:"autoTLS" default:"false" usage:"Automatically generate Let's Encrypt certificate (Server must be reachable on port 443 from public internet)."`
 
-	XESContractAddress string `json:"XESContractAddress" default:"0x84E0b37e8f5B4B86d5d299b0B0e33686405A3919"`
+	XESContractAddress string `json:"XESContractAddress" default:"0x15FeA089CC48B4f4596242c138156e3B53579B37"`
 
 	AirdropWalletfile string `json:"airdropWalletfile" usage:"Path to File containing Private Key of the Wallet to fund Airdrops of XES and Ether."`
 	AirdropWalletkey  string `json:"airdropWalletkey" usage:"Path to File containing the Key for the Airdrop Private Key."`
