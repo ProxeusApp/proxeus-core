@@ -107,10 +107,10 @@ func (me *System) init(stngs *model.Settings) error {
 		cfg.Config.XESContractAddress = "0xf94BdC648A30719fF0cf91B436f9819F7804e1a0"
 		cfg.Config.EthClientURL = "https://polygon-mumbai.infura.io/v3/" + stngs.InfuraApiKey
 		cfg.Config.EthWebSocketURL = "wss://polygon-mumbai.infura.io/ws/v3/" + stngs.InfuraApiKey
-	} else if stngs.BlockchainNet == "polygon-mainnet" {
-		// cfg.Config.XESContractAddress = "0xa017ac5fac5941f95010b12570b812c974469c2c"
-		// cfg.Config.EthClientURL = "https://polygon-mainnet.infura.io/v3/" + stngs.InfuraApiKey
-		// cfg.Config.EthWebSocketURL = "wss://polygon-mainnet.infura.io/ws/v3/" + stngs.InfuraApiKey
+	} else if stngs.BlockchainNet == "polygon" {
+		cfg.Config.XESContractAddress = "0x6B586cdC3f889AD4C9FA78000F99C54e88F66459"
+		cfg.Config.EthClientURL = "https://polygon-mainnet.infura.io/v3/" + stngs.InfuraApiKey
+		cfg.Config.EthWebSocketURL = "wss://polygon-mainnet.infura.io/ws/v3/" + stngs.InfuraApiKey
 	} else {
 		log.Println("Wrong blockchain network: ", stngs.BlockchainNet)
 	}
