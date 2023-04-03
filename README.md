@@ -59,3 +59,4 @@ Like so many projects, this effort has roots in many places. The list can be fou
 - goerli
 - mainnet
 - polygon-mumbai
+- polygon

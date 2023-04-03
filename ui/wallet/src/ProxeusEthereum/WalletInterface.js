@@ -423,7 +423,7 @@ class WalletInterface {
       case 11155111:
         return 'sepolia'
       case 137:
-        return 'polygon-mainnet'
+        return 'polygon'
       case 80001:
         return 'polygon-mumbai'
       default:
