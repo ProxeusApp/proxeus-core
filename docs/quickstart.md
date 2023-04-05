@@ -1,6 +1,8 @@
 # Quick Start
 
-**By installing and using the Proxeus software you agree with the terms of the [Proxeus License Agreement](license.md).**
+A brief installation guide. Find more details and explanation of the configuration settings in [configure.md](configure.md).
+
+**By installing and using the Proxeus software you agree with the terms of the [Proxeus License Agreement](LICENSE).**
 
 ## Source Code
 
@@ -19,7 +21,7 @@ Please create an account on those platform and get an API Keys.
 
 ## Proxeus Demo Ethereum Smart Contract
 
-For your convenience, a demo smart contract is deployed on the Goerli network at the following address:
+For your convenience, a demo smart contract is deployed on several networks at the following address:
 
 ```
 0x66FF4FBF80D4a3C85a54974446309a2858221689
