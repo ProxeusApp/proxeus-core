@@ -44,9 +44,11 @@ require (
 	github.com/dlclark/regexp2 v1.4.1-0.20220329233251-d0559a0de6e3 // indirect
 	github.com/fasthttp/websocket v1.4.3-rc.10 // indirect
 	github.com/gballet/go-libpcsclite v0.0.0-20191108122812-4678299bea08 // indirect
+	github.com/go-bindata/go-bindata/v3 v3.1.3 // indirect
 	github.com/go-stack/stack v1.8.1 // indirect
 	github.com/gorilla/context v1.1.1 // indirect
 	github.com/gorilla/websocket v1.5.0 // indirect
+	github.com/kisielk/errcheck v1.6.2 // indirect
 	github.com/klauspost/compress v1.15.1 // indirect
 	github.com/labstack/echo v3.3.10+incompatible
 	github.com/labstack/echo-contrib v0.12.0
@@ -60,10 +62,14 @@ require (
 	github.com/tklauser/go-sysconf v0.3.10 // indirect
 	github.com/tyler-smith/go-bip39 v1.1.0 // indirect
 	github.com/valyala/fasthttp v1.35.0 // indirect
+	github.com/wadey/gocovmerge v0.0.0-20160331181800-b5bfa59ec0ad // indirect
+	github.com/xdg-go/scram v1.1.1 // indirect
 	github.com/youmark/pkcs8 v0.0.0-20201027041543-1326539a0a0a // indirect
+	github.com/yuin/goldmark v1.5.3 // indirect
 	github.com/yusufpapurcu/wmi v1.2.2 // indirect
-	golang.org/x/image v0.5.0 // indirect
-	golang.org/x/sync v0.1.0 // indirect
+	golang.org/x/image v0.0.0-20220413100746-70e8d0d3baa9 // indirect
+	golang.org/x/lint v0.0.0-20210508222113-6edffad5e616 // indirect
+	golang.org/x/tools v0.4.0 // indirect
 	google.golang.org/appengine v1.6.7 // indirect
 	google.golang.org/protobuf v1.28.0 // indirect
 )

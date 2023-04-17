@@ -26,6 +26,15 @@ const serviceConfig = {
     PROXEUS_FS_PAST_ADDRESSES: [
     ]
   },
+  'polygon': {
+    DEFAULT_GAS_REGULAR: 1000000,
+    DEFAULT_GAS_CREATE: 4000000,
+    XES_TOKEN_ADDRESS: '0x6B586cdC3f889AD4C9FA78000F99C54e88F66459',
+    PROXEUS_FS_ADDRESS: '0x60970BeFda93464A105DD21Dc6a30B69C5B5c6e4',
+    // When the PROXEUS_FS_ADDRESS changes add the old address to the list below so that file validation check also past contracts
+    PROXEUS_FS_PAST_ADDRESSES: [
+    ]
+  },
   ropsten: {
     DEFAULT_GAS_REGULAR: 1000000,
     DEFAULT_GAS_CREATE: 4000000,
