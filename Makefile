@@ -1,6 +1,6 @@
 SHELL:= /bin/bash
 DEBUG_FLAG?=false
-GO_VERSION=1.20
+GO_VERSION=1.18
 
 ifeq ($(DEBUG), "true")
 	BINDATA_OPTS="-debug"
