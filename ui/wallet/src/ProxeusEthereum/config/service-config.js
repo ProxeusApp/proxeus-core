@@ -26,7 +26,7 @@ const serviceConfig = {
     PROXEUS_FS_PAST_ADDRESSES: [
     ]
   },
-  'polygon': {
+  polygon: {
     DEFAULT_GAS_REGULAR: 1000000,
     DEFAULT_GAS_CREATE: 4000000,
     XES_TOKEN_ADDRESS: '0x6B586cdC3f889AD4C9FA78000F99C54e88F66459',
