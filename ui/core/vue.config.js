@@ -82,11 +82,15 @@ module.exports = {
     }
   },
   chainWebpack: config => {
-    config.module.rule('eslint').use('eslint-loader').tap(options => {
-      options.configFile = path.resolve(__dirname, '.eslintrc.js')
-      options.fix = true
-      return options
-    })
+    config.module
+      .rule('eslint')
+      .use('eslint-loader')
+      .loader('eslint-loader')
+      .tap(options => {
+        options.configFile = path.resolve(__dirname, '.eslintrc.js')
+        options.fix = true
+        return options
+      })
     // remove vue-cli-service error output
     // config.plugins.delete('friendly-errors')
     // remove vue-cli-service's progress output
