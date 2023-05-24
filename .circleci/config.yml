@@ -5,6 +5,7 @@ executors:
   docker-image-golang:
     environment:
       PROJECT_ROOT_FOLDER: ~/project
+      PATH: $PATH:$HOME/.go_workspace/bin:/usr/local/go/bin
     docker:
       - image: cimg/go:1.18
   docker-image-golang-dependencies:
