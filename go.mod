@@ -1,6 +1,6 @@
 module github.com/ProxeusApp/proxeus-core
 
-go 1.18
+go 1.20
 
 require (
 	github.com/DataDog/zstd v1.5.2 // indirect
