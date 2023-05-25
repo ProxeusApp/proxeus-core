@@ -171,6 +171,7 @@ jobs:
       - run: sudo apt-get install libgconf-2-4
       - run: sudo apt-get install libnss3
       - run: sudo apt-get install libxss1
+      - run: sudo apt-get install libxtst6
       - run: sudo apt-get install libasound2
       - run: sudo apt-get install xvfb
       - run:
