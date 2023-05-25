@@ -17,12 +17,12 @@ executors:
     environment:
       PROJECT_ROOT_FOLDER: ~/project
     docker:
-      - image: cimg/go:1.18
+      - image: cimg/go:1.20
   docker-image-golang-dependencies:
     environment:
       PROJECT_ROOT_FOLDER: ~/project
     docker:
-      - image: cimg/go:1.18
+      - image: cimg/go:1.20
       - image: proxeus/node-crypto-forex-rates
       - image: proxeus/document-service
       - image: proxeus/mongo-dev-cluster
