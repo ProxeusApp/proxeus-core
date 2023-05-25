@@ -141,8 +141,7 @@ jobs:
           path: artifacts/coverage.*
 
   test-ui:
-    docker:
-      - image: cimg/node:16.20
+    executor: docker-image-golang-dependencies
     resource_class: medium
     steps:
       - checkout
@@ -152,7 +151,10 @@ jobs:
       - restore_cache:
           keys:
             - go-mod-v2-{{ checksum "go.sum" }}
-      - run: sudo apt-get update
+      - run: curl -fsSL https://deb.nodesource.com/setup_16.x | sudo -E bash -
+      - run: curl -sL https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
+      - run: echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
+      - run: sudo apt-get update && sudo apt-get install yarn
       - run: sudo apt-get install libgtk2.0-0
       - run: sudo apt-get install libnotify-dev
       - run: sudo apt-get install libgconf-2-4
