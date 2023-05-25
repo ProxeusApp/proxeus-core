@@ -29,7 +29,7 @@ Join the [Discussions](https://github.com/ProxeusApp/community/discussions/3) if
 
 If you wish to build the project form the source code, follow the instructions in [Build all](docs/build_all.md).
 
-If you wish to build the project from source code, follow the instructions in [Build all](docs/build_all.md). 
+Please read the [Developer Manual](https://doc.proxeus.com) to learn more about the Proxeus platform.
 
 ### Infura and SparkPost
 
@@ -68,17 +68,3 @@ Licensed under the GNU GENERAL PUBLIC LICENSE. You may read a copy of the [Licen
 ## Acknowledgements
 
 Like so many projects, this effort has roots in many places. The list can be found in [ACKNOWLEDGEMENTS](ACKNOWLEDGEMENTS).
-
-## Supported Chains
-
-Ethereum
-
-- mainnet
-- sepolia
-- goerli
-
-Polygon
-
-- mainnet
-- mumbai
-
