@@ -11,7 +11,8 @@ import (
 
 // Given a folder (src), tar-gz' the content and writes it to writer
 // Example:
-// 	f, _ := os.Create(tmpFile)
+//
+//	f, _ := os.Create(tmpFile)
 //
 //	err = Tar(dirToZip, f)
 func Tar(src string, writer io.Writer) error {

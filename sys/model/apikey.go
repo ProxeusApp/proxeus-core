@@ -25,7 +25,7 @@ func NewApiKey(name, uid string) (*ApiKey, error) {
 	return &ApiKey{Name: name, Key: k[0:16] + uid[0:8] + k[16:]}, nil
 }
 
-//HideKey hashes the key
+// HideKey hashes the key
 func (me *ApiKey) HideKey() {
 	me.Key, _ = hashString(me.Key)
 }

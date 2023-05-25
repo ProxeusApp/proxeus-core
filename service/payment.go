@@ -58,7 +58,7 @@ var (
 	ErrTxHashEmpty          = errors.New("no txHash given")
 )
 
-//Important: Pass system to service (and not e.g. system.DB.WorkflowPayments because system.DB variable is replaced on calling api/handlers.PostInit()
+// Important: Pass system to service (and not e.g. system.DB.WorkflowPayments because system.DB variable is replaced on calling api/handlers.PostInit()
 func NewPaymentService(userService UserService) *DefaultPaymentService {
 	return &DefaultPaymentService{userService: userService}
 }
@@ -88,7 +88,7 @@ func (me *DefaultPaymentService) GetWorkflowPaymentById(paymentId string) (*mode
 	return paymentsDB().Get(paymentId)
 }
 
-//GetWorkflowPayment returns a WorkflowPaymentItem that matches the txHash, ethAddress and status
+// GetWorkflowPayment returns a WorkflowPaymentItem that matches the txHash, ethAddress and status
 func (me *DefaultPaymentService) GetWorkflowPayment(txHash, ethAddresses, status string) (*model.WorkflowPaymentItem, error) {
 	if txHash == "" {
 		log.Printf("[GetWorkflowPayment] bad request, either provide paymentId, txHash or workflowId")
@@ -130,7 +130,7 @@ func (me *DefaultPaymentService) RedeemPayment(workflowId, ethAddr string) error
 	return paymentsDB().Redeem(workflowId, ethAddr)
 }
 
-//CheckIfWorkflowPaymentRequired returns whether a payment is required for the user for a workflow
+// CheckIfWorkflowPaymentRequired returns whether a payment is required for the user for a workflow
 func (me *DefaultPaymentService) CheckIfWorkflowPaymentRequired(auth model.Auth, workflowId string) (bool, error) {
 	workflow, err := workflowDB().Get(auth, workflowId)
 	if err != nil {

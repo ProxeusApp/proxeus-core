@@ -25,10 +25,10 @@ type FormDB struct {
 	baseFilePath string
 }
 
-//formHeavyData helps us to load the data of the model.Form entity when it is requested by metaOnly = false
+// formHeavyData helps us to load the data of the model.Form entity when it is requested by metaOnly = false
 const formHeavyData = "form_data"
 
-//formVersion helps us to keep track of the structure version between persistence and memory
+// formVersion helps us to keep track of the structure version between persistence and memory
 const formVersion = "form_version"
 
 const formCompVersion = "formComp_version"
@@ -276,7 +276,7 @@ func (me *FormDB) GetComp(auth model.Auth, id string) (*model.FormComponentItem,
 	return &fbi, nil
 }
 
-//makes it possible to search to content no matter what field type it is
+// makes it possible to search to content no matter what field type it is
 type formComponentSearchMatcher struct {
 	Contains     string
 	re           *regexp.Regexp

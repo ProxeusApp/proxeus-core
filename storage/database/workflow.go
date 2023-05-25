@@ -148,7 +148,7 @@ func (me *WorkflowDB) GetList(auth model.Auth, ids []string) ([]*model.WorkflowI
 	return workflows, nil
 }
 
-//Put adds a workflow item into the database
+// Put adds a workflow item into the database
 func (me *WorkflowDB) Put(auth model.Auth, item *model.WorkflowItem) error {
 	return me.put(auth, item, true)
 }

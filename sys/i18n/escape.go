@@ -52,7 +52,7 @@ var htmlEndTagReg = regexp.MustCompile(`(?Ui)</html>`)
 var bodyTagReg = regexp.MustCompile(`(?Ui)<body((\s+[\w\-\_\:]+\=[^"']\S+[^"'])|(\s+[\w\-\_\:]+\=["'][\s\S]*["'])|(\s+[\w\-\_\:]+))*(\s+)?>`)
 var bodyEndTagReg = regexp.MustCompile(`(?Ui)</body>`)
 
-//to prevent from script in attribute values
+// to prevent from script in attribute values
 var tagAndAttrReg = regexp.MustCompile(`(?Ui)<[\w\-\_\:]+((\s+[\w\-\_\:]+\=[^"']\S+[^"'])|(\s+[\w\-\_\:]+\=["'][\s\S]*["'])|(\s+[\w\-\_\:]+))*\s*(\/)?>`)
 var attrReg = regexp.MustCompile(`(?sU)(\s*([\w\-\_\:]+)\=[\s\S]+["'\s])[\s\/>]`)
 var attrEventsMap = map[string]bool{
@@ -136,7 +136,7 @@ var attrEventsMap = map[string]bool{
 	"ontoggle": true,
 }
 
-//Escape makes sure javascript and linked CSS is cleaned out. Only embedded CSS is allowed.
+// Escape makes sure javascript and linked CSS is cleaned out. Only embedded CSS is allowed.
 func Escape(text string) string {
 	btext := []byte(text)
 	empty := []byte("")

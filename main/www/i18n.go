@@ -91,9 +91,9 @@ type HttpAceptLanguage struct {
 
 var regexParseAcceptLanguageWeight = regexp.MustCompile(`q=([0-9\.]+)`)
 
-//ParseAcceptLanguageHeader reads the weighted header values
-//like de-CH,de;q=0.9,en;q=0.8,en-US;q=0.7
-//into [{Lang:de-CH, Weight:1} {Lang:de Weight:0.9} {Lang:en Weight:0.8} {Lang:en-US Weight:0.7}]
+// ParseAcceptLanguageHeader reads the weighted header values
+// like de-CH,de;q=0.9,en;q=0.8,en-US;q=0.7
+// into [{Lang:de-CH, Weight:1} {Lang:de Weight:0.9} {Lang:en Weight:0.8} {Lang:en-US Weight:0.7}]
 func ParseAcceptLanguageHeader(headerValue string) []*HttpAceptLanguage {
 	splittedList := strings.Split(headerValue, ",")
 	langList := make([]*HttpAceptLanguage, 0)
@@ -124,7 +124,7 @@ func ParseAcceptLanguageHeader(headerValue string) []*HttpAceptLanguage {
 	return langList
 }
 
-//Translate
+// Translate
 func (wi18n *WebI18n) T(b ...interface{}) string {
 	lang := wi18n.Lang
 	l := len(b)
