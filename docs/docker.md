@@ -8,21 +8,21 @@ dependencies:
 
 ## Start with Docker Compose
 
-This is the simplest method to work with Proxeus, and will start a local Proxeus platform
-using images from Docker Hub - or a local build. Check the Environment Variables section, as you will probably need to set up a `.env` file first.
-
-```
-docker-compose up
-```
-
-This deploys Proxeus using Docker.  The repository includes several additional `docker-compose` YAML files that can be used to deploy the platform in different context:
+You easily deploy Proxeus using Docker.  The repository includes several `docker-compose` YAML files that can be used to deploy the platform in different context:
 
 * `docker-compose.yml`
 * `docker-compose-extra.override.yml`
 * `docker-compose-cloud.override.yml`
 * `docker-compose-local.override.yml`
 
-For example, if you would like to use all the default Proxeus nodes (by default only the Document Service is included) in your deployment:
+In each case you can then use the **logs** command to see the system status (with the useful `-f` parameter):
+
+`docker-compose logs`
+
+For more usage instructions, visit the [Docker Compose CLI reference](https://docs.docker.com/compose/reference/).
+
+
+## Simple Docker Compose
 
 `docker-compose -f docker-compose.yml -f docker-compose-extra.override.yml up`
 
