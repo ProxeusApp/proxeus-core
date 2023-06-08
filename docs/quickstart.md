@@ -103,3 +103,13 @@ Proxeus should be available at http://localhost:1323
 **Note:** that your system configuration at this point will be reflected in the local configuration database under `data/proxeus-platform/settings/main.json`. Any future changes to the configuration must be made here - the environment variables will not be propagated, unless you delete this file to reset the deployment.
 
 The next step is to [configure](configure.md) your instance for the first time.
+
+## Troubleshooting
+
+Are you having an issue getting the server up and running, or logging into the console?
+
+1. **Check the logs for any apparent errors.** In particular, an error in your API or contract keys might result in a message like `failed to dial for eth events`.
+2. **See if you have issues in the JS console.** Using your web browser's development console, see if you have any issues that may relate to connectivity issues like your server's firewall.
+3. **Check the docs.** This guide is the best place to go. Search on [GitHub](https://github.com/search?q=org%3AProxeusApp+houston%2C+we+have+a+problem&type=issues) for your error message.
+4. **Ask for help.** Write a note in the [Q&A discussion](https://github.com/orgs/ProxeusApp/discussions/categories/q-a), or put up a [bug report](https://github.com/ProxeusApp/proxeus-core/issues).
+5. **Hire a DevOp.** The [Proxeus Association](https://proxeus.org) can recommend a competent developer/system administrator to try to solve your problem.
