@@ -56,7 +56,16 @@ cd proxeus-core
 
 All the build projects are stated in `./Makefile`.
 
-Before building Proxeus, make sure to set all [required environment variables](build_docker.md) (i.e. with an `.env` file).
+Before building Proxeus, make sure to set all [required environment variables](../README.md#quick-start-with-docker).
+```
+export PROXEUS_DATA_DIR=./data
+export PROXEUS_INFURA_API_KEY=<Your Infura project ID>
+export PROXEUS_SPARKPOST_API_KEY=<Your SparkPost API Key>
+export PROXEUS_ENCRYPTION_SECRET_KEY=<A 32-character random string>
+export PROXEUS_BLOCKCHAIN_CONTRACT_ADDRESS=0x1d3e5c81bf4bc60d41a8fbbb3d1bae6f03a75f71
+export PROXEUS_ALLOW_HTTP=true
+export PROXEUS_PLATFORM_DOMAIN=localhost
+export PROXEUS_EMAIL_FROM=youremail@example.com
 
 Make sure that the email domain for `PROXEUS_EMAIL_FROM` is a configured sending domain in Sparkpost.
 
