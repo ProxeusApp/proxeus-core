@@ -8,9 +8,9 @@ import (
 
 const msgRequired = "required"
 
-//Required validates fields if the spec is required=bool
-//possible values: 0,1,t,T,TRUE,true,f,F,FALSE,false
-//We do not support zero val on bool! Bool is always correct.
+// Required validates fields if the spec is required=bool
+// possible values: 0,1,t,T,TRUE,true,f,F,FALSE,false
+// We do not support zero val on bool! Bool is always correct.
 func (v *validator) required() {
 	if !v.val.IsValid() {
 		v.addRequired()

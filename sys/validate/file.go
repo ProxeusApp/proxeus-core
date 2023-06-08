@@ -127,13 +127,13 @@ func File(src io.Reader, rules Rules) ([]byte, error) {
 	return buf.Bytes(), nil
 }
 
-//validateStream breaks if there is an error in the type, min or max validation
-//if any of the options are undefined, the validation will pass
-//no error is returned for undefined!
+// validateStream breaks if there is an error in the type, min or max validation
+// if any of the options are undefined, the validation will pass
+// no error is returned for undefined!
 //
-//ft nil for undefined
-//minBytes -1 for undefined
-//maxBytes -1 for undefined
+// ft nil for undefined
+// minBytes -1 for undefined
+// maxBytes -1 for undefined
 func validateStream(dst io.Writer, src io.Reader, ft *FileType, minBytes, maxBytes int64) (written int64, err error) {
 	buf := make([]byte, 32*1024)
 	needToValidate := true

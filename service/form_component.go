@@ -44,7 +44,7 @@ func NewFormComponentService() *DefaultFormComponentService {
 	return &DefaultFormComponentService{}
 }
 
-//EnsureDefaultFormComponents creates all default form components
+// EnsureDefaultFormComponents creates all default form components
 func (me *DefaultFormComponentService) EnsureDefaultFormComponents(auth model.Auth) error {
 	_, err := formDB().ListComp(auth, "", storage.Options{})
 	if err != nil && !db.NotFound(err) {

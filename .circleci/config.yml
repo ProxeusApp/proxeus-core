@@ -6,12 +6,12 @@ executors:
     environment:
       PROJECT_ROOT_FOLDER: ~/project
     docker:
-      - image: cimg/go:1.17-node
+      - image: cimg/go:1.20
   docker-image-golang-dependencies:
     environment:
       PROJECT_ROOT_FOLDER: ~/project
     docker:
-      - image: cimg/go:1.17-node
+      - image: cimg/go:1.20
       - image: proxeus/node-crypto-forex-rates
       - image: proxeus/document-service
       - image: proxeus/mongo-dev-cluster
@@ -25,7 +25,7 @@ executors:
 jobs:
   build-ui:
     docker:
-      - image: cimg/go:1.17-node
+      - image: cimg/node:16.20
     steps:
       - checkout
       - restore_cache:
@@ -151,17 +151,17 @@ jobs:
       - restore_cache:
           keys:
             - go-mod-v2-{{ checksum "go.sum" }}
-      - run: curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
-      - run: curl -sL https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
+      - run: 
+          name: Node.js
+          command: curl -fsSL https://deb.nodesource.com/setup_16.x | sudo -E bash -
+      - run: 
+          name: Yarn
+          command: curl -sL https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
       - run: echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
       - run: sudo apt-get update && sudo apt-get install yarn
-      - run: sudo apt-get install libgtk2.0-0
-      - run: sudo apt-get install libnotify-dev
-      - run: sudo apt-get install libgconf-2-4
-      - run: sudo apt-get install libnss3
-      - run: sudo apt-get install libxss1
-      - run: sudo apt-get install libasound2
-      - run: sudo apt-get install xvfb
+      - run: 
+          name: Cypress dependencies
+          command: sudo apt-get install libgtk2.0-0 libgtk-3-0 libgbm-dev libnotify-dev libgconf-2-4 libnss3 libxss1 libasound2 libxtst6 xauth xvfb
       - run:
           name: Test UI
           command: make init test-ui

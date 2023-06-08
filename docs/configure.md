@@ -17,7 +17,10 @@ Generate a  [infura API Key](https://infura.io)
 ```
 0x66FF4FBF80D4a3C85a54974446309a2858221689
 ```
-(alternatively deploy own smart contract from ProxeusFS.sol)
+
+[Verify on Etherscan](https://goerli.etherscan.io/address/0x66FF4FBF80D4a3C85a54974446309a2858221689#code)
+
+Alternatively: deploy your own smart contract from [ProxeusFS.sol](https://github.com/ProxeusApp/storage-app/blob/master/spp/eth/solidity/ProxeusFS.sol)
 
 ## Email from
 ```

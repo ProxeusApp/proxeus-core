@@ -46,14 +46,14 @@ func NewNodeService(workflowService WorkflowService) *defaultNodeService {
 	return &defaultNodeService{workflowService: workflowService}
 }
 
-//ProbeExternalNodes checks all registered external nodes health endpoint and deletes the ones that are offline
+// ProbeExternalNodes checks all registered external nodes health endpoint and deletes the ones that are offline
 func (me *defaultNodeService) ProbeExternalNodes() {
 	for _, node := range me.ListExternalNodes() {
 		me.probeExternalNode(node)
 	}
 }
 
-//List returns a list of workflow nodes.
+// List returns a list of workflow nodes.
 func (me *defaultNodeService) List(nodeType string) []*workflow.Node {
 	var nodes []*workflow.Node
 	switch nodeType {

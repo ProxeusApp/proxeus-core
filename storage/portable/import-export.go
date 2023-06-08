@@ -149,7 +149,7 @@ func (ie *ImportExport) isProcessed(kind EntityType, id string) bool {
 	return false
 }
 
-//clean this up to make the processed keys accurate but only if there is no error
+// clean this up to make the processed keys accurate but only if there is no error
 func (ie *ImportExport) cleanI18nAllKeyMarkersWithoutErr() error {
 	langs, err := ie.sysDB.I18n.GetAllLangs()
 	if err != nil {

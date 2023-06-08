@@ -7,7 +7,7 @@ import (
 	"github.com/robertkrimen/otto"
 )
 
-//UIParses takes key(first arg) and value(second arg) out of structures like:
+// UIParses takes key(first arg) and value(second arg) out of structures like:
 // $t('verification.blockchain.hint.valid', 'The file {filename} is valid.', {filename: file.name})
 type UIParser struct {
 	trans  map[string]string
