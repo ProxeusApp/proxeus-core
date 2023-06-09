@@ -20,8 +20,8 @@ const ProxeusEnvPrefix = "PROXEUS_"
 //2. Using the specified arguments in flag
 type Configuration struct {
 	SettingsFile    string `json:"settingsFile" default:"~/.proxeus/settings/main.json" usage:"Path to the settings file"`
-	EthClientURL    string `json:"ethClientURL" default:"https://goerli.infura.io/v3/" usage:"Ethereum client URL"`
-	EthWebSocketURL string `json:"ethWebSocketURL" default:"wss://goerli.infura.io/ws/v3/" usage:"Ethereum websocket URL"`
+	EthClientURL    string `json:"ethClientURL" default:"https://sepolia.infura.io/v3/" usage:"Ethereum client URL"`
+	EthWebSocketURL string `json:"ethWebSocketURL" default:"wss://sepolia.infura.io/ws/v3/" usage:"Ethereum websocket URL"`
 
 	ServiceAddress string `json:"serviceAddress" default:":1323" usage:"address and port of this service"`
 
