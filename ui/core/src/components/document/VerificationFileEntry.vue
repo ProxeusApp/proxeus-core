@@ -237,7 +237,7 @@ export default {
       isFileInvalidated: undefined,
       tx: undefined,
       hash: undefined,
-      network: process.env.VUE_APP_BLOCKCHAIN_NET === 'goerli' ? 'goerli.' : '',
+      network: process.env.VUE_APP_BLOCKCHAIN_NET === 'sepolia' ? 'sepolia.' : '',
       timestamp: undefined,
       creator: undefined,
       signatures: [],

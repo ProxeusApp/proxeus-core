@@ -95,7 +95,11 @@ func (me *System) init(stngs *model.Settings) error {
 	}
 	me.settingsInUse.SparkpostApiKey = stngs.SparkpostApiKey
 
-	if stngs.BlockchainNet == "goerli" {
+	if stngs.BlockchainNet == "sepolia" {
+		cfg.Config.XESContractAddress = "0x61a26381a8ca72870ab4E4108d5D3982a89D7fd0"
+		cfg.Config.EthClientURL = "https://sepolia.infura.io/v3/" + stngs.InfuraApiKey
+		cfg.Config.EthWebSocketURL = "wss://sepolia.infura.io/ws/v3/" + stngs.InfuraApiKey
+	} else if stngs.BlockchainNet == "goerli" {
 		cfg.Config.XESContractAddress = "0x15FeA089CC48B4f4596242c138156e3B53579B37"
 		cfg.Config.EthClientURL = "https://goerli.infura.io/v3/" + stngs.InfuraApiKey
 		cfg.Config.EthWebSocketURL = "wss://goerli.infura.io/ws/v3/" + stngs.InfuraApiKey

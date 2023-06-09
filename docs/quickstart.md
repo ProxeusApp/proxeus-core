@@ -52,10 +52,10 @@ The Proxeus platform depends on [Infura](https://infura.io/) and [SparkPost](htt
 
 We use [Infura](https://infura.io/) for blockchain services. Supported chains include:
 
-For your convenience, a demo smart contract is deployed on several networks at the following address:
+For your convenience, a demo smart contract is deployed on the Sepolia network at the following address:
 
 ```
-0x66FF4FBF80D4a3C85a54974446309a2858221689
+0x9bc518Fd070BE3DBB07399261688015744a7FB02
 ```
 
 - Please note that the domain you set up on SparkPost MUST match the **reply-to** e-mail address that you configure in the next step in order to create accounts and receive e-mails on your instance.
