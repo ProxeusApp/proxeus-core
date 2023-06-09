@@ -14,7 +14,7 @@ import getTransactionReceiptMined from './helpers/getTransactionReceiptMined'
 class WalletInterface {
   // TODO improve checking that current network matches what is expected
   // TODO: network param only for compatibility reasons with blockchain/dapp
-  constructor (network = 'goerli', proxeusFSAddress, forceProxeusWallet = false) {
+  constructor (network = 'sepolia', proxeusFSAddress, forceProxeusWallet = false) {
     this.useProxeusWallet = forceProxeusWallet || typeof window.ethereum === 'undefined'
 
     // make sure we are using the web3 we want and not the one provided by metamask

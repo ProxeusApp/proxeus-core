@@ -19,10 +19,10 @@ Please create an account on those platform and get an API Keys.
 
 ## Proxeus Demo Ethereum Smart Contract
 
-For your convenience, a demo smart contract is deployed on the Goerli network at the following address:
+For your convenience, a demo smart contract is deployed on the Sepolia network at the following address:
 
 ```
-0x66FF4FBF80D4a3C85a54974446309a2858221689
+0x9bc518Fd070BE3DBB07399261688015744a7FB02
 ```
 
 ## Create a docker-compose.yml file
