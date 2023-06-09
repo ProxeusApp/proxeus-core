@@ -23,9 +23,37 @@ Please create an account on those platform and get an API Keys.
 
 For your convenience, a demo smart contract is deployed on several networks at the following address:
 
+### Sepolia
+```
+0x9bc518Fd070BE3DBB07399261688015744a7FB02
+```
+[Verify on Etherscan](https://sepolia.etherscan.io/address/0x9bc518Fd070BE3DBB07399261688015744a7FB02#code)
+
+### Goerli
 ```
 0x66FF4FBF80D4a3C85a54974446309a2858221689
 ```
+[Verify on Etherscan](https://goerli.etherscan.io/address/0x66FF4FBF80D4a3C85a54974446309a2858221689#code)
+
+
+### Mainnet
+```
+0xf63e471d8cbc57517c37c39c35381a385628e012
+```
+[Verify on Etherscan](https://etherscan.io/address/0xf63e471d8cbc57517c37c39c35381a385628e012)
+
+### Polygon-mumbai
+```
+0x00119d8C02bbC4c1231D054BB2813792B4411Ed5
+```
+[Verify on Etherscan](https://mumbai.polygonscan.com/address/0x00119d8C02bbC4c1231D054BB2813792B4411Ed5)
+
+
+### Polygon
+```
+0x60970BeFda93464A105DD21Dc6a30B69C5B5c6e4
+```
+[Verify on Etherscan](https://polygonscan.com/address/0x60970BeFda93464A105DD21Dc6a30B69C5B5c6e4)
 
 ## Create a docker-compose.yml file
 

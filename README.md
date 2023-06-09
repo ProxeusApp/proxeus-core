@@ -66,4 +66,14 @@ Licensed under the GNU GENERAL PUBLIC LICENSE. You may read a copy of the [Licen
 
 ## Acknowledgements
 
+
 Like so many projects, this effort has roots in many places. The list can be found in [ACKNOWLEDGEMENTS](ACKNOWLEDGEMENTS).
+
+## Supported Chains
+
+- sepolia
+- goerli
+- mainnet
+- polygon-mumbai
+- polygon
+

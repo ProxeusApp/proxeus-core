@@ -13,14 +13,43 @@ https://dev-ds.proxeus.com/
 ## Infura API Key
 Generate a  [infura API Key](https://infura.io)
 
-## Blockchain contract address (goerli)
+## Blockchain File Storage contract address 
+### Sepolia
+```
+0x9bc518Fd070BE3DBB07399261688015744a7FB02
+```
+[Verify on Etherscan](https://sepolia.etherscan.io/address/0x9bc518Fd070BE3DBB07399261688015744a7FB02#code)
+
+### Goerli
 ```
 0x66FF4FBF80D4a3C85a54974446309a2858221689
 ```
-
 [Verify on Etherscan](https://goerli.etherscan.io/address/0x66FF4FBF80D4a3C85a54974446309a2858221689#code)
 
+
+### Mainnet
+```
+0xf63e471d8cbc57517c37c39c35381a385628e012
+```
+[Verify on Etherscan](https://etherscan.io/address/0xf63e471d8cbc57517c37c39c35381a385628e012)
+
+### Polygon-mumbai
+```
+0x00119d8C02bbC4c1231D054BB2813792B4411Ed5
+```
+[Verify on Etherscan](https://mumbai.polygonscan.com/address/0x00119d8C02bbC4c1231D054BB2813792B4411Ed5)
+
+
+### Polygon
+```
+0x60970BeFda93464A105DD21Dc6a30B69C5B5c6e4
+```
+[Verify on Etherscan](https://polygonscan.com/address/0x60970BeFda93464A105DD21Dc6a30B69C5B5c6e4)
+
+
+
 Alternatively: deploy your own smart contract from [ProxeusFS.sol](https://github.com/ProxeusApp/storage-app/blob/master/spp/eth/solidity/ProxeusFS.sol)
+
 
 ## Email from
 ```
@@ -65,7 +94,7 @@ Usage of ./artifacts/proxeus:
   -BlockchainContractAddress string
     	Ethereum contract address which will be used to register files and verify them. (PROXEUS_BLOCKCHAIN_CONTRACT_ADDRESS)
   -BlockchainNet string
-    	Ethereum blockchain net like mainnet/goerli/polygon-mumbai/polygon-mainnet. (PROXEUS_BLOCKCHAIN_NET) (default "goerli")
+    	Ethereum blockchain net like mainnet/goerli/sepolia/polygon-mumbai/polygon-mainnet. (PROXEUS_BLOCKCHAIN_NET) (default "sepolia")
   -CacheExpiry string
     	Common cache expiry which will be used for email tokens or similar. (PROXEUS_CACHE_EXPIRY) (default "24h")
   -DataDir string
@@ -83,9 +112,9 @@ Usage of ./artifacts/proxeus:
   -EmailFrom string
     	Email that is being used to send out emails. (PROXEUS_EMAIL_FROM)
   -EthClientURL string
-    	Ethereum client URL (PROXEUS_ETH_CLIENT_URL) (default "https://goerli.infura.io/v3/")
+    	Ethereum client URL (PROXEUS_ETH_CLIENT_URL) (default "https://sepolia.infura.io/v3/")
   -EthWebSocketURL string
-    	Ethereum websocket URL (PROXEUS_ETH_WEB_SOCKET_URL) (default "wss://goerli.infura.io/ws/v3/")
+    	Ethereum websocket URL (PROXEUS_ETH_WEB_SOCKET_URL) (default "wss://sepolia.infura.io/ws/v3/")
   -InfuraApiKey string
     	API Key to access Infura node. (PROXEUS_INFURA_API_KEY)
   -LogPath string

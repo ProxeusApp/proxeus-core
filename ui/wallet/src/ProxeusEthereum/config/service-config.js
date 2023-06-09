@@ -1,4 +1,13 @@
 const serviceConfig = {
+  sepolia: {
+    DEFAULT_GAS_REGULAR: 1000000,
+    DEFAULT_GAS_CREATE: 4000000,
+    XES_TOKEN_ADDRESS: '0x61a26381a8ca72870ab4E4108d5D3982a89D7fd0',
+    PROXEUS_FS_ADDRESS: '0x9bc518Fd070BE3DBB07399261688015744a7FB02',
+    // When the PROXEUS_FS_ADDRESS changes add the old address to the list below so that file validation check also past contracts
+    PROXEUS_FS_PAST_ADDRESSES: [
+    ]
+  },
   goerli: {
     DEFAULT_GAS_REGULAR: 1000000,
     DEFAULT_GAS_CREATE: 4000000,
