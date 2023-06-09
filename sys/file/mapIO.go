@@ -10,7 +10,7 @@ import (
 
 type MapIO map[string]interface{}
 
-//MakeFileInfos makes sure all file map patterns are replaced by actual Info's
+// MakeFileInfos makes sure all file map patterns are replaced by actual Info's
 func (me MapIO) MakeFileInfos(baseDir string) {
 	for k, v := range me {
 		check(r.ValueOf(v), r.ValueOf(me), r.ValueOf(k), baseDir, nil)
@@ -143,7 +143,7 @@ func merge(target map[string]interface{}, path []string, i int, toMerge map[stri
 	}
 }
 
-//Get retrieves the value by a path like key.key2.key3
+// Get retrieves the value by a path like key.key2.key3
 func (me MapIO) Get(path string) interface{} {
 	if path == "" {
 		return me
@@ -151,7 +151,7 @@ func (me MapIO) Get(path string) interface{} {
 	return access(dataPathUnmarshal(path), 0, r.ValueOf(me))
 }
 
-//GetFileInfo retrieves the value by a path like key.key2.key3
+// GetFileInfo retrieves the value by a path like key.key2.key3
 func (me MapIO) GetFileInfo(baseDir, path string) *IO {
 	maybeFi := me.Get(path)
 	if fi, ok := maybeFi.(*IO); ok {

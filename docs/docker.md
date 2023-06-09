@@ -87,7 +87,7 @@ Environment:
 |Name           | Default Value | Description |
 |---------------|-----------------------|------------------------------|
 |PROXEUS_DATA_DIR| `./data` | Path to the directory to use a data store.|
-|PROXEUS_ENCRYPTION_SECRET_KEY|*A random string*|Use a hard key to ensure your database is safe.|
+|PROXEUS_ENCRYPTION_SECRET_KEY|*A random string of 32 characters*|Use a hard key to ensure your database is safe.|
 |PROXEUS_BLOCKCHAIN_CONTRACT_ADDRESS|*0x1d3e5c81bf4bc60d41a8fbbb3d1bae6f03a75f71*|The address of the Proxeus contract.|
 |PROXEUS_INFURA_API_KEY|*Your Infura API Key*|An Infura API Key for Ethereum integration.|
 |PROXEUS_SPARKPOST_API_KEY|*Your SpartPost Key*|A SparkPost API Key for email integration.|
@@ -132,7 +132,7 @@ Environment:
 |Name           | Default Value | Description |
 |---------------|-----------------------|------------------------------|
 |PROXEUS_DATA_DIR| `./data` | Path to the directory to use a data store.|
-|PROXEUS_ENCRYPTION_SECRET_KEY|*A random string*|Use a hard key to ensure your database is safe.|
+|PROXEUS_ENCRYPTION_SECRET_KEY|*A random string of 32 characters*|Use a hard key to ensure your database is safe.|
 |PROXEUS_BLOCKCHAIN_CONTRACT_ADDRESS|*0x1d3e5c81bf4bc60d41a8fbbb3d1bae6f03a75f71*|The address of the Proxeus contract.|
 |PROXEUS_INFURA_API_KEY|*Your Infura API Key*|An Infura API Key for Ethereum integration.|
 |PROXEUS_SPARKPOST_API_KEY|*Your SpartPost Key*|A SparkPost API Key for email integration.|
@@ -272,7 +272,7 @@ Environment:
 |Name           | Default Value | Description |
 |---------------|-----------------------|------------------------------|
 |PROXEUS_DATA_DIR| `./data` | Path to the directory to use a data store.|
-|PROXEUS_ENCRYPTION_SECRET_KEY|*A random string*|Use a hard key to ensure your database is safe.|
+|PROXEUS_ENCRYPTION_SECRET_KEY|*A random string of 32 characters*|Use a hard key to ensure your database is safe.|
 |PROXEUS_BLOCKCHAIN_CONTRACT_ADDRESS|*0x1d3e5c81bf4bc60d41a8fbbb3d1bae6f03a75f71*|The address of the Proxeus contract.|
 |PROXEUS_INFURA_API_KEY|*Your Infura API Key*|An Infura API Key for Ethereum integration.|
 |PROXEUS_SPARKPOST_API_KEY|*Your SpartPost Key*|A SparkPost API Key for email integration.|

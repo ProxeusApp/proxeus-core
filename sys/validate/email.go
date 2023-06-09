@@ -9,7 +9,7 @@ const msgEmailInvalid = "email invalid"
 
 var emailRegexp = regexp.MustCompile("^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*$")
 
-//email validates a string if the spec is { email:bool }
+// email validates a string if the spec is { email:bool }
 func (v *validator) email() {
 	if v.val.Kind() == reflect.String {
 		e := v.val.String()

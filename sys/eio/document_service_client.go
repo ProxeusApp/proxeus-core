@@ -45,8 +45,8 @@ type Template struct {
 	EmbedError   bool        //print compilation error in the document
 }
 
-//Compile packs the provided files into a ZIP and sends it to the document-service to be compiled as the format you have provided.
-//if format is empty, it will take the default one which is PDF.
+// Compile packs the provided files into a ZIP and sends it to the document-service to be compiled as the format you have provided.
+// if format is empty, it will take the default one which is PDF.
 func (ds *DocumentServiceClient) Compile(db storage.FilesIF, template Template) (resp *http.Response, err error) {
 	var templateBuf bytes.Buffer
 	err = db.Read(template.TemplatePath, &templateBuf)
@@ -178,8 +178,8 @@ func (ds *DocumentServiceClient) Compile(db storage.FilesIF, template Template) 
 	return
 }
 
-//Vars returns a list of the vars contained in the provided template.
-//You can filter them with the prefix if needed.
+// Vars returns a list of the vars contained in the provided template.
+// You can filter them with the prefix if needed.
 func (ds *DocumentServiceClient) Vars(templateBuf *bytes.Buffer) ([]string, error) {
 	requestReader, requestWriter := io.Pipe()
 	go func() {
@@ -229,7 +229,7 @@ func (ds *DocumentServiceClient) Vars(templateBuf *bytes.Buffer) ([]string, erro
 	}
 }
 
-//Download the template assistance extension for your writer.
+// Download the template assistance extension for your writer.
 func (ds *DocumentServiceClient) DownloadExtension(arch string) (resp *http.Response, err error) {
 	req, err := http.NewRequest("GET", ds.makeUrl("extension"), nil)
 	if err != nil {

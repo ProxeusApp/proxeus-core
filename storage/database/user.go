@@ -29,17 +29,17 @@ type UserDB struct {
 	fileDB       storage.FilesIF
 }
 
-//userHeavyDataBucket helps us to load the data of the model.User entity when it is requested by metaOnly = false
+// userHeavyDataBucket helps us to load the data of the model.User entity when it is requested by metaOnly = false
 const userHeavyDataBucket = "user_data"
 
 const userApiKeyBucket = "user_api_key"   //api key -> user id
 const userApiKeysBucket = "user_api_keys" //user id -> [api key1, api key2...]
 
-//userVersion helps us to keep track of the structure version between persistence and memory
+// userVersion helps us to keep track of the structure version between persistence and memory
 const userVersion = "user_version"
 
-//passwordBucket helps us to keep it away from the actual structure
-//it is only needed for login and password reset
+// passwordBucket helps us to keep it away from the actual structure
+// it is only needed for login and password reset
 const passwordBucket = "pw_bucket"
 
 // NewUserDB returns a handle to the user database, containing the user object, incl. their credentials for login and API access

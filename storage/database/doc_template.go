@@ -200,7 +200,7 @@ func (me *DocTemplateDB) DeleteTemplate(auth model.Auth, files storage.FilesIF, 
 	return os.ErrNotExist
 }
 
-//Put inserts a template item
+// Put inserts a template item
 func (me *DocTemplateDB) Put(auth model.Auth, item *model.TemplateItem) error {
 	return me.put(auth, item, true)
 }

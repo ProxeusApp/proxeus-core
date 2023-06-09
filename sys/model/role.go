@@ -52,7 +52,7 @@ func init() {
 	})
 }
 
-//String returns every character in lower case like "admin"
+// String returns every character in lower case like "admin"
 func (r Role) String() string {
 	for k, v := range roles {
 		if v == r {
@@ -62,7 +62,7 @@ func (r Role) String() string {
 	return "unknown"
 }
 
-//StringToRole takes role string case insensitive and returns a GUEST role if no role was found with the provided string
+// StringToRole takes role string case insensitive and returns a GUEST role if no role was found with the provided string
 func StringToRole(role string) Role {
 	lowerCaseRole := strings.ToLower(role)
 	if r, ok := roles[lowerCaseRole]; ok {
@@ -71,27 +71,27 @@ func StringToRole(role string) Role {
 	return GUEST
 }
 
-//Lower returns every character in lower case like "admin"
+// Lower returns every character in lower case like "admin"
 func (r Role) Lower() string {
 	return r.String()
 }
 
-//Title returns the first character with upper case like "Admin"
+// Title returns the first character with upper case like "Admin"
 func (r Role) Title() string {
 	return strings.Title(r.String())
 }
 
-//Upper returns every character in upper case like "ADMIN"
+// Upper returns every character in upper case like "ADMIN"
 func (r Role) Upper() string {
 	return strings.ToUpper(r.String())
 }
 
-//Is checks if current role and provided one are equal
+// Is checks if current role and provided one are equal
 func (r Role) Is(pr Role) bool {
 	return pr == r
 }
 
-//IsGrantedFor checks if current is higher or equal to the provided role
+// IsGrantedFor checks if current is higher or equal to the provided role
 func (r Role) IsGrantedFor(pr Role) bool {
 	return pr <= r
 }
@@ -104,12 +104,12 @@ func (r Role) AllowedToCreateEntities() bool {
 	return CREATOR <= r
 }
 
-//IsGrantedForUserModifications checks if current is higher or equal to SUPERADMIN
+// IsGrantedForUserModifications checks if current is higher or equal to SUPERADMIN
 func (r Role) IsGrantedForUserModifications() bool {
 	return SUPERADMIN <= r
 }
 
-//RolesInRange provides all roles hierarchically sorted in your range
+// RolesInRange provides all roles hierarchically sorted in your range
 func (r Role) RolesInRange() []RoleSet {
 	return r.RolesInRangeWithNameFormat(Title)
 }

@@ -66,7 +66,7 @@ func (d *FileDB) Exists(path string) (bool, error) {
 	return true, nil
 }
 
-//Delete removes a file from the file database
+// Delete removes a file from the file database
 func (d *FileDB) Delete(path string) error {
 	return d.db.Delete("storedFile", path)
 }

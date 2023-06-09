@@ -7,7 +7,7 @@ import (
 	"testing"
 )
 
-//Use this when you are extending the tests
+// Use this when you are extending the tests
 const testVerbose = false
 
 type (
@@ -23,8 +23,8 @@ type (
 	}
 )
 
-//key = node.ID, value = true executed | false closed
-//TODO this is supposed to help checking if the NodeIF calls are correct but not in use yet
+// key = node.ID, value = true executed | false closed
+// TODO this is supposed to help checking if the NodeIF calls are correct but not in use yet
 type MyNodeState map[string]bool
 
 var nodeStateMap = MyNodeState{}

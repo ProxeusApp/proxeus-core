@@ -15,9 +15,9 @@ import (
 
 const ProxeusEnvPrefix = "PROXEUS_"
 
-//This configuration can be used in two ways:
-//1. Using the default meta in a struct
-//2. Using the specified arguments in flag
+// This configuration can be used in two ways:
+// 1. Using the default meta in a struct
+// 2. Using the specified arguments in flag
 type Configuration struct {
 	SettingsFile    string `json:"settingsFile" default:"~/.proxeus/settings/main.json" usage:"Path to the settings file"`
 	EthClientURL    string `json:"ethClientURL" default:"https://sepolia.infura.io/v3/" usage:"Ethereum client URL"`
