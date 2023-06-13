@@ -472,7 +472,7 @@ export default {
         this.wallet.proxeusFS.createFileUndefinedSigners({
           from: account,
           hash,
-          data: (this.data === '' ? '0x00' : web3.utils.asciiToHex(this.data)),
+          data: (this.data === '' ? '0x00' : this.wallet.proxeusFS.web3.utils.fromAscii(this.data)),
           mandatorySigners: 0,
           expiry: 0,
           providers: [],
