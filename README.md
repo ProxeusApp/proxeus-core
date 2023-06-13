@@ -71,8 +71,14 @@ Like so many projects, this effort has roots in many places. The list can be fou
 
 ## Supported Chains
 
+Ethereum
+
+- mainnet
 - sepolia
 - goerli
+
+Polygon
+
 - mainnet
-- polygon-mumbai
-- polygon
+- mumbai
+
