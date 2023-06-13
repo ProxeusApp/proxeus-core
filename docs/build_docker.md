@@ -42,7 +42,9 @@ docker-compose restart
 This will build the proxeus-core image based on your current project and use a deployed image
 for the document service.
 
-If you're having trouble, try a clean full build, specifying each of the configuration files:
+## Using Docker for the build
+
+If you're having trouble, try a clean full Docker build, specifying each of the configuration files:
 
 ```
 make clean
@@ -57,4 +59,12 @@ instead of the default `docker-compose.override.yml`:
 
 ```
 docker-compose -f docker-compose.yml -f docker-compose-cloud.override.yml
+```
+
+## Docker Light version
+
+There is also a Docker Compose configure in one file with a 'minimal' Proxeus installation. The only extra nodes are 'mail-sender' and 'json-sender':
+
+```
+docker-compose -f docker-compose-light.yml
 ```
