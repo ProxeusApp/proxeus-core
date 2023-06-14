@@ -309,49 +309,49 @@ workflows:
             - test-ui
           filters:
             branches:
-              only: master
+              only: main
       - publish-latest:
           requires:
             - build-docker-image
           filters:
             branches:
-              only: master
+              only: main
       - approve-staging:
           type: approval
           requires:
             - build-docker-image
           filters:
             branches:
-              only: master
+              only: main
       - publish-staging:
           requires:
             - approve-staging
           filters:
             branches:
-              only: master
+              only: main
       - approve-demo:
           type: approval
           requires:
             - publish-staging
           filters:
             branches:
-              only: master
+              only: main
       - publish-demo:
           requires:
             - approve-demo
           filters:
             branches:
-              only: master
+              only: main
       - approve-handelsregister:
           type: approval
           requires:
             - publish-staging
           filters:
             branches:
-              only: master
+              only: main
       - publish-handelsregister:
           requires:
             - approve-handelsregister
           filters:
             branches:
-              only: master
+              only: main
