@@ -16,8 +16,8 @@ The latest ProxeusFS contract can be found in github: https://github.com/Proxeus
  2. Create or Import an Ethereum Account in Metamask
 
 ### Deployment
- 1. Switch to the target network (testnet or mainnet) in Metamask depending on where you would like to deploy the contract
- 2. Make sure your Ethereum Account has some Ether to fund the transactions (e.g. Goerli faucet: https://goerlifaucet.com/)
+ 1. Switch to sepolia/goerli/mainnet/polygon-mumbai/polygon-mainnet in Metamask depending on where you would like to deploy the contract
+ 2. Make sure your Ethereum Account has some Ether to fund the transactions (Goerli faucet: https://goerlifaucet.com/, Sepolia faucet https://sepoliafaucet.com/)
  3. Open Remix: https://remix.ethereum.org
  4. Upload the ProxeusFS.sol file
  5. Open the "Plugin Manager" (Sidebar) and enable Plugins "Solidity Compiler" & "Deploy & Run Transactions"
