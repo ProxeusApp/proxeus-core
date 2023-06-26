@@ -219,60 +219,9 @@ jobs:
           command: |
             echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
             docker push $CONTAINER_IMAGE_NAME:latest
-
-  publish-staging:
-    executor: docker-publisher
-    steps:
-      - attach_workspace:
-          at: /tmp/workspace
-      - setup_remote_docker
       - run:
-          name: Load archived Docker image
-          command: docker load -i /tmp/workspace/image.tar
-      - run:
-          name: Tag staging docker image
-          command: docker tag $CONTAINER_IMAGE_NAME $CONTAINER_IMAGE_NAME:staging
-      - run:
-          name: Publish staging Docker Image to Docker Hub
-          command: |
-            echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
-            docker push $CONTAINER_IMAGE_NAME:staging
-
-  publish-demo:
-    executor: docker-publisher
-    steps:
-      - attach_workspace:
-          at: /tmp/workspace
-      - setup_remote_docker
-      - run:
-          name: Load archived Docker image
-          command: docker load -i /tmp/workspace/image.tar
-      - run:
-          name: Tag demo docker image
-          command: docker tag $CONTAINER_IMAGE_NAME $CONTAINER_IMAGE_NAME:demo
-      - run:
-          name: Publish demo Docker Image to Docker Hub
-          command: |
-            echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
-            docker push $CONTAINER_IMAGE_NAME:demo
-
-  publish-handelsregister:
-    executor: docker-publisher
-    steps:
-      - attach_workspace:
-          at: /tmp/workspace
-      - setup_remote_docker
-      - run:
-          name: Load archived Docker image
-          command: docker load -i /tmp/workspace/image.tar
-      - run:
-          name: Tag handelsregister docker image
-          command: docker tag $CONTAINER_IMAGE_NAME $CONTAINER_IMAGE_NAME:handelsregister
-      - run:
-          name: Publish handelsregister Docker Image to Docker Hub
-          command: |
-            echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
-            docker push $CONTAINER_IMAGE_NAME:handelsregister
+          name: Tag the latest Docker release with current Git version
+          command: docker tag $CONTAINER_IMAGE_NAME:$CIRCLE_TAG $CONTAINER_IMAGE_NAME:latest
 
 workflows:
   version: 2
@@ -339,19 +288,6 @@ workflows:
       - publish-demo:
           requires:
             - approve-demo
-          filters:
-            branches:
-              only: main
-      - approve-handelsregister:
-          type: approval
-          requires:
-            - publish-staging
-          filters:
-            branches:
-              only: main
-      - publish-handelsregister:
-          requires:
-            - approve-handelsregister
           filters:
             branches:
               only: main
