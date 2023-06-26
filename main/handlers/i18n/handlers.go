@@ -29,13 +29,13 @@ func IndexHandler(e echo.Context) error {
 	return c.HTMLBlob(http.StatusOK, bts)
 }
 
-// Returns a json containing i18n metadata {
-//		"langListSize",
-//		"langList",
-//		"activeLangs",
-//		"langFallback",
-//		"fallbackTranslations",
-//	}
+//	Returns a json containing i18n metadata {
+//			"langListSize",
+//			"langList",
+//			"activeLangs",
+//			"langFallback",
+//			"fallbackTranslations",
+//		}
 func MetaHandler(e echo.Context) error {
 	c := e.(*www.Context)
 	fallback, _ := c.System().DB.I18n.GetFallback()

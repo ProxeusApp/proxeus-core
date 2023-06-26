@@ -277,7 +277,7 @@ func (r Rules) isFile() bool {
 	return ok
 }
 
-//FieldByStrRules accepts rules like "required=true,email=true,matches=^(abc|123)$"
+// FieldByStrRules accepts rules like "required=true,email=true,matches=^(abc|123)$"
 func FieldByStrRules(val interface{}, rules string) Errors {
 	return Field(val, makeRules(rules))
 }
@@ -319,19 +319,22 @@ func Field(val interface{}, rules Rules) Errors {
 	return *validr.errs
 }
 
-/**
-      validate:{
-     	//@method:@spec
-          required:true|false,
-          email:true|false,
-          number:true|false,
-          matches:'regex',
-          max:[0-9]+,
-          min:[0-9]+,
-          url:true|false
-		  date:dd.mm.yyyy HH:ii
-      }
- **/
+/*
+*
+
+	      validate:{
+	     	//@method:@spec
+	          required:true|false,
+	          email:true|false,
+	          number:true|false,
+	          matches:'regex',
+	          max:[0-9]+,
+	          min:[0-9]+,
+	          url:true|false
+			  date:dd.mm.yyyy HH:ii
+	      }
+	 *
+*/
 type validator struct {
 	val      r.Value
 	rules    Rules

@@ -89,17 +89,19 @@ func (me *dataManager) GetDataByPath(formID, dataPath string) (interface{}, erro
 	return nil, os.ErrInvalid
 }
 
-/**
+/*
+*
 returns:
-{
-	"key":"value",
-	"fileKey": {
-		"name":"myfile.pdf",
-		"contentType":"application/pdf",
-		"size":123,
-		"path":"{{BaseFilePath}}/76ed295d-92d8-41b1-83be-7078ea9a94a2"
+
+	{
+		"key":"value",
+		"fileKey": {
+			"name":"myfile.pdf",
+			"contentType":"application/pdf",
+			"size":123,
+			"path":"{{BaseFilePath}}/76ed295d-92d8-41b1-83be-7078ea9a94a2"
+		}
 	}
-}
 */
 func (me *dataManager) GetAllData() (dat map[string]interface{}, err error) {
 	me.RLock()
@@ -126,20 +128,25 @@ func (me *dataManager) GetAllData() (dat map[string]interface{}, err error) {
 	return
 }
 
-/**
+/*
+*
 returns:
-dat = {
-	"key":"value",
-	"fileKey": {
-		"name":"myfile.pdf",
-		"contentType":"application/pdf",
-		"size":123,
-		"path":"76ed295d-92d8-41b1-83be-7078ea9a94a2"
+
+	dat = {
+		"key":"value",
+		"fileKey": {
+			"name":"myfile.pdf",
+			"contentType":"application/pdf",
+			"size":123,
+			"path":"76ed295d-92d8-41b1-83be-7078ea9a94a2"
+		}
 	}
-}
+
 files = [
+
 	"{{BaseFilePath}}/76ed295d-92d8-41b1-83be-7078ea9a94a2",
 	...
+
 ]
 */
 func (me *dataManager) GetAllDataFilePathNameOnly() (dat map[string]interface{}, files []string) {

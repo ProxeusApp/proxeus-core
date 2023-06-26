@@ -6,9 +6,11 @@ import (
 	"github.com/robertkrimen/otto"
 )
 
-/**
+/*
+*
 In this package there are a few words about internal, background and foreground nodes. The meaning of them is here explained.
 background node:
+
 	A background node is not blocking the process.
 	When you call Next, you get a background node with Current if it is a node at the end of the workflow otherwise you will get a foreground node if no error occurred.
 	In the background nodes implementation there should be always returned < proceed > true if no error occurred otherwise it is configured wrong.
@@ -16,15 +18,18 @@ background node:
 	Background nodes can be skipped in the Previous call to be able to get back to the last foreground node if no error occurs.
 	Please note, there is no detection for wrong configuration of background nodes during runtime.
 	If your node implementation changes and has an effect on the execution type, you must keep the background flag consistent.
+
 foreground node:
+
 	A foreground node is blocking the process.
 	When you call Next usually you should get the foreground node by calling Current. Foreground nodes have states in the node implementation that causes Execute to be called more than once.
 	For example a form node. It has at least two states. State one is presenting the form, state two or higher is validating the form.
+
 internal node:
+
 	Currently there are just two internal nodes, which is workflow and condition.
 	These nodes are handled by the engine itself, they are visible in the Stack but they can also be visible in Current.
 	For example if the root workflow starts with another workflow or a condition.
-
 */
 type (
 	Config struct {
@@ -90,17 +95,17 @@ func New(wf *Workflow, conf Config) (*Engine, error) {
 	return me, nil
 }
 
-//LoopNext is the same as Next but it combines hasNext and err into one bool so it can be used easier in a loop.
-//To ensure if everything went well, you can just call Current() which provides the recent error
-//This call is thread safe.
+// LoopNext is the same as Next but it combines hasNext and err into one bool so it can be used easier in a loop.
+// To ensure if everything went well, you can just call Current() which provides the recent error
+// This call is thread safe.
 func (me *Engine) LoopNext() bool {
 	hasNext, err := me.Next()
 	return hasNext && err == nil
 }
 
-//Next is moving one node further in the workflow
-//The recent error can be retrieved by Current() as well.
-//This call is thread safe.
+// Next is moving one node further in the workflow
+// The recent error can be retrieved by Current() as well.
+// This call is thread safe.
 func (me *Engine) Next() (bool, error) {
 	me.m.Lock()
 	defer me.m.Unlock()
@@ -115,37 +120,37 @@ func (me *Engine) next() (bool, error) {
 	return me.root.hasNext, nil
 }
 
-//HasPrevious is providing the last state of being able to move one step back.
-//The result is guaranteed.
-//This call is thread safe.
+// HasPrevious is providing the last state of being able to move one step back.
+// The result is guaranteed.
+// This call is thread safe.
 func (me *Engine) HasPrevious() bool {
 	me.m.Lock()
 	defer me.m.Unlock()
 	return me.hasPrev
 }
 
-//HasNext is providing the last state of being able to move forward.
-//HasNext result is not guaranteed as the path can change during the execution with the provided data.
-//This call is thread safe.
+// HasNext is providing the last state of being able to move forward.
+// HasNext result is not guaranteed as the path can change during the execution with the provided data.
+// This call is thread safe.
 func (me *Engine) HasNext() bool {
 	me.m.Lock()
 	defer me.m.Unlock()
 	return me.root.hasNext
 }
 
-//Stack is providing a slice containing all the executed nodes no matter if it was during forward or backward.
-//It contains internal nodes like workflow or condition.
-//This call is thread safe.
+// Stack is providing a slice containing all the executed nodes no matter if it was during forward or backward.
+// It contains internal nodes like workflow or condition.
+// This call is thread safe.
 func (me *Engine) Stack() []Stack {
 	me.m.Lock()
 	defer me.m.Unlock()
 	return me.stack
 }
 
-//State is providing a slice containing the path with background and foreground nodes.
-//It doesn't contain any internal nodes like workflow or condition.
-//This state can be provided during initialization in the config to recover the previous state.
-//This call is thread safe.
+// State is providing a slice containing the path with background and foreground nodes.
+// It doesn't contain any internal nodes like workflow or condition.
+// This state can be provided during initialization in the config to recover the previous state.
+// This call is thread safe.
 func (me *Engine) State() []Step {
 	me.m.Lock()
 	defer me.m.Unlock()
@@ -156,26 +161,26 @@ func (me *Engine) State() []Step {
 	return state
 }
 
-//Current is providing the target node and the recent error.
-//The target node can be an internal node or background node as well. It depends on the structure of the workflow.
-//This call is thread safe.
+// Current is providing the target node and the recent error.
+// The target node can be an internal node or background node as well. It depends on the structure of the workflow.
+// This call is thread safe.
 func (me *Engine) Current() (*Node, error) {
 	me.m.Lock()
 	defer me.m.Unlock()
 	return me.target.curr()
 }
 
-//LoopPrevious is the same as Previous but it combines hasPrev and err into one bool, so it can be used easier in a loop.
-//To ensure if everything went well, you can just call Current() which provides the recent error
-//This call is thread safe.
+// LoopPrevious is the same as Previous but it combines hasPrev and err into one bool, so it can be used easier in a loop.
+// To ensure if everything went well, you can just call Current() which provides the recent error
+// This call is thread safe.
 func (me *Engine) LoopPrevious(skipBackgroundNodes bool) bool {
 	hasPrev, err := me.Previous(skipBackgroundNodes)
 	return hasPrev && err == nil
 }
 
-//Previous is moving one or more steps back. A step consists of background nodes and foreground nodes.
-//By skipping background nodes it moves back to a foreground node if there is one otherwise it stops at the beginning.
-//This call is thread safe.
+// Previous is moving one or more steps back. A step consists of background nodes and foreground nodes.
+// By skipping background nodes it moves back to a foreground node if there is one otherwise it stops at the beginning.
+// This call is thread safe.
 func (me *Engine) Previous(skipBackgroundNodes bool) (bool, error) {
 	me.m.Lock()
 	defer me.m.Unlock()

@@ -97,13 +97,13 @@ ufw logging off
 ## ----------------------------------------------
 ## Install & configure proxeus
 
-log "Installing Proxeus"
+log "Installing Proxeus with demo smart contract"
 mkdir -p /srv
 cd /srv
 
 cat <<END >.env
-PROXEUS_BLOCKCHAIN_CONTRACT_ADDRESS=0x1d3e5c81bf4bc60d41a8fbbb3d1bae6f03a75f71
-PROXEUS_ENCRYPTION_SECRET_KEY=`dd bs=32 count=1 if="/dev/urandom" | base64 | tr +/ _.`
+PROXEUS_BLOCKCHAIN_CONTRACT_ADDRESS=0x66FF4FBF80D4a3C85a54974446309a2858221689
+PROXEUS_ENCRYPTION_SECRET_KEY=`hexdump -n 16 -e '4/4 "%08X"' /dev/random`
 PROXEUS_DATA_DIR=./data
 PROXEUS_ALLOW_HTTP=true
 PROXEUS_INFURA_API_KEY=$INFURA

@@ -1,29 +1,77 @@
 # Quick Start
 
-**By installing and using the Proxeus software you agree with the terms of the [Proxeus License Agreement](license.md).**
+A brief installation guide. Find more details and explanation of the configuration settings in [configure.md](configure.md).
+
+**By installing and using the Proxeus software you agree with the terms of the [Proxeus License Agreement](LICENSE).**
 
 ## Source Code
 
 You can access the source code of this application on the [Proxeus GitHub repository](https://github.com/ProxeusApp).
 
 ## Install docker and docker-compose
+
 The quickest way to try Proxeus is to use `docker-compose`.
+
 1. [Install Docker Engine](https://docs.docker.com/install/)
 2. [Install docker-compose](https://docs.docker.com/compose/install/)
 
 ## Get API Keys for Infura and SparkPost
+
 The Proxeus platform depends on [Infura](https://infura.io/) and [SparkPost](https://www.sparkpost.com/)
 for Ethereum and email integration respectively.
 
 Please create an account on those platform and get an API Keys.
 
-## Proxeus Demo Ethereum Smart Contract
+## Proxeus Demo Smart Contract
 
-For your convenience, a demo smart contract is deployed on the Goerli network at the following address:
+For your convenience, a demo smart contract is deployed on several networks at the following addresses.
+
+You can switch between the networks using the environment configuration `PROXEUS_BLOCKCHAIN_NET`
+
+### Ethereum: Sepolia
+
+```
+0x9bc518Fd070BE3DBB07399261688015744a7FB02
+```
+[Verify on Etherscan](https://sepolia.etherscan.io/address/0x9bc518Fd070BE3DBB07399261688015744a7FB02#code)
+
+`PROXEUS_BLOCKCHAIN_NET=sepolia`
+
+### Ethereum: Goerli
 
 ```
 0x66FF4FBF80D4a3C85a54974446309a2858221689
 ```
+[Verify on Etherscan](https://goerli.etherscan.io/address/0x66FF4FBF80D4a3C85a54974446309a2858221689#code)
+
+`PROXEUS_BLOCKCHAIN_NET=goerli`
+
+### Ethereum: Mainnet
+
+```
+0xf63e471d8cbc57517c37c39c35381a385628e012
+```
+[Verify on Etherscan](https://etherscan.io/address/0xf63e471d8cbc57517c37c39c35381a385628e012)
+
+`PROXEUS_BLOCKCHAIN_NET=main`
+
+### Polygon: mumbai
+
+```
+0x00119d8C02bbC4c1231D054BB2813792B4411Ed5
+```
+[Verify on Etherscan](https://mumbai.polygonscan.com/address/0x00119d8C02bbC4c1231D054BB2813792B4411Ed5)
+
+`PROXEUS_BLOCKCHAIN_NET=polygon-mumbai`
+
+### Polygon: main
+
+```
+0x60970BeFda93464A105DD21Dc6a30B69C5B5c6e4
+```
+[Verify on Etherscan](https://polygonscan.com/address/0x60970BeFda93464A105DD21Dc6a30B69C5B5c6e4)
+
+`PROXEUS_BLOCKCHAIN_NET=polygon`
 
 ## Create a docker-compose.yml file
 

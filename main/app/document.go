@@ -27,7 +27,7 @@ import (
 	"github.com/ethereum/go-ethereum/crypto"
 )
 
-//TODO replace DataCluster with file.MapIO. DataCluster was meant to be used for guest users only to prevent from storing data that will be never used again after the session is expired
+// TODO replace DataCluster with file.MapIO. DataCluster was meant to be used for guest users only to prevent from storing data that will be never used again after the session is expired
 type (
 	DocumentFlowInstance struct {
 		WFID             string           `json:"WFID"`

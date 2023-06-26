@@ -29,12 +29,12 @@ const (
 `
 )
 
-//TODO improve/replace js engine
+// TODO improve/replace js engine
 type JSRegexEval struct {
 	vm *goja.Runtime
 }
 
-//var tmpVm *goja.Runtime
+// var tmpVm *goja.Runtime
 func NewJSRegexEval() *JSRegexEval {
 	js := &JSRegexEval{}
 	js.vm = goja.New()

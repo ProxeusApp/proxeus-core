@@ -1,6 +1,6 @@
 SHELL:= /bin/bash
 DEBUG_FLAG?=false
-GO_VERSION=1.16
+GO_VERSION=1.20
 
 ifeq ($(DEBUG), "true")
 	BINDATA_OPTS="-debug"
@@ -78,12 +78,12 @@ all: ui server
 .PHONY: init
 init:
 	@for d in $(dependencies); do (echo "Checking $$d is installed... " && which $$d ) || ( echo "Please install $$d before continuing" && exit 1 ); done
-	go get -u golang.org/x/tools/...
-	go get -u github.com/wadey/gocovmerge
-	go get -u github.com/go-bindata/go-bindata/v3/...
-	go install golang.org/x/tools/cmd/goimports
+	@go version
+	go install github.com/go-bindata/go-bindata/...
 	go install github.com/golang/mock/mockgen
 	go install github.com/wadey/gocovmerge
+	go install golang.org/x/tools/...
+	go install golang.org/x/tools/cmd/goimports
 	go install golang.org/x/tools/cmd/godoc
 
 .PHONY: update

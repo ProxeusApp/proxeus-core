@@ -11,10 +11,10 @@ var ErrAuthorityMissing = fmt.Errorf("authority missing")
 var ErrAuthorityInvalid = fmt.Errorf("invalid authority key")
 var ErrAuthorityNotFound = fmt.Errorf("user not found for key")
 
-//Permission holds an byte slice for the pattern --/rw or ----/r-r- and so on
+// Permission holds an byte slice for the pattern --/rw or ----/r-r- and so on
 // none     read    write
-//0 == - | 1 == r | 2 == w
-//to support []byte we implement the json marshaller interface otherwise use []int
+// 0 == - | 1 == r | 2 == w
+// to support []byte we implement the json marshaller interface otherwise use []int
 type Permission []byte
 
 const read = 1
@@ -168,7 +168,7 @@ func (me Permission) String() string {
 	return me.ToReadablePattern()
 }
 
-//TODO improve perm modification
+// TODO improve perm modification
 func (me *Permissions) Change(auth Auth, changed *Permissions) *Permissions {
 	if me.OwnedBy(auth) {
 		if changed.Owner != "" {
@@ -221,11 +221,13 @@ func (me *Permissions) UpdateUserID(usrOldIdNewID map[string]string) {
 	}
 }
 
-//IsReadGrantedFor is checking whether the User has read rights or not
-//Rights pattern:       	    					group others
-//		                     	 	 				 --     --
-//default value is:                	    				----
-//example for group and others with read perm:	    	r-r-
+// IsReadGrantedFor is checking whether the User has read rights or not
+// Rights pattern:       	    					group others
+//
+//	--     --
+//
+// default value is:                	    				----
+// example for group and others with read perm:	    	r-r-
 func (me *Permissions) IsReadGrantedFor(auth Auth) bool {
 	if auth == nil {
 		return false
@@ -304,11 +306,13 @@ func (me *GroupAndOthers) IsOthersWrite() bool {
 	return me.Rights.IsOthersWrite()
 }
 
-//IsWriteGrantedFor is checking whether the User has write rights or not
-//Rights pattern:       	    					group others
-//		                     	 	 				 --     --
-//default value is:                	    				----
-//example for group and others with read perm:	    	r-r-
+// IsWriteGrantedFor is checking whether the User has write rights or not
+// Rights pattern:       	    					group others
+//
+//	--     --
+//
+// default value is:                	    				----
+// example for group and others with read perm:	    	r-r-
 func (me *Permissions) IsWriteGrantedFor(auth Auth) bool {
 	if auth == nil {
 		return false

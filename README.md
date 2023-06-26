@@ -1,7 +1,7 @@
 ![](docs/_media/logo.png)
 
 # Proxeus Core
-----------------
+--------------
 
 Proxeus combines a powerful automation tool with a form builder, document generator and blockchain connection - enabling you to digitize, secure, and tap into the value of data flows. Access the full source code of available modules and extensions [@ProxeusApp](https://github.com/ProxeusApp).
 
@@ -13,7 +13,7 @@ Get help to make the most of the platform in the **[User Handbook](https://githu
 
 To learn more about Smart Contracts using Solidity, see the documentation in the [proxeus-contract](https://github.com/ProxeusApp/proxeus-contract).
 
-For detailed information about payment setup (currently unsupported), check the [XES-Payment](docs/xes-payment.md) project.
+For detailed information about token setup, check the [XES-Payment](docs/xes-payment.md) project. Software architecture and other details are in the [Developer Manual](https://doc.proxeus.com).
 
 ## Installation
 
@@ -21,33 +21,29 @@ Proxeus is primarily a Web application, intended for access with a web browser. 
 
 In addition to the developer guidelines below, several "one-click" deployment configurations are available for select cloud platforms:
 
-- [Docker Compose](docker-compose.yml)
+- [Docker Compose](docs/docker.md)
 - [Linode StackScript](deploy/linode/README.md)
 - [DigitalOcean Droplet](deploy/digitalocean/README.md)
 
-Please [contact us](https://github.com/ProxeusApp/community/discussions/3) if you are interested in seeing additional providers on this list.
+Join the [Discussions](https://github.com/ProxeusApp/community/discussions/3) if you are interested in seeing additional providers on this list.
 
-## Development
+If you wish to build the project form the source code, follow the instructions in [Build all](docs/build_all.md).
 
 Please read the [Developer Manual](https://doc.proxeus.com) to learn more about the Proxeus platform.
 
-If you wish to build the project form the source code, follow the instructions in [Build all](docs/build_all.md)
-
-### Installation using Docker
-
-The quickest way to set up Proxeus for development is to use Docker, and the `docker-compose` tool.
-
-1. [Install Docker Engine](https://docs.docker.com/install/)
-2. [Install docker-compose](https://docs.docker.com/compose/install/)
-
-See further deployment instructions in [docs/docker](docs/docker.md) to set up your server using Docker.
-
 ### Infura and SparkPost
 
-The Proxeus platform currently depends on [Infura](https://infura.io/) and [SparkPost](https://www.sparkpost.com/)
-for Ethereum and email integration respectively. Create an account on those platforms
-to get API Keys. These keys need to be added to corresponding environment variables, or
-entered when deploying a "one-click" instance.
+The Proxeus platform currently depends on [Infura](https://infura.io/) for blockchain services. Supported chains include:
+
+- ethereum: sepolia
+- ethereum: goerli
+- ethereum: mainnet
+- polygon: mumbai
+- polygon: mainnet
+
+Create an account to get an API Keys. These keys need to be added to corresponding environment variables, or entered when deploying a "one-click" instance.
+
+Proxeus works best with [SparkPost](https://www.sparkpost.com/) for email integration. 
 
 Please note that the domain you set up on SparkPost MUST match the **reply-to** e-mail address that you configure in the next step in order to create accounts and receive e-mails on your instance.
 
@@ -74,7 +70,14 @@ Like so many projects, this effort has roots in many places. The list can be fou
 
 ## Supported Chains
 
-- goerli
+Ethereum
+
 - mainnet
-- polygon-mumbai
-- polygon
+- sepolia
+- goerli
+
+Polygon
+
+- mainnet
+- mumbai
+
