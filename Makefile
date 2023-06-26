@@ -110,6 +110,11 @@ server: generate
 server-docker: generate
 	$(DOCKER_LINUX) go build $(GO_OPTS) -tags nocgo -o ./artifacts/proxeus-docker ./main
 
+.PHONY: build-docker
+build-docker: server-docker
+	# Creates a local Docker image
+	$(DOCKER) build -f Dockerfile -t proxeus/proxeus-core:latest -t proxeus/proxeus-core .
+
 .PHONY: validate
 validate: init
 	@if [[ "$$(goimports -l -local $(golocalimport) main sys storage service | grep -v bindata.go | tee /dev/tty | wc -l | xargs)" != "0" ]]; then \
