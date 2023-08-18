@@ -22,6 +22,13 @@ In each case you can then use the **logs** command to see the system status (wit
 For more usage instructions, visit the [Docker Compose CLI reference](https://docs.docker.com/compose/reference/).
 
 
+In each case you can then use the **logs** command to see the system status (with the useful `-f` parameter):
+
+`docker-compose logs`
+
+For more usage instructions, visit the [Docker Compose CLI reference](https://docs.docker.com/compose/reference/).
+
+
 ## Simple Docker Compose
 
 `docker-compose -f docker-compose.yml -f docker-compose-extra.override.yml up`
