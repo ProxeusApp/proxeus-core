@@ -66,5 +66,5 @@ docker-compose -f docker-compose.yml -f docker-compose-cloud.override.yml
 There is also a Docker Compose configure in one file with a 'minimal' Proxeus installation. The only extra nodes are 'mail-sender' and 'json-sender':
 
 ```
-docker-compose -f docker-compose-light.yml
+docker-compose -f docker-compose-light.yml up
 ```
