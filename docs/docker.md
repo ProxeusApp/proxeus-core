@@ -7,12 +7,18 @@ dependencies:
 2. [Install docker-compose](https://docs.docker.com/compose/install/)
 
 
-You easily deploy Proxeus using Docker.  The repository includes several `docker-compose` YAML files that can be
-used to deploy the platform in different context:
+You easily deploy Proxeus using Docker.  The repository includes several `docker-compose` YAML files that can be used to deploy the platform in different context:
 
 * `docker-compose.yml`
 * `docker-compose.override.yml`
 * `docker-compose-cloud-override.yml`
+
+In each case you can then use the **logs** command to see the system status (with the useful `-f` parameter):
+
+`docker-compose logs`
+
+For more usage instructions, visit the [Docker Compose CLI reference](https://docs.docker.com/compose/reference/).
+
 
 ## Simple Docker Compose
 
@@ -148,7 +154,7 @@ with the `docker-compose.yml` file as described in [Multiple Compose files](http
 It will add the required configuration to deploy Proxeus on a hosted VM for example on Google Cloud or AWS,
 including
 * [nginx](https://hub.docker.com/r/jwilder/nginx-proxy/) reverse proxy,
-* [letsencrypt ](https://hub.docker.com/r/jrcs/letsencrypt-nginx-proxy-companion/) HTTPS provider and
+* [letsencrypt](https://hub.docker.com/r/jrcs/letsencrypt-nginx-proxy-companion/) HTTPS provider and
 * [watchtower](https://hub.docker.com/r/v2tec/watchtower/) automatic container update.
 
 Please refer to [Use Compose in production](https://docs.docker.com/compose/production/) for more information about

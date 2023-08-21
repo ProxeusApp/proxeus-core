@@ -214,7 +214,10 @@ coverage:
 .PHONY: clean
 clean:
 	cd artifacts && rm -rf `ls . | grep -v 'cache'`
+	echo "Clearing the JS cache"
 	cd ui && yarn cache clean && cd ..
+	echo "Clearing the Go module cache"
+	go clean -modcache
 
 .PHONY: run
 run: server
