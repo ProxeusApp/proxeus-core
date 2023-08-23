@@ -1,4 +1,4 @@
 * [Association](about.md)
-* [Handbook](handbook.md)
-* [Quickstart](quickstart.md)
-* [Architecture](components.md)
+* [Quick start](quickstart.md)
+* [Configure](configure.md)
+* [Deploy](components.md)

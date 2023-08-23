@@ -2,12 +2,17 @@
 
 A brief installation guide. Find more details and explanation of the configuration settings in [configure.md](configure.md).
 
-**By installing and using the Proxeus software you agree with the terms of the [Proxeus License Agreement](LICENSE).**
+_"Proxeus is a platform for quick and convenient document digitalization, signing, processing, and distribution. It allows users to keep their important documents secure and registered on the blockchain. Proxeus empowers anyone to create blockchain applications and is available for free as an open-source project." --[S-Pro](https://s-pro.io/)_
+
+
+<iframe style="width:100%" height="350" src="https://player.vimeo.com/video/837487333" allowfullscreen="" title="Screencast of document validation workflow (5 min), June 2023"></iframe>
 
 **By installing and using the Proxeus software you agree with the terms of the [Proxeus License Agreement](LICENSE).**
 
 
 _"Proxeus is a platform for quick and convenient document digitalization, signing, processing, and distribution. It allows users to keep their important documents secure and registered on the blockchain. Proxeus empowers anyone to create blockchain applications and is available for free as an open-source project." --[S-Pro](https://s-pro.io/)_
+
+**By installing and using the Proxeus software you agree with the terms of the [Proxeus License Agreement](LICENSE).**
 
 ## Install docker and docker-compose
 
