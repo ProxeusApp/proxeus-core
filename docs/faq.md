@@ -1,5 +1,6 @@
 # FAQ
 
+To see new tips from the community, or if you have other questions, please visit our [Community Discussions](https://github.com/orgs/ProxeusApp/discussions).
 
 ## Installation
 
