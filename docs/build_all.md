@@ -73,11 +73,6 @@ To initialize dependencies run:
 make init
 ```
 
-To update go dependencies run:
-```
-make update
-```
-
 The make all command build the `server` and `ui`:
 ```
 make all
@@ -85,14 +80,15 @@ make all
 
 ### Start
 
-Run `server`.
+To run the server (`artifacts/proxeus`):
+
 ```
-./artifacts/proxeus
+make run
 ```
 
-The platform will be available at the following URL: http://localhost:1323
+The platform should in a few moments be available at the following URL: http://localhost:1323
 
-It is now time to [configure your platform](configure.md)
+It is now time to [configure your platform](configure.md).
 
 ### Tips
 
@@ -104,3 +100,5 @@ Update command failing? Try:
 `go clean -cache -modcache -i -r`
 - checking your dependency graph to isolate the issue:
 `go mod graph`
+- updating Go & JS dependencies:
+`make update`

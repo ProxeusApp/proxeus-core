@@ -1,8 +1,11 @@
 ![logo](_media/proxeus_logo.svg)
 
-# <small>1.0.0</small>
-> Blockchain-enabled documents and workflows
+> Your data. Your blockchain. Your business.
 
-Proxeus combines a powerful document automation tool with the wide-ranging blockchain functionalities, enabling users to digitize and monetize their IP.
+### Open source form builder, workflow designer, and document validation. 
+
+Proxeus combines a versatile document automation tool with enterprise<br> blockchain functionalities, enabling users to more easily digitize their IP.
 
 [Getting Started](quickstart.md) 
+[Community Forum](https://github.com/ProxeusApp/community/discussions)
+
