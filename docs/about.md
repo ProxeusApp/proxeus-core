@@ -1,13 +1,20 @@
-# The Proxeus Association
+# About the Proxeus Association
 
-The association is the governing body responsible for the maintenance and development of the Proxeus software. We also aim to encourage innovation and evangelize the project by launching and supporting community initiatives as well as creating synergies and partnerships with relevant community projects. The Association is working to give the project a decentralized structure (DAO) to allow our members to propose guidance on the software. We want to make the Proxeus software the WordPress of the blockchain and democratize the development of blockchain applications.
+The association is the governing body responsible for the maintenance and development of the Proxeus software. We also aim to encourage innovation and evangelize the project by launching and supporting community initiatives as well as creating synergies and partnerships with relevant community projects. 
 
-Please visit our [Community Forum](https://github.com/ProxeusApp/community/discussions) if you have any questions about the project, or write to us at association@proxeus.org
+Governance
+----------
 
-Articles of association
------------------------
+The Association is working to give the project a decentralized structure to allow our members to propose guidance on the software. Our mission is to make the Proxeus software the 'WordPress' of the blockchain - in other words, to democratize access, and lower the costs of deployment of small blockchain applications.
 
-Proxeus Association is a non-profit association governed by the present statutes and, secondly, by Articles 60 et seq. of the Swiss Civil Code. It is politically neutral, and non- denominational.
+Some of the benefits of getting involved with the Association, is the ability to contribute both to day-to-day decisions and plans further out on the roadmap. The easiest way to do this now is to join us on [Open Collective](https://opencollective.com/proxeus).
+
+See also the [Contributing](contributing) section, and visit our [Community Forum](https://github.com/ProxeusApp/community/discussions) if you have any questions about the project - or write to us at association@proxeus.org
+
+Statutes
+--------
+
+Proxeus Association is a non-profit association governed by the present statutes and, secondly, by Articles 60 et seq. of the Swiss Civil Code. It is politically neutral, and non-denominational.
 
 OVERVIEW
 --------

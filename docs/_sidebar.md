@@ -1,4 +1,4 @@
-- [![logo](_media/proxeus_logo.svg)](/)
+- [![logo](_media/proxeus_logo.svg)](https://proxeus.org)
 
 - Getting started
 
