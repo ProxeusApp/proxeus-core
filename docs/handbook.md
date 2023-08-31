@@ -1,11 +1,6 @@
 # Proxeus Handbook
 
-
-<iframe style="border:none; width:100%" height="360" frameborder="0" src="https://player.vimeo.com/video/837487333" allowfullscreen="" title="Screencast of document validation workflow (5 min), June 2023"></iframe>
-
-  
-## Table of Contents
-
+<u>Table of Contents</u>
 
 1. **[Introduction](#_1-introduction)**
 1. **[Requirements](#_2-requirements)**
@@ -21,33 +16,22 @@
 1 Introduction
 ==============
 
-
-
 The Proxeus software makes blockchain accessible by simplifying the creation of document-centered blockchain applications, allowing users to digitize and run their processes in a decentralized environment.
 
+Out of the box, Proxeus provides you with a toolbox that already contains everything you need. A workflow engine, document generator, connection to the Ethereum blockchain and more, with a lot of attention paid to usability in an intuitive, fully translated interface. 
+
+Here is a brief screencast introducing our basic features:
+
+<iframe style="border:none; width:100%" height="480" frameborder="0" src="https://player.vimeo.com/video/837487333" allowfullscreen="" title="Screencast of document validation workflow (5 min), June 2023"></iframe>
 
 
-Proxeus provides you with a toolbox that already contains everything you need: workflow engine, document generator, connection to the Ethereum blockchain and more.
-
-
-
-![](handbook/Proxeus%20-%20The%20Complete%20Handbook_html_63e1e3204a60f7f8.png)
-
-
-
-Reading this handbook and following our tips & tricks will improve your experience with your Proxeus platform.
-
-
+Reading this handbook and following our tips and tricks will improve your experience with your Proxeus platform.
 
 This handbook is structured along the different user roles, going from novice to advanced. Proxeus has three groups of user roles: Consumers, Creators and Operators. The platform is also split into two areas: the User View and the Admin Panel.
-
 
 *   Consumers can browse, purchase and use workflows made available by Creators. They can only access the front area (“User View”) of the platform.
 *   Creators build, sell and maintain workflows. They can access the “User View” as well as parts of the “Admin Panel”.
 *   Operators are Platform administrators setting up and operating a Proxeus platform for their own purposes or in order to make it available to a set of users. They have access to additional Admin Panel areas to manage users, languages and data.
-
-
-
 
 This handbook provides a guide across the activities available to each of the three user levels. The focus lies on the process of creating workflows, forms and templates, as well as the generation of documents.
 
@@ -57,17 +41,23 @@ This handbook provides a guide across the activities available to each of the th
 2 Requirements
 ==============
 
-The following apps are needed to use Proxeus.
+Proxeus is a web application that runs on a variety of server platforms. Some technical experience is needed here, though we have some straightforward guidelines for getting set up in the [Quick start](quickstart). Once you have access to a Proxeus server, the platform offers an intuitive experience that only needs your web browser and, optionally, a web3 wallet.
 
-2.1 Google Chrome
------------------
+2.1 Web Browser
+---------------
 
-We recommend using the Google Chrome browser. Other MetaMask- compatible browsers may work too.
+We recommend using the latest update of a web browser on a desktop or laptop. Proxeus has been thoroughly tested with [Google Chrome](https://chrome.google.com), and other modern browsers compatible with web3 extensions (see below) should work fine.
 
-2.2 MetaMask
-------------
+2.2 Wallet
+----------
 
-MetaMask is required to set up and use a blockchain identity on the platform and to execute payments. You can download MetaMask directly from [https://metamask.io/](https://metamask.io/).
+While you can log in and access most Proxeus features with an e-mail and password, a web3 wallet - Metamask - is required to set up and use a blockchain identity on the platform, to sign documents and execute payments. You can download Metamask from [metamask.io](https://metamask.io/) for iOS or Android, or get extensions for any of the following supported browsers:
+
+- [Chrome](https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn)
+- [Firefox](https://addons.mozilla.org/en-US/firefox/addon/ether-metamask/)
+- [Brave](https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn)
+- [Edge](https://microsoftedge.microsoft.com/addons/detail/metamask/ejbalbakoplchlghecdalmeeeajnimhm?hl=en-US)
+- [Opera](https://addons.opera.com/en-gb/extensions/details/metamask-10/)
 
 2.3 Document Editor
 -------------------
