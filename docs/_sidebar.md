@@ -1,11 +1,9 @@
-- ![logo](_media/proxeus_logo.svg)
+- [![logo](_media/proxeus_logo.svg)](/)
 
 - Getting started
 
     - [Quick start](quickstart.md)
     - [User handbook](handbook.md)
-    - [Formulas guide](formulas.md)
-    - [F.A.Q.](faq.md)
 
 - Build and Run
 
