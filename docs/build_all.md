@@ -2,6 +2,8 @@
 
 This section describes how to build and run the platform for developers.
 
+If you intend to deploy Proxeus to a production server, please follow the [Quick start](README) guide.
+
 ### Dependencies
 
 Here is the list of dependencies:
