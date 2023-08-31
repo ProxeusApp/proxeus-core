@@ -6614,10 +6614,10 @@ human-signals@^1.1.1:
   resolved "https://registry.yarnpkg.com/human-signals/-/human-signals-1.1.1.tgz#c5b1cd14f50aeae09ab6c59fe63ba3395fe4dfa3"
   integrity sha512-SEQu7vl8KjNL2eoGBLF3+wAjpsNfA9XMlXAYj/3EdaNfAlxKthD1xjEQfGOUhllCGGJVNY34bRr6lPINhNjyZw==
 
-human-standard-token-abi@^1.0.2:
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/human-standard-token-abi/-/human-standard-token-abi-1.0.2.tgz#207d7846796ee5bb85fdd336e769cb38045b2ae0"
-  integrity sha512-kLnZeoeGvnI5ZNo1o6EnzEeWsPnHgP6uMT7U4S8mfHZztYSfamr2SM3SY+/IRBwnpAcPsIg+RVcUDx1DvWEPKg==
+human-standard-token-abi@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/human-standard-token-abi/-/human-standard-token-abi-2.0.0.tgz#e0c2057596d0a1d4a110f91f974a37f4b904f008"
+  integrity sha512-m1f5DiIvqaNmpgphNqx2OziyTCj4Lvmmk28uMSxGWrOc9/lMpAKH8UcMPhvb13DMNZPzxn07WYFhxOGKuPLryg==
 
 iconv-lite@0.4.24, iconv-lite@^0.4.24:
   version "0.4.24"
