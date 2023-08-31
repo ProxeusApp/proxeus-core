@@ -45,7 +45,7 @@
     "vue-clipboard2": "^0.2.1",
     "vue-codemirror": "^4.0.5",
     "vue-cookie": "^1.1.4",
-    "vue-draggable": "^1.0.6",
+    "vue-draggable": "^2.0.6",
     "vue-dynamic": "0.2.1",
     "vue-error-page": "^1.1.5",
     "vue-flatpickr-component": "^7.0.2",
