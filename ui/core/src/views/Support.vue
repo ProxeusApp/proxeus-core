@@ -9,7 +9,7 @@
         <section class="pl-2">
           <p class="mt-1">{{$t('Support description paragraph', 'More detailed information on how to use the Proxeus platform can be found in the Handbook.')}}</p>
           <a target="_blank"
-            :href="$t('Support Button Link', 'https://docs.google.com/document/d/1C3B1oNY6lOv8Q_AvbKhwlySrS6qTiRl3raPLV6OXr7w/preview')"
+            :href="$t('Support Button Link', 'https://doc.proxeus.org/#/handbook')"
              class="btn btn-primary-dark btn-lg mt-1">{{$t('Handbook')}}
           </a>
         </section>
