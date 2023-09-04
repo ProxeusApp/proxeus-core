@@ -3,20 +3,7 @@
 
 <iframe style="border:none; width:100%" height="360" frameborder="0" src="https://player.vimeo.com/video/837487333" allowfullscreen="" title="Screencast of document validation workflow (5 min), June 2023"></iframe>
 
-  
-## Table of Contents
 
-
-1. **[Introduction](#_1-introduction)**
-1. **[Requirements](#_2-requirements)**
-1. **[Your Account](#_3-your-account)**
-1. **[User View](#_4-user-view)**
-1. **[Admin Panel](#_5-admin-panel)**
-1. **[UI Guides](#_6-ui-guides)**
-1. **[Roles](#_7-roles)**
-1. **[Platform Installation](#_8-platform-installation)**
-
----
 
 1 Introduction
 ==============
