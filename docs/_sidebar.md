@@ -1,5 +1,9 @@
 - [![logo](_media/proxeus_logo.svg)](https://proxeus.org)
 
+
+- Proxeus Association
+    - [About](about.md)
+
 - Getting started
 
     - [Quick start](quickstart.md)

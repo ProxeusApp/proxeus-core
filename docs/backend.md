@@ -39,13 +39,13 @@ There are two internal nodes workflow and condition.
 These nodes are handled by the engine itself, they are visible in the Stack but they can also be visible in Current().
 For example if the root workflow starts with another workflow or a condition.
 
-![node diagram](_media/node_workflow.png)
+![node diagram](_media/nodes/node_workflow.png)
 
 #### Background node
 
 Successful execution of background node proceeds to the next one without waiting.
 
-![node diagram](_media/background_node_workflow.png)
+![node diagram](_media/nodes/background_node_workflow.png)
 
 Error when executing a background node. The entire workflow process stops or moves back to the foreground node and waits for the next user interaction.
 

@@ -5,7 +5,7 @@ External workflow nodes are the primary method to extend Proxeus workflow to any
 They are implemented as external HTTP servers that interact with the Proxeus Core using a
 simple API.
 
-![external_node](_media/external_node_half.png)
+![external_node](_media/nodes/external_node_half.png)
 
 During workflow execution, when the state transitions to an external node, the following steps are executed:
 * Proxeus Core sends the full workflow state the external node,

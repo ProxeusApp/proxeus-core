@@ -3,20 +3,7 @@
 
 <iframe style="border:none; width:100%" height="360" frameborder="0" src="https://player.vimeo.com/video/837487333" allowfullscreen="" title="Screencast of document validation workflow (5 min), June 2023"></iframe>
 
-  
-## Table of Contents
 
-
-1. **[Introduction](#_1-introduction)**
-1. **[Requirements](#_2-requirements)**
-1. **[Your Account](#_3-your-account)**
-1. **[User View](#_4-user-view)**
-1. **[Admin Panel](#_5-admin-panel)**
-1. **[UI Guides](#_6-ui-guides)**
-1. **[Roles](#_7-roles)**
-1. **[Platform Installation](#_8-platform-installation)**
-
----
 
 1 Introduction
 ==============
@@ -31,7 +18,7 @@ Proxeus provides you with a toolbox that already contains everything you need: w
 
 
 
-![](handbook/Proxeus%20-%20The%20Complete%20Handbook_html_63e1e3204a60f7f8.png)
+![](_media/handbook/logo.png)
 
 
 
@@ -179,7 +166,7 @@ You can download your finalized documents as PDFs or Microsoft Word files (only 
 
 
 
-![](handbook/Proxeus%20-%20The%20Complete%20Handbook_html_c6dbc4f60fe085d4.png)
+![](_media/handbook/downloads.png)
 
 ### 4.1.2 Requesting signatures
 
@@ -187,7 +174,7 @@ Once you have completed a workflow and generated a document, you can ask others 
 
 
 
-![](handbook/Proxeus%20-%20The%20Complete%20Handbook_html_b0d27088acfc9ea1.png)
+![](_media/handbook/requesting-signatures/requesting-signatures-1.png)
 
 _Your document, opened via “Documents” tab_
 
@@ -195,7 +182,7 @@ _Your document, opened via “Documents” tab_
 
 Click on the document to see all available actions and find the signature requests on the right:
 
-![](handbook/Proxeus%20-%20The%20Complete%20Handbook_html_f29c3f30ee6d87a2.png)
+![](_media/handbook/requesting-signatures/requesting-signatures-2.png)
 
 _The available actions for your documents: view in browser, download as a PDF or Word file, request signatures_
 
@@ -210,7 +197,7 @@ The authenticity of documents which were created through the platform can be ver
 
 
 
-![](handbook/Proxeus%20-%20The%20Complete%20Handbook_html_ad8c3d09bed27d94.png)
+![](_media/handbook/verification-1.png)
 
 _A successful verification - this file has been registered via Proxeus_
 
@@ -225,7 +212,7 @@ If another user requests your signature, you will find their request in the “S
 
 
 
-![](handbook/Proxeus%20-%20The%20Complete%20Handbook_html_d007d01a1f3c3208.png)
+![](_media/handbook/requesting-signatures/requesting-signatures-4.png)
 
 _An open signature request_
 
@@ -286,13 +273,13 @@ Workflows are built by connecting templates, forms and other workflow elements. 
 
 To create a new workflow, click on “Workflows” in the navigation panel and click on the “Create new” button.
 
-![](handbook/Proxeus%20-%20The%20Complete%20Handbook_html_5481d85d82acc650.png)
+![](_media/handbook/workflows/workflows-3.png)
 
 
 
 Enter a “Name” for your new workflow. Optionally, you can add further information in the “Details” field. Click on “✓” and your workflow is created. Click on the newly created workflow to access it.
 
-![](handbook/Proxeus%20-%20The%20Complete%20Handbook_html_7139fb3de33c357a.png)
+![](_media/handbook/workflows/workflows-9.png)
 
 
 
@@ -300,7 +287,7 @@ When building a workflow, the templates have to be inserted as the first steps, 
 
 
 
-![](handbook/Proxeus%20-%20The%20Complete%20Handbook_html_64aa240a167179fa.png)  
+![](_media/handbook/workflows/workflows-1.png)  
 _A simple workflow with one template (pink) and one form (green)_
 
 ### 5.2.2 Price
@@ -309,7 +296,7 @@ Creators can decide to make a workflow available to users for a fee. A price of 
 
 
 
-![](handbook/Proxeus%20-%20The%20Complete%20Handbook_html_ce291de963f4a5c7.png)
+![](_media/handbook/workflows/workflows-2.png)
 
 _The workflow settings with the price on the right_
 
@@ -329,7 +316,7 @@ Conditions can be used to guide the user through different paths of a workflow, 
 
 
 
-![](handbook/Proxeus%20-%20The%20Complete%20Handbook_html_10299e76126cc024.png)
+![](_media/handbook/condition.png)
 
 _A workflow with a condition, sending the user to different forms based on inputs from a previous form_
 
@@ -339,7 +326,7 @@ Proxeus allows you to develop custom nodes and to make them available to all use
 
 
 
-![](handbook/Proxeus%20-%20The%20Complete%20Handbook_html_4225235e26b8c178.png)
+![](_media/handbook/custom-nodes-2.png)
 
 
 
@@ -347,7 +334,7 @@ You can add custom nodes at any position in the workflow.
 
 
 
-![](handbook/Proxeus%20-%20The%20Complete%20Handbook_html_951d02a5e7f5dc31.png)  
+![](_media/handbook/custom-nodes.png)  
 _A custom node at the end of our example workflow_
 
 
@@ -356,7 +343,7 @@ _A custom node at the end of our example workflow_
 
 In Proxeus, you can also build workflows that call other workflows. The main workflow will start normally and then guide the user through the sub-workflow. After the user has completed this sub-workflow or “workflow in a workflow”, they will be brought back to the main workflow.
 
-![](handbook/Proxeus%20-%20The%20Complete%20Handbook_html_d7693cee8e9aac78.png)  
+![](_media/handbook/workflows/workflows-7.png)  
 _A workflow with a sub-workflow. The user will see form 1A first, then the forms of the sub-workflow and finally form 2A._
 
 ### 5.2.7 Deleting connections & elements
@@ -365,7 +352,7 @@ You can remove connections between workflow elements by clicking on the connecti
 
 
 
-![](handbook/Proxeus%20-%20The%20Complete%20Handbook_html_e1ea58a054e536e0.png)  
+![](_media/handbook/workflows/workflows-6.png)  
 _Deleting the connection between the template and the form_
 
 5.3 Templates
@@ -381,7 +368,7 @@ If the platform has multiple active languages, you may upload one version of the
 
 Open the document creator of your choice and save the empty file in ODT format on your local machine. Make sure the filename does not contain any special characters.
 
-![](handbook/Proxeus%20-%20The%20Complete%20Handbook_html_90e0d496413daf75.png)
+![](_media/handbook/templates/templates-4.png)
 
 
 
@@ -389,13 +376,13 @@ Open the document creator of your choice and save the empty file in ODT format o
 
 Click on “Templates” in the navigation panel and click on the “Create new” button to create a new template.
 
-![](handbook/Proxeus%20-%20The%20Complete%20Handbook_html_64cf037526a23d7.png)
+![](_media/handbook/templates/templates-2.png)
 
 
 
 Enter a “Name” for your new template. Optionally, you can add further information in the “Details” field. Click on “✓” and your template is created.
 
-![](handbook/Proxeus%20-%20The%20Complete%20Handbook_html_c928046a2a552f00.png)
+![](_media/handbook/templates/templates-7.png)
 
 
 
@@ -403,7 +390,7 @@ Enter a “Name” for your new template. Optionally, you can add further inform
 
 Click on the newly created template to access it. Drag the ODT file onto the upload area of the respective language or click on the area to browse your local directory and select the right file.
 
-![](handbook/Proxeus%20-%20The%20Complete%20Handbook_html_9375dbc8240de8f6.png)
+![](_media/handbook/templates/templates-5.png)
 
 
 
@@ -419,7 +406,7 @@ To start, you have to access the template you want to work on, upload the templa
 
 
 
-![](handbook/Proxeus%20-%20The%20Complete%20Handbook_html_71ee1bf264a4edea.png)
+![](_media/handbook/templates/templates-3.png)
 
 
 
@@ -435,7 +422,7 @@ To directly copy and paste variables, below the upload field, search for your fo
 
 
 
-![](handbook/Proxeus%20-%20The%20Complete%20Handbook_html_f74a14eaebbef02b.png)
+![](_media/handbook/templates/templates-3.png)
 
 
 
@@ -455,7 +442,7 @@ In order to test whether the template file you uploaded behaves as desired, a te
 
 
 
-![Shape1](handbook/Proxeus%20-%20The%20Complete%20Handbook_html_ead9a2bf0849694e.gif)
+![Shape1](_media/handbook/Proxeus%20-%20The%20Complete%20Handbook_html_ead9a2bf0849694e.gif)
 
 
 
@@ -504,7 +491,7 @@ The “FOR” Formula is used to loop through an array of values (i.e. from the 
 
 To gather the birthdays of our friends we have created a field, where multiple entries can be made.
 
-![](handbook/Proxeus%20-%20The%20Complete%20Handbook_html_8a570ce7f4d583b2.png)
+![](_media/handbook/formula/formula.png)
 
 To add all the entries from this “Dynamic List” to the document the following formula is used:
 
@@ -517,7 +504,7 @@ To add all the entries from this “Dynamic List” to the document the followin
 This will create a bullet point list (it works with other formatting too):  
 
 
-![](handbook/Proxeus%20-%20The%20Complete%20Handbook_html_d241ff7211167f3a.png)
+![](_media/handbook/formula/formula-2.png)
 
 For checkboxes, the following formula can be used:
 
@@ -750,13 +737,13 @@ Forms are used to collect user input throughout a workflow process. The variable
 
 To create a new workflow, click on “Workflows” in the navigation panel and click on the “Create new” button.
 
-![](handbook/Proxeus%20-%20The%20Complete%20Handbook_html_ed735f78a5c0be77.png)
+![](_media/handbook/forms/forms-2.png)
 
 
 
 Enter a “Name” for your new form. Optionally, you can add further information in the “Details” field. Click on “✓” and your form is created. Click on the newly created form to access the form editor.
 
-![](handbook/Proxeus%20-%20The%20Complete%20Handbook_html_3f41852b7dfa724d.png)
+![](_media/handbook/forms/forms-1.png)
 
 
 
@@ -773,13 +760,13 @@ The basic steps are:
 
 
 
-![Shape2](handbook/Proxeus%20-%20The%20Complete%20Handbook_html_30ebd5a287e6c904.gif)
+![Shape2](_media/handbook/Proxeus%20-%20The%20Complete%20Handbook_html_30ebd5a287e6c904.gif)
 
 _The two form editor areas: your form (left) and the form component templates (right)_
 
 
 
-![](handbook/Proxeus%20-%20The%20Complete%20Handbook_html_8f8c4dee1c7f180e.png)
+![](_media/handbook/forms/forms-6.png)
 
 _A correctly configured component. The name is used as a variable in the ODT Template file._
 
@@ -795,13 +782,13 @@ In the default view “Workspace”, the forms are built by dragging & dropping 
 
 
 
-![](handbook/Proxeus%20-%20The%20Complete%20Handbook_html_c9ff17083ce623b0.png)
+![](_media/handbook/forms/forms-9.png)
 
 ### 5.4.3 Action
 
 Under Action, the form components can be conditionally linked to each other. This is useful if depending on a form input, more form components should be shown. Simply connect the blue dots of the components.
 
-![](handbook/Proxeus%20-%20The%20Complete%20Handbook_html_f2247b1e55d57403.png)
+![](_media/handbook/forms/forms-10.png)
 
 _Demonstration of the action mode: depending on the user’s radio button choice,_ _simple_ _field_ _A or B is shown._
 
@@ -811,13 +798,13 @@ In the “Test” tab, the form can be tested live in action without having to s
 
 
 
-![](handbook/Proxeus%20-%20The%20Complete%20Handbook_html_7c16ff586c91d22.png)
+![](_media/handbook/forms/forms-5.png)
 
 _Demonstration of the Test mode using the “Actions Example” from above._
 
 In the footer of the test tab, there is a “Reset” button to re-initialize the form and a “Play” button that activates the validation to check if the form can be finished with your current inputs. Validation errors such as empty required fields will then be displayed.
 
-![](handbook/Proxeus%20-%20The%20Complete%20Handbook_html_7082734f41d7a205.png)
+![](_media/handbook/forms/forms-7.png)
 
 _The Form Reset and Form Validation buttons_
 
@@ -904,13 +891,13 @@ Add a new code in the translations by filling in the code search and the text se
 
 
 
-![](handbook/Proxeus%20-%20The%20Complete%20Handbook_html_7be2670d2f1892cb.png)
+![](_media/handbook/multilingual/multilingual-1.png)
 
 
 
 The result looks like this:
 
-![](handbook/Proxeus%20-%20The%20Complete%20Handbook_html_93d98c7a37d04dc3.png)
+![](_media/handbook/multilingual/multilingual-2.png)
 
 
 
@@ -918,7 +905,7 @@ Then navigate to your form and on the component property (e.g. label) that you w
 
 
 
-![](handbook/Proxeus%20-%20The%20Complete%20Handbook_html_a1d0a25615f373f4.png)
+![](_media/handbook/multilingual/multilingual-3.png)
 
 _Form builder: selecting a translation code to be used for the “Label” property._
 
@@ -928,7 +915,7 @@ _Form builder: selecting a translation code to be used for the “Label” prope
 
 When multiple languages are active, you can upload translated versions of templates:
 
-![](handbook/Proxeus%20-%20The%20Complete%20Handbook_html_463f7d37dd1f0f7e.png)
+![](_media/handbook/multilingual/multilingual-4.png)
 
 
 
@@ -956,7 +943,7 @@ Proxeus imports data with a “best effort” approach, meaning that errors will
 
 
 
-![](handbook/Proxeus%20-%20The%20Complete%20Handbook_html_6544c8b9845e4ce8.png)
+![](_media/handbook/data-2.png)
 
 
 
@@ -964,7 +951,7 @@ Under “Workflows”, “Templates” and “Forms”, it is possible to only e
 
 
 
-![](handbook/Proxeus%20-%20The%20Complete%20Handbook_html_bd6b023a95f49a54.png)
+![](_media/handbook/forms/forms-3.png)
 
 _Using the search function to only export the “Proxeus Form”._
 
@@ -992,7 +979,7 @@ In the following UI guides, we’re explaining the different screens you might e
 6.1 Admin Panel
 ---------------
 
-![](handbook/Proxeus%20-%20The%20Complete%20Handbook_html_2cf30d5758e4a4fa.png)
+![](_media/handbook/admin-panel.png)
 
 1.  List of workflows
 2.  List of templates
@@ -1009,7 +996,7 @@ In the following UI guides, we’re explaining the different screens you might e
 
 ### 6.1.1 Workflow
 
-![](handbook/Proxeus%20-%20The%20Complete%20Handbook_html_248280e3a19f5674.png)
+![](_media/handbook/workflows/workflows-5.png)
 
 1.  Back to “Workflows”
 2.  Share workflow with other users
@@ -1029,7 +1016,7 @@ In the following UI guides, we’re explaining the different screens you might e
 
 ### 6.1.2 Template
 
-![](handbook/Proxeus%20-%20The%20Complete%20Handbook_html_7c96d6635102e938.png)
+![](_media/handbook/templates/templates-1.png)
 
 1.  Back to “Templates”
 2.  Show/hide document preview
@@ -1048,7 +1035,7 @@ In the following UI guides, we’re explaining the different screens you might e
 
 ### 6.1.3 Form
 
-![](handbook/Proxeus%20-%20The%20Complete%20Handbook_html_b6074b169d306295.png)
+![](_media/handbook/forms/forms-4.png)
 
 1.  Back to “Forms”
 2.  Share form
@@ -1070,7 +1057,7 @@ In the following UI guides, we’re explaining the different screens you might e
 
 ### 6.2.1 Documents
 
-![](handbook/Proxeus%20-%20The%20Complete%20Handbook_html_5cb7ff81c6e55e5e.png)
+![](_media/handbook/documents.png)
 
 1.  Execute a workflow to generate a document
 2.  Search through documents/drafts
@@ -1082,14 +1069,14 @@ In the following UI guides, we’re explaining the different screens you might e
 
 ### 6.2.2 Verification
 
-![](handbook/Proxeus%20-%20The%20Complete%20Handbook_html_4941424111de63ee.png)
+![](_media/handbook/verification-2.png)
 
 1.  Upload area
 
 
 ### 6.2.3 Signature Requests
 
-![](handbook/Proxeus%20-%20The%20Complete%20Handbook_html_6061bcac26f7fc4a.png)
+![](_media/handbook/requesting-signatures/requesting-signatures-3.png)
 
 1.  Sign document
 2.  Reject signature request
@@ -1179,7 +1166,7 @@ For the following explanations we’ll assume that you are already working with 
 
 
 
-![](handbook/Proxeus%20-%20The%20Complete%20Handbook_html_8649382b98149ec0.png)
+![](_media/handbook/data-3.png)
 
 _The “Power up” screen after successful installation_
 
@@ -1206,7 +1193,7 @@ If you have an export file from a backup or from a different platform, you can l
 
 
 
-![](handbook/Proxeus%20-%20The%20Complete%20Handbook_html_5658bd1d0e8a3e71.png)
+![](_media/handbook/data-1.png)
 
 _A successful data import_
 
@@ -1238,13 +1225,13 @@ After setting up your own platform powered by Proxeus, you will be able to custo
 
 If you wish to programmatically use the API, your users need to create an API authentication key. This can be done directly in the user profile (top right corner).
 
-![](handbook/Proxeus%20-%20The%20Complete%20Handbook_html_2f5cac16d403f61b.png)
+![](_media/handbook/api/api-1.png)
 
 _Name the API key you are generating_
 
 
 
-![](handbook/Proxeus%20-%20The%20Complete%20Handbook_html_f622e65eb6e6449c.png)
+![](_media/handbook/api/api-2.png)
 
 _A successful key generation - use this key for API authentication_
 
@@ -1254,4 +1241,4 @@ _A successful key generation - use this key for API authentication_
 
 Last updated
 
-August 2023
+September 2023
