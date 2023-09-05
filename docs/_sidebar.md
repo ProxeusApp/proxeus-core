@@ -3,6 +3,7 @@
 
 - Proxeus Association
     - [About](about.md)
+    - [Use Cases](use_cases.md)
 
 - Getting started
 
