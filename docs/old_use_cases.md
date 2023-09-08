@@ -213,7 +213,7 @@ If you are just looking to understand the principles behind the solution, here i
     \- Navigate through the workflow  
     \- Complete the workflow and download the document
 
-![](https://uploads-ssl.webflow.com/5d5ab00483100b49520a730f/5e6bcd5444884ed4e398f506_QxY8riHY3RYGChZJI088xAVYe7_zu0NRJLdf2y7RYwpVbtbk3PUT9-KqMjj4Qn5XLeJjxN8_2BrgFNz5XpUNe1jhxNr_s-S5yRJxMwMT0_vaDTGqQoLN4PtdBPUaS52Vgg_YcgiS.png)
+![](_media/old_proxeus/education/6.png)
 
 _Starting a new workflow to create a blockchain-secured diploma_
 
@@ -221,5 +221,84 @@ _Starting a new workflow to create a blockchain-secured diploma_
   
 Your iFrame HTML code to embed it into your website would then look like this:
 
+Sports : Anti-doping process
+============================
 
-‍
+![](_media/old_proxeus/sports/1.svg)
+
+## Background
+
+
+Professional sport is a matter of national pride and results can have considerable financial consequences. For this reason, this field is highly prone to fraud, which has led to the occurrence of several public scandals over the last years. A series of blockchain use cases can be imagined in this area to increase process efficiency and auditability.  
+‍  
+The [International Testing Agency](http://ita.sport/) (ITA) was officially founded in January 2018 following a proposal by the International Olympic Committee (IOC) to make anti-doping independent from national and international sports organisations. The organisation has been established by the IOC as an independent, not-for-profit foundation under Swiss law and is headquartered in Lausanne, Switzerland.  
+  
+One of the key roles of anti-doping organizations is to prevent the materialization of a series of important risks:  
+  
+\- testing plans (who gets tested when by who) can be leaked  
+\- test results can be tampered with  
+\- storage servers can be compromised  
+\- information shared between parties can be intercepted  
+  
+ITA is dealing against powerful forces and must therefore constantly look to improve itself and address potential vulnerabilities in its processes. In this context, a project has been discussed and setup to explore the possible applications of blockchain in the anti-doping space.
+
+## Use case exploration
+
+
+If an athlete has medical reasons to take a prohibited substance, he/she can apply to receive a certificate granting them an exemption for therapeutic use (TUE). Such exemption is given after consideration of an independent medical board and for a set prohibited substance, in a certain dosage, within a limited period.  
+‍  
+The project consisted of prototyping the digitization of the TUE request workflow (currently managed via a .pdf form sent by the athlete via email) using the [Proxeus](http://www.proxeus.com/) framework, thus increasing process efficiency and auditability.
+
+## Implementation
+
+
+After the initial project scoping, the project consisted of creating and configuring a workflow based on the existing [TUE request template](https://ita.sport/wp-content/uploads/2019/08/TUE-Form.pdf), designing a corresponding template and setting up a signature process.  
+
+The TUE request was implemented as a multi-page .odt smart template with complex variables:
+
+![](_media/old_proxeus/sports/2.png)‍  
+
+## Implementation
+
+
+An athlete receives a link, fills out the forms and finalizes the process before sharing the finalized document with a doctor (via the address book) and with the medical board of ITA in charge of issuing the final confirmation.  
+
+Finalized TUE documents can be easily verified on a drag and drop interface, which triggers the creation of a new hash. The system checks on the blockchain whether the exact same hash has been registered, allowing to prove whether the document is original or has been tampered with.  
+
+The process was presented on CNN Money Switzerland where Benjamin Cohen, director of ITA, explained the genesis of the organization, its challenges and how blockchain could play a role in the future.  
+
+![](_media/old_proxeus/sports/3.png)
+
+## Insights
+
+
+The project was implemented as a prototype through an active exchange with ITA and gave the team an occasion to reflect on the security aspects of the application, as well as to add, test and improve several features, such as the signature requests, the rendering of tables in documents and the possibility to upload custom images as part of a workflow, which can be displayed as attachments in the final document.
+
+## Limitations
+
+
+The lack of easy access to blockchain applications (e.g. integration of blockchain identity solutions in smartphones) remains an issue for products to be implemented at wide scale. In the present case for example, athletes cannot be expected to perform blockchain transactions independently.
+
+## Try it out yourself
+
+
+You enjoyed reading the documentation and would like to build a similar workflow? Follow the steps below. All you need is an instance of Proxeus and basic users skills. Check out the handbook and tutorial videos on our website for help.  
+  
+Here is how you can create a workflow - using only Proxeus and no programming at all.  
+
+*   Understand the requirements. What workflow output do you expect? What documents should be registered? What role should signatures play?
+*   Set up Proxeus. You can run your own instance of Proxeus on a server or locally on your computer - or you could use someone else’s instance. The complete guide to setting up your own instance is available [here](http://doc.proxeus.com/#/README). It is recommended that you deploy your own smart contract following our instructions in the guide and using the [template in our GitHub](https://github.com/ProxeusApp/proxeus-contract).  
+    
+*   Prepare the document template(s). What should the document design look like? What should placeholders be used for? How should the information be formatted (e.g. what sections should be shown vs. hidden in the final output)?  
+    
+*   Prepare the user forms. Adapt the requirements to the audience (e.g. athletes cannot be expected to be very tech-savvy) - entering the data has to be intuitive and instill confidence. All Proxeus form elements support help texts - they even accept HTML and links to further information - use them to clarify every step.
+*   Configure the workflow by connecting the smart template(s) and the forms in a workflow. Set a XES price to the workflow (if applicable) and share the form with the platform users.
+*   Set signatures as required - once given by users they are publicly visible on the blockchain and verifiable by anyone.
+*   Test and improve your workflow. Nothing is perfect from the start. Even when your workflow is already in production and in use, you can simply clone it and release an improved version to your users. If the changes are compatible, you can also just upgrade the existing workflow and all running instances will use the new definition automatically.
+*   Create an instruction page to onboard users. Our handbook and tutorial videos are also here to help.
+*   Integrate a verification tool into your organization’s website to simplify the verification process. The verification tool of your Proxeus platform can be found directly via the /validation path; for example [https://morrison.proxeus.org/](https://morrison.proxeus.org/). It can also be embedded using a standard iFrame HTML code.
+
+  
+Your iFrame HTML code to embed it into your website would then look like this:
+
+<iframe width="100%" height="650" src="https://morrison.proxeus.org/" frameborder="0" marginwidth="0" marginheight="0" scrolling="yes"></iframe>
