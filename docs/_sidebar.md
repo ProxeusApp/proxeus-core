@@ -1,6 +1,13 @@
 - [![logo](_media/proxeus_logo.svg)](https://proxeus.org)
 
 
+- Saved From Old Proxeus Web Site
+
+    - [Discover](old_discover.md)
+    - [Key Features](old_key_features.md)
+    - [Application Examples](old_application_examples.md)
+    - [Use Cases](old_use_cases.md)
+
 - Proxeus Association
     - [About](about.md)
 
