@@ -25,15 +25,20 @@ The solution consists of a Proxeus platform with workflows for the different leg
 
 ![](_media/old_proxeus/legal/2.png)
 
-### Excerpt from one of the user forms of the incorporation process
+Excerpt from one of the user forms of the incorporation process
 
 The workflow also includes a conditional alternative path, depending on if the founder has already opened a capital deposit account at a bank. If he has not, two additional forms are shown and one more document is produced.
 
-### Conditional alternative path
+![](_media/old_proxeus/legal/4.png)
+
+Conditional alternative path
+
 
 At the end of the workflow, all needed documents are created and their hash is registered on the Ethereum blockchain, making the document tamper-proof and verifiable. While Proxeus provides a verification tool for its users’ convenience, the entries are made on the public Ethereum blockchain and may also be checked using block explorers like Etherscan or custom tools.
 
-### One of the workflow versions used to incorporate a company
+![](_media/old_proxeus/legal/6.png)
+
+One of the workflow versions used to incorporate a company
 
 At the end of the workflow, a custom node built for Proxeus’ integration layer interacts with a service developed by the project partner IBM. Through this service, Proxeus is connected to a votation contract on Hyperledger Fabric, allowing the relevant stakeholders (entrepreneur, lawyer, bank, notary, public register) to verify and sign the documents produced. The bank states that the capital money has indeed been paid; the notary confirms that the necessary documents have been provided, read over, and approved; and the commercial register performs a final check that everything is accurate and lawful. After successful collection of all confirmations, the filing is officially registered with the Commercial Register and Official Gazette of Commerce.
 
@@ -90,6 +95,8 @@ Here is how you can create a workflow - using only Proxeus and no programming at
 -   Create Proxeus workflows. When you scoped your project in step 1, you figured out which documents need to be produced. After you’ve set up your own instance of Proxeus, you can now configure a workflow for each document. Workflows comprise of data entry forms and document templates. Some users prefer to design the document templates first and then to derive the necessary data inputs in the forms from there. The other way around is also fine.
 -   Prepare the document template(s). What should the document design look like? What should placeholders be used for? How should the information be formatted (e.g. what sections should be shown vs. hidden in the final output)?
 Excerpt from one of the templates of the incorporation process
+
+![](_media/old_proxeus/legal/7.png)
 
 <em>Excerpt from one of the templates of the incorporation process</em>
 
