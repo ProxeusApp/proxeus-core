@@ -448,3 +448,269 @@ In most jurisdictions, tokens may be considered securities. The consultation of 
 An example contract template for the registration and certification of documents (“ProxeusFS”) is available in our GitHub repository. For token contract resources, we recommend to look into [OpenZeppelin](https://github.com/OpenZeppelin/openzeppelin-contracts/tree/master/contracts/token/ERC20) open source templates. If you are looking for support, tokenization services are offered by many companies, including [Microsoft Azure](https://azure.microsoft.com/en-us/services/blockchain-tokens/), [Token Factory](https://tokenfactory.global/), [Tokeny](https://tokeny.com/) and [AlphaPoint](https://alphapoint.com/) to name just a few.  
 
 There are lots of free and helpful resources out there. And feel free to reach out to the Proxeus community for help with your endeavors!
+
+Logistics : Track and Trace Prototype
+=====================================
+
+![](_media/old_proxeus/logistics/1.svg)
+
+## Abstract
+
+On this page we’re presenting one of our exploratory projects that helped shape the development of Proxeus. It demonstrates the use of the platform in a logistics use case. We’re tracking shipped goods from their origin all the way to their destination using RFID tags, the [IOTA](https://www.iota.org/get-started/what-is-iota) ledger and Proxeus. Together with a description of the scenario and our solution you’ll also find a guide for the reproduction of our project.
+
+## Background
+
+IBM has estimated that the implementation of digital technologies such as blockchain could save the logistics industry as much as $38 billion per year. According to Boston Consulting Group, blockchain technologies alone could save several millions of dollars yearly for large manufacturers.
+
+Supply chain processes traditionally rely on paper, for example a full binder of documents is needed to send a shipment from Asia to Europe. A key saving, in financial terms, would come from a reduction of the manual paperwork associated with the movement of goods as they transit in between terminals.
+
+This led us to define “Logistics & Trade Finance” as one of the focus verticals that we set out to explore as part of the Proxeus project development. Indeed by collaborating with external partners on concrete use cases, we were able to gain valuable insights that contributed to shape the Proxeus framework.
+
+Today, the Proxeus document workflow automation, blockchain capabilities and integration interfaces provide a solid foundation for projects in logistics and trade finance.
+
+## Use Case Exploration
+
+By combining new technologies such as the Internet of Things (IoT) together with a decentralised ledger, we looked into possibilities to track shipments through the use of physical devices while registering the metadata associated with a particular shipment in a transaction on a ledger, making possible to instantaneously generate digital documents providing reliable and immutable tracking information for the transit of goods from A to B.
+
+## What we've built
+
+The prototype supported a full showcase process using a real logistics industry use case: the tracking of goods from the seller to the customer, going through one or several carriers on the way, coordinated by a freight forwarding company.
+
+<figure>
+    <iframe allowfullscreen="true" frameborder="0" scrolling="no"
+            src="https://www.youtube.com/embed/hburhJQy3m8">
+    </iframe>
+</figure>
+
+Watch our video explaining the track & trace process
+
+## Actors
+
+These are the key participants in the freight forwarding process.
+
+Shipper: Seller of the goods, engaging a Freight Forwarder to organize transport of the goods from point of origin to the agreed destination with the customer.
+
+Freight Forwarder: Service Provider to the Shipper organizing transport from point of origin to destination incl. hand-over to the customer.
+
+Carrier: Vessel operator contracted and coordinated by the Freight Forwarder to transport the goods for the full or part of the distance between point of origin and destination.
+
+Customer: Buyer of the goods expecting delivery at destination.
+
+![](_media/old_proxeus/logistics/2.png)
+
+An example visualization of the goods and information flows in logistics.
+
+‍
+
+## The process
+
+We’ve selected a (slightly simplified) freight forwarding process for our project. These are the key steps:
+
+- The Seller sells goods to the Customer and engages a Freight Forwarder to organize transport from point of origin to destination.
+- The Freight Forwarder responds to the Shipper’s request by issuing a shipping quote which is valid for a certain timeframe. Upon quote acceptance by the Shipper, the booking confirmation is added to the shipment collection which has a unique identifier, i.e., via the Global Identification Number for Consignment (GINC).
+- The Shipper packages the goods on to the pallets, and assigns the pallets to the GINC. The chips are activated for that shipment and set into status “Ready for pick-up”, which also marks the first step of the tracking flow on the blockchain.
+- Out of his system data, the Shipper produces the following items that are added to the shipment collection:
+
+  a. Commercial Invoice for shipment  
+  b. Packing List (overall and by pallet)  
+  c. Load Details for Bill of Lading (shared with Freight Forwarder)
+
+- The truck carrier picks up the shipment paletes at the point of origin and checks them in on his vessel (HT), which issues the official Bill of Lading in the shipment collection and makes it available to the Shipper and puts the pallet as in transit leg 1 of 2, the first update of the blockchain tracking flow.
+- At the reloading terminal, the HT in the forklift checks in the receipt of every pallet and the status of the shipment is changed into reloading leg 1 to leg 2, the second update of the tracking flow.
+- Upon loading by the train carrier, the pallet is checked in to leg 2 of 2, the third update of the tracking flow.
+- At arrival at destination, C checks in the pallet (fourth and last update of the tracking flow) and accesses his relevant documents to confirm receipt (finalization of tracking flow). Pallets (and therefore their chips) are deactivated for shipment.
+
+## Insights
+
+We’ve learned quite a few interesting things during the course of this project. For example, who would have thought that it may become a project requirement to run Proxeus not on today’s powerful cloud infrastructures with endless performance scalability, but on a tiny computer like the Raspberry Pi? This move reinforced the team in architectural decisions such as splitting the document service from the Proxeus core and enabling its use as a standalone service.
+
+The project provided a lot of insights for the product management and development team and helped improve the API capabilities of Proxeus - through the Proxeus API, even microcomputers like Raspberry Pis are able to trigger the production of a whole series of different documents - from anywhere in the world.
+
+Reading data from an [IOTA tangle](https://www.iota.org/) - a technology very different from Proxeus’ native blockchain Ethereum - and feeding this data into Proxeus workflows for the production of documents worked really well. For the team it was important to see that it works not only in theory - you can actually connect Proxeus to any blockchain thanks to its extensibility.
+
+## Limitations
+
+The prototype was intentionally created for demonstration and learning purposes only and therefore lacks many elements that would be required of a full-fledged logistics solution. There were no integrations with the existing systems of any stakeholder. Only prototyping hardware was used instead of devices actually hardened for the use in logistics. Everything was simulated in one room instead of taking place all over the world with all the implications of different time zones, climates, procedures and so on.
+
+The actual implementation of a blockchain solution into a vast existing ecosystem such as global logistics will require to involve and coordinate the needs of a great many different stakeholders. Even if a lean scope is chosen, such a project is a great endeavour and will require substantial initial investments from all involved parties (hardware, integration projects, employee training etc.).
+
+## How we’ve built it
+
+Let’s dive into the technical details! Make sure you consult the glossary at the end of the page if you encounter any unfamiliar terms.
+
+As part of a project executed in cooperation with a German logistics startup, RFID chips were used to track palettes across connected terminals. The tracking data (such as the consignment ID, the terminal name or even the signatory name) was directly sent to the IOTA ledger by the terminals without any human intervention whatsoever.
+
+On a separate server, Proxeus was then leveraged to automatically and instantaneously generate documents based on the data retrieved from the IOTA ledger and pre-configured templates. Several key documents (such as the [Bill of Lading](https://en.wikipedia.org/wiki/Bill_of_lading)) can be tokenized to enable a frictionless transfer of ownership of the goods shipped.
+
+![](_media/old_proxeus/logistics/3.png)
+
+Image: palette with goods and an hidden RFID chip being “transported” to a terminal
+
+![](_media/old_proxeus/logistics/4.png)
+
+Image: screen with custom-made demo “terminal” software running on a Raspberry Pi
+
+‍
+
+In this prototype, we introduced quite a few elements in order to showcase a potential cross-platform, blockchain-agnostic tracking system that could be built using Proxeus and IoT components.
+
+## IoT node on a Raspberry Pi**
+
+**‍**In the world of the “internet of things (IoT)”, the participating devices are often called “nodes”. For the nodes in our simulated logistics ecosystem, we equipped a prototype board (Raspberry Pi) with an RC522 RFID reader. The microcomputer connects to WLAN automatically and the operating system is stored on an SD card which can easily be cloned after setting it once.
+
+We created a small custom application for the Raspberry Pi. Running this software, the nodes were able to run independently in different modes:
+
+1\. Track consignment
+
+2\. Sign receipt for a consignment
+
+3\. Open up a new tracking
+
+4\. Set terminal in monitoring mode
+
+5\. Display tracking details
+
+For the technically curious among our readers, the code for the tracking nodes can be found on our GitHub: [https://github.com/ProxeusApp/usecase-shipment-tracking](https://github.com/ProxeusApp/usecase-shipment-tracking)
+
+Keep in mind that it was a rapidly built prototype and may need some improvement if you wish to use it for your own projects.
+
+One part is built in Python and offers functionality to read from and write to RFID tags using the [SimpleMFRC522](https://github.com/pimylifeup/MFRC522-python) library specifically made for budget MFRC522 module for the Raspberry. It also creates and tracks transactions on the IOTA ledger using the respective [IOTA library for Python](https://github.com/iotaledger/iota.py). It has a console-based user interface with a menu to choose between the modes listed above. The second part is a visual UI implemented in Golang that can be used on top.
+
+After the initial setup, the application was configured by connecting to it and copying the specific configuration files to it. In order to provide maximal mobility, the microcomputer was connected to a power bank. This setup is barely larger than a cigarette box (depending on the powerbank chosen) and is connected to the internet over WLAN. The platform also incorporates an IOTA node which syncs the data logged by the application with the livenet of IOTA.
+
+The IoT nodes in this project came in two variants:
+
+1.  Priming nodes are writing information to the RFID chip, linking it to a unique id like a dossier number. The second information is the UID of the tag itself, which cannot be changed and identifies the pallet.
+2.  Tracking nodes are always on “listen mode” after bootup and execute an IOTA transaction containing the details (tagID, document collection, data & time etc) of the tracking.
+
+![](_media/old_proxeus/logistics/5.png)
+
+Image: a Raspberry Pi with an RFID module (blue), powered by a power bank
+
+As soon as an RFID chip is scanned, the terminals execute a transaction. The software also returns a table with all the checkpoints encountered. The system has been configured to be able to run concurrent trackings and have them added to the respective IOTA tangle.
+
+## Documents as a Service‍
+
+In this use case, Proxeus was used as a “documents as a service” provider. Proxeus can be remotely controlled to produce documents by using the API. Any scripting or programming language that is capable of communicating with a REST API will do. This could also be simulated by using a tool like [SoapUI](https://www.soapui.org/).
+
+1.  To make the call, you must be [authenticated](http://doc.proxeus.com/#/api_auth). You can create API keys in your user profile on the Proxeus platform.
+2.  Write down your workflow’s ID or retrieve it via the API’s [workflow list request](http://doc.proxeus.com/#/api_list_all_workflows).  
+    GET /api/document/list  
+    For the example, let’s assume it’s 3e6ece3d-6b5d-4e79-aea0-0c06e14935cb.
+3.  Retrieve the workflow’s [data schema](http://doc.proxeus.com/#/api_get_workflow_schema) to identify the required inputs.  
+    GET /api/document/3e6ece3d-6b5d-4e79-aea0-0c06e14935cb/allAtOnce/schema
+4.  Call the API method “allatOnce” as documented [here](http://doc.proxeus.com/#/api_execute_workflow).  
+    POST /api/document/3e6ece3d-6b5d-4e79-aea0-0c06e14935cb/allAtOnce  
+    {“field”:”value”, “field2”:123, “field3”:true}  
+    The success response is status 200. The response body will be the produced PDF.
+
+The advantage of a REST API is that you’re free to use almost any technology. You could write a little script in Python or use programming languages like Go or Java.
+
+A Proxeus platform we’ve set up specifically for this project was equipped with a number of workflows with templates for the relevant documents (shipping manifest, bill of lading, container load plan, confirmation letter, tax document, import and customs documents). For this we researched what information these documents typically contain and designed the respective templates in Microsoft Word (OpenOffice works as well). In the Proxeus admin panel we created one workflow for every template. Then we configured simple forms (mostly text/number/date inputs) for the required inputs and added them to the workflows. All this was done using standard Proxeus functionality - if you’re not familiar with it, we highly recommend watching our \[tutorials\] or browsing the \[handbook\]!
+
+![](_media/old_proxeus/logistics/6.png)
+
+Screenshot: an excerpt from the bill of lading template we created
+
+‍
+
+## Monitoring service
+
+A key element of the showcase was to demonstrate that the transactions have indeed been logged on the blockchain and are made available to the user. This has been achieved by using an IOTA tangle explorer. The monitoring service can be used to simply display updates on a screen or to trigger document production via the API of a Proxeus instance. We’ve described in the chapter above how to use Proxeus in a “documents as a service” setup.
+
+A transaction on the IOTA tangle as viewed through the popular tangle explorer [TheTangle.org](https://thetangle.org/) looks like this:
+
+![](_media/old_proxeus/logistics/7.png)
+
+## How to build it yourself
+
+Are you interested in building a similar project? The following steps can guide you through the process. Please note that this is one of the most challenging Proxeus projects to rebuild. It requires prototyping hardware and you will need **software development skills** as well as a **good level of experience in using Proxeus**. Read our solution description above carefully before following this guide.
+
+1.  If you haven’t done this already, please familiarize yourself with Proxeus workflows.The documentation on the website and in particular the following materials should help:  
+    a) \[link to handbook\]  
+    b) [Tutorial video - how to build your first workflow](https://youtu.be/8ndmlTPYwMc)  
+    c) [Tutorial video - Create and manage documents](https://youtu.be/WwyOiluZw8c)  
+    d) [Step by Step Guide - Education Diploma](https://docs.google.com/document/d/1Gl6R1t0LYRK6kARScx5-vqpiKtd6xqcH2yPPC3wWMr4/preview)
+2.  Requirements analysis and specification:  
+    a) Which part of which business process would you like to digitize with your Proxeus prototype?  
+    b) Who are the stakeholders? What are the different stations of the transiting goods? What are their roles? Do they simply report that the goods have passed through or do they need to produce a receipt for someone?  
+    c) Which documents shall be produced and what information is needed to create them?
+3.  Preparation of materials  
+    a) [Raspberry Pis](https://www.raspberrypi.org/) (or [Arduinos](https://www.arduino.cc/))  
+    b) SD memory cards for the Pis  
+    c) Battery packs for the Pis  
+    d) Screens for the Pis  
+    e) RFID readers/writer modules for the Pis, RC522 standard  
+    f) RFID chips or cards, RC522 standard  
+    g) Optional: to visualize the transportation of goods, we’ve used props like miniature pallets, self-built miniature trucks and boats. Add an RFID chip to each pallet.
+4.  Prepare an RFID priming node: one of the Raspberry Pis with an RFID writer module can do this job. It should create a unique ID for each new tag that it finds in its proximity. It can be implemented in the scripting/programming language of your choice, as long as it is supported by one of the available operating systems of the device. [This tutorial](https://lastminuteengineers.com/how-rfid-works-rc522-arduino-tutorial/) is a great starting introduction if you haven’t worked with RFID before and this [detailed guide](https://pimylifeup.com/raspberry-pi-rfid-rc522/) walks you through all the Raspberry specific steps.
+    Our implementation for Raspberry Pi can be found on our GitHub:  
+    [https://github.com/ProxeusApp/usecase-shipment-tracking  
+    ](https://github.com/ProxeusApp/usecase-shipment-tracking)It triggers a transaction on the IOTA tangle when an RFID chip is detected by the Raspberry’s attached RFID module.
+5.  Set up the listening nodes- the Raspberry Pis with RFID reader module - with their specific tasks depending on the specifics of your desired setup. Just like with point 4 you are free to choose the technology for this script or application. This could be simply reporting that the goods have passed this station or they could display information. They could also trigger the production of a receipt or of a payment. When an RFID chip is scanned, the node should automatically create a transaction on the IOTA tangle with the ID of the tag and the node’s identification. For this, the Raspberry Pi needs to be connected to the internet. The node’s software must be capable of creating IOTA transactions (e.g. through the API of an IOTA service provider). A simple script (e.g. Python) should suffice. Here or  
+    \- [Python quickstart guide to IOTA  
+    ](https://docs.iota.org/docs/client-libraries/0.1/getting-started/python-quickstart)\- [PyOTA Getting Started  
+    ](https://pyota.readthedocs.io/en/latest/getting_started.html#getting-started)\- [How to create a IOTA transaction in a single API call (Python)  
+    ](https://gist.github.com/Hribek25/abf3e51864c32d2e0df5e20785d0cb36)\- [A popular Tangle explorer for IOTA](https://thetangle.org/)  
+    \- You can use the following public nodes service: [https://nodes.thetangle.org:443
+
+    ](https://nodes.thetangle.org:443/)
+
+6.  Set up Proxeus. You can run your own instance of Proxeus on a server or locally on your computer - or you could use someone else’s instance. The complete guide to setting up your own instance is available [here](http://doc.proxeus.com/#/README) and in our GitHub repository.
+7.  Create Proxeus workflows. When you scoped your project in step 1, you figured out which documents need to be produced. After you’ve set up your own instance of Proxeus, you can now configure a workflow for each document. Workflows comprise of data entry forms and document templates. As you’re not going to type in the data manually, you don’t need to spend much time on designing beautiful forms. Adding all necessary fields with the right data type should suffice. Design and upload templates for all document types and add them to your workflows.  
+    \- \[Download link for template - Bill of Lading\]  
+    \- \[Download link for template - Consignment Tracking History\]
+
+8.  Set up the event listener. On your computer, create a software (e.g. a Python script) that listens to the events (transactions) that your Raspberry Pis (the listening nodes) create on the IOTA tangle and then triggers a Proxeus workflow through its API. The API allows you to choose the workflow for the type of document you want to produce and to provide all necessary data to immediately complete it and generate the document. For example: if the final node in your logistics chain scans the pallet, it creates a transaction that is then detected by your listener. It then triggers Proxeus to produce a confirmation for receiving the goods. Examples for using the Proxeus API can be found above under “Documents as a Service” and the documentation is at [doc.proxeus.com](http://doc.proxeus.com/#/api_auth).
+
+‍
+
+## Glossary
+
+We’re using a lot of terms that you may not yet be familiar with. Here is some help.
+
+IoT
+
+The Internet of Things is a network of devices that are interacting with each other without human interaction. [Read more on Wikipedia](https://en.wikipedia.org/wiki/Internet_of_things)
+
+IOTA
+
+IOTA is a distributed ledger technology (DLT) that allows devices in an IOTA network to transact in micropayments and to send each other immutable data. [Visit the website](https://docs.iota.org/)
+
+Tangle
+
+IOTA uses the term “tangle” for what is called the blockchain in other distributed ledger technologies: an immutable data structure that contains all transactions.
+
+TheTangle.org
+
+A service provider offering access to the IOTA tangle through a browser on their website and an API. It is much like what Etherscan is for Ethereum. [Visit the website](https://thetangle.org/)
+
+RFID
+
+A near-field data transmission technology. [Read more on Wikipedia](https://en.wikipedia.org/wiki/Radio-frequency_identification)
+
+Raspberry Pi
+
+A tiny, simple computer developed for teaching the basics of computer science. Popular for technical experiments and prototyping. [Visit the website](https://www.raspberrypi.org/)
+
+API
+
+A programming interface to facilitate the communication between different computer programs.
+
+Python
+
+A powerful scripting language. [Visit the website](https://www.python.org/)
+
+SoapUI
+
+An advanced API testing tool that enables you to try out any API without writing a single line of software. [Visit the website](https://www.soapui.org/)
+
+## Take it one step further
+
+As we have mentioned under “Limitations”, this project was limited to a tightly defined scope. There are many more directions to explore.
+
+Decentralized IoT networks may transform supply chain management in the future. Most of today’s processes involve the management of physical, hand written documents. All those formal paper-based documents and processes need first to be digitized and later integrated with other systems.
+
+Using Bluetooth sensors combined with other IoT devices would enable users to retrieve and add additional data such as temperature, pressure or any other quantifiable variables to the tracking journey, opening a new dimension and new possibilities for implementing documents (e.g. contract execution if a certain condition is met).
+
+Projects like [Ambrosus](https://ambrosus.com/), [Modum](https://modum.io/) and Zimt have specialized in this. Read our interview with Vlad Trifa, a thought leader in the fields of IoT and blockchain [here](https://medium.com/proxeus/our-mission-is-to-provide-trusted-real-time-data-as-a-commodity-aeb5a1d5118d).
