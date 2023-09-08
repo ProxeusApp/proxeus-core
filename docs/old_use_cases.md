@@ -2,8 +2,10 @@
 
 Proxeus plays the role of a bridge connecting two worlds, allowing you to digitize traditional processes and register information on a blockchain, as well as to make blockchain activity visible by generating human-readable documents.
 
-Legal : Incorporation of Swiss companies
-========================================
+Legal
+=====
+
+**Incorporation of Swiss companies**
 
 ![](_media/old_proxeus/legal/1.svg)
 
@@ -126,8 +128,10 @@ To help you kickstart your ideas, we’ve provided several examples on this webs
 
 <iframe width="100%" height="650" src="https://morrison.proxeus.org/" frameborder="0" marginwidth="0" marginheight="0" scrolling="yes"></iframe>
 
-Tamper-proof : University Diplomas
-================================
+Tamper-proof
+============
+
+**University Diplomas**
 
 ![](_media/old_proxeus/education/1.svg)
 
@@ -221,8 +225,10 @@ _Starting a new workflow to create a blockchain-secured diploma_
   
 Your iFrame HTML code to embed it into your website would then look like this:
 
-Sports : Anti-doping process
-============================
+Sports
+======
+
+**Anti-doping process**
 
 ![](_media/old_proxeus/sports/1.svg)
 
@@ -303,9 +309,11 @@ Your iFrame HTML code to embed it into your website would then look like this:
 
 <iframe width="100%" height="650" src="https://morrison.proxeus.org/" frameborder="0" marginwidth="0" marginheight="0" scrolling="yes"></iframe>
 
-Tokenization : Tokenization of Luxury Cars
-==========================================
-   
+Tokenization
+============
+
+**Tokenization of Luxury Cars**
+
 ![](_media/old_proxeus/tokenization/1.svg)
 
 ## Background
@@ -315,7 +323,6 @@ Tokenization of assets is a hot topic and a collaboration was set up in 2018 wit
 
 ![](_media/old_proxeus/tokenization/2.png)
 
-  
 
 ## Use case exploration
 
@@ -449,8 +456,10 @@ An example contract template for the registration and certification of documents
 
 There are lots of free and helpful resources out there. And feel free to reach out to the Proxeus community for help with your endeavors!
 
-Logistics : Track and Trace Prototype
-=====================================
+Logistics
+=========
+
+**Track and Trace Prototype**
 
 ![](_media/old_proxeus/logistics/1.svg)
 
@@ -718,7 +727,7 @@ Projects like [Ambrosus](https://ambrosus.com/), [Modum](https://modum.io/) and 
 Data Storage
 ============
 
-Proxeus Releases Decentralized Data Storage DApp Tango Reloaded
+**Proxeus Releases Decentralized Data Storage DApp Tango Reloaded**
 
 
 April 11, 2019
