@@ -302,3 +302,149 @@ Here is how you can create a workflow - using only Proxeus and no programming at
 Your iFrame HTML code to embed it into your website would then look like this:
 
 <iframe width="100%" height="650" src="https://morrison.proxeus.org/" frameborder="0" marginwidth="0" marginheight="0" scrolling="yes"></iframe>
+
+Tokenization : Tokenization of Luxury Cars
+==========================================
+   
+![](_media/old_proxeus/tokenization/1.svg)
+
+## Background
+
+
+Tokenization of assets is a hot topic and a collaboration was set up in 2018 with Mercuria Helvetica, a startup playing a pioneering role looking at ways to tokenize investment-grade cars, to explore the possible role of the workflow and document automation capabilities of Proxeus in that context.
+
+![](_media/old_proxeus/tokenization/2.png)
+
+  
+
+## Use case exploration
+
+
+The tokenization of an asset means its representation in the digital world through a digital artifact (e.g. using a hash or a token on a blockchain). The creation of multiple tokens each representing a piece of an asset can make this one tradable if the tokens are sold and put onto a marketplace.
+
+While there are several ways and methods to reach this result, we defined and followed the following steps:  
+
+1.  Documentation - define the asset you want to tokenize. Build the documentation you need to describe fully all the aspects of your asset that make it unique, preparing it for registration.
+2.  Registration - immutably register your asset. Once your asset is fully documented, register it on the blockchain in order to create a tamper-proof record.
+3.  Certification - bring in third-party experts to certify the accuracy and completeness of your documentation, possibly after inspecting the real-world asset. Let them add their cryptographic signatures to your document as evidence for their approval.  
+    ‍
+
+If fractional ownership is a topic, the issuer can decide to generate tokens by deploying a smart contract for the asset described in the documentation as an additional step.
+
+## Implementation
+
+
+The first step was to identify everything that needs to be documented about the luxury cars to be tokenized. Besides the technical attributes of the car (engine type, horse power etc.), we learned that investors will request to know price-defining data such as the production year, rarity (i.e. number of cars produced for a certain model), the history of repairs and maintenance performed, the car’s current condition and so on. The technical description is typically accompanied by a photographic documentation.  
+
+Based on these requirements, the team designed user-friendly data entry forms. The forms were configured to validate the input immediately (e.g. valid date, value within the expected range, all mandatory fields filled etc.)
+
+  
+
+![](_media/old_proxeus/tokenization/3.png)
+
+_An excerpt from a user form draft in the form editor_  
+
+‍
+
+![](_media/old_proxeus/tokenization/4.png)
+
+_The configuration for an input, validated to be a number and bigger than 0_  
+
+  
+
+As the second step the team designed a smart template that presented the car’s information as well as the uploaded photos in an appealing manner. The template would show or hide sections depending on the information entered in the workflow.
+
+![](_media/old_proxeus/tokenization/5.png)
+
+_An excerpt from the document template (draft version)_  
+
+Thirdly, the forms and template were built into a workflow designed to be used by the Mercuria Helvetica’s staff. It allowed for the efficient entry of all relevant data, the rendering of the documentation into a PDF file as well as an effortless registration of the produced documents in a Proxeus smart contract on the Ethereum blockchain.
+
+![](_media/old_proxeus/tokenization/6.png)
+
+_A workflow draft that connects four user forms and results in the production of a blockchain-secured documentation of a luxury car_
+
+## Result
+
+
+The team deployed a new instance of the Proxeus platform and designed the complete workflow to create the documentation dossier. The workflow included the blockchain registration. With this application, Mercuria Helvetica received a standardized and streamlined process to create the documentation for each car to be tokenized. It also provided a tool that enabled anyone to quickly verify the authenticity of all circulating documents.  
+
+Our partner in this project later went on to create Curio Invest, a platform that enables the issuance, distribution and management of fine collectable assets registered as security tokens. CurioInvest makes it possible for collectible assets such as fine automobiles to be registered with the regulators in a compliant way and to be represented as a token that users can acquire.  
+
+## Feedback
+
+
+In an [interview](https://medium.com/proxeus/blockchain-enables-investing-in-classic-cars-for-everybody-not-just-millionaires-5e9dec740aee) from August 2019, CurioInvest’s CEO Fernando Verboonen made the following statements:  
+
+_“Last year we did a proof of concept using blockchain to register certificates of authenticity and conditions of investment-grade classic and exotic autos. By scanning those certificates and placing the document hash on the blockchain, we were making them verifiable, guaranteeing their originality and authenticity._  
+
+_By having every document involved in the acquisition of a classic car immutably on the blockchain, you are able to scale the process, making it safe, decreasing diligence costs and saving a lot of time: we’re reducing the process from several weeks to seconds!_  
+
+_Our current platform is focusing on the tokenization of the assets and is still quite minimalistic, but in the future we see the opportunity of using Proxeus to create certified documents that can be referenced in the relevant tokenization smart contract. This step will further enhance CurioInvest’s scope and usability by adding features like integrating all the relevant documents of the classic cars.”_
+
+## Insights
+
+
+The project allowed the product team to understand the possible role of a document-centered workflow engine like Proxeus in the tokenization space, differentiating between the processes that should take place within the application core (document creation, registration, certification) and the ones that are custom to every project and should be set up separately and under the responsibility of the respective projects (smart contract deployment, custody solutions).  
+
+## Limitations
+
+
+The discussions around the requirements for certifying assets represented critical inputs for designing the Signature Requests feature, which was not available at the time, but now enables certification with Proxeus out of the box.
+
+## Try it out yourself
+
+
+If you’ve enjoyed reading the documentation of this project and would like to try building something similar, we suggest following the steps below. All you need is an instance of Proxeus and decent users skills. If you haven’t already, you should check out our extensive [handbook](https://docs.google.com/document/d/1C3B1oNY6lOv8Q_AvbKhwlySrS6qTiRl3raPLV6OXr7w/preview) and our [step-by-step guide](https://docs.google.com/document/d/1Gl6R1t0LYRK6kARScx5-vqpiKtd6xqcH2yPPC3wWMr4/preview) for creating a workflow.
+
+‍
+
+1.  Understand the requirements. What workflow output do you expect? What documents should be registered? What role should signatures play?
+
+  
+
+2.  Set up Proxeus. You can run your own instance of Proxeus on a server or locally on your computer - or you could use someone else’s instance. The complete guide to setting up your own instance is available [here](http://doc.proxeus.com/#/README). It is recommended that you deploy your own smart contract following our instructions in the guide and using the [template in our GitHub](https://github.com/ProxeusApp/proxeus-contract).  
+      
+    
+3.  Create the template(s) for the document(s) you want to produce, register and get certified. What are the properties of the asset that need to be described in its documentation? What do the future buyers of the tokens need to know? What are the design requirements?  
+      
+    
+4.  Create the user forms. Now that you’ve designed the desired result, you know what information needs to be collected to fill the templates. Use the data validation capabilities of Proxeus to help the user avoid errors.
+
+  
+
+5.  Configure the workflow by connecting the smart template(s) and the forms in a workflow. Set a XES price to the workflow (if applicable) and share the form with the platform users.
+
+  
+
+6.  Test and improve your workflow. Nothing is perfect from the start. Even when your workflow is already in production and in use, you can simply clone it and release an improved version to your users. If the changes are compatible, you can also just upgrade the existing workflow and all running instances will use the new definition automatically.  
+      
+    
+7.  Create an instruction page to onboard users. Our handbook and tutorial videos are also here to help.
+
+  
+
+8.  Set signatures as required - once given by users they are publicly visible on the blockchain and verifiable by anyone.  
+    ‍
+
+‍  
+
+Integrate a verification tool into your organization’s website to simplify the verification process. The verification tool of your Proxeus platform can be found directly via the /validation path; for example [https://morrison.proxeus.org/](https://morrison.proxeus.org/). It can also be embedded using a standard iFrame HTML code. 
+  
+Your iFrame HTML code to embed it into your website would then look like this:
+
+<iframe width="100%" height="650" src="https://morrison.proxeus.org/" frameborder="0" marginwidth="0" marginheight="0" scrolling="yes"></iframe>
+
+
+## Take it one step further
+
+
+Deploy a smart contract!  
+
+After picking an asset, compiling extensive documentation, anchoring it on the blockchain and getting it certified by experts, you may want to deploy a token smart contract for this asset. There is no universal smart contract solution and you should take time to consider different aspects to find the one that fits your needs: how many tokens should be issued? Should they be tradeable? Who will issue them? Should they be burnable? By whom? Should the supply be fixed or should further minting be possible? Is the smart contract controlled by a single private key or do changes require the signature from multiple keys?  
+
+In most jurisdictions, tokens may be considered securities. The consultation of legal experts is necessary if you plan to distribute the tokens created in any way. On the technical side, the deployment of smart contracts entails critical security aspects and this task should be given to specialists, in particular if your tokens are planned to have monetary value (for example by representing a physical asset): smart contract security breaches with partial or total loss of funds have happened frequently in the past and in the famous “DAO hack”, 50 million dollars worth of ETH were lost due to a loophole.  
+
+An example contract template for the registration and certification of documents (“ProxeusFS”) is available in our GitHub repository. For token contract resources, we recommend to look into [OpenZeppelin](https://github.com/OpenZeppelin/openzeppelin-contracts/tree/master/contracts/token/ERC20) open source templates. If you are looking for support, tokenization services are offered by many companies, including [Microsoft Azure](https://azure.microsoft.com/en-us/services/blockchain-tokens/), [Token Factory](https://tokenfactory.global/), [Tokeny](https://tokeny.com/) and [AlphaPoint](https://alphapoint.com/) to name just a few.  
+
+There are lots of free and helpful resources out there. And feel free to reach out to the Proxeus community for help with your endeavors!
