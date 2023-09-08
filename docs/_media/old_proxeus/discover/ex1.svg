@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   id="svg8"
+   version="1.1"
+   viewBox="0 0 266.65866 248.1255"
+   height="248.1255mm"
+   width="266.65866mm">
+  <defs
+     id="defs2">
+    <linearGradient
+       id="paint0_linear"
+       x1="200.536"
+       y1="-34.2117"
+       x2="84.208099"
+       y2="121.389"
+       gradientUnits="userSpaceOnUse">
+      <stop
+         stop-color="#E0EAF2"
+         id="stop855" />
+      <stop
+         offset="1"
+         stop-color="#93B8D4"
+         id="stop857" />
+    </linearGradient>
+    <linearGradient
+       y2="121.389"
+       x2="84.208099"
+       y1="-34.2117"
+       x1="200.536"
+       gradientUnits="userSpaceOnUse"
+       id="linearGradient902"
+       xlink:href="#paint0_linear" />
+    <linearGradient
+       y2="121.389"
+       x2="84.208099"
+       y1="-34.2117"
+       x1="200.536"
+       gradientUnits="userSpaceOnUse"
+       id="linearGradient904"
+       xlink:href="#paint0_linear" />
+  </defs>
+  <metadata
+     id="metadata5">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     transform="translate(233.41491,-371.5747)"
+     id="layer1">
+    <g
+       transform="matrix(1.4688781,0,0,1.5316389,-233.41491,371.5747)"
+       id="g880"
+       style="fill:none">
+      <path
+         style="fill:#ffffff"
+         d="M 50.4971,0 H 181.539 V 162 H 50.4971 Z"
+         id="path837" />
+      <path
+         style="clip-rule:evenodd;fill:url(#linearGradient902);fill-rule:evenodd"
+         d="M 180.484,1.05537 H 51.5524 V 160.945 H 180.484 Z M 50.4971,0 V 162 H 181.539 V 0 Z"
+         id="path839" />
+      <circle
+         style="fill:#1bbead"
+         cx="157.26601"
+         cy="138.254"
+         r="17.941401"
+         id="circle841" />
+      <path
+         style="clip-rule:evenodd;fill:#ffffff;fill-rule:evenodd"
+         d="m 155.969,143.822 -2.748,-5.399 -1.411,0.718 3.41,6.699 c 0.132,0.259 0.395,0.425 0.685,0.432 0.29,0.008 0.561,-0.144 0.706,-0.395 l 8.396,-14.542 -1.371,-0.791 z"
+         id="path843" />
+      <path
+         style="fill:#64ddd1"
+         d="M 0,42.6848 50.5691,27.8716 101.329,42.6848 50.8559,61.0341 Z"
+         id="path845" />
+      <path
+         style="fill:#1bbead"
+         d="M 50.6641,130.131 50.8553,61.0344 101.329,42.6851 97.3138,106.621 Z"
+         id="path847" />
+      <path
+         style="fill:#4971da"
+         d="M 63,137.446 63.1912,68.3493 113.665,50 109.65,113.936 Z"
+         id="path849" />
+      <path
+         style="fill:#062a85"
+         d="M 75,144.446 75.1912,75.3493 125.665,57 121.65,120.936 Z"
+         id="path851" />
+      <path
+         style="fill:#a0e3dd"
+         d="M 3.82375,106.621 0,42.6851 50.8559,61.0344 50.6647,130.131 Z"
+         id="path853" />
+    </g>
+    <g
+       style="fill:none"
+       id="g900"
+       transform="matrix(1.4688781,0,0,1.5316389,-233.41491,371.5747)">
+      <path
+         id="path882"
+         d="M 50.4971,0 H 181.539 V 162 H 50.4971 Z"
+         style="fill:#ffffff" />
+      <path
+         id="path884"
+         d="M 180.484,1.05537 H 51.5524 V 160.945 H 180.484 Z M 50.4971,0 V 162 H 181.539 V 0 Z"
+         style="clip-rule:evenodd;fill:url(#linearGradient904);fill-rule:evenodd" />
+      <circle
+         id="circle886"
+         r="17.941401"
+         cy="138.254"
+         cx="157.26601"
+         style="fill:#1bbead" />
+      <path
+         id="path888"
+         d="m 155.969,143.822 -2.748,-5.399 -1.411,0.718 3.41,6.699 c 0.132,0.259 0.395,0.425 0.685,0.432 0.29,0.008 0.561,-0.144 0.706,-0.395 l 8.396,-14.542 -1.371,-0.791 z"
+         style="clip-rule:evenodd;fill:#ffffff;fill-rule:evenodd" />
+      <path
+         id="path890"
+         d="M 0,42.6848 50.5691,27.8716 101.329,42.6848 50.8559,61.0341 Z"
+         style="fill:#64ddd1" />
+      <path
+         id="path892"
+         d="M 50.6641,130.131 50.8553,61.0344 101.329,42.6851 97.3138,106.621 Z"
+         style="fill:#1bbead" />
+      <path
+         id="path894"
+         d="M 63,137.446 63.1912,68.3493 113.665,50 109.65,113.936 Z"
+         style="fill:#4971da" />
+      <path
+         id="path896"
+         d="M 75,144.446 75.1912,75.3493 125.665,57 121.65,120.936 Z"
+         style="fill:#062a85" />
+      <path
+         id="path898"
+         d="M 3.82375,106.621 0,42.6851 50.8559,61.0344 50.6647,130.131 Z"
+         style="fill:#a0e3dd" />
+    </g>
+  </g>
+</svg>
