@@ -714,3 +714,64 @@ Decentralized IoT networks may transform supply chain management in the future. 
 Using Bluetooth sensors combined with other IoT devices would enable users to retrieve and add additional data such as temperature, pressure or any other quantifiable variables to the tracking journey, opening a new dimension and new possibilities for implementing documents (e.g. contract execution if a certain condition is met).
 
 Projects like [Ambrosus](https://ambrosus.com/), [Modum](https://modum.io/) and Zimt have specialized in this. Read our interview with Vlad Trifa, a thought leader in the fields of IoT and blockchain [here](https://medium.com/proxeus/our-mission-is-to-provide-trusted-real-time-data-as-a-commodity-aeb5a1d5118d).
+
+Data Storage
+============
+
+Proxeus Releases Decentralized Data Storage DApp Tango Reloaded
+
+
+April 11, 2019
+
+If you have followed us for a while, you will already be familiar with the DApp Tango Beta. Tango is a user-friendly, ground-breaking secure data storage product which empowers anyone to register, share, sign and save documents through a decentralized blockchain application.
+
+![](_media/old_proxeus/data_storage/1.png)
+
+We are now excited to announce the release of Tango Reloaded, a major update incorporating new features and improvements following extensive user testing over the last months. The difference between Tango Reloaded and traditional storage solutions, such as Google Drive or Dropbox, is that Proxeus puts the power entirely in the hands of the user.
+
+How? The ownership and sharing rights are held by the user’s crypto-identity, the files are fully encrypted and the storage provider can be selected individually for each file based on the physical location or security grade required by data protection requirements.
+
+## Your data as secure as Fort Knox
+
+
+Proxeus stores the encrypted data in a secure off-chain facility, while putting advanced access controls on-chain using smart contracts.
+
+ROCKCHAIN, the service provided by [Mount 10](https://www.mount10.ch/), is currently the exclusive storage provider, storing the data in what can best be described as a military bunker, [Fort Knox style](https://www.mount10.ch/de/mount10/swiss-fort-knox/index.html). It is Europe’s most secure data centre, with multi-level protection and servers stored deep inside the Swiss mountains.
+
+Co-founder Antoine Verdon says: “I am very excited about Tango as its potential goes way beyond the decentralized storage of information. We allow users to truly own their data, to associate it with their crypto-identity and to control the sharing of it over a blockchain interface. It is a key piece of technology that constitutes a stepping stone for anyone interested to build blockchain products around the concept of self-sovereign identity.”
+
+## Powerful, useful features
+
+
+The new features offer enhanced functionalities and have been defined in collaboration with several community members who gave feedback in the months following the first Tango release.
+
+### Key features include:
+
+
+*   Zero Knowledge Storage (achieved through client-side PGP encryption), meaning no one (Including the storage provider) has access to the file’s content, unless the user decides to share the file
+*   Blockchain secured access management (including sharing).
+*   Convenient document signing with your private key.
+*   DApp Tango operates as a “pay-as-you-go” solution, meaning there is no need for a traditional subscription. The payment for individual file storage is made with Proxeus’ own cryptocurrency, XES, and is now based on the file size and the duration of storage.
+*   Users can send Ether and XES straight out of their DApp wallet.
+*   A notification log, so users can track activity in one place.
+*   Minor bug fixes and general improvements.
+*   Local Encryption Concept which improves file handling on the user’s local machine.
+
+## Extremely user-friendly
+
+
+Thanks to new ground-breaking advancements, now literally anyone can store files and manage permissions decentrally. “Tango Reloaded is incredibly simple to use. The interface is extremely user-friendly, so anyone can use it to upload and share, sign and register documents, says Stephan Balzer, Product Manager at [BlockFactory AG](https://www.blockfactory.com/), the company that has developed the DApp for Proxeus.
+
+## Why the name Tango?
+
+
+The Proxeus team seems to have an affection for passionate dances. The name Tango was chosen as the dance represents strength and firmness, but simultaneously, a vibrant and playful energy. And you need both elements to make the technique work.
+
+## Test Tango Reloaded
+
+
+Curious? Test Tango Reloaded [here](http://beta.proxeus.com./), and check out [this video](https://www.youtube.com/watch?v=B7bgXY2yGGw&feature=youtu.be) that walks you through the simple steps to use it. There’s also a user-guide available just in case you get stuck.
+
+When you’ve tested it, we want to hear from you! What are your favourite features? Would you like different functionalities and if so, what? [Let us know.](http://proxeus.com/)
+
+‍
