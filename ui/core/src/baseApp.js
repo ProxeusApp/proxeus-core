@@ -73,15 +73,13 @@ export default {
         if (this.me.role >= 100) {
           return true
         }
-      } catch (e) {
-      }
+      } catch (e) {}
       try {
         // check public
         if (item.publicByID[0] === 2) {
           return true
         }
-      } catch (e) {
-      }
+      } catch (e) {}
 
       try {
         // check owner
@@ -92,8 +90,7 @@ export default {
           item.grant[this.me.id][0] === 2) {
           return true
         }
-      } catch (e) {
-      }
+      } catch (e) {}
       try {
         // check group
         if (this.me.role !== 0) {
@@ -102,8 +99,7 @@ export default {
             return true
           }
         }
-      } catch (e) {
-      }
+      } catch (e) {}
 
       // check others
       try {
@@ -111,8 +107,7 @@ export default {
           // others have write rights
           return true
         }
-      } catch (e) {
-      }
+      } catch (e) {}
       return false
     },
     handleError (o) {
@@ -152,14 +147,29 @@ export default {
     },
     setSelectedLang (lang) {
       if (lang) {
-        this.$cookie.set('lang', lang, { expires: '1Y' })
+        this.$cookie.set('lang', lang, {
+          expires: '1Y'
+        })
         this.reloadI18n()
       } else {
         this.$cookie.delete('lang')
         this.$i18n.set(this.fallbackLang())
       }
     },
+    checkUserHasSession () {
+      return !!localStorage.getItem('userhassession')
+    },
+    initUserHasSession () {
+      localStorage.setItem('userhassession', true)
+    },
+    deleteUserHasSession () {
+      localStorage.removeItem('userhassession')
+    },
     loadMe (clb) {
+      if (!this.checkUserHasSession()) {
+        return
+      }
+
       axios.get('/api/me').then((response) => {
         this.me = response.data
         this.$root.$emit('me', this.me)
@@ -171,6 +181,7 @@ export default {
           }
         }
       }, (err) => {
+        this.deleteUserHasSession()
         this.handleError(err)
       })
     },
@@ -396,8 +407,7 @@ export default {
       get () {
         return this.$root.$children[0]
       },
-      set (a) {
-      }
+      set (a) {}
     }
   },
   created () {
