@@ -1264,5 +1264,23 @@ This offers users exceptional security and control over their data, and the flex
 **So, what’s next?  
 **“In the past six months we have demonstrated the key aspects of our technology: the workflow manager, document registration, and document storage,” said Verdon. “We will be adding more features and putting all those pieces together into the open source product outlined in our whitepaper, then releasing it as soon as possible for developers to build their own blockchain applications.”
 
+Swiss University certificates turn tamper-proof thanks to blockchain
+====================================================================
+
+September 20, 2018
+
+Yesterday, all 126 students passing the “Bitcoin, Blockchain and Cryptoassets” course of the University of Basel received certificates registered on the Ethereum mainnet blockchain. This marked the first time that a university in Switzerland secured the authenticity and integrity of an academic certificate on a blockchain, and an important milestone for Proxeus as its first product went live just over half a year after its successful ICO.
+
+![](https://uploads-ssl.webflow.com/5d5ada771e1398913827a622/5d64e9beca4f1a32b8bdc891_Uni-Basel_longform.jpg)
+
+“This blockchain solution developed in cooperation with [Proxeus](https://proxeus.com/en/) greatly improves the process of verifying documents and represents an important step towards forgery-proof academic certificates,” said Prof. Dr. Fabian Schär, Managing Director of the Center for Innovative Finance. “Two tools have been created — one that the university staff can use to create the certificate and register it to the blockchain with its unique hash, and a second, [public tool](https://cif.unibas.ch/en/eventsprojects/certificates/)which allows anyone to verify that the electronic document has been issued by the university.”
+
+The benefits of these tools are immediately apparent. The first, and most obvious benefit is to students, employers and the university itself — by reducing the potential for academic fraud, the secured diplomas raise the value of their credentials accordingly. “Fraud is a problem in academia just as it is in any field,” indicated Prof. Dr. Fabian Schär. “By registering credentials on an immutable, decentralized ledger, we provide an extra layer of security for graduates and potential employers. These credentials can’t be faked, and can be easily verified online. It will introduce a new paradigm of security and offer value to all parties.”
+
+The second benefit is perhaps less visible, but carries far more economic weight. The new technology offers clear efficiency advantages compared to the previous effort required to check course certificates. Previously, the university had to be contacted directly and first had to obtain the permission of the graduate concerned before handing over the relevant information — a process that took, on average, about 90 minutes per request. By allowing web-based verification of the diplomas, the Proxeus technology minimizes the amount of effort required by potential employers to validate the credentials, and greatly reduces the amount of time required by the university to check and confirm the information when requested.
+
+“Everyone involved benefits from this approach,” said Schär. “Employers can easily check diplomas and educational institutions minimize the risk of damage to their reputation. Perhaps most importantly, the graduates themselves benefit from greater credibility, which increases the standing of their alma mater.”
+
+Don’t just take our word for it — you can try if for yourself and see if you can fake a certificate! [Download the test certificate](https://cif.unibas.ch/fileadmin/user_upload/cif/certificate_valid.pdf), and [check it here](https://cif.unibas.ch/de/eventsprojekte/zertifikate/). Then, try editing or altering the certificate and check it again. Within seconds, you’ll see that the certificates can’t be faked, no matter how hard you try!
 
 ‍
