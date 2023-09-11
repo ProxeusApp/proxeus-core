@@ -184,3 +184,70 @@ Vivien is a seasoned financial expert with several years of experience in the cr
 We believe that Proxeus is a fantastic tool with potential to facilitate the transition to a new digital economy. As the project is starting a new phase, we are excited by the journey ahead and are committed to bringing Proxeus to the next level. Proxeus Association is here to listen to the needs and wishes of the community, drive the further development of the product and foster adoption through various initiatives. As part of the project handover from Proxeus Anstalt, we have also taken over the management of the Proxeus official communication channels — follow our updates on our [blog](https://medium.com/proxeus) and on [Twitter](https://twitter.com/proxeusapp) and get in touch with us!
 
 ‍
+
+UI update: fresh looks and a more intuitive interface
+=====================================================
+
+March 25, 2020
+
+After the release of Proxeus 1.0 in September last year, we’ve received questions, praise and improvement suggestions from the community. Some of the feedback concerned the user experience that the application offers or specific elements of the user interface design. The product team decided to implement improvements in the user interface to give it a fresh touch before open sourcing the software. Besides the visual changes, we’ve also made it easier for our users to customize their own Proxeus platforms.
+
+![](https://uploads-ssl.webflow.com/5d5ada771e1398913827a622/5ebab54cb44a484a2a6c2483_1_XGrhabWoYgNfEYdqk95cRw.png)
+
+After the release of [Proxeus 1.0](https://medium.com/proxeus/proxeus-v1-0-32144b628349) in September last year, we’ve received questions, praise and improvement suggestions from the community. Some of the feedback concerned the user experience that the application offers or specific elements of the user interface design.
+
+The product team decided to implement improvements in the user interface to give it a fresh touch before open sourcing the software. Besides the visual changes, we’ve also made it easier for our users to customize their own Proxeus platforms.
+
+If you’ve been an avid user of the platform before, you’ll certainly notice immediately that the way we’re displaying lists — your workflows, forms and templates — has been cleaned up to give you a much better overview of your elements and the available actions.
+
+Another change that might stand out is that we’ve reorganized the menus. The most important buttons are now much easier to locate and all the other options won’t distract you any longer. We even got rid of the big old round button in the bottom right corner!
+
+Other improvements comprise the introduction of a new main font, a few changes to the color palette, and an easy way to integrate your own logo. In the translations section, you’ll find an entry “Logo url” where you simply add the path to your logo. You can even choose a separate logo for each language.
+
+Overall we believe that we’ve found a balanced approach to fulfil your change requests without changing the user interface so much that you have to relearn everything. The simpler design and more intuitive arrangement should give all users a better experience.
+
+Below we share some before–after screenshots to give you an idea of the new user experience!
+
+Let the Proxeus community know what you think and what you would change… it might just happen! Besides, Proxeus is now open-sourced completely, so you’ll be able make changes yourself, too!
+
+– –
+
+**Lists**
+
+Lists have been redesigned to provide a better overview. The buttons are no longer just icons, but their function is spelled out. We’ve also replaced the round green “plus” button for creating new elements; it’s now above the list instead of hiding in the bottom right corner.
+
+![](https://uploads-ssl.webflow.com/5d5ada771e1398913827a622/5ebab4d55a8a0e7a1260874f_1*_CbRM5LlHyTtDk7omIUAPA.png)
+
+![](https://uploads-ssl.webflow.com/5d5ada771e1398913827a622/5ebab4d5206cb9b01273ebb1_1*Tn-lr9c5kbB9Cuoxyf4bEw.png)
+
+**Workflows**
+
+When editing elements such as workflows, it’s quite clear that the old UI just got more and more functions, leading to four “main” buttons dominating the view. We’ve reworked that to highlight only the two key actions.
+
+![](https://uploads-ssl.webflow.com/5d5ada771e1398913827a622/5ebab4d51489093b17f980a7_1*wdQ22GgglV0vhQiDnorLeg.png)
+
+**Dropdowns**
+
+Other elements such as dropdown menus have been revisited, too. It’s now much easier to find the right list item.
+
+![](https://uploads-ssl.webflow.com/5d5ada771e1398913827a622/5ebab4d5a453150bf0f4d4da_1*Q2GSFrEhz50-p7md6bxjgQ.png)
+
+![](https://uploads-ssl.webflow.com/5d5ada771e1398913827a622/5ebab4d61b721744ec5ff14b_1*w5zfrmbnpnjbXP5Hmc8SUw.png)
+
+**Overviews**
+
+![](https://uploads-ssl.webflow.com/5d5ada771e1398913827a622/5ebab4d634b983318ed3d5ff_1*dcv9ubO3TJRub4szsZHdwg.png)
+
+![](https://uploads-ssl.webflow.com/5d5ada771e1398913827a622/5ebab4d69787fbac84cc8164_1*1byag23-krXPZVynzrp5wg.png)
+
+**Templates**
+
+The previously cluttered template preview window has been cleaned up and helps you keep an overview of all your template versions even if your platform has several activated languages.
+
+![](https://uploads-ssl.webflow.com/5d5ada771e1398913827a622/5ebab4d667d349e9bbd8988d_1*PwzXQQtaiin1BK983FK8cA.png)
+
+**Form editor**
+
+The form editor has been revamped, too. The key actions are now all next to each other and the Save button is highlighted.
+
+![](https://uploads-ssl.webflow.com/5d5ada771e1398913827a622/5ebab4d68988744786057e57_1*OjYBsxvrDZ33yn5M9mSycQ.png)
