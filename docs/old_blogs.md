@@ -1494,3 +1494,20 @@ The bigger picture
 The Proxeus team analyzed 477 successful ICOs that took place from March 21, 2016 to March 27, 2018. The ICOs were divided into product & feature categories, such as “Data Storage,” “Payments,” etc. By comparing each to the functionality of the Proxeus platform, these categories analyzed to see if Proxeus could fully, or partially, be used to cover generic use cases in each category.
 
 This data was then calculated for each projects in all categories, revealing that 68% of the analyzed blockchain-based projects could be partially or fully replicated directly on the Proxeus platform, and direct analogues of 39% of the analyzed projected could be fully replicated using XES token.
+
+‍Registering Swiss companies on blockchain: bringing down a 6-week process to 48 hours
+=====================================================================================
+
+March 20, 2018
+
+While Switzerland is ranked Nr. 1 in the last World Economic Forum Competitiveness Report, the country lags in 53rd place (out of 137) in terms of the number of steps required to start a company, and 60th when it comes to the amount of time needed — around six weeks in average. This lies primarily in the enormous amount of red tape that entrepreneurs have to sort through. From lawyers to notaries, via the bank and the trade register, it is a long, laborious process, and a lot of tasks are done twice over.
+
+![](https://uploads-ssl.webflow.com/5d5ada771e1398913827a622/5d5fe4e8a7638f21b5510b83_Med1.jpg)
+
+As part of the [digitalswitzerland challenge](https://challenge.digitalswitzerland.com/), Proxeus is working together with companies like IBM and Swisscom to digitize the Swiss trade register. The Proxeus platform makes it possible to create blockchain applications that are entirely compatible with current ERP systems (information systems that enable people to manage and keep track of a company’s overall daily operational services and information) and we are using it to create a prototype that will be tested in a live context in the coming months. Once this test phase is over, it will be possible to start a company in 48 hours, from creating it to filing it with the trade register.
+
+The key for accelerating the company registration process is to use a smart contract, enabling entrepreneurs to register their company themselves directly. The registration is then finalized once all stakeholders have validated the date. The bank will state that the capital money has indeed been paid; the notary will confirm that the necessary documents have been provided, read over, and approved. If all of the conditions are met, then the filing, which up until that point will have been provisional, will automatically be processed. The various players can provide their input into the creation process simultaneously, instead of having to intervene a pre-defined sequence. The amount of time and money this simple change saves is enormous.
+
+The Proxeus technology is also of interest to players on the other side of the Atlantic — a big Latin American country for example has recently approached us requesting that we develop a similar system for their land register. Exciting times!
+
+[First published on Medium](https://medium.com/@proxeusapp_4423/registering-swiss-companies-on-blockchain-bringing-down-a-6-week-process-to-48-hours-4261dd5cdcd8)
