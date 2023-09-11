@@ -137,6 +137,7 @@ export default {
             this.challenge = response.data
             this.metamaskLogin()
           }, (err) => {
+            this.app.deleteUserHasSession()
             this.app.handleError(err)
           })
         }
@@ -151,36 +152,50 @@ export default {
           await this.app.wallet.wallet.setupDefaultAccount()
         } catch (e) {
           console.log(e)
+          this.app.deleteUserHasSession()
           this.walletErrorMessage = this.$t('Please grant access to MetaMask.')
           return
         }
       } else {
+        this.app.deleteUserHasSession()
         this.walletErrorMessage = this.$t('Please grant access to MetaMask.')
         return
       }
+
       this.account = this.app.wallet.getCurrentAddress()
+
       if (this.account === undefined) {
+        this.app.deleteUserHasSession()
         this.walletErrorMessage = this.$t('Please sign in to MetaMask.')
         return
       }
+
       this.pwlogin = false
+
       if (this.checkTermsAndConditions()) {
-        this.app.wallet.signMessage(this.challenge, this.account).then((signature) => {
-          axios.post('/api/login', { signature }).then((res) => {
-            this.challenge = ''
-            if (res.status >= 200 && res.status <= 299) {
-              window.location = res.data.location || '/admin/workflow'
-            } else {
-              this.walletErrorMessage = this.$t('Could not verify signature.')
-            }
-          }, (err) => {
-            this.challenge = ''
-            this.app.handleError(err)
-            this.walletErrorMessage = this.$t('Could not verify signature.')
+        this.app.wallet.signMessage(this.challenge, this.account)
+          .then((signature) => {
+            axios.post('/api/login', { signature })
+              .then((res) => {
+                this.challenge = ''
+
+                if (res.status >= 200 && res.status <= 299) {
+                  this.app.initUserHasSession()
+                  window.location = res.data.location || '/admin/workflow'
+                } else {
+                  this.app.deleteUserHasSession()
+                  this.walletErrorMessage = this.$t('Could not verify signature.')
+                }
+              }, (err) => {
+                this.challenge = ''
+                this.app.deleteUserHasSession()
+                this.app.handleError(err)
+                this.walletErrorMessage = this.$t('Could not verify signature.')
+              })
+          }).catch(() => {
+            this.app.deleteUserHasSession()
+            this.walletErrorMessage = this.$t('Could not Sign Message.')
           })
-        }).catch(() => {
-          this.walletErrorMessage = this.$t('Could not Sign Message.')
-        })
       }
     }
   }
