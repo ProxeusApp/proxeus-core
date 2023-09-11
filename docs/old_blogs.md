@@ -1304,4 +1304,30 @@ The confusion mostly comes less from a missing formal separation, but instead be
 
 This separation of roles is deliberate and carefully considered. It ensures impartiality of decision making, proper financial diligence, and no conflicts of interest. In the end, it’s an illustration of the old English expression “Good fences make good neighbours.” Clarity about who does what makes us all work together more effectively, and achieve what we all want — the successful fulfilment of the Proxeus whitepaper.
 
+
+Proxeus beta released less than 6 mos after ICO
+===============================================
+
+July 25, 2018
+
+In keeping with their commitment to speed and efficiency, Proxeus has released the beta of their innovative blockchain workflow generator to the community for testing at beta.proxeus.com, less than six months after their USD 25m ICO.
+
+![](https://uploads-ssl.webflow.com/5d5ada771e1398913827a622/5d5ff669c701dec1e42bb250_video-header.jpg)
+
+The Proxeus technology represents the next phase of digitization, bridging the efficiencies brought by blockchain to the needs of enterprise through an innovative, easy-to-use drag and drop interface. By empowering users to create blockchain applications without specialized programming skills, Proxeus simultaneously lowers the bar to adoption and increases the accessibility of deploying blockchain for a wide variety of use cases.
+
+“This is a big milestone for Proxeus,” said cofounder Antoine Verdon. “For the first time we are able to show that our technology is real and truly demonstrate the value we are delivering to the blockchain ecosystem. We’re proud of what we’ve achieved so far, and are very excited to hear what the community has to say about it.”
+
+Prior to the beta release, Proxeus developed prototypes to legally incorporate businesses, register assets, and validate certificates on the blockchain, and then released the beta to a selected group of testers to build their own workflows. Now, anyone can use the beta to build, test and validate workflows.
+
+![](https://uploads-ssl.webflow.com/5d5ada771e1398913827a622/5d5ff695a7638f6e0f517247_planet-150x150.png)
+
+The initial beta functionality allows users to create workflows and register documents on the testnet blockchain, and thus easily recreate use cases such as the University of Basel’s Center for Innovative Finance course certificates (originally built in 100 hours) or WWF Switzerland’s tax donation verification system (built in less than 1 day) in a matter of hours. Test XES tokens will be provided to show how they are function within the Proxeus ecosystem and are used to pay for Proxeus’ services.
+
+“Fundamentally, what Proxeus offers its users is flexibility,” said Artan Veliju, CTO for Proxeus. “We’ve given them the ability to easily build the workflows they need to use blockchain productively without needing to launch a software development project. It’s opened the door to make developing blockchain applications a normal part of the enterprise toolbox.”
+
+After meeting a critical milestone toward fulfilling the requirements of their whitepaper and delivering a concrete, public demonstration of the speed and efficiency of their technology in such a short time, Proxeus is now moving into the community. In the coming months, the scope will be expanded and user feedback incorporated to complete the functions described in the whitepaper and release a fully-developed, mature solution to empower enterprise adoption of blockchain.
+
+The beta can be accessed at beta.proxeus.com.
+
 ‍
