@@ -8,6 +8,7 @@
     - [Application Examples](old_application_examples.md)
     - [Use Cases](old_use_cases.md)
     - [developers](old_developers.md)
+    - [Blogs](old_blogs.md)
 
 - Proxeus Association
     - [About](about.md)
