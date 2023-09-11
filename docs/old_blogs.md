@@ -1363,8 +1363,7 @@ As an open-source platform, Proxeus will continue to grow and evolve as the comm
 
 We are driven by our ambition to be a key enabler in bringing blockchain to the mainstream, and act as a catalyst for the next generation of digitalization. More than just the technical future, we want to see a future digital environment where using blockchain is a natural as browsing the internet or sending emails. While Proxeus will be one of many tools to help accomplish this, we believe it will be an important one.
 
-‍
-Proxeus and WWF Switzerland put donation on the blockchain
+‍Proxeus and WWF Switzerland put donation on the blockchain
 ==========================================================
 
 June 20, 2018
@@ -1394,7 +1393,36 @@ Proxeus (proxeus.com) is an award-winning, powerful workflow engine and document
 
 WWF Switzerland is the largest independent conservation organization in Switzerland and part of an international WWF network with over 5 million supporters and active in over 100 countries. WWF’s mission is to stop the degradation of the Earth’s natural environment and to build a future in which humans live in harmony with nature. Visit wwf.ch/medien for latest news and media resources and follow us on Twitter @WWF\_Schweiz
 
-‍
+‍Getting blockchain in gear
+==========================
 
+May 21, 2018
 
-‍
+Proxeus adds an unprecedented layer of security by using blockchain to register the certificates of authenticity and condition for investment-grade classic and exotic autos.
+
+![](https://uploads-ssl.webflow.com/5d5ada771e1398913827a622/5d5ff0b338c00e1e12aef63a_Proxeus-15b.jpg)
+
+Zurich, May 21, 2018. The roar of a classic’s engine isn’t usually associated with blockchain, but award-winning Swiss startup Proxeus aims to change that. This weekend they celebrated their successful partnership with Swiss auto investment specialist [Mercuria Helvetica](https://mercuriahelvetica.com/) in developing the platform to register the certifications of authenticity and condition of their collection on Ethereum – and they did it with style. At the Mercuria Helvetica storage facility in Pleidelsheim, Germany, Proxeus cofounder Antoine Verdon and Mercuria Helvetica CEO Fernando Verboonen took a select group of press and VIPs behind the curtain of classic car investment. Following the realtime issuing of the first certificate, Verdon and Verbooren invited the attendees to get behind the wheel and experience the other side of the industry – driving an investment-grade classic.
+
+This partnership was spurred by a deep need for trustworthy assurances of authenticity and condition – two of the key determinants of value – when investing in a classic auto. Certification of the authenticity, integrity and history of collector’s items like classic cars usually relies on antique or incomplete original documentation of provenance, maintenance, and ownership on one hand, and expert opinions and certificates on the other. Due to their direct impact on the value, these documents have a high risk of being forged or misassigned, a risk increased by the lack of document standardization for classic cars.
+
+“When Fernando approached us with this proposal we were on board immediately,” said Verdon. “We’ve talked about the tokenization of collectibles since before the white paper – it’s a great use case. In this case it’s not just the technology that’s engaging – this is progress we can hear and feel!”
+
+Driving a paradigm shift
+------------------------
+
+Leveraging the Proxeus solution, these risks can be mitigated – first, a suitable authority, such as Mercuria Helvetica, documents and certifies the car using a smooth and flexible workflow that registers this certification on the blockchain, making it both unforgeable and verifiable by anyone. For a next step further, the car itself could be taken to the blockchain as a non-fungible token with integrated certification library, offering not only proof of ownership and history but also a permanent link to the verified documentation.
+
+“We spend a lot of time and energy on documentation,” Verboonen said. “Proxeus removed a lot of effort and added a lot of security, and they did it for us very, very quickly. It’s going to be an impressive tool and one we’ll be happy to use.”
+
+With benefits beyond the efficiencies of automation, this security in documentation benefits all stakeholders – the assessors’ can more easily verify and create documentation and reduce their reputational risk, the collectors, investors, and custodians all benefit from reduced transaction costs and risk of fraud.
+
+![](https://uploads-ssl.webflow.com/5d5ada771e1398913827a622/5d5ff141ef7f20012b86ff5a_Proxeus-1.jpg)
+
+About
+-----
+
+**‍**  
+**Proxeus** (proxeus.com) is an award-winning, powerful workflow engine and document generator allowing users to create blockchain applications by inputting information and building workflows without the need to learn a new programming language. Founded in 2017, Proxeus has developed a mature technology and has been testing it with a series of industry leaders in trade finance, tokenization of assets, legal & compliance. Shortly after raising $25M as a part of their ICO, Proxeus won the Swiss Fintech Award for “Early Stage Startup of the Year 2018.” Proxeus has offices in Liechtenstein, Zug, Zurich, Lisbon and Singapore.
+
+**Mercuria Helvetica** is a Swiss based fintech investment firm that operates world-class services and delivers a one stop asset management solution, managing the whole ownership lifecycle end-to-end. Founded in 2015, Mercuria Helvetica enables investors to gain exposure to fine collectible cars and have access to their garage across the globe.
