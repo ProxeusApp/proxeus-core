@@ -1133,7 +1133,7 @@ func GetProfilePhotoHandler(e echo.Context) error {
 
 	err := userService.GetProfilePhoto(sess, id, c.Response().Writer)
 	if err != nil {
-		return c.NoContent(http.StatusNotFound)
+		return c.NoContent(http.StatusNoContent)
 	}
 	c.Response().Committed = true
 	c.Response().Header().Set("Content-Type", "image/jpeg")

@@ -172,6 +172,7 @@ export default {
     },
     logout () {
       axios.post('/api/logout', null).then(response => {
+        this.app.deleteUserHasSession()
         window.location.replace('/')
       }, (err) => {
         this.app.handleError(err)
