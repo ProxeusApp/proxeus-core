@@ -1511,3 +1511,19 @@ The key for accelerating the company registration process is to use a smart cont
 The Proxeus technology is also of interest to players on the other side of the Atlantic — a big Latin American country for example has recently approached us requesting that we develop a similar system for their land register. Exciting times!
 
 [First published on Medium](https://medium.com/@proxeusapp_4423/registering-swiss-companies-on-blockchain-bringing-down-a-6-week-process-to-48-hours-4261dd5cdcd8)
+
+‍Swiss FinTech Award winner 2018
+===============================
+
+March 20, 2018
+
+After a tight competition, during a gala held at Zurich’s prestigious Dolder Hotel, we got the news we’d been hoping for – Proxeus had won the Swiss Fintech Awards 2018 in the Early Stage category! We’ve been working hard for this, and it’s an enormous validation of our efforts.
+
+![](https://uploads-ssl.webflow.com/5d5ada771e1398913827a622/5d5fe5eda7638f30155112a7_Winjog.jpg)
+
+“Winning the most important fintech award in the country of banking is a huge recognition,” said Cofounder Antoine Verdon, after the ceremony. “We were approached by several banks and financial organisations looking to use Proxeus to digitize their services. The awareness created by this award will also help us grow the community and push the Proxeus ecosystem to the next level”
+
+
+Along with the giant check and warm applause, Antoine received a more unusual award – a pair of fuzzy unicorn slippers, as recognition of his remarkably long and unusual record of success as an entrepreneur.
+
+Now, with the award under our belt, it’s back to work developing the resources we need to change how the world stores and accesses data. We’ve got big news coming very soon!
