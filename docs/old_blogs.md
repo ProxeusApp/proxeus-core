@@ -947,4 +947,88 @@ We have a very innovative roadmap with additional products that we want to bring
 
 We also have the option of having tokens that not only represent one single car but a line of cars — a “Porsche line” for instance — or a coin representing a whole car collection. And on the community side we will put a lot of effort into connecting the individual user with the assets he has invested in by providing him for example with 24/7 webcam streams of the cars or by building VR applications allowing him to interact with the assets. Imagine a user logging into a video game, proofing his ownership of tokens of a certain fine car and afterwards being able to ride “his” car in the game. Or you could allow users to build virtual garages with all their cars inside.
 
+Swiss Blockchain Hackathon 2019
+===============================
+
+June 26, 2019
+
+We are just back from the Swiss Blockchain Hackathon held at Trust Square this week-end, the largest blockchain incubator spread across 2000 square meters in a former bank building on Bahnhofstrasse, Zurich’s main shopping street. Here are some impressions from the week-end:
+
+![](https://uploads-ssl.webflow.com/5d5ada771e1398913827a622/5e5bded82089e5a915936ac6_1_LDNlN7NyctYlJmTZyQJmlQ.jpg)
+
+‍
+
+Impressions from the Swiss Blockchain Hackathon 2019
+
+200 hackers from 20 countries set up camp in Zurich for three days to solve real-life challenges using blockchain in six different verticals. It was a perfect opportunity for us to meet and network with a lot of relevant technical and business experts in the space. The atmosphere at the closing ceremony was exhilarating with over 200 people doing “the wave” to celebrate the end of the challenge!
+
+![](https://uploads-ssl.webflow.com/5d5ada771e1398913827a622/5e5bdf032089e51b06936beb_1*JpKM16Aqs3Q_dc-wFRDnLA.jpeg)
+
+As event partners, we made the Proxeus framework available to the participants and we were able to work with several teams and gather useful feedback. Most importantly, we made several new and valuable contacts with open-source developers who expressed interested to use Proxeus as part of their regular toolbox. Following a general introduction session to the Proxeus framework, we supported several teams to build solutions in the food and shipping space, and we will stay in touch with them as their projects move from prototypes to potential live applications.
+
+![](https://uploads-ssl.webflow.com/5d5ada771e1398913827a622/5e5bdf0363723ec350a92576_1*CFCcFQ7NlNgjgiIdC1kkTA.jpeg)
+
+Our own crew received an assignment in the eGovernment vertical and worked until the early morning hours exploring possibilities to enable public entities to federate the right to issue documents under their seal to individual crypto-identities, in a way that is fully decentralized & auditable. White-listing capabilities are required in a wide-range of projects and this initial research will allow us to put this topic on the roadmap.
+
+![](https://uploads-ssl.webflow.com/5d5ada771e1398913827a622/5e5bdf0363723ed2f0a92577_0*BM6yNQ49uU7wOSOv.png)
+
+Reflecting over the event, it is rare to be able to spend so much energy on a project in such a short timeframe and we are starting the Summer with a lot of new inputs. Overall, it was very well invested time and we were able to position Proxeus among top-tier projects and academic institutions — we will be working with more similar initiatives in the future in order to grow awareness about the framework in relevant target groups.
+
+
+Proxeus Releases Decentralized Data Storage DApp Tango Reloaded
+===============================================================
+
+April 11, 2019
+
+If you have followed us for a while, you will already be familiar with the DApp Tango Beta. Tango is a user-friendly, ground-breaking secure data storage product which empowers anyone to register, share, sign and save documents through a decentralized blockchain application.
+
+![](https://uploads-ssl.webflow.com/5d5ada771e1398913827a622/5d64edaa99c8ff8767d7c3e7_image.png)
+
+We are now excited to announce the release of Tango Reloaded, a major update incorporating new features and improvements following extensive user testing over the last months. The difference between Tango Reloaded and traditional storage solutions, such as Google Drive or Dropbox, is that Proxeus puts the power entirely in the hands of the user.
+
+How? The ownership and sharing rights are held by the user’s crypto-identity, the files are fully encrypted and the storage provider can be selected individually for each file based on the physical location or security grade required by data protection requirements.
+
+Your data as secure as Fort Knox
+--------------------------------
+
+Proxeus stores the encrypted data in a secure off-chain facility, while putting advanced access controls on-chain using smart contracts.
+
+ROCKCHAIN, the service provided by [Mount 10](https://www.mount10.ch/), is currently the exclusive storage provider, storing the data in what can best be described as a military bunker, [Fort Knox style](https://www.mount10.ch/de/mount10/swiss-fort-knox/index.html). It is Europe’s most secure data centre, with multi-level protection and servers stored deep inside the Swiss mountains.
+
+Co-founder Antoine Verdon says: “I am very excited about Tango as its potential goes way beyond the decentralized storage of information. We allow users to truly own their data, to associate it with their crypto-identity and to control the sharing of it over a blockchain interface. It is a key piece of technology that constitutes a stepping stone for anyone interested to build blockchain products around the concept of self-sovereign identity.”
+
+Powerful, useful features
+-------------------------
+
+The new features offer enhanced functionalities and have been defined in collaboration with several community members who gave feedback in the months following the first Tango release.
+
+Key features include:
+---------------------
+
+*   Zero Knowledge Storage (achieved through client-side PGP encryption), meaning no one (Including the storage provider) has access to the file’s content, unless the user decides to share the file
+*   Blockchain secured access management (including sharing).
+*   Convenient document signing with your private key.
+*   DApp Tango operates as a “pay-as-you-go” solution, meaning there is no need for a traditional subscription. The payment for individual file storage is made with Proxeus’ own cryptocurrency, XES, and is now based on the file size and the duration of storage.
+*   Users can send Ether and XES straight out of their DApp wallet.
+*   A notification log, so users can track activity in one place.
+*   Minor bug fixes and general improvements.
+*   Local Encryption Concept which improves file handling on the user’s local machine.
+
+Extremely user-friendly
+-----------------------
+
+Thanks to new ground-breaking advancements, now literally anyone can store files and manage permissions decentrally. “Tango Reloaded is incredibly simple to use. The interface is extremely user-friendly, so anyone can use it to upload and share, sign and register documents, says Stephan Balzer, Product Manager at [BlockFactory AG](https://www.blockfactory.com/), the company that has developed the DApp for Proxeus.
+
+Why the name Tango?
+-------------------
+
+The Proxeus team seems to have an affection for passionate dances. The name Tango was chosen as the dance represents strength and firmness, but simultaneously, a vibrant and playful energy. And you need both elements to make the technique work.
+
+Test Tango Reloaded
+-------------------
+
+Curious? Test Tango Reloaded [here](http://beta.proxeus.com./), and check out [this video](https://www.youtube.com/watch?v=B7bgXY2yGGw&feature=youtu.be) that walks you through the simple steps to use it. There’s also a user-guide available just in case you get stuck.
+
+When you’ve tested it, we want to hear from you! What are your favourite features? Would you like different functionalities and if so, what? [Let us know.](http://proxeus.com/)
+
 ‍
