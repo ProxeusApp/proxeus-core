@@ -1283,4 +1283,25 @@ The second benefit is perhaps less visible, but carries far more economic weight
 
 Don’t just take our word for it — you can try if for yourself and see if you can fake a certificate! [Download the test certificate](https://cif.unibas.ch/fileadmin/user_upload/cif/certificate_valid.pdf), and [check it here](https://cif.unibas.ch/de/eventsprojekte/zertifikate/). Then, try editing or altering the certificate and check it again. Within seconds, you’ll see that the certificates can’t be faked, no matter how hard you try!
 
+‍Who’s behind Proxeus?
+=====================
+
+August 22, 2018
+
+Many of the questions we get are related to the relationship between Proxeus Est. and BlockFactory AG (Ltd.). It seems that a lot of people have difficulty understanding not only what the two entities are and what they each do, but also how they related to each other. I would like to shed some light on this.
+
+![](https://uploads-ssl.webflow.com/5d5ada771e1398913827a622/5d5ffcafa7638fedc0519e0d_Vaduz.jpeg)
+
+Proxeus is a non-profit establishment which has its domicile in the beautiful city of Vaduz in Lichtenstein. This entity is responsible for managing all aspects of the Proxeus project, in order to build up Proxeus technology as well as the ecosystem around the XES token according to the Proxeus white paper.
+
+BlockFactory is a profit-orientated limited company registered in the bucolic city of Zug, at the heart of Switzerland’s Crypto Valley. Proxeus mandated BlockFactory — which is specialised in blockchain solutions — to fulfil the Proxeus product suite as stated in the whitepaper.
+
+From a formal perspective, Proxeus is the client, and BlockFactory the service provider.
+
+![](https://uploads-ssl.webflow.com/5d5ada771e1398913827a622/5d5ffcc5c701ded9dd2be1e1_BlockFactory-organigram-300x223.jpeg)
+
+The confusion mostly comes less from a missing formal separation, but instead because some of BlockFactory’s staff fulfil representative functions at Proxeus. Antoine Verdon, for instance, is in fact one of the cofounders of Proxeus and represents the Proxeus technology accordingly. In the media, he was sometimes represented as “Head of Proxeus” — which isn’t factually accurate. He is CEO of BlockFactory and has no legal role within the Proxeus establishment, which is governed by an independent board.
+
+This separation of roles is deliberate and carefully considered. It ensures impartiality of decision making, proper financial diligence, and no conflicts of interest. In the end, it’s an illustration of the old English expression “Good fences make good neighbours.” Clarity about who does what makes us all work together more effectively, and achieve what we all want — the successful fulfilment of the Proxeus whitepaper.
+
 ‍
