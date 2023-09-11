@@ -590,10 +590,8 @@ The Proxeus document service is unique because its core dependency is a document
 
 At the moment ODT is supported. But adding new XML-based formats like DOCX is quite easy as the Proxeus document service core is based on XML and not on document format specific things.
 
-‍
-
-Building DApps: signature integration
--------------------------------------
+‍Building DApps: signature integration
+=====================================
 
 October 29, 2019
 
