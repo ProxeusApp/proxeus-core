@@ -705,7 +705,6 @@ This same principle can be extended to almost every field: if you know how to ce
 Proxeus v1.0
 ============
 
-
 September 24, 2019
 
 Proxeus v1.0
@@ -778,5 +777,45 @@ Once you’ve built your first workflow, you can set a price (in XES tokens) for
 ----------------
 
 The next step on the roadmap is to incorporate community feedback and release Proxeus as open source software. We are excited to see Proxeus going out into the world — now it’s your turn to test the software and give us feedback! Your contribution can play a key role in the adoption of Proxeus and XES and we can’t wait to discover new community-driven use cases and learn about new angles and ways to use Proxeus, that we may not even have thought about.
+
+‍
+“It’s only a matter of sitting down and defining the processes”
+===============================================================
+
+September 18, 2019
+
+Will the social media agency of the future use Proxeus to collect client requests and run on smart contracts? We met Gustavo Salami, founder of Kuble, to learn more about his vision.
+
+![](https://uploads-ssl.webflow.com/5d5ada771e1398913827a622/5e5bdcf12089e5b1ea9355ec_1_enwj9_Ry_zhq1SgCDq3SfQ.jpg)
+
+**What types of services does your agency offer?**
+--------------------------------------------------
+
+We provide services around social media from a 360° perspective for brands and people with the goal to boost their visibility and credibility on the social web. The projects involve tasks such as consulting, research, content creation, campaign management, project management or data analysis.
+
+**What are the challenges when it comes to structuring these services?**
+------------------------------------------------------------------------
+
+For social media, there are little to no standards for clients and their requirements or for service providers and their deliverables. In some cases it’s difficult to structure due to the nature of creative work. But in many situations it’s just skilled work that can be broken down into deliverables. I believe that if the person or company in need of a service goes through a structured briefing process, it’s beneficial for the agency as well as for the outcomes of a project.
+
+**Where do you see the potential for blockchain to reduce these challenges for you as an agency?**
+--------------------------------------------------------------------------------------------------
+
+With blockchain and particularly the use of smart contracts, we can overcome the first hurdles and create trust so that both parties can rely on an agreed process.
+
+**What are the advantages from a client’s perspective?**
+--------------------------------------------------------
+
+Giving the client the possibility to go through a structured briefing helps him to understand what he will receive at the end of a project, what the time frame is and what it costs. Escrow payments that are locked in a smart contract create security for the client as well as for the service provider.
+
+**Could such a setup work beyond the agency business for other services as well?**
+----------------------------------------------------------------------------------
+
+Sure. I think that wherever services are provided and standards are not clearly defined a setup with blockchain and smart contracts can be applied. It’s only a matter of sitting down and defining the processes. We might start with simple processes and later build on them.
+
+**How can Proxeus help realize your vision?**
+---------------------------------------------
+
+I believe that Proxeus could help us to quickly prototype some key aspects of the solution and test them with our clients. The set of tools that are already in place can help us to move forward quickly without having to reinvent the wheel. It’s great to hear that the team behind Proxeus are very supportive for our idea and we’re looking forward to making the next steps.
 
 ‍
