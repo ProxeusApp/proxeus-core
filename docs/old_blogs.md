@@ -701,3 +701,82 @@ At the beginning of the Proxeus journey, a lot of the conversations we had with 
 Instead of making mere templates available for download, owners of specialist know-how are empowered by Proxeus to create guided workflows similar to client interviews — only in digital form and automatized. Let’s take the [Swiss company registration process](https://medium.com/proxeus/proxeus-helps-speeding-up-swiss-business-incorporations-dd0eed421576) as an example: instead of conducting separate in-person interviews with 3 different actors (lawyer, notary, bank), all information is collected in a single flow. A series of pre-programmed checks and rules makes sure at every step that the data entered is compliant with the local laws, regulations and practices, reducing the need for human validation.
 
 This same principle can be extended to almost every field: if you know how to certify an asset, how to issue an education diploma or how to create a tax report for crypto holdings in a specific jurisdiction, Proxeus enables you to capture this know-how in the form of workflows so you can start monetizing it (by making it available to third-parties for a fee payable in XES) or use it for any other purpose (such as increasing the efficiency of your internal processes). Now that the product is out and available to anyone on livenet, we can’t wait to discover new community-driven use cases and learn about new angles and ideas to use Proxeus, that we haven’t even thought about.
+
+Proxeus v1.0
+============
+
+
+September 24, 2019
+
+Proxeus v1.0
+
+![](https://uploads-ssl.webflow.com/5d5ada771e1398913827a622/5d8b1c4f8c12c7a0ad3b223e_1_CiLHvbqj2Va7pRSWQ4J4YQ.png)
+
+**IMPORTANT NOTE: To install and run your own instance of Proxeus, please follow the instructions published on** [**doc.proxeus.com**](http://doc.proxeus.com/) **and always make sure that you always pull Docker images from the official \`proxeus\` DockerHub repository and that you are using the latest version.**
+
+Almost four years ago, we started out on a vision to make blockchain more accessible and create what the community later dubbed as the “WordPress of blockchain”. Today, we proudly announce that we now have reached an important milestone: we are releasing version 1.0 of the Proxeus software.
+
+**ABOUT PROXEUS**
+-----------------
+
+Proxeus simplifies the development of document-centered blockchain applications by combining a powerful document automation tool with a series of blockchain functionalities. Prior to this release, we developed several prototypes showing how the framework can be used to incorporate new businesses, issue course certificates, create donation receipts, certify assets, track shipments or make anti-doping processes more secure. The functionality offered by Proxeus 1.0 will allow the community to easily recreate all of these use cases and charge for services using Proxeus tokens on livenet.
+
+**KEY FEATURES**
+----------------
+
+The Proxeus software allows you to create a wide range of blockchain use cases by using and combining the following key functionalities:
+
+*   Design document-centered workflow processes by connecting objects on a visual interface;
+*   Create custom workflow nodes to perform all kinds of actions and connect with third-party systems;
+*   Create forms to collect data;
+*   Design templates and apply the data collected by forms to produce one or several documents;
+*   Share workflows with third-parties for free or for a fee charged in XES;
+*   Make your documents tamper-proof and easily verifiable by registering the file hash in a smart contract together with the Ethereum ID of your Proxeus account as the issuer;
+*   Verify registered documents via drag & drop
+*   Request signatures and approve or reject documents shared with you;
+*   Extend the system capacities and start workflows automatically using the system API
+
+**USER LEVELS**
+---------------
+
+Users can be active on three possible levels:
+
+*   Operator: Platform administrators setting up and operating a Proxeus platform for their own purposes or in order to make it available to a set of users
+*   Creator: Users with backend access that can create and modify forms, templates and workflows
+*   Consumer: Users with frontend access only, i.e., able to execute workflows available to them and issue corresponding documents
+
+**ARCHITECTURE**
+----------------
+
+We distinguish between three different application levels:
+
+The Core is the “engine” that provides the essential functionality of any system built on top of the Proxeus technology stack. It comprises an interface (“I/O”) facilitating the connection with external applications (“extensions”) and the integration with third-party systems.
+
+“Extensions” are smaller stand-alone applications that connect with the Core via the I/O layer. They run in combination with the Core but have no integral function that can be used by other extensions. They can be provided by Proxeus and by external contributors. The extensions are installed by Operators additionally to the Core.
+
+“Applications” are implementations of the Core (and of any relevant extensions) that are done with the objective to fulfill the requirements of specific use cases.
+
+**SETUP INSTRUCTIONS**
+----------------------
+
+**To install and run your own instance of Proxeus, follow the instructions published on** [**doc.proxeus.com**](http://doc.proxeus.com/)**. Always make sure that you always pull Docker images from the official \`proxeus\` DockerHub repository and that you are using the latest version.**
+
+Once you got your own Proxeus platform up and running, head over to the [configuration guide](https://docs.google.com/document/d/1C3B1oNY6lOv8Q_AvbKhwlySrS6qTiRl3raPLV6OXr7w/edit#heading=h.46uk8p8upgx3) in the handbook for the final steps. After completing the power up, you can log in with your newly created root user account. We recommend to always make your first steps by connecting to the Ropsten testnet. It’s up to you if you’d like to deploy your own smart contract following our instructions or if you prefer to use our demo contract.
+
+If that sounds like too much work and you are only interested to give it a quick try, we are running a [demo platform](https://demo.proxeus.com/) connected to the Ropsten testnet, which you can use to get familiar with Proxeus instead of deploying your own instance. Please be aware that the contents are wiped on a regular basis; be sure to check the schedule on the website in order to avoid loosing your work.
+
+**CREATE YOUR FIRST APPLICATION USING PROXEUS**
+-----------------------------------------------
+
+Now that you have successfully installed and configured your Proxeus platform, you can start creating your first application. Make sure that you have all the [required tools](https://docs.google.com/document/d/1C3B1oNY6lOv8Q_AvbKhwlySrS6qTiRl3raPLV6OXr7w/preview#heading=h.bdiacgpk9uqr) ready and dive right in following our [quick start guide](https://docs.google.com/document/d/1C3B1oNY6lOv8Q_AvbKhwlySrS6qTiRl3raPLV6OXr7w/preview#heading=h.z2jx3mx52di5).
+
+A minimal workflow comprises one template and a form to gather the data to be inserted into the document. Your workflow will automatically support the blockchain interactions required to register the output documents on Ethereum. All the concepts are explained in our [handbook](https://docs.google.com/document/d/1C3B1oNY6lOv8Q_AvbKhwlySrS6qTiRl3raPLV6OXr7w/preview). If you need inspiration, check out some of the use case examples on our [website](/discover).
+
+Once you’ve built your first workflow, you can set a price (in XES tokens) for it and publish it. You’re ready to launch your first Proxeus platform!
+
+**WHAT’S NEXT?**
+----------------
+
+The next step on the roadmap is to incorporate community feedback and release Proxeus as open source software. We are excited to see Proxeus going out into the world — now it’s your turn to test the software and give us feedback! Your contribution can play a key role in the adoption of Proxeus and XES and we can’t wait to discover new community-driven use cases and learn about new angles and ways to use Proxeus, that we may not even have thought about.
+
+‍
