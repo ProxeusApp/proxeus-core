@@ -1240,7 +1240,29 @@ This week we talked to Stephan, our Junior Digitization Manager. He discusses hi
 
 **‍**As a digitization manager, I am using the beta on a daily basis and I am heavily involved in its testing and quality assurance — so yes! :)
 
-‍
+‍Building better technology
+==========================
+
+September 26, 2018
+
+Just because a technology is good, doesn’t mean it will be adopted. It needs to be accessible and easy enough to use that the average user is willing to convert from their traditional, familiar way of doing things. Proxeus aims to do for blockchain what WordPress did for websites — take it out of the realm of the specialist and put the power right in the hands of the average user.
+
+![](https://uploads-ssl.webflow.com/5d5ada771e1398913827a622/5d64ea46371eb760e4f91032_puzzle.jpg)
+
+To do this means simplifying everything about it — turning what used to require coding into a simple drag-and-drop UI. Proxeus’ first two betas show how this will be realized — by making the blockchain invisible and giving the user a familiar interface that lets them focus on their work.
+
+“We’re very proud of the flexibility of Proxeus” said cofounder Antoine Verdon. “We are really changing the way people work, and how data is stored and managed. The Proxeus framework can be used to create fully GDPR-compliant blockchain products and store customer data, information from official registers, or DNA records.”
+
+The first beta — codenamed Rumba — demonstrated the workflow engine and document generator, which had already been used in several test cases with partners like the Cantonal Government of Zug, WWF Switzerland, and the University of Basel. In fact, the University of Basel’s diploma registration and verification system was launched on mainnet September 19, making it the first real-world application of Proxeus technology.
+
+Tango, the second beta, is a revolutionary tool for data management. Through the Proxeus DApp, users are able to have total control over their digital identity by storing their data off-chain, encrypted and secured in the storage provider of their choice, while putting detailed, granular access controls on-chain using smart contracts.
+
+“The interface is similar to Dropbox, and it is available on Mac, Linux and PC,” said cofounder Patrick Allemann. “Currently, the documents are stored by Mount10, a storage facility located in the Swiss mountains. We will be adding more storage providers over time.”
+
+This offers users exceptional security and control over their data, and the flexibility to share and collaborate as easily as they would with DropBox or Google Drive. However, unlike conventional solutions, Proxeus requires no subscription and there are no intermediaries and no risk of international data copying between clouds or data mining.
+
+**So, what’s next?  
+**“In the past six months we have demonstrated the key aspects of our technology: the workflow manager, document registration, and document storage,” said Verdon. “We will be adding more features and putting all those pieces together into the open source product outlined in our whitepaper, then releasing it as soon as possible for developers to build their own blockchain applications.”
 
 
 ‍
