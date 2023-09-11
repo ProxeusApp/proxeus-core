@@ -341,3 +341,20 @@ Yes, we do. The first step is to show proof-of-concepts for viable commercial us
 
 ‍
 
+
+Proxeus partners with the Swiss Blockchain Institute
+====================================================
+
+February 12, 2020
+
+Today we proudly announce that Proxeus joined forces with the Geneva-based Swiss Blockchain Institute. The Institute will be using the Proxeus framework to issue blockchain-registered diplomas as well as possibly adding the framework to its academic program in the future, enabling its students to quickly prototype and test their project ideas.
+
+![](https://uploads-ssl.webflow.com/5d5ada771e1398913827a622/5e5bd6a175d7b20a3421f0de_1_ZL78FX8wGZKDzfYG4GvmhQ.jpg)
+
+The Swiss Blockchain Institute opened its doors back in October 2019. As a training institution entirely dedicated to blockchain, its main objective is to close the current gap between the offer and demand of blockchain professionals. As its founder Matthieu Collas states, today for every trained blockchain development engineer on the marketplace there are 14 recruitment requests from companies.
+
+The Institute trains its students on various programming languages like Ethereum, Solidity, Hyperledger, Corda, Tezos and others. In the long term, it also aims to integrate Proxeus to its training offering: “Proxeus is often compared to WordPress as it allows to simplify the creation of applications that interact with the blockchain. Making students familiar with the framework will give them precious new skills as they will be empowered to quickly prototype new products and services,” says Collas.
+
+Following completion of a program, participants receive a certificate in accordance with the selected training. “Making our credentials immutable and easily verifiable is a natural step for the Institute and it provides an extra layer of security for both students and employers,” says Collas. Such certificates are tamper-proof which makes fraud impossible. Apart from using Proxeus to issue students certificates, the Institute is also looking for other use cases where the framework could enhance internal and external processes.
+
+‍
