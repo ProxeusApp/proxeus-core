@@ -358,3 +358,17 @@ The Institute trains its students on various programming languages like Ethereum
 Following completion of a program, participants receive a certificate in accordance with the selected training. “Making our credentials immutable and easily verifiable is a natural step for the Institute and it provides an extra layer of security for both students and employers,” says Collas. Such certificates are tamper-proof which makes fraud impossible. Apart from using Proxeus to issue students certificates, the Institute is also looking for other use cases where the framework could enhance internal and external processes.
 
 ‍
+
+Proxeus workflows: a strong backbone
+====================================
+
+January 22, 2020
+
+In past articles we explored Proxeus forms, smart templates and the document service. Proxeus workflows is where all elements come together — let’s take a look how they constitute the backbone of every Proxeus application by defining the process logic and connecting to various actions and input sources.
+
+![](https://uploads-ssl.webflow.com/5d5ada771e1398913827a622/5e5bd72f63723e4181a8f369_1_d8qHc9TsXuD2m5sLdLrmXQ.png)
+
+**What is a Proxeus workflow?**
+-------------------------------
+
+A Proxeus workflow is a series of sequential steps that are carried out based on user-defined rules or conditions in order to execute a business process. Workflows enable Proxeus users to [digitize their know-how](https://medium.com/proxeus/proxeus-wrap-your-know-how-digitally-a99150875ffe) and to make it available to third parties, for free or for a fee paid in XES.
