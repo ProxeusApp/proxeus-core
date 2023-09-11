@@ -19,3 +19,21 @@ Some news about Proxeus
 - [CNN](https://www.youtube.com/watch?v=nDxhAQOSkNE)
 - [coinspeaker](https://www.coinspeaker.com/getting-blockchain-gear/)
 
+
+Some Doc Links
+==============
+
+- [Proxeus White Paper](https://docs.google.com/document/d/1TTSTjRdZ3VMPVAV8_So6ycnKHqX3_Uos5txhcFAqiw4/edit)
+- [Handbook](https://docs.google.com/document/d/1C3B1oNY6lOv8Q_AvbKhwlySrS6qTiRl3raPLV6OXr7w/preview)
+- [Guide - Education Diploma](https://docs.google.com/document/d/1Gl6R1t0LYRK6kARScx5-vqpiKtd6xqcH2yPPC3wWMr4/preview)
+- [Guide - Crypto-tax Workflow](https://docs.google.com/document/d/1lllYwzMWNESZg9vnOajssuxWaalMycwI2Zs8BmDwf1M/preview)
+- [Guide - Proof of Existence](https://docs.google.com/document/d/19Q0w6vDDkQ3bQKjfMf-ksMNoGWjo-uxiMfskm2JHMqw/preview)
+- [Proxeus Association / Project Manager (30-50%)](https://docs.google.com/document/d/1xn1ECVIaNxxyFe9LysYm91apA1YYQsOAJNKmRNaCF-A/edit)
+- [Template Handbook](https://docs.google.com/document/d/1-vJsTrU3w8dEcDr3-nV5owtxqHWSjzEf2uk6m9-cMIs/preview)
+- [Proxeus White Paper v2.2](https://docs.google.com/document/d/1TTSTjRdZ3VMPVAV8_So6ycnKHqX3_Uos5txhcFAqiw4/edit)
+
+
+- [Twitter](https://twitter.com/proxeusapp?lang=en)
+- [Medium](https://medium.com/proxeus)
+- [Telegram](https://web.telegram.org/#/im?p=@proxeusannouncements)
+
