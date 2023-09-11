@@ -1126,6 +1126,32 @@ What particular challenges does this imply?
 
 The most complex and exciting challenges are those that have no precedent and no best-practice yet, due to blockchain being such a new technology. This situation leads to interesting conversations between team members and to the drawing of new solutions. To me, it feels like having a front-row seat witnessing as well as contributing to the upcoming blockchain-world.
 
-‍
+Interview with Guido Zeller
+===========================
 
+December 19, 2018
+
+We talked to Guido Zeller, a developer who has been using the Proxeus framework to develop various applications and also presented his work at the University of Lucerne.
+
+![](https://uploads-ssl.webflow.com/5d5ada771e1398913827a622/5d64ec39371eb75653f91d43_Workflow.png)
+
+**Who are you and how did you learn about the Proxeus project?**
+----------------------------------------------------------------
+
+My name is Guido and I am active in the Business Integration field. I was looking for quite some time for a platform to extend classic workflows to blockchain applications. Meeting Antoine and Patrick, and hearing about their project at a Crypto Valley Association event, was an impressive experience. I then immediately started to develop my own applications on the Proxeus project.
+
+**Could you tell us more about the use-cases that you developed on the Proxeus framework?**
+-------------------------------------------------------------------------------------------
+
+I started to use the workflow builder and document generator in order to easily prove the authenticity of a learning certificate and therefore eliminate the administrative overhead of this lengthy process. I then focused on other use-cases, such as creating certificates for goods of value or leveraging digital signature in order to improve the coordination of several parties within a complex process.
+
+**What impressed you most about the application?**
+--------------------------------------------------
+
+The flexibility of the Document Generator is very impressive. I particularly liked the way how you can activate fields depending on specific content.
+
+**Any other pieces of advice to our followers?**
+------------------------------------------------
+
+The ability to create dynamic forms is a strength — it is very interesting and useful to explore. Above all, the framework provides simplicity in the usually complicated processes that are workflows.
 
