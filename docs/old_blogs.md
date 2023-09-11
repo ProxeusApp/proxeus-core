@@ -778,8 +778,7 @@ Once you’ve built your first workflow, you can set a price (in XES tokens) for
 
 The next step on the roadmap is to incorporate community feedback and release Proxeus as open source software. We are excited to see Proxeus going out into the world — now it’s your turn to test the software and give us feedback! Your contribution can play a key role in the adoption of Proxeus and XES and we can’t wait to discover new community-driven use cases and learn about new angles and ways to use Proxeus, that we may not even have thought about.
 
-‍
-“It’s only a matter of sitting down and defining the processes”
+‍“It’s only a matter of sitting down and defining the processes”
 ===============================================================
 
 September 18, 2019
@@ -819,3 +818,53 @@ Sure. I think that wherever services are provided and standards are not clearly 
 I believe that Proxeus could help us to quickly prototype some key aspects of the solution and test them with our clients. The set of tools that are already in place can help us to move forward quickly without having to reinvent the wheel. It’s great to hear that the team behind Proxeus are very supportive for our idea and we’re looking forward to making the next steps.
 
 ‍
+
+
+“My hope is that smart contracts will really deserve their name in the future”
+==============================================================================
+
+September 4, 2019
+
+Be it as an advisor for blockchain based projects, as a member of the Ethereum Foundation’s advisory board or with his recent talk about identity on the blockchain at TEDxLausanne — Bernd Lapp is a blockchain veteran who has been sharing his expertise for several years already. We met him to talk about his current work, his vision for the future of the industry and how he sees Proxeus contributing to the blockchain ecosystem.
+
+![](https://uploads-ssl.webflow.com/5d5ada771e1398913827a622/5e5bdd86c9fe84cb0c9c8f24_1_FskXLUnfLD4FiCmHTI4zlw.jpg)
+
+**What are you currently working on?**
+--------------------------------------
+
+One of my main projects is [Avado](https://ava.do/): We produce mini PCs that developers can use to run their own blockchain nodes. Bitcoin, Ethereum and Monero are the supported blockchains at the moment and more will be added in the future. Apart from selling the hardware, we developed an operating system as well which makes it very easy to run and maintain a node.
+
+Another project is [relai](https://t.co/qG4DkSjL2E) which allows to make recurring investments into crypto. You link your bank account and then specify an amount and the day of the week to make the payment. Afterwards it’s converted into BTC or ETH and sent to your wallet. That’s a very convenient way to accumulate crypto currencies because it takes away the hassle and burden of doing it manually and levels out volatility.
+
+**You are also engaged in the project Bot Latam — can you tell us more about it?**
+----------------------------------------------------------------------------------
+
+Motivated by the idea that decentralized products have much more potential in developing countries than in places like Switzerland — where the legal system, the financial system etc. are working — we organized [Bot Latam](http://es.botlatam.ch/) last year. It was an onboarding tour for crypto currencies through various cities of Latin America. We focused on teaching the people how to set up their own ecosystem of crypto products rather than explaining the technical background. The tour was a great experience and we received good feedback. Especially for the tools that were used, the feedback from real users is very valuable.
+
+**You were a member of the Ethereum advisory board — how was this experience?**
+-------------------------------------------------------------------------------
+
+I joined the board in 2015 and worked for them until the beginning of 2017. They were young and new back then and I helped to structure and organize their foundation in Zug. My main task as a board member was representing Ethereum to companies that are interested in the philosophy and potential of blockchain technology and smart contracts. For many consulting companies like PwC, E&Y, KPMG etc. that today have their own blockchain departments I was an entry point to start building their knowledge base.
+
+**What’s your vision for the intersection of documents and smart contracts?**
+-----------------------------------------------------------------------------
+
+My hope is that smart contracts will really deserve their name in the future: A document providing information that it receives from various sources and that enables that information to trigger functions in the document itself. Such a smart contract document would thus look quite different to what we call a document today — it will be much more versatile and active. For example when it comes to proving that I’m above 18 to buy alcohol: Instead of having to produce a document that another party has to check, the smart contract would simply give that information to the system — such a process will be much more automated.
+
+**How do you see Proxeus and its potential contribution to the ecosystem?**
+---------------------------------------------------------------------------
+
+Proxeus is a great infrastructural piece for this new economy. Today’s internet applications would not be possible without the decades of development for the underlying infrastructure. The same case applies for the blockchain — it’s a great concept but will not work unless the infrastructure is in place. Projects like Proxeus are developing solutions that make it very easy for example to let documents interact with smart contracts and there are a lot of use cases that can be built on top of it.
+
+**What are the main challenges for blockchain to gain broader usage and acceptance?**
+-------------------------------------------------------------------------------------
+
+The biggest challenge are the huge expectations. The internet needed 40 years to become what it is now, while for the blockchain many people expect everything to be ready today. However, building the infrastructure needs time, there are many issues around scalability and security that have to be solved and we need real collaboration on standards. It will at least take another 5 to 10 years before a product might achieve mass adoption.
+
+Some industries that looked into the technology and became aware of its immaturity are starting their own solutions — Libra is one example. Those semi-blockchains build on existing infrastructure and try to make use of some benefits of the blockchain technology. But they take a centralized approach which then eliminates almost all the good parts of the blockchain. This unwillingness to wait is a serious problem.
+
+**What are the next big things on the blockchain that you see coming?**
+-----------------------------------------------------------------------
+
+To make blockchains work in a productive environment, everything comes down to identity. The identity of humans, refrigerators, IoT devices etc. can be verified via blockchain with the right solutions. Thanks to the zero knowledge approach, you will be able to proof your identity without having to reveal all your private information and the result of the claim will be stored on the blockchain. And in case you move home and your address changes, you would no longer need to inform everybody about it — instead they would simply see the updated information in the system. To enable such solutions, we need to standardize the way we look at identities as well.
+
