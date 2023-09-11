@@ -560,3 +560,34 @@ In order to facilitate the creation of templates, variables entered into the for
 For a complete guide on templating, please check our [templating handbook](https://docs.google.com/document/d/1-vJsTrU3w8dEcDr3-nV5owtxqHWSjzEf2uk6m9-cMIs/preview). Share your best results and contact us if you get stuck or if you are struggling to implement a complex functionality — we’ll be happy to help!
 
 ‍
+
+Proxeus document service — document templating made easy
+========================================================
+
+November 8, 2019
+
+The Proxeus document service is an integral part of the framework and was built from scratch to offer state of the art possibilities in the field of document templating. We sat down with the team that develops this feature to get some insights.
+
+![](https://uploads-ssl.webflow.com/5d5ada771e1398913827a622/5e5bdb530e1706647182715d_1_fUy2sgFXIDA8nIzE2NISng.png)
+
+**Quickly explained: What is the Proxeus document service?**
+------------------------------------------------------------
+
+The document service is a document templating engine that is built as an integral part of the Proxeus framework. The service basically takes a template document and a JSON containing the data and renders it to a format like PDF, ODT or DOCX. While the current implementation only allows ODT as output format, the service supports all XML-based document solutions by design. So they can easily be included using the same core.
+
+**Why did you create your own document service?**
+-------------------------------------------------
+
+Back in 2016 when we started to look for a templating engine solution for the Proxeus framework, there was nothing available that quite fit our idea, so we had to start from scratch. Today there are indeed a few similar solutions on the market.
+
+**What differentiates it from other solutions?**
+------------------------------------------------
+
+The Proxeus document service is unique because its core dependency is a document format based on XML (like DOCX, XLS, ODT and many more). This principal characteristic makes it independent from LibreOffice or MS-Office as far as possible. Besides that, new features added for DOCX or ODT work out of the box without the need for any changes on the document service as long as they are on top of XML. Examples could be new formula features, specific features for table structures or paragraph and styling changes. Many other solutions out there are taking a different approach by reconstructing and integrating feature by feature of the external tool (LibreOffice or MS-Office for example). Such applications are much more static and need continuous adaptation if new features are added at the external tool whereas the beauty of the Proxeus document service lies in its independence and its generic, universal applicability.
+
+**What types of documents does it support?**
+--------------------------------------------
+
+At the moment ODT is supported. But adding new XML-based formats like DOCX is quite easy as the Proxeus document service core is based on XML and not on document format specific things.
+
+‍
