@@ -1426,3 +1426,31 @@ About
 **Proxeus** (proxeus.com) is an award-winning, powerful workflow engine and document generator allowing users to create blockchain applications by inputting information and building workflows without the need to learn a new programming language. Founded in 2017, Proxeus has developed a mature technology and has been testing it with a series of industry leaders in trade finance, tokenization of assets, legal & compliance. Shortly after raising $25M as a part of their ICO, Proxeus won the Swiss Fintech Award for “Early Stage Startup of the Year 2018.” Proxeus has offices in Liechtenstein, Zug, Zurich, Lisbon and Singapore.
 
 **Mercuria Helvetica** is a Swiss based fintech investment firm that operates world-class services and delivers a one stop asset management solution, managing the whole ownership lifecycle end-to-end. Founded in 2015, Mercuria Helvetica enables investors to gain exposure to fine collectible cars and have access to their garage across the globe.
+
+Bringing higher education to the blockchain – fast
+==================================================
+
+May 7, 2018
+
+In under 100 hours, Proxeus created a dApp to issue certificates for the “Bitcoin, Blockchain und Kryptoassets” course run by the University of Basel’s Center of Innovative Finance (CIF) and registering them on Ethereum, making CIF the first institution in Switzerland to use blockchain to secure their academic credentials from fraud.
+
+![](https://uploads-ssl.webflow.com/5d5ada771e1398913827a622/5d5feb3514f5cded1bc8ba1b_presscrop.jpg)
+
+In under 100 hours, Proxeus created a dApp to issue certificates for the “Bitcoin, Blockchain und Kryptoassets” course run by the University of Basel’s Center of Innovative Finance (CIF) and registering them on Ethereum, making CIF the first institution in Switzerland to use blockchain to secure their academic credentials from fraud.
+
+The solution developed is simplistic, and elegant. Two tools have been created – one that the university staff can use to create the certificate and register it to the blockchain with its unique hash. The second tool is publicly available, allowing anyone to verify that the electronic document has been issued by the university, and that the content is accurate.
+
+Aiming to prove Proxeus’ flexibility and efficiency, this project was started on the Monday morning, and delivered by Thursday. This speed of delivery highlights how Proxeus will revolutionize blockchain-based workflows by eliminating the need for complex coding. It also served as a proof of concept for Proxeus’ blockchain agnostic positioning, using Ethereum instead of Hyperledger, which was employed when Proxeus joined forces with IBM and Swisscom among others to incorporate the first Swiss company using blockchain.
+
+“We are particularly proud of this project,” said cofounder Antoine Verdon. “Proxeus has been intended from the beginning to be easy to use, efficient, and blockchain agnostic. In less than a month, we have deployed two functioning prototypes on two different blockchains – and this one took less than a week to take from concept to completion.”
+
+This first prototype will be used to create certificates of completion for CIF’s blockchain course – but Managing Director of CIF Dr. Fabian Schär believes it’s just a first step towards securing academic credentials with the new technology.
+
+“Fraud is a problem in academia just as it is in any field,” he said. “By registering credentials on an immutable, decentralized ledger, we provide an extra layer of security for graduates and potential employers. These credentials can’t be faked, and can be easily verified online. It will introduce a new paradigm of security and offer value to all parties – employers don’t lose time checking credentials, graduates have an edge, and the institutions themselves reduce their reputational risk and a significant administrative burden.”**‍**
+
+About  
+Proxeus (proxeus.com) is an award-winning, powerful workflow engine and document generator allowing users to create blockchain applications by inputting information and building workflows without the need to learn a new programming language. Founded in 2017, Proxeus has developed a mature technology and has been testing it with a series of industry leaders in trade finance, tokenization of assets, legal & compliance. Shortly after raising $25M as a part of their ICO, Proxeus won the Swiss Fintech Award for “Early Stage Startup of the Year 2018.” Proxeus has offices in Liechtenstein, Zug, Zurich, Lisbon and Singapore.
+
+The Faculty of Business and Economics of the University of Basel has had a focus on crypto assets and blockchain technology since more than four years. In December 2017, the Center for Innovative Finance (CIF, cif.unibas.ch) was founded in order to create a dedicated organization that drives research around blockchain technology and other fintech topics. As of today, the CIF team consists of twelve researchers.
+
+‍
