@@ -251,3 +251,46 @@ The previously cluttered template preview window has been cleaned up and helps y
 The form editor has been revamped, too. The key actions are now all next to each other and the Save button is highlighted.
 
 ![](https://uploads-ssl.webflow.com/5d5ada771e1398913827a622/5ebab4d68988744786057e57_1*OjYBsxvrDZ33yn5M9mSycQ.png)
+
+Proxeus & Hyperledger: Combining powers
+=======================================
+
+March 17, 2020
+
+Proxeus made history by helping to speed up company incorporations in Switzerland to under two hours (find more details here). In a previous blog post we spoke to the lawyer Philippe Kaiser from Kaiser Odermatt & Partner who is involved in the project. To provide another view on the project we asked Ulrich Schimpel, member of IBM CTO Europe Team, about his thoughts and experiences.
+
+![](https://uploads-ssl.webflow.com/5d5ada771e1398913827a622/5ebab47e89da3c4e94f0bcf4_1_OgRRWozwu9uNGoTBHCQScg.jpg)
+
+_Proxeus made history by helping to speed up company incorporations in Switzerland to under two hours (find more details_ [_here_](https://www.businessinsider.fr/us/swiss-using-blockchain-to-refine-clunky-business-incorporation-2018-5)_). In a_ [_previous blog post_](https://medium.com/proxeus/proxeus-helps-speeding-up-swiss-business-incorporations-dd0eed421576) _we spoke to the lawyer Philippe Kaiser from Kaiser Odermatt & Partner who is involved in the project. To provide another view on the project we asked Ulrich Schimpel, member of IBM CTO Europe Team, about his thoughts and experiences._
+
+**Can you tell us more about the company register project and its objectives?**
+
+The project is about an end-to-end acceleration when you are founding a Swiss company. It’s not about replacing any party involved in such a process but it brings together all the pieces that are needed including notaries, banks and the commercial registrar. The objective is clearly to speed up the founding process to a few days compared to several weeks and to have a much better transparency across different players.
+
+**You set a new record by founding the first Swiss company on the blockchain in under 100 minutes, instead of the usual 10 days. How did you achieve that?**
+
+We did this experiment as a realistic fire drill to find the limit of this process. This means, everyone involved was informed but we did not know the name of the company to be founded. It was only when the jury actually chose a name that we were able to start the process, fill in all the information and have the correct name in the files, for example, to open a bank account.
+
+This experiment was very insightful because it showed us that founding a company was possible in under two hours and the delays will hopefully be reduced step by step in the future. We achieved this result not by revolutionizing the entire process but by cleverly combining different components: Of course, we used digitization but we also reused existing, already very well working infrastructure and our job was to put these different components together. This is the main reason why we could actually achieve this impressive result.
+
+**Why did you choose Proxeus as a core partner to start this business ecosystem?**
+
+First of all, the Proxeus team is highly innovative, agile and engaged and perfectly fits the spirit of all other core partners. This is also true when it comes to their product: Proxeus is a highly flexible tool to pull together all relevant information in a user-friendly workflow that — in the very beginning — we did not know how it would look like. Having to define and configure this workflow including roles etc. and being able to do it in an intuitive way was very helpful. We configured Proxeus as a web solution which was a must for us, and it provides a very good user experience for the people who need to fill in the data and produce the required documents. All in all, the Proxeus platform offered a tremendous support for this pioneering initiative.
+
+**Why did you choose to implement a Hyperledger blockchain? How did you set it up and what role does it play in the company incorporation process?**
+
+We used a Hyperledger Fabric as a permissioned blockchain because we are working in a regulated industry environment. This requires to know the identities of the participating players and to employ flexible and role-based accessibility and visibility policies: A bank has different rights and obligations than the commercial registrar or a notary and we have to make sure that only a bank can for example issue a bank certificate and only a commercial registrar can approve a company foundation. Furthermore, we don’t need a mining process to guarantee consistency of the blockchain as the set of current and future participants like Cantons and banks offer a high standard of trustworthiness, professionality and mutual independence.
+
+In our setup the Hyperledger fabric blockchain has a logging mechanism which makes the whole process revision-proof: You can see exactly when the bank actually approved or uploaded a certificate or when the notary actually approved that all the necessary steps for the foundation have been completed.
+
+**How does the Hyperledger contract communicate with the Proxeus application?**
+
+Just like everything in our joint project with the partners was very lean and agile, we implemented a very lean interface between Proxeus and the Hyperledger fabric blockchain. Information typed in or provided by the users in the Proxeus interface (e.g. name of the new company and its founders and the chosen notary) is not only filled into the documents but also transmitted to the blockchain-enabled workflow system, where it is used to dynamically set up the adequate access rights. Only involved process parties will then have the rights to access a certain foundation.
+
+**What are your learnings from this project?**
+
+There are two key learnings: First, regarding the lean approach I already mentioned reusing existing components, processes and infrastructures and, second, regarding the ecosystem. Like many (maybe all) industrial blockchain projects, ours depends a lot on the ecosystem of partners and how they are actually being orchestrated, how they interact and collaborate. This is an evolutionary journey which should be given sufficient attention. Technology is only one part of the project, the other part is about real processes in the real world and — in our case — with a lot of legal aspects as well. In some cases, we actually had to employ “workarounds” because of legal restrictions and in order to be fully compliant with Swiss law. Such issues make it necessary that the partners are working together efficiently, and while short communication paths must be in place, we also needed to give it necessary time to evolve at certain points. Basically, the project as a whole but also each partner needs to have sufficient time to make the necessary clarification adjustments and changes for themselves.
+
+‍
+
+
