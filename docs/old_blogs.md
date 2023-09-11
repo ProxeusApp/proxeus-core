@@ -591,3 +591,41 @@ The Proxeus document service is unique because its core dependency is a document
 At the moment ODT is supported. But adding new XML-based formats like DOCX is quite easy as the Proxeus document service core is based on XML and not on document format specific things.
 
 ‍
+
+Building DApps: signature integration
+-------------------------------------
+
+October 29, 2019
+
+Proxeus comes with a fully-fledged signature feature, allowing to send and receive signature requests. Signing a document creates a public cryptographic proof that can be checked on the blockchain by anyone in possession of the document.
+
+![](https://uploads-ssl.webflow.com/5d5ada771e1398913827a622/5e5bdba40e17060e5a827371_1_HNKpPgvgPXI_D_gmdBYzXA.png)
+
+**How do signatures work?**
+---------------------------
+
+The signature feature on Proxeus allows to request and record cryptographic signatures of a document hash using the Ethereum identity associated with a Proxeus platform user account. These signatures are recorded in the platform’s Registry Smart Contract.
+
+Once the workflow execution is completed and the hash has been added to the Blockchain Registry, the finalized document can be accessed from the “Documents” tab in the frontend view of the Proxeus platform.
+
+![](https://uploads-ssl.webflow.com/5d5ada771e1398913827a622/5e5bdbbdc9fe844ae49c6d8d_1*JZz6QI8iOpOQGCGAKCxSpA.png)
+
+Users have the possibility to go beyond this default document / issuer registration and to request additional signatures from other Proxeus platform users in order to record the agreement of multiple parties on a document. The “Documents” view shows the status of all signature requests issued so far. As long as a signature request is pending, it can be cancelled by the requestor.
+
+![](https://uploads-ssl.webflow.com/5d5ada771e1398913827a622/5e5bdbbc2089e5ee52934d8b_1*wlQAM1_ZzTxG3apPuGa9zw.png)
+
+Users are notified of signature requests via a notification email. Requests can be accessed from the “Signature Requests” tab in the frontend view, where users can decide whether to sign the document or to reject the request. In order to give their signature, users are prompted to sign a transaction with Metamask, which will add the Ethereum identity associated with their Proxeus platform account to the Registry Smart Contract entry for the document as signatory.
+
+**What can I do with signatures?**
+----------------------------------
+
+Signatures are an important blockchain feature and can be used to signify approval in many different ways. Depending on your use case, they can be implemented to provide a simple confirmation (such as in a review process in a company), or to give formal approval to entering a business relationship with partners or customers. But the same feature can also be used to fulfill many different use cases. Imagine for example that you are interested to build a voting mechanism: just issue a series of requests to people whom you want to give a voice to and set up a blockchain observer module to watch over the answers provided (requests confirmed or declined) — the result can be used to automatically generate a document via the Proxeus API that features the vote result and is sent to the relevant participants.
+
+**Linking signatures with identities**
+--------------------------------------
+
+An important question users will face is: how can I know who is behind a wallet? Who is signing? If you are building prototypes, simple solutions such as publishing the wallet address on each party’s website, or having the identity confirmed on a case by case basis by a notary can do the trick. If you are looking to set up a productive system, you could look into integrating Ethereum Name Service or identity solutions such as uPort and more generally self-sovereign identity solutions building on the W3C DID standard.
+
+Let us know if you are working on a use case involving signatures, especially if you are looking at creative ways to use them — we are curious to learn more and happy to assist!
+
+‍
