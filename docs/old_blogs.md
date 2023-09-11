@@ -1330,4 +1330,39 @@ After meeting a critical milestone toward fulfilling the requirements of their w
 
 The beta can be accessed at beta.proxeus.com.
 
+From funding to beta in five intense months
+===========================================
+
+July 24, 2018
+
+The first beta functionalities allow users to test their blockchain use case by creating documents and workflows and registering them on the Ethereum blockchain. Over the next months, we will continue improving the current platform based on feedback delivered by the first users, and we will be rolling out the next wave of functionalities, including the possibility to use the blockchain to store and certify assets.
+
+![](https://uploads-ssl.webflow.com/5d5ada771e1398913827a622/5d5ff2e1ef7f20e5df8705ff_Fron-funding-to-beta.jpeg)
+
+The status of the beta now
+--------------------------
+
+The first beta functionalities allow users to test their blockchain use case by creating documents and workflows and registering them on the Ethereum blockchain. Over the next months, we will continue improving the current platform based on feedback delivered by the first users, and we will be rolling out the next wave of functionalities, including the possibility to use the blockchain to store and certify assets.
+
+Introducing Planet Proxeus
+--------------------------
+
+![](https://uploads-ssl.webflow.com/5d5ada771e1398913827a622/5d5ff2fba7638f14e951577d_Planet-proxeus-illustration-300x199.png)
+
+In order to make Proxeus’ technology and its uses more tangible, we have launched “[Planet Proxeus](http://proxeus.world/)”, a testing ground where users can get a hands-on experience with the Proxeus platform through a series of fictive use cases. We have released a first series of challenges around the tokenization of assets – a key use case made possible by Proxeus – and will be updating them on a regular basis. XES tokens will be awarded for the most interesting solutions. [Go try it out](https://proxeus.world/yachts/)!
+
+Making fast progress
+--------------------
+
+We are working hard on new standards for the registration, storage and management of blockchain assets. Our aim is to have all core functionalities of Proxeus available for testing by mid-Q4, and to finalize the development of the entire project within one year from funding. Ambitious? Of course – but not unrealistic.
+
+Building a broader ecosystem
+----------------------------
+
+As an open-source platform, Proxeus will continue to grow and evolve as the community begins to work with it. The Proxeus ecosystem will resemble the WordPress one, with an open-source core and a range of partners providing additional modules and custom build services.
+
+We are driven by our ambition to be a key enabler in bringing blockchain to the mainstream, and act as a catalyst for the next generation of digitalization. More than just the technical future, we want to see a future digital environment where using blockchain is a natural as browsing the internet or sending emails. While Proxeus will be one of many tools to help accomplish this, we believe it will be an important one.
+
+‍
+
 ‍
