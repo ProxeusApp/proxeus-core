@@ -1155,3 +1155,22 @@ The flexibility of the Document Generator is very impressive. I particularly lik
 
 The ability to create dynamic forms is a strength — it is very interesting and useful to explore. Above all, the framework provides simplicity in the usually complicated processes that are workflows.
 
+
+Proxeus Workshop: Issue a blockchain-based watch certificate in less than 30 minutes
+====================================================================================
+
+December 5, 2018
+
+Last Tuesday, the Proxeus framework was leveraged as part of the ProConcept UserDay in order to create a blockchain-based watch certificate in less than 30 minutes.
+
+![](https://uploads-ssl.webflow.com/5d5ada771e1398913827a622/5e5bdfa02089e52df493722a_0_QB4KTAc5EuQhtjXo.jpg)
+
+Back in July, we released our first beta, named “Rumba”, which allows anyone to register just any types of documents on the blockchain through pre-generated workflows and forms. This beta, openly available [here](https://beta-app.proxeus.com/), makes it easy to issue and verify the authenticity of any documents in a matter of minutes. Hence, we accepted and successfully completed the challenge to create a digital, blockchain-based watch certificate in less than 30 minutes as part of the ProConcept UserDay organized in Bern.
+
+Once again, this successful use-case demonstrates the power of the Proxeus framework, which can already be used to remove the complexity inherent to the development of blockchain applications, in particular in use-cases related to the certification of documents. By providing a series of building blocks, the application allows users to focus on the added-value of their product, instead of spending time on basic technological challenges that dozens of others have already solved before. The platform is extremely easy to use and empowers anyone to create blockchain applications that are affordable and can be made compatible with current enterprise systems.
+
+At the end of the experiment, two different documents were issued: an authentic certificate, and a copy that we altered by changing the serial number of the watch. The two documents can be found [here](https://drive.google.com/open?id=1xph_NlH3XiiPpY0GQ5uKpq1I7gEHwE-d).
+
+Give it a try: download the documents and visit the [verification page](https://beta-app.proxeus.com/) in the beta section of the website. Can you recognize which certificate is authentic, and which one has been altered? Let us know if you do!
+
+‍
