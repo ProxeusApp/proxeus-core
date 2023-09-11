@@ -1364,5 +1364,37 @@ As an open-source platform, Proxeus will continue to grow and evolve as the comm
 We are driven by our ambition to be a key enabler in bringing blockchain to the mainstream, and act as a catalyst for the next generation of digitalization. More than just the technical future, we want to see a future digital environment where using blockchain is a natural as browsing the internet or sending emails. While Proxeus will be one of many tools to help accomplish this, we believe it will be an important one.
 
 ‍
+Proxeus and WWF Switzerland put donation on the blockchain
+==========================================================
+
+June 20, 2018
+
+Proxeus is collaborating with WWF Switzerland on a prototype solution to improve the ease and accountability of the donation process.
+
+![](https://uploads-ssl.webflow.com/5d5ada771e1398913827a622/5d5ff216c701de07a22ba296_WWF-banner_v5.jpg)
+
+June 19,2018, Zurich. Charitable donation is the lifeblood of global NGOs like WWF, yet the good intentions of donation come hand-in-hand with issues of their own. Accountability for the donation, the transaction costs of processing so many individual contributions, and confirmation of the donation for tax purposes are just a few of the challenges that Proxeus and WWF aim to overcome with this test case.
+
+Starting with a prototype blockchain-powered donation confirmation engine, this project aims to empower consumers to donate more easily while reducing administration costs associated with processing these donations, ensuring more of the donation goes to its intended purpose. For the prototype, no real donor data was used.
+
+“This is a real opportunity to use our technology for social good,” said Antoine Verdon, cofounder of Proxeus. “We are helping ensure that the donations go where they have to. By minimizing the system complexity we’ve maximized the benefit for WWF Switzerland’s projects.”
+
+The first step in this process is the donation confirmation engine, which uses the Ethereum blockchain to confirm receipt of the donation(s) from the donor and issue a confirmation of donation at the end of the year for tax purposes, all while maintaining full GDPR-compliant privacy protection. The vision for this project goes much further, for example enabling donation targeting, micro-donations at points of sale, and aggregated cross-platform donation acknowledgement.
+
+In real terms, this could allow donations to be made as micro-donations at points of sale – currently not efficient due to transaction cost – and at the end of the year have the full sum of the donations aggregated and acknowledged for tax purposes.
+
+“Blockchain will affect many aspects of our life and work. Even though issues remain to be  resolved, the technology has considerable potential to streamline processes in fundraising and administration,and to scale up our conservation impact. Hence, WWF is motivated to test real-life applications of blockchain in different areas of our work,” said Thomas Vellacott, CEO of WWF Switzerland. “We are currently running several initiatives worldwide to test the application of blockchain. WWF Switzerland works with other WWF offices on these initiatives. We will analyze the results and decide how to use blockchain going forward.”
+
+Despite fears to the contrary, blockchain-based donation processes will not lead to unsustainable use of resources. By replacing paper, blockchain not only consumes power at a comparable or lesser rate (7,000-14,000kWh/kg for paper, 70kWh/transaction for Ethereum, with that consumption rate diminishing significantly as the verification mechanism in the Ethereum network is switched from a “proof of work” to a “proof of stake” mechanism by an upgrade to the Casper protocol), blockchain does not have any of the undesirable impacts of paper production such as deforestation and pollution of water and air.
+
+About  
+-----
+
+Proxeus (proxeus.com) is an award-winning, powerful workflow engine and document generator allowing users to create blockchain applications by inputting information and building workflows without the need to learn a new programming language. Founded in 2017, Proxeus has developed a mature technology and has been testing it with a series of industry leaders in trade finance, tokenization of assets, legal & compliance. Shortly after raising $25M as a part of their ICO, Proxeus won the Swiss Fintech Award for “Early Stage Startup of the Year 2018.” Proxeus has offices in Liechtenstein, Zug, Zurich, Lisbon and Singapore.
+
+WWF Switzerland is the largest independent conservation organization in Switzerland and part of an international WWF network with over 5 million supporters and active in over 100 countries. WWF’s mission is to stop the degradation of the Earth’s natural environment and to build a future in which humans live in harmony with nature. Visit wwf.ch/medien for latest news and media resources and follow us on Twitter @WWF\_Schweiz
+
+‍
+
 
 ‍
