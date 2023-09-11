@@ -684,3 +684,20 @@ Of course there are many risks and challenges about privacy or people’s rights
 
 ‍
 
+
+Proxeus: wrap your know-how digitally
+=====================================
+
+October 8, 2019
+
+The invention of email in 1971 essentially allowed users to put letters inside a new form of envelope: a digital one. Compared to the offering of traditional postal services, this new digital envelope format not only resulted in dramatic efficiency gains (immediate delivery) and cost improvements (free distribution); over the years, it also augmented the original letter concept with new functions such as search, read receipts or auto-complete.
+
+![](https://uploads-ssl.webflow.com/5d5ada771e1398913827a622/5e5bdc8f0e17065341827551_1_sISGIBxtNsb8ikXm5v50TA.png)
+
+Image, video and audio content soon followed this evolution and received their own digital envelope, giving them new properties and the ability to spread much quicker. But the last wave of digitization left entire categories untouched: it took the invention of blockchains and tokens so we could understand how other elements such as money and assets could be wrapped digitally \[1\]. Proxeus participates in this evolution by offering the technology to wrap new types of elements digitally: intellectual property and know-how.
+
+At the beginning of the Proxeus journey, a lot of the conversations we had with early users revolved around digitization in the legal space, where documents are still largely handcrafted by professionals charging an hourly rate for their service. We started thinking about solutions to scale this professional know-how. Today, it is possible to buy legal templates on different online platforms, but questions will often arise as regular consumers fill them out: what are the exact legal requirements they should observe and how should they specific points be phrased?
+
+Instead of making mere templates available for download, owners of specialist know-how are empowered by Proxeus to create guided workflows similar to client interviews — only in digital form and automatized. Let’s take the [Swiss company registration process](https://medium.com/proxeus/proxeus-helps-speeding-up-swiss-business-incorporations-dd0eed421576) as an example: instead of conducting separate in-person interviews with 3 different actors (lawyer, notary, bank), all information is collected in a single flow. A series of pre-programmed checks and rules makes sure at every step that the data entered is compliant with the local laws, regulations and practices, reducing the need for human validation.
+
+This same principle can be extended to almost every field: if you know how to certify an asset, how to issue an education diploma or how to create a tax report for crypto holdings in a specific jurisdiction, Proxeus enables you to capture this know-how in the form of workflows so you can start monetizing it (by making it available to third-parties for a fee payable in XES) or use it for any other purpose (such as increasing the efficiency of your internal processes). Now that the product is out and available to anyone on livenet, we can’t wait to discover new community-driven use cases and learn about new angles and ideas to use Proxeus, that we haven’t even thought about.
