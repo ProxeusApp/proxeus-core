@@ -1031,4 +1031,61 @@ Curious? Test Tango Reloaded [here](http://beta.proxeus.com./), and check out [t
 
 When you’ve tested it, we want to hear from you! What are your favourite features? Would you like different functionalities and if so, what? [Let us know.](http://proxeus.com/)
 
+‍“Proxeus will help to get blockchain applications adopted mainstream”
+=====================================================================
+
+March 28, 2019
+
+We were delighted to receive a visit by one of our most proactive Proxeus followers, Patrick Eichhorn.
+
+![](https://uploads-ssl.webflow.com/5d5ada771e1398913827a622/5d64ecd5371eb7c46cf91e4c_Ptrick-Eichhorn.jpeg)
+
 ‍
+
+Q&A with Patrick Eichhorn
+-------------------------
+
+_We were delighted to receive a visit by one of our most proactive Proxeus followers,_ [_Patrick Eichhorn_](http://www.linkedin.com/in/patrick-eichhorn)_._
+
+_The Swiss developer has been following Proxeus closely since the beginning and we had the chance to meet him recently at the office of our developer, BlockFactory AG. This is a quick Q & A from his visit here._
+
+_Patrick has been involved in the crypto-sphere since August 2017. At that time, more and more blockchain projects were being announced every week and Patrick started noticing growing interest in the developer community about blockchain technology, which made him inspired and curious to learn more._
+
+_Shortly after, Patrick heard about Proxeus through a friend and he participated in the token sale._
+
+What particularly excites you about Proxeus compared to other projects?
+-----------------------------------------------------------------------
+
+“There are many different aspects that make Proxeus a unique project. It consists of a team with substantial knowledge gained during years of work in various blockchain projects but also in “traditional” industries such as Finance or Logistics. In my opinion, the team is the most important asset of any project. I also particularly like the transparency of the project.”
+
+“The path from a great idea to a real working product isn’t easy — but as far as we saw during the previous year a I am convinced that there is a great future ahead.The most important point at the moment is to give the project enough time to create that value. As token holders, we have to be patient,” says Patrick.
+
+What were the key highlights of your last visit?
+------------------------------------------------
+
+“As we stepped in, we were warmly received by the different members of the team.
+
+There aren’t many companies where the project followers have the opportunity to talk with one of the founders face-to-face. Antoine took the time to answer all of our questions and was very curious to hear about our thoughts of the project.”
+
+What insights could you give to the other project followers?
+------------------------------------------------------------
+
+“Firstly, I want to tell everyone who has any doubts about the seriousness of Proxeus that the project is real and that there are actually real people working on it!
+
+Jokes aside, we saw several very cool prototypes during our visit. One project was built on the IOTA ledger and designed in a smart way. This is a sign that the team keeps its view wide enough in order to remain blockchain-agnostic and hence embracing every possibility, whatever the underlying infrastructure.”
+
+“One can really feel that the team members are striving to build an awesome product. They really care about their token holders and are working as hard as possible to get a product running and get that solution to people in order to derive an organic demand for the XES token. This strategy was clearly explained at the start of the project and the fact that the team holds on to this plan despite adverse market conditions is a positive sign.”
+
+Moving forward, how do you think the project will contribute to turning blockchain applications mainstream?
+-----------------------------------------------------------------------------------------------------------
+
+“A great way to spread the word about the potential of the Proxeus framework is the hackathon that will take place this summer, organised by the Trust Square in Zurich, and where the Proxeus framework will be leveraged as one of the core technologies available to the participants. More than 200 hackers will then work with the framework in order to create mainstream applications and thus highlighting the potential of the platform.
+
+“The project is here for the long-term and Proxeus will help to get blockchain applications to mainstream adoption.
+
+I just would like to thank the whole team for answering all of our questions and for the great experience in your office. We wish you all the best!”
+
+Thanks Patrick for coming by and the whole team hope to see you again soon!
+
+‍
+
