@@ -1087,5 +1087,45 @@ I just would like to thank the whole team for answering all of our questions and
 
 Thanks Patrick for coming by and the whole team hope to see you again soon!
 
+Proxeus Perspectives: Alex
+==========================
+
+January 30, 2019
+
+In this new edition of the Proxeus Perspectives series, we talked to Alex, one of the full-stack developers working on the Proxeus storage application. Alex unveils the motivations that drove him to join a blockchain project and talks about the challenges arising from working with new technologies.
+
+![](https://uploads-ssl.webflow.com/5d5ada771e1398913827a622/5d64ef02ca4f1a7787bdee75_1_PkBZFWbKCH5voBl1-YkJCg.jpg)
+
+Hi Alex! When did you first hear about blockchain and how did you become interested in this technology?
+-------------------------------------------------------------------------------------------------------
+
+I first heard about blockchain back in 2017 when there was a lot of hype around bitcoin and cryptocurrencies. I was very curious to find out why so many people were excited about this new technology, and therefore, I started to read various whitepapers. Quickly I became fascinated by the potential of blockchain technology and spent much time studying every aspect and nuance of this technology, such as game-theory, governance, decentralization, scaling and so on. At this point, I was convinced that I wanted to work in this field, so I resigned from my former job and started to learn how to implement smart-contracts with solidity.
+
+What is the particular use case that interests you most with the blockchain technology?
+---------------------------------------------------------------------------------------
+
+Lately, everybody has been asking what will be the blockchain’s killer app. In my opinion, trustless programmable money is a fascinating use case and could very much be the killer app. Currently, we see many companies just putting existing apps on the blockchain without any real added value. I’m particularly interested in applications where the blockchain solves a security, governance or censorship problem. For example, the Proxeus storage DApp has a decentralized file access management on a smart-contract, which greatly improves the security for storing, sharing and digitally signing documents in a trustless manner.
+
+On what type of projects have you worked prior to joining the Proxeus project?
+------------------------------------------------------------------------------
+
+Directly after finishing my bachelor studies in Software Engineering, I worked for the Zurich University of Applied Sciences on complex simulations to increase road-traffic efficiency. I’ve also worked as a Web-Developer implementing various medium to large scale web applications.
+
+What is your favourite thing about being involved in the Proxeus project?
+-------------------------------------------------------------------------
+
+With Proxeus we are building software at the edge of innovation and the team is continuously learning new concepts and aspects of the blockchain technology. What I particularly like about the Proxeus platform is that we are building a new technology stack and a set of standards which have the potential to change the whole blockchain development environment.
+
+How is it to work as a developer using new technologies such as blockchain?
+---------------------------------------------------------------------------
+
+For a software developer, it’s exciting to work on new technology. It is at the same time fascinating and challenging to wrap your head around the new blockchain-paradigma and come up with great technical solutions. As a developer, you need to keep up with the newest developments in this space on a daily basis.
+
+What particular challenges does this imply?
+-------------------------------------------
+
+The most complex and exciting challenges are those that have no precedent and no best-practice yet, due to blockchain being such a new technology. This situation leads to interesting conversations between team members and to the drawing of new solutions. To me, it feels like having a front-row seat witnessing as well as contributing to the upcoming blockchain-world.
+
 ‍
+
 
