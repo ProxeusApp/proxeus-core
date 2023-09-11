@@ -1190,6 +1190,57 @@ This step paves the way to issuing event tickets connected to a crypto-identity,
 
 Are you attending the event and do you want to receive your own blockchain-registered certificate of attendance from the Blockchain Leadership Summit? You can do so by coming to the BlockFactory booth at the Summit. Looking forward to seeing you there!
 
+
+Proxeus Perspectives: Stephan
+=============================
+
+October 31, 2018
+
+This week we talked to Stephan, our Junior Digitization Manager. He discusses his experiences in the blockchain world, his role in the Proxeus project as well as his favorite moments since joining the adventure.
+
+![](https://uploads-ssl.webflow.com/5d5ada771e1398913827a622/5e5be017512f4e69fba8a6be_1_9D8BSnZO09XSVofo0DAIEQ.png)
+
+**How long have you been working in crypto?**
+---------------------------------------------
+
+**‍**Since the 1st of June, 2018. However, I have been interested in crypto for quite a while. I first learned about bitcoin and cryptocurrencies around November 2016, when I watched the Netflix documentaries “Deep Web” and “Banking on Bitcoin”.
+
+**What did you do before and what made you want to work in the blockchain industry?**
+-------------------------------------------------------------------------------------
+
+**‍**I have had a wide variety of jobs. I have worked as a software developer for one of Switzerland’s main bank and in online marketing. Most recently, I graduated from Michael Smurfit Graduate Business School (Dublin, Ireland) with a Master’s degree in International Management. My previous jobs have something in common as they were all in the tech industry. Combining this interest for tech with my passion for innovation and disruption, it became clear to me that I wanted to find a job in the blockchain industry.
+
+**What’s your favorite thing about working in blockchain?**
+-----------------------------------------------------------
+
+**‍**The potential and ambiguity. The state of blockchain technology is often compared to the beginnings of the Internet. While there are endless possibilities, there is also a lot of uncertainty, which has to be managed accordingly.
+
+**What do you think of the Proxeus project?**
+---------------------------------------------
+
+**‍**When I first learned about the Proxeus project, I was blown away by its flexibility and ingenuity. Only in a few minutes, I could already think of at least five interesting use-cases. The team is currently working very hard to deliver on the promises of the white paper. Once this is done, people will see the true potential of the Proxeus platform.
+
+**What would be your favorite use case that could be done with the Proxeus technology?**
+----------------------------------------------------------------------------------------
+
+**‍**To me it is groundbreaking that the Proxeus technology enables users to create tamper-proof documents with very little effort. This opens up a world of possibilities in terms of certification of assets. These assets can be simple diplomas and documents but they can also be art, watches, designer clothes or even cars.
+
+**What does a Digitization Manager actually do?**
+-------------------------------------------------
+
+**‍**A digitization manager is responsible for replicating existing business processes on the Proxeus platform. This includes building workflows, designing templates and creating forms. Further, I am testing the internal applications, which the developers are releasing.
+
+**What’s your favourite story from the project?**
+-------------------------------------------------
+
+**‍**This has to be the release of the first beta. The evening before the release date we stumbled upon a technical bug. This problem was almost impossible to spot during our test runs, but after the release, it would have had negatively affected the user experience. During this moment, I felt that the whole team pulled together to fix the bug, before to test the improved product and met the tight deadline. Something that seemed almost impossible at first was achieved through team effort and hard work.
+
+**Have you tested the beta?**
+-----------------------------
+
+**‍**As a digitization manager, I am using the beta on a daily basis and I am heavily involved in its testing and quality assurance — so yes! :)
+
 ‍
+
 
 ‍
