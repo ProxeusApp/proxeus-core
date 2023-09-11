@@ -9,6 +9,7 @@
     - [Use Cases](old_use_cases.md)
     - [developers](old_developers.md)
     - [Blogs](old_blogs.md)
+    - [Rest](old_rest.md)
 
 - Proxeus Association
     - [About](about.md)
