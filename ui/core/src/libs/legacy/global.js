@@ -86,7 +86,8 @@ var cglbl = {
     return this.scrollBarWith
   },
   sizeOf: function (obj) {
-    var size = 0; var key
+    var size = 0;
+    var key
     for (key in obj) {
       if (obj.hasOwnProperty(key)) size++
     }
@@ -203,7 +204,9 @@ $.fn.checkAndFillInputValue = function (fullKey, dataVal, element) {
       _.parents('.field-parent').attr('data-status', 'success')
       _.attr('data-status', 'success')
       _.doCompAction(true)
-      _.trigger('change', [{ init: true }])
+      _.trigger('change', [{
+        init: true
+      }])
       return true
     }
   } else if (_.attr('type') === 'checkbox') {
@@ -214,7 +217,9 @@ $.fn.checkAndFillInputValue = function (fullKey, dataVal, element) {
       _.parents('.field-parent').attr('data-status', 'success')
       _.attr('data-status', 'success')
       _.doCompAction(true)
-      _.trigger('change', [{ init: true }])
+      _.trigger('change', [{
+        init: true
+      }])
       return true
     } else { // multi
       _.removeAttr('checked')
@@ -223,7 +228,9 @@ $.fn.checkAndFillInputValue = function (fullKey, dataVal, element) {
         _.parents('.field-parent').attr('data-status', 'success')
         _.attr('data-status', 'success')
         _.doCompAction(true)
-        _.trigger('change', [{ init: true }])
+        _.trigger('change', [{
+          init: true
+        }])
         return true
       }
     }
@@ -268,7 +275,9 @@ $.fn.checkAndFillInputValue = function (fullKey, dataVal, element) {
         _.attr('data-status', 'success')
         _.doCompAction(true)
         if (_.is('select')) {
-          _.trigger('change', [{ init: true }])
+          _.trigger('change', [{
+            init: true
+          }])
         }
         return true
       } else {
@@ -353,7 +362,9 @@ FTGlobal.prototype.createDatepicker = function (elem, options) {
           pickr.setDate(elem.val())
         }
       }
-    } catch (e) { console.log(e) }
+    } catch (e) {
+      console.log(e)
+    }
   } catch (dateExc) {
     console.log(dateExc)
   }
@@ -438,7 +449,7 @@ $.fn.nextParentWithClass = function (attrClass) {
   var parent = this
   while (!parent.hasClass(attrClass)) {
     parent = parent.parent()
-    ++index
+      ++index
     if (maxIndex < index) {
       break
     }
@@ -608,9 +619,9 @@ $.fn.fileElement = function (element) {
 }
 jQuery.fn.center = function () {
   this.css('margin-top', Math.max(0, (($(window).height() - $(this).outerHeight()) / 2) +
-            $(window).scrollTop()) + 'px')
+    $(window).scrollTop()) + 'px')
   this.css('margin-left', Math.max(0, (($(window).width() - $(this).outerWidth()) / 2) +
-            $(window).scrollLeft()) + 'px')
+    $(window).scrollLeft()) + 'px')
   return this
 }
 
@@ -726,7 +737,9 @@ $.fn.assignSubmitOnChange = function (options) {
                 if ($.isFunction(options.success)) {
                   options.success.apply(this, [data, textStatus, xhr, this.myReq])
                 }
-              } catch (eee) { console.log(eee) }
+              } catch (eee) {
+                console.log(eee)
+              }
             },
             error: function (data, a2, a3, a4) {
               var status = 'error'
@@ -738,13 +751,20 @@ $.fn.assignSubmitOnChange = function (options) {
                 this.responsibleEl.showFieldErrors(data.responseJSON)
               }
               if (data.status == 502) {
-                this.responsibleEl.showFieldErrors({ errors: [{ field: this.responsibleEl.attr('name'), message: FTG.translate('file.limit.exceeded') }] })
+                this.responsibleEl.showFieldErrors({
+                  errors: [{
+                    field: this.responsibleEl.attr('name'),
+                    message: FTG.translate('file.limit.exceeded')
+                  }]
+                })
               }
               try {
                 if ($.isFunction(options.error)) {
                   options.error.apply(this, [data, a2, a3, this.myReq])
                 }
-              } catch (eee) { console.log(eee) }
+              } catch (eee) {
+                console.log(eee)
+              }
             }
           })
         }
@@ -950,7 +970,7 @@ $.fn.serializeFormToObject = function (excludeFileFormFields) {
   for (var i = 0; i < allElementsHavingNameAttr.length; ++i) {
     targetElement = $(allElementsHavingNameAttr[i])
     // if (excludeFileFormFields === true) {
-    if (!targetElement.is(':visible') || targetElement.attr('type') === 'file') {
+    if (targetElement.attr('type') === 'file') {
       continue
     }
     // }
@@ -1008,7 +1028,9 @@ $.fn.isValAsFilenameValid = function () {
 $.fn.makeSameHeight = function (options) {
   var _this = this
   if (!options) {
-    options = { delay: 10 }
+    options = {
+      delay: 10
+    }
   }
   if (!options.delay) {
     options.delay = 10
@@ -1045,35 +1067,103 @@ String.prototype.msgFormat = function () {
   })
 }
 jQuery.fn.copyHtmlToClipboard = function () {
-  if (this.length === 0) {
-    return this
+    if (this.length === 0) {
+      return this
+    }
+    var node = this[0]
+    try {
+      var range, selection
+      selection = window.getSelection()
+      range = document.createRange()
+      range.selectNodeContents(node)
+      selection.removeAllRanges()
+      selection.addRange(range)
+      document.execCommand('copy')
+      $('#copyToclipboardInfo_').remove()
+      var cInfo = $('<span id="copyToclipboardInfo_" draggable="true" style="border-color:transparent;border-radius: 4px;background: #4ef2d0ba;padding:10px;position:absolute;top:-40px;left:50px;z-index:100000000;white-space: nowrap;">copied to clipboard</span>')
+      $(node).append(cInfo)
+      setTimeout(function () {
+        cInfo.remove()
+      }, 4000)
+    } catch (e) {
+      console.log(e)
+    }
   }
-  var node = this[0]
-  try {
-    var range, selection
-    selection = window.getSelection()
-    range = document.createRange()
-    range.selectNodeContents(node)
-    selection.removeAllRanges()
-    selection.addRange(range)
-    document.execCommand('copy')
-    $('#copyToclipboardInfo_').remove()
-    var cInfo = $('<span id="copyToclipboardInfo_" draggable="true" style="border-color:transparent;border-radius: 4px;background: #4ef2d0ba;padding:10px;position:absolute;top:-40px;left:50px;z-index:100000000;white-space: nowrap;">copied to clipboard</span>')
-    $(node).append(cInfo)
-    setTimeout(function () {
-      cInfo.remove()
-    }, 4000)
-  } catch (e) {
-    console.log(e)
-  }
-}
-/*!
- * JavaScript Cookie v2.1.2
- * https://github.com/js-cookie/js-cookie
- *
- * Copyright 2006, 2015 Klaus Hartl & Fagner Brack
- * Released under the MIT license
- */
-!(function (e) { if (typeof define === 'function' && define.amd)define(e); else if (typeof exports === 'object')module.exports = e(); else { var n = window.Cookies; var t = window.Cookies = e(); t.noConflict = function () { return window.Cookies = n, t } } }(function () { function e () { for (var e = 0, n = {}; e < arguments.length; e++) { var t = arguments[e]; for (var o in t)n[o] = t[o] } return n } function n (t) { function o (n, r, i) { var c; if (typeof document !== 'undefined') { if (arguments.length > 1) { if (i = e({ path: '/' }, o.defaults, i), typeof i.expires === 'number') { var a = new Date(); a.setMilliseconds(a.getMilliseconds() + 864e5 * i.expires), i.expires = a } try { c = JSON.stringify(r), /^[\{\[]/.test(c) && (r = c) } catch (s) {} return r = t.write ? t.write(r, n) : encodeURIComponent(String(r)).replace(/%(23|24|26|2B|3A|3C|3E|3D|2F|3F|40|5B|5D|5E|60|7B|7D|7C)/g, decodeURIComponent), n = encodeURIComponent(String(n)), n = n.replace(/%(23|24|26|2B|5E|60|7C)/g, decodeURIComponent), n = n.replace(/[\(\)]/g, escape), document.cookie = [n, '=', r, i.expires ? '; expires=' + i.expires.toUTCString() : '', i.path ? '; path=' + i.path : '', i.domain ? '; domain=' + i.domain : '', i.secure ? '; secure' : ''].join('') }n || (c = {}); for (var p = document.cookie ? document.cookie.split('; ') : [], u = /(%[0-9A-Z]{2})+/g, d = 0; d < p.length; d++) { var f = p[d].split('='); var l = f.slice(1).join('='); l.charAt(0) === '"' && (l = l.slice(1, -1)); try { var m = f[0].replace(u, decodeURIComponent); if (l = t.read ? t.read(l, m) : t(l, m) || l.replace(u, decodeURIComponent), this.json) try { l = JSON.parse(l) } catch (s) {} if (n === m) { c = l; break }n || (c[m] = l) } catch (s) {} } return c } } return o.set = o, o.get = function (e) { return o(e) }, o.getJSON = function () { return o.apply({ json: !0 }, [].slice.call(arguments)) }, o.defaults = {}, o.remove = function (n, t) { o(n, '', e(t, { expires: -1 })) }, o.withConverter = n, o } return n(function () {}) }))
+  /*!
+   * JavaScript Cookie v2.1.2
+   * https://github.com/js-cookie/js-cookie
+   *
+   * Copyright 2006, 2015 Klaus Hartl & Fagner Brack
+   * Released under the MIT license
+   */
+  !(function (e) {
+    if (typeof define === 'function' && define.amd) define(e);
+    else if (typeof exports === 'object') module.exports = e();
+    else {
+      var n = window.Cookies;
+      var t = window.Cookies = e();
+      t.noConflict = function () {
+        return window.Cookies = n, t
+      }
+    }
+  }(function () {
+    function e() {
+      for (var e = 0, n = {}; e < arguments.length; e++) {
+        var t = arguments[e];
+        for (var o in t) n[o] = t[o]
+      }
+      return n
+    }
+
+    function n(t) {
+      function o(n, r, i) {
+        var c;
+        if (typeof document !== 'undefined') {
+          if (arguments.length > 1) {
+            if (i = e({
+                path: '/'
+              }, o.defaults, i), typeof i.expires === 'number') {
+              var a = new Date();
+              a.setMilliseconds(a.getMilliseconds() + 864e5 * i.expires), i.expires = a
+            }
+            try {
+              c = JSON.stringify(r), /^[\{\[]/.test(c) && (r = c)
+            } catch (s) {}
+            return r = t.write ? t.write(r, n) : encodeURIComponent(String(r)).replace(/%(23|24|26|2B|3A|3C|3E|3D|2F|3F|40|5B|5D|5E|60|7B|7D|7C)/g, decodeURIComponent), n = encodeURIComponent(String(n)), n = n.replace(/%(23|24|26|2B|5E|60|7C)/g, decodeURIComponent), n = n.replace(/[\(\)]/g, escape), document.cookie = [n, '=', r, i.expires ? '; expires=' + i.expires.toUTCString() : '', i.path ? '; path=' + i.path : '', i.domain ? '; domain=' + i.domain : '', i.secure ? '; secure' : ''].join('')
+          }
+          n || (c = {});
+          for (var p = document.cookie ? document.cookie.split('; ') : [], u = /(%[0-9A-Z]{2})+/g, d = 0; d < p.length; d++) {
+            var f = p[d].split('=');
+            var l = f.slice(1).join('=');
+            l.charAt(0) === '"' && (l = l.slice(1, -1));
+            try {
+              var m = f[0].replace(u, decodeURIComponent);
+              if (l = t.read ? t.read(l, m) : t(l, m) || l.replace(u, decodeURIComponent), this.json) try {
+                l = JSON.parse(l)
+              } catch (s) {}
+              if (n === m) {
+                c = l;
+                break
+              }
+              n || (c[m] = l)
+            } catch (s) {}
+          }
+          return c
+        }
+      }
+      return o.set = o, o.get = function (e) {
+        return o(e)
+      }, o.getJSON = function () {
+        return o.apply({
+          json: !0
+        }, [].slice.call(arguments))
+      }, o.defaults = {}, o.remove = function (n, t) {
+        o(n, '', e(t, {
+          expires: -1
+        }))
+      }, o.withConverter = n, o
+    }
+    return n(function () {})
+  }))
 
 export default FTG
