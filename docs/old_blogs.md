@@ -1454,3 +1454,43 @@ Proxeus (proxeus.com) is an award-winning, powerful workflow engine and document
 The Faculty of Business and Economics of the University of Basel has had a focus on crypto assets and blockchain technology since more than four years. In December 2017, the Center for Innovative Finance (CIF, cif.unibas.ch) was founded in order to create a dedicated organization that drives research around blockchain technology and other fintech topics. As of today, the CIF team consists of twelve researchers.
 
 ‍
+
+Proxeus enables first business to be legally registered using blockchain
+========================================================================
+
+April 10, 2018
+
+In a bid to win the digitalSwitzerland challenge, Proxeus joined forces with small group of highly innovative partners to do something never done before – legally register a company from start to finish in record time using digitized workflows and smart contracts.
+
+![](https://uploads-ssl.webflow.com/5d5ada771e1398913827a622/5d5fead014f5cdaf58c8b0e7_VAS_17_chrigi-04880cut.jpg)
+
+Answering the [digitalSwitzerland](https://challenge.digitalswitzerland.com/) challenge, blockchain innovators Proxeus, along with partners Canton Zug, the home of Switzerland’s Crypto Valley; Grunder Rechtsanwälte; IBM Switzerland; Kaiser Odermatt & Partner; Swisscom; VermögensZentrum; and Zwicky Windlin & Partner proved that the entire process for registering a Swiss startup in the commercial register can be completed in a fraction of the previous time required. This speed record-setting achievement is a Swiss – and likely world’s – first, and was done by means of combining a digital workflow and Hyperledger Blockchain with the existing IT systems of the bank and the commercial registry.
+
+_“From our perspective as Swiss notaries, the process will speed-up the registration from a pushcart to a rocket, facilitate the drafting of legal documents and it will consolidate the various parties in a most effective way.”_ Philippe J.A. Kaiser, Partner at Kaiser Odermatt & Partner, Diego Benz, Partner at Zwicky Windlin & Partner, and Rahel Merenda Partner at Grunder Rechtsanwälte.
+
+Bringing Switzerland to the top 10
+----------------------------------
+
+The competition that the partners are aiming to win comes from the digitalSwitzerland challenge, a joint initiative from leading Swiss businesses that is driving digitization efforts across the country. The problem they identified was that out of the WEF ranking of 138 countries’ efficiency and speed in starting a business, Switzerland ranked 54th and 56th in time and number of steps respectively. This performance is primarily due to the number of involved parties, and the large volume of paper documents that need to be exchanged.
+
+“Defending the competitive advantage of Switzerland heavily depends on its power to innovate and build up its startup ecosystem,” says Ulrich Schimpel, CTO Europe Team & IBM Research, Cognitive Industry Solutions. “It’s a matter of tomorrow’s success in eliminating any unnecessary complexity for our budding entrepreneurs. Our business ecosystem is rapidly evolving through open dialogue and collaboration among business partners and government entities – an ideal territory for embracing a digital transformation, which includes advancing and applying blockchain technology. This a major reason why IBM has decided to play a key role in this challenge. In the big scheme of things, reducing the complexity and duration of all administrative interactions throughout the entire corporate life-cycle has the potential to strengthen Switzerland’s position as a world-leading business location.”
+
+“We joined this challenge because it offered a perfect proof of concept for Proxeus,” said Antoine Verdon, cofounder of Proxeus. “The existing system was slow and inefficient. We have proposed a solution that allowed us to radically speed up the registration process by creating a parallel blockchain track, while still producing all the paperwork necessary to document and formally incorporate the company.”
+
+By shifting the entire registration process encompassing the entrepreneur, lawyer, bank, notary and commercial register to a digital workflow and Hyperledger blockchain and a utilizing smart contract, the key steps can be processed instantly, drastically reducing the time it takes to verify the multiple steps of registry. The bank will state that the capital money has indeed been paid; the notary will confirm that the necessary documents have been provided, read over, and approved; and the commercial register does the final check that everything is lawful. If all of the conditions are met, then the filing, which up until that point will have been provisional, will be officially registered with the Commercial Register and Official Gazette of Commerce.
+
+Thomas Fischer, Chief Credit Officer at VermögensZentrum said about the achievement._“Due to the new technology, our business benefits from substantial efficiency gains which result in lower costs for our customers.”_
+
+What this means for the future
+------------------------------
+
+While reducing the time to register a business is an important first step down the path of digitizing all multi-partner processes throughout the full corporate lifecycle by means of blockchain, the most interesting impact stands to be the knock-on effects of shifting to smart contracts. While the current application is a simple smart contract – have the conditions been met to register a business – future iterations could be far more complex, including things like share restrictions, partnership agreements, powers of attorney, and more.
+
+“This is what Proxeus has been working towards,” said Verdon. “What we demonstrated today is that without any legislative change, traditional paper-driven, highly iterative processes can be transferred to the blockchain securely and effectively, increasing efficiency and dramatically lowering costs. But incorporating a company is only the first step: by tokenizing company shares and connecting them with crypto-identities, we will be able to automate entire areas of corporate law and financing.”
+
+The bigger picture
+------------------
+
+The Proxeus team analyzed 477 successful ICOs that took place from March 21, 2016 to March 27, 2018. The ICOs were divided into product & feature categories, such as “Data Storage,” “Payments,” etc. By comparing each to the functionality of the Proxeus platform, these categories analyzed to see if Proxeus could fully, or partially, be used to cover generic use cases in each category.
+
+This data was then calculated for each projects in all categories, revealing that 68% of the analyzed blockchain-based projects could be partially or fully replicated directly on the Proxeus platform, and direct analogues of 39% of the analyzed projected could be fully replicated using XES token.
