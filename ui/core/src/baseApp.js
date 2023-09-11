@@ -316,6 +316,9 @@ export default {
         this.handleError(err)
       })
     },
+    async validateSessionCookie () {
+      return axios.get('/api/session/validate')
+    },
     loadMeta (clb) {
       axios.get('/api/i18n/meta').then((response) => {
         this.meta = response.data
@@ -414,6 +417,7 @@ export default {
     const tmpLangToPreventFromWarnings = 'en'
     this.$i18n.fallback(tmpLangToPreventFromWarnings)
     this.$i18n.set(tmpLangToPreventFromWarnings)
+    this.validateSessionCookie()
     this.loadMeta()
     this.loadConfig()
     this.loadMe()
