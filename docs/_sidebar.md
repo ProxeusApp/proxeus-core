@@ -1,6 +1,6 @@
 - [![logo](_media/proxeus_logo.svg)](https://proxeus.org)
 
-
+<!---
 - Saved From Old Proxeus Web Site
 
     - [Discover](old_discover.md)
@@ -10,7 +10,7 @@
     - [developers](old_developers.md)
     - [Blogs](old_blogs.md)
     - [Rest](old_rest.md)
-
+-->
 - Proxeus Association
     - [About](about.md)
 
