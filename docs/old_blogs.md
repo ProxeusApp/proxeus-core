@@ -107,3 +107,80 @@ We would like to make a special thank you to our unique community, whose members
 Thank you also to our partners, in particular to the BlockFactory team, who oversaw the technical aspects of the project and worked extremely hard to build the product and has seen things to the very end. Many of the project members will continue supporting Proxeus in various roles after a much-needed break and we can’t wait to see what new ideas will come to life over the coming years. The journey to large-scale blockchain adoption is still a long one and we are the first to recognize that it is only beginning, but with the Proxeus v1.1 release, we just contributed our part towards this vision.
 
 ‍
+
+Introducing Proxeus Open Source Association
+===========================================
+
+June 9, 2020
+
+On June 9, 2020, Proxeus Anstalt announced that following completion of the goals set at the occasion of the Proxeus TGE in February 2018, it will step down from its role of developer and maintainer of the Proxeus framework. This post addresses the question of maintenance and future developments relating to the Proxeus framework going forward.
+
+![](https://uploads-ssl.webflow.com/5d5ada771e1398913827a622/5edfbcc97e92241b7cb7fe55_Proxeus%20Association.png)
+
+_On June 9, 2020, Proxeus Anstalt_ [_announced_](https://medium.com/proxeus/every-ending-is-a-new-beginning-a5bffeb890a9) _that following completion of the goals set at the occasion of the Proxeus TGE in February 2018, it will step down from its role of developer and maintainer of the Proxeus framework. This post addresses the question of maintenance and future developments relating to the Proxeus framework going forward._
+
+**Our vision**
+
+Decentralized technologies create new framework conditions allowing innovative business models to emerge. Yet a lot of blockchain ideas stay stuck in the heads of entrepreneurs because the technological and financial barriers to create them are too high. Web development has seen a “no code” revolution over the last decade, with new tools — such as the blogging and content management software WordPress — leading to the creation of a lot of value for society at large. We want to participate to the democratization of blockchain applications.
+
+**About us**
+
+A group of people with deep expertise in software and open source technologies, who believe that Proxeus is a valuable framework with potential to gain broader acceptance. As maintenance and further development of the software is reliant on the existence of an active community of users, we have set ourselves the mission to establish a governing body for Proxeus with the following objectives:
+
+*   Set up community governance mechanisms using the XES token
+*   Maintain and develop the Proxeus framework
+*   Foster innovation and increase framework attractiveness
+*   Develop long term funding sources for the Proxeus framework
+
+Proxeus Anstalt — the organization that set up the Proxeus TGE in 2018 — has announced the completion of its mission and will be winded down. As part of this process, Proxeus Association has been tasked with the responsibility for a series of key aspects of the project, such as ownership of the source code license, ownership of the project’s source code repositories, governance of the XES reserve and management of the Proxeus communication channels, and has been provided with funding to execute its vision.
+
+**Project Roadmap**
+
+We have high ambitions for Proxeus and we have set out to work on four tracks: product, community, governance and funding. We are currently working on giving visibility and transparency to the activities planned for the next project phase.
+
+**_Product_  
+**Proxeus Association compensates maintainers and incentivizes contributors to the Proxeus framework. We allocate resources based on the defined roadmap and scheduled improvements. We post bounties and associate a reward to the development of specific desired features, or accept improvements proposed by external developers.
+
+**_Community_**  
+We launch and support community initiatives, and we create synergies and partner with relevant community-driven projects. We accept funding applications from external projects. Requests are accepted for projects that aim to add a net value to the Proxeus ecosystem as a whole, and will be thoroughly reviewed.
+
+**_Governance_**  
+We endeavour to develop ways to crowdsource decisions in order to increase community involvement and create a direct alignment between the software usage and development and the interests of the token holders. DAOs are considered interesting constructs to run a decentralized governance body, and the Executive Board will work towards the vision of enabling XES holders to directly take influence on the project course.
+
+**_Funding_**  
+We strive to put the Proxeus framework on a stable long-term financial basis. In addition to the possible mechanisms a governance DAO can offer (e.g. link community engagement to XES scarcity through staking), we will be developing a series of traditional funding sources, among which the acceptance of donations and the seeking of grants connected to partnerships within the open source ecosystem.
+
+**Initial thoughts on decentralized governance**
+
+DAOs offer the possibility to develop a governance structure that reflects the interests of the community and translates an increase in framework usage or in community engagement into a reduction of the available token supply. The Aragon framework for example could offer the possibility to issue voting tokens to community members who decide to stake their XES for a certain period. The number of tokens issued would depend on staking duration (the longer tokens are staked, the more voting tokens would be issued proportionally) and the voting tokens can then be used by community members to take influence on strategic product/framework issues, or to validate the allocation of grants to third-party projects. In order to create a DAO vehicle that is truly aligned with the community interests, this project should however not be rushed: it should be thoroughly reflected, discussed and tested. It therefore makes sense to plan it as part of the Proxeus Association 2020 roadmap.
+
+**How can I be involved?**
+
+There are several ways to get involved in the activities of the Proxeus Association: at the moment we are mainly looking for deployment maintainers and a [project manager](https://docs.google.com/document/d/1xn1ECVIaNxxyFe9LysYm91apA1YYQsOAJNKmRNaCF-A/edit).
+
+We are also planning to open board membership to a larger circle. More information will follow on that in the second part of the year. In order to apply, candidates to the association board will need to fulfill the following conditions:
+
+*   Interest for the product and for advancing the long term goals of Proxeus and/or existing meaningful contribution to the Proxeus codebase
+*   Evidence of high ethical standards, good reputation and compliance with the Proxeus Open Source Association statutes
+*   Absence of any conflict of interest with the Proxeus vision and ecosystem
+
+If you have built a project using the Proxeus software, we would like to know more about it and how we can help you. Please contact us at [association@proxeus.com](mailto:association@proxeus.com)
+
+**Who is behind Proxeus Association**
+
+Proxeus Association is a non-profit association based in Berne, Switzerland, that is entirely dedicated to the maintenance, promotion and advancement of the Proxeus framework. The association is governed by an Executive Board currently consisting of three members:
+
+**_Oleg Lavrovsky / Community lead_**  
+A professional software engineer and consultant with two decades of IT experience, Oleg works with digital and local communities to build sustainable bridges in a world increasingly dependent on data. A recognized expert in and proponent of open systems, he is a member of the board of Opendata.ch — Swiss chapter of Open Knowledge Foundation — active in various communities as coach and organizer. As co-founder of the civic tech initiative Cividi, maintainer of the open source hackathon platform Dribdat, as well as contributor to dozens of mature open source projects, Oleg will be drawing on his community building and open development experience to make Proxeus “hackable”: attractive and widely useful to developer communities.
+
+**_Fabian Mösli / Product lead_**  
+After discovering the Proxeus project at the beginning of 2018, Fabian joined BlockFactory, the Swiss software development company mandated by Proxeus Anstalt with the implementation of the project whitepaper. He was soon overseeing several product management streams and became one of the driving forces and key knowledge carriers behind the successful completion of the mandate. Fabian has now moved on to his next challenge but he is still burning with unbroken enthusiasm for DLT and decentralized applications and therefore volunteered to contribute his product knowledge to Proxeus Association, which will also allow him to stay in contact with the community.
+
+**_Vivien Fuhrer / Admin lead_**  
+Vivien is a seasoned financial expert with several years of experience in the cryptocurrency field. He will be leading the administrative aspects of Proxeus Association with the primary responsibility over the accounting. He is also actively promoting the use of the Proxeus software within Switzerland by supporting community projects and initiatives.
+
+**Looking ahead**
+
+We believe that Proxeus is a fantastic tool with potential to facilitate the transition to a new digital economy. As the project is starting a new phase, we are excited by the journey ahead and are committed to bringing Proxeus to the next level. Proxeus Association is here to listen to the needs and wishes of the community, drive the further development of the product and foster adoption through various initiatives. As part of the project handover from Proxeus Anstalt, we have also taken over the management of the Proxeus official communication channels — follow our updates on our [blog](https://medium.com/proxeus) and on [Twitter](https://twitter.com/proxeusapp) and get in touch with us!
+
+‍
