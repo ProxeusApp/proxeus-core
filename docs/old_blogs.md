@@ -817,10 +817,7 @@ Sure. I think that wherever services are provided and standards are not clearly 
 
 I believe that Proxeus could help us to quickly prototype some key aspects of the solution and test them with our clients. The set of tools that are already in place can help us to move forward quickly without having to reinvent the wheel. It’s great to hear that the team behind Proxeus are very supportive for our idea and we’re looking forward to making the next steps.
 
-‍
-
-
-“My hope is that smart contracts will really deserve their name in the future”
+‍“My hope is that smart contracts will really deserve their name in the future”
 ==============================================================================
 
 September 4, 2019
@@ -868,3 +865,86 @@ Some industries that looked into the technology and became aware of its immaturi
 
 To make blockchains work in a productive environment, everything comes down to identity. The identity of humans, refrigerators, IoT devices etc. can be verified via blockchain with the right solutions. Thanks to the zero knowledge approach, you will be able to proof your identity without having to reveal all your private information and the result of the claim will be stored on the blockchain. And in case you move home and your address changes, you would no longer need to inform everybody about it — instead they would simply see the updated information in the system. To enable such solutions, we need to standardize the way we look at identities as well.
 
+
+“Blockchain enables investing in classic cars for everybody, not just millionaires”
+===================================================================================
+
+August 13, 2019
+
+Last year, Proxeus and Mercuria Helvetica presented a proof of concept for using blockchain to register certificates of authenticity and conditions for investment-grade autos (more details in this blogpost).
+
+![](https://uploads-ssl.webflow.com/5d5ada771e1398913827a622/5e5bde68c9fe840a2b9c935a_1_05BVWaIOO3h-vfPJcSFp1A.jpg)
+
+_Now Fernando Verboonen has taken the project to the next step and incorporated a new company,_ [_CurioInvest_](https://curioinvest.com/)_, with the purpose to tokenize classic cars. We met him to learn why he thinks that classic cars are currently a great investment opportunity — not only for car enthusiasts._
+
+**What is CurioInvest?**
+------------------------
+CurioInvest is a platform that enables the issuance, distribution and management of fine collectable assets registered as security tokens. CurioInvest makes it possible for collectible assets such as fine automobiles to be registered with the regulators in a compliant way and to be represented as a token that users can acquire.
+
+**What other collectible assets could be on the CurioInvest platform?**
+-----------------------------------------------------------------------
+
+At this stage, there is a strong focus on fine automobiles. But our setup is very scalable and enables diversification in the future to bring other assets to the platform such as Swiss watches or paintings for instance.
+
+**Where are you currently on the project’s timeline?**
+------------------------------------------------------
+
+A great portion of our work focused on solving the regulatory landscape that defines security tokens. There has been a lot of discussion lately regarding the regulatory frameworks under which ICOs (and STOs) fall. It’s very important for us to have a solid start, we want users to feel safe when investing in our tokens. Two weeks ago we got the final approval from the regulators and this is a huge step not only for us but for the entire crypto space as this is a “world first” — the CurioInvest platform is a pioneer in its field. So we are ready to launch and market this innovative product across Europe.
+
+**When will the first car be crowdsourced and the first tokens be sold?**
+-------------------------------------------------------------------------
+
+Put in a simple perspective, we crowdfund on a car level. Users come to our site and invest in a certain car buying its tokens. We are currently working on an exciting partnership and therefore we’re holding the launch of the platform until we agree on the last details of this partnership. This is expected to happen in the next weeks. Looking back, this feels so exciting: One year ago when we partnered with Proxeus this was just an idea and now it’s one step away from going live.
+
+**Talking about Proxeus, are there current interfaces between CurioInvest and the Proxeus framework?**
+------------------------------------------------------------------------------------------------------
+
+Last year we did a proof of concept using blockchain to register certificates of authenticity and conditions of investment-grade classic and exotic autos. By scanning those certificates and placing the document hash on the blockchain, we were making them verifiable, guaranteeing their originality and authenticity.
+
+Our current platform is focusin on the tokenization of the assets and is still quite minimalistic, but in the future we see the opportunity of using Proxeus to create certified documents that can be referenced in the relevant tokenization smart contract. This step will further enhance CurioInvest’s scope and usability by adding features like integrating all the relevant documents of the classic cars.
+
+**What is the public resonance you are receiving for CurioInvest?**
+-------------------------------------------------------------------
+
+We are very thankful for our community that is providing us with so much positive feedback. Earlier this year we were very fortunate to win a “Best Product Award” at a start-up competition at Crypto Lab in Zug’s Crypto Valley. As a consequence, we were invited to Korea to pitch CurioInvest on TV and made it to the top 3 finalists.
+
+**What is the big advantage of having classic cars on the blockchain?**
+-----------------------------------------------------------------------
+
+On one hand, we have the contractual perspective: By having every document involved in the acquisition of a classic car immutably on the blockchain, you are able to scale the process, making it safe, decreasing diligence costs and saving a lot of time: we’re reducing the process from several weeks to seconds!
+
+On the other hand, there is the investor perspective: By tokenizing collectables like fine cars, we are providing a gateway for users to participate in the value of a car without having to own it. Our platform allows everybody to invest in an asset class that until now was an elite market only accessible to very wealthy individuals.
+
+**Who will typically use CurioInvest?**
+---------------------------------------
+
+Our target groups are private individuals interested in classic cars and willing to invest in this asset class. And we are also getting an increased amount of attention from family offices and private banks looking for something new and unique to offer to their clients.
+
+**Are there also incentives for wealthy collectors who actually own those cars to participate in CurioInvest?**
+---------------------------------------------------------------------------------------------------------------
+
+For those collectors, CurioInvest provides faster liquidity in case they want to sell a car. Adding such a car to our platform for crowdsourcing makes it much easier to sell than having to look for an individual buyer. Another use case are inheritances of cars where the heirs want to split the legacy in equal parts.
+
+**In which markets will CurioInvest be mainly active?**
+-------------------------------------------------------
+
+In a first step we will market the product in Europe in general and especially in core markets like Germany or the UK. This will be done using a legal entity we set up in Liechtenstein. We also see increased demand from Asia and further down the road we aim at going global and to involve financial institutions to resell our product as well.
+
+**How would you convince a layperson of CurioInvest?**
+------------------------------------------------------
+
+With the recent crypto winter and the current volatility in the space it became apparent that for crypto investors it’s very hard to diversify their portfolios without exiting the crypto space, meaning without switching to stocks, bonds etc.
+
+At the moment, only stablecoins provide a way to diversify. In the future, investors don’t have to exit the crypto space in order to access other investment opportunities and CurioInvest is facilitating this by providing a new asset class for crypto portfolios. We are bringing a very unique asset that has provenance and historic value and lets everyone participate. On one side you are for the first time able to invest in those assets with crypto and on the other side you can participate in the price valuation of those assets. In the future, frictions to invest in the crypto space will further decrease, making it even more attractive to users.
+
+**Where do you see CurioInvest 5 years from now?**
+--------------------------------------------------
+
+We have a very innovative roadmap with additional products that we want to bring to the market. Therefore in 5 years we see us as an established company that has gained the trust of customer, that has built an allocation of several hundred rare cars and that has opened them to the public to see them and to interact with them. We see us as an innovator, building beautiful storylines about those assets. Lines that inspire people to learn more about those cars, the designers and their stories.
+
+**And on the investment side?**
+-------------------------------
+
+We also have the option of having tokens that not only represent one single car but a line of cars — a “Porsche line” for instance — or a coin representing a whole car collection. And on the community side we will put a lot of effort into connecting the individual user with the assets he has invested in by providing him for example with 24/7 webcam streams of the cars or by building VR applications allowing him to interact with the assets. Imagine a user logging into a video game, proofing his ownership of tokens of a certain fine car and afterwards being able to ride “his” car in the game. Or you could allow users to build virtual garages with all their cars inside.
+
+‍
