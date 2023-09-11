@@ -628,4 +628,59 @@ An important question users will face is: how can I know who is behind a wallet?
 
 Let us know if you are working on a use case involving signatures, especially if you are looking at creative ways to use them — we are curious to learn more and happy to assist!
 
+‍“Our mission is to provide trusted real time data as a commodity”
+=================================================================
+
+October 17, 2019
+
+Vlad Trifa, computer scientist, researcher and former Chief Product Officer at Ambrosus just started his new company Sensia. He is a thought leader in the fields of the Internet of Things (IoT) and the Web of Things and we met him to talk about the future of these applications in which Proxeus can play a role as well.
+
+![](https://uploads-ssl.webflow.com/5d5ada771e1398913827a622/5e5bdc3075d7b24dd5221cf5_1_bTLS-TX4XLMqn_9fp-7dYg.png)
+
+**What are you currently working on?**
+--------------------------------------
+
+I have been with Ambrosus for the last two years. The company has been covering a wide range of solutions so we recently decided to split it into several components for better focus. Moving forward, Ambrosus will be dedicated to the blockchain backbone. The newly created company Sensia aims at providing secure IoT sensors and other hardware, building the physical environment and software to enable businesses to collect, transfer and process real world data about physical things (for example the location of a truck, the temperature of a box inside that truck, etc.) in the most reliable, transparent, secure and verifiable way. There are a lot of use cases in a variety of industries, not just logistics.
+
+**What is your background and how did you get into IoT?**
+---------------------------------------------------------
+
+My background is engineering. After studies in machine learning and robotics at EPFL, I did a PhD at ETH Zurich on IoT. We have done a lot of research to make it easier for developers to program physical devices and even [wrote a book about Web technologies applied to IoT](https://www.manning.com/books/building-the-web-of-things). Eight years ago we built the startup [Evrythng](https://evrythng.com/) in Zurich which later moved to London. In 2016 I joined the Swisscom Digital Innovation Lab at EPFL before I was invited by Ambrosus to lead the project’s engineering and product department. It’s exciting to bring together blockchain and my expertise about making IoT programmable, accessible, secure, reliable and trustworthy.
+
+**What are the main challenges today with IoT?**
+------------------------------------------------
+
+Firstly, it is hard today to program secure quality IoT enterprise solutions. There is a variety of devices on the market that make it very easy to get started and build a prototype. But they are not designed for building reliable, secure enterprise applications. For those, only few choices are available which are mostly complex, expensive, antique or simply full of proprietary components and security issues.
+
+Secondly, there is a big lack of secure-by-design and blockchain-friendly sensors on the market. 99% of the data collected by sensors today are transmitted via a variety of hubs and protocols. Encryption is used for securing transmitted data, but it’s only implemented in software. Without a hardware secure element (HSM) to manage private keys and sign the data produced by the sensor on the sensor, the database, application, or business process which uses that data has no means to prove that the data is legitimate and has not been accessed or tampered by someone in between. The solution to this problem are sensors with a crypto chip attached (essentially the same technology as found on a hardware wallet) which enables the database to verify that the data it receives is not only valid (on the blockchain, not altered) but furthermore that it really comes from the device itself and not from somewhere else.
+
+The more we can work towards making it easy to build high-quality secure IoT applications, the more companies can shift their budgets from basic R&D and testing devices to really building concrete use cases for their data, products and processes that bring business value.
+
+![](https://uploads-ssl.webflow.com/5d5ada771e1398913827a622/5e5bdc4063723e2ef4a917f5_1*pqu-Z-3IYNzRXcan5yATkA.png)
+
+**How will decentralized IoT networks transform supply chain management?**
+--------------------------------------------------------------------------
+
+Let’s take the fruit market sector as an example. Today it’s controlled by a few large companies and it’s nearly impossible for smaller businesses to enter. As a first short term shift, new technologies will enable those smaller players to reduce costs of all processes involved to a fraction of today and allows them to compete with their product because of its quality and not because of monopolies of scale.
+
+The second, longer term vision for the next 5 to 15 years is that the physical world will get properly decentralized as well. The whole process of finding the suppliers, transporting the goods, selling them and paying for everything will be a lot more marketplace based, efficient, seamless and cheap. Think of automated Ebays for any process or operation that a business does — blockchain will enable that from a data management, match making and cost perspective. And once that’s then linked to the physical world, we have futuristic scenarios that will highly enhance the quality of supply chains and will generate new industries.
+
+**How do you see that the Proxeus framework can play a role in IoT’s future?**
+------------------------------------------------------------------------------
+
+Most of today’s processes involve the management of physical, hand written documents. All those formal paper-based documents and processes need first to be digitized and later integrated with other systems. To order products in the future, you not only need the documentation and identity of those goods on the supply chain, but also the logic around their delivery — for example you want to make sure they can move seamlessly from point A to point B (across countries and companies, etc.). This setup can be handled with smart contracts. The Proxeus framework could be leveraged here to provide solutions for a properly audited, flexible, integrated and secure smart contract infrastructure that can be integrated into the key softwares on the market.
+
+**How do you think that the intersection between IoT, contracts and documents will evolve in the future?**
+----------------------------------------------------------------------------------------------------------
+
+Historically, most contracts involved very little physicality. But moving to smart contracts will allow accessing physical goods if the conditions for doing so have been met. For this, smart contracts not only need to have information about the real world, but they need trust in this information as well. Take the example of AirBnB and smart locks: Instead of me having to meet a person who hands me over the keys and having all the risky elements involved in this process (trust the other person, what happens if the person is not there, etc.), it could be entirely moved to IoT. Physical things like “release shipment”, “open door” or “let truck leave” can be entirely worked into smart contracts and linked to conditions — for “release shipment” for example “custom was cleared” and “the bill was paid”. So the future vision for smart contracts is about extending today’s concept to various interactions in the physical world.
+
+**People are quite sceptical towards IoT. How would you convince them of the benefits to gain trust when it comes to security concerns?**
+-----------------------------------------------------------------------------------------------------------------------------------------
+
+I would tell them about the potential IoT has to improve and enhance the world we are living in. One simple example are the food and medical supply chains: While they are getting more complex and technology is getting better and more efficient, we see at the same time more abuse, fraud and people getting sick because of contaminated medicine. With IoT we can change the momentum and make those processes much more secure and reliable. Another example are elderly people: Taking care of them takes a lot of time and resources, while IoT allows to automate some of those tasks and whenever something happens a reliable, trusted sensor notifies for example the family or calls an ambulance.
+
+Of course there are many risks and challenges about privacy or people’s rights. But most of these issues arose because instead of building high quality tools, prototypes have been used. Using experience, expertise and extensive know-how to create very high quality, reliable and secure systems is the way to go. That’s a gap we are trying to bridge with Sensia by focusing on providing trusted real time data as a commodity. That would limit a lot of the abuses and risks and at the same time bring us closer to the benefits that were promised.
+
 ‍
+
