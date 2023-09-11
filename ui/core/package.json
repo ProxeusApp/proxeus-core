@@ -67,7 +67,7 @@
     "vue-range-slider": "^0.6.0",
     "vue-router": "^3.0.1",
     "vue-scrollto": "^2.11.0",
-    "vue-select": "^2.4.0",
+    "vue-select": "^3.20.2",
     "vue-tour": "^1.0.1",
     "vuedraggable": "^2.16.0",
     "vuep": "^0.8.1",
