@@ -1173,4 +1173,23 @@ At the end of the experiment, two different documents were issued: an authentic 
 
 Give it a try: download the documents and visit the [verification page](https://beta-app.proxeus.com/) in the beta section of the website. Can you recognize which certificate is authentic, and which one has been altered? Let us know if you do!
 
+Certificate of Attendance — Blockchain Leadership Summit
+========================================================
+
+November 21, 2018
+
+We are glad to announce that the Proxeus platform will be used to issue certificates of attendance as part of the Blockchain Leadership Summit 2018, the largest blockchain event in Switzerland. The conference that will be held at the Congress Center Basel on November 23 and 24, will welcome more than 2,500 attendees from all over the world.
+
+![](https://uploads-ssl.webflow.com/5d5ada771e1398913827a622/5d64eb319093d70a3dc47444_Blockchain-Leadership-Summit.jpg)
+
+After successfully creating certificates for the graduates of the “Bitcoin, Blockchain & Crypto-assets” course at the University of Basel back in September, we are taking the Proxeus technology a step further and are testing how to handle a large number of documents in a live context.
+
+These certificates will be created from the attendees’ basic personal information (first name, last name & company name). The documents will then be shared via e-mail with the attendees, who will instantaneously be able to verify the authenticity of their certificate of attendance through a web-based verification engine.
+
+This step paves the way to issuing event tickets connected to a crypto-identity, that the owner holds in their self-sovereign identity solution and can decide to share with relevant parties, such as partners making special offers available in connection to the event (reduction on room rates, discounted transport tickets, etc.).
+
+Are you attending the event and do you want to receive your own blockchain-registered certificate of attendance from the Blockchain Leadership Summit? You can do so by coming to the BlockFactory booth at the Summit. Looking forward to seeing you there!
+
+‍
+
 ‍
