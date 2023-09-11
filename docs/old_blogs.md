@@ -371,10 +371,54 @@ In past articles we explored Proxeus forms, smart templates and the document ser
 A Proxeus workflow is a series of sequential steps that are carried out based on user-defined rules or conditions in order to execute a business process. Workflows enable Proxeus users to [digitize their know-how](https://medium.com/proxeus/proxeus-wrap-your-know-how-digitally-a99150875ffe) and to make it available to third parties, for free or for a fee paid in XES.
 
 **Creating and editing workflows**
-==================================
-
-‍
+----------------------------------
 
 ![](https://uploads-ssl.webflow.com/5d5ada771e1398913827a622/5e5bd7410e1706ae75824e45_1*19tGOfoXhEn0dRB8VNLv_A.png)
 
 The workflow manager offers an interface to assemble and update workflows by combining [forms](https://medium.com/proxeus/gather-structured-information-using-proxeus-forms-e08abcf103aa) and [smart templates](https://medium.com/proxeus/using-proxeus-smart-templates-957eefb75315). Components are added to the workspace via drag & drop and can then be dynamically linked in a sequential flow. Data sources or external services are integrated through the addition of connectors. The resulting workflow can be given various access rights and made available to third parties in the front-end.
+
+
+**Workflow logic**
+------------------
+
+“Conditions” may be added as graphical elements in the workflow to enable the creation of dynamic decision engines that make the logic, steering and scope of the data collection process dependent on values entered by the end users during the workflow execution process. They can be created easily using IF-functions of JavaScript. Examples are available in the Proxeus [handbook](https://docs.google.com/document/d/1C3B1oNY6lOv8Q_AvbKhwlySrS6qTiRl3raPLV6OXr7w/preview#heading=h.t8n5j48zabtn).
+
+‍
+
+![](https://uploads-ssl.webflow.com/5d5ada771e1398913827a622/5e5bd742c9fe8403659c551e_1*jmQSCzx_ki08tUhe27E8rg.png)
+
+_Example of a simple condition element: script (left) and workflow view (right)_
+
+‍
+
+**Process finalization**
+------------------------
+
+Following the completion of all steps, workflows are finalized by calling the [document service](https://medium.com/proxeus/proxeus-document-service-document-templating-made-easy-5304b4ead44e). It then generates the final document(s) by combining the data collected via forms and connectors during the workflow execution together with the variables from document templates that have been included into the workflow. As a final step of every workflow execution, the human readable workflow output (.pdf) is hashed and the hash registered on the Registry Smart Contract (which has been set up by the operator as part of the initial platform deployment, alongside a record of the Ethereum identity of the end user as the issuer of the document). The validation of the corresponding transaction also gives the possibility to add a public reference in order to make the documents registered more easily identifiable.
+
+**Custom connectors and nodes**
+-------------------------------
+
+‍
+
+![](https://uploads-ssl.webflow.com/5d5ada771e1398913827a622/5e5bd74275d7b2bf9221f94c_1*JmeYN9slmwg9fIzA3LTNMg.png)
+
+_Representation of custom connectors in the workflow workspace_
+
+‍
+
+“Custom Connectors” are workflow nodes that extend the possibilities offered out of the box by connecting to external services in order to retrieve data from a designated source or to execute predefined operations (such as sending an email notification). Custom connectors and nodes will be the subject of a separate post detailing the different possibilities they offer to augment the Proxeus experience.
+
+**Machine-readable output**
+---------------------------
+
+The machine-readable workflow output — a JSON containing the values collected for the variables specified in the workflow — is stored on the platform database and can be accessed via the I/O layer. In addition to manual inputs from end users during the workflow execution, forms can be populated via API calls to external services using the I/O layer. Combined with the possibility to trigger workflows based on the occurrence of certain events, this functionality enables workflow creators to build a fully automated document production service for their use case.
+
+**Interoperability**
+--------------------
+
+The workflows can be exported locally and are operable on any Proxeus platform, ensuring that workflow creators and their intellectual property (expressed as workflows, forms and templates) are not dependent on a specific Proxeus platform.
+
+Are you working on interesting use cases pushing the limits of what the framework offers? Are you wondering whether Proxeus can be used to implement your idea? Share your progress with us and get in touch with our dev team, we are always grateful for feedback and happy to support!
+
+‍
