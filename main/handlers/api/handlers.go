@@ -633,7 +633,6 @@ func LoginHandler(e echo.Context) (err error) {
 }
 
 // Validates user session cookie
-//
 func ValidateUserSession(e echo.Context) (err error) {
 	c := e.(*www.Context)
 	c.Session(true)
