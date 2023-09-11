@@ -294,3 +294,50 @@ There are two key learnings: First, regarding the lean approach I already mentio
 ‍
 
 
+“We digitized over $200 billion in bonds onto the blockchain with Proxeus”
+==========================================================================
+
+March 5, 2020
+
+From smart cities to fintech to blockchain, Global ReEnergy Holdings is busy finding best practice solutions that can shape our digital future. We sat down with its CEO, Dr. Jonathan R. Everhart, to talk about current challenges and his experiences with the Proxeus platform that his company uses for InnovativBank.
+
+![](https://uploads-ssl.webflow.com/5d5ada771e1398913827a622/5ebab2976197012fbe8f9b88_1_fBvh-eTOM9gRhRqizMXuEw.png)
+
+_From smart cities to fintech to blockchain,_ [_Global ReEnergy Holdings_](https://www.globalreenergyinc.com/) _is busy finding best practice solutions that can shape our digital future. We sat down with its CEO, Dr. Jonathan R. Everhart, to talk about current challenges and his experiences with the Proxeus platform that his company uses for InnovativBank._
+
+**What is InnovativBank?**
+
+[InnovativBank](https://www.innovativbank.com/) is a wholly-owned fintech subsidiary of ours that focuses on shaping the future of global financial markets. We use technology solutions–such as Proxeus–within the fintech arena and deploy them with institutions in the financial services industry. All current demonstrations with the Proxeus platform are operated through InnovativBank.
+
+**What services and applications does InnovativBank provide to its clients?**
+
+InnovativBank provides a variety of fintech solutions to financial institutions, such as smart lending, digital trade finance, and blockchain. We continuously source new fintech solutions to add to our technology portfolio and provide them to the institutions we work with.
+
+**Who are your clients?**
+
+Our clients are mainly B2B and B2G. We are working globally with a number of financial institutions, international financial centers, and stock exchanges to integrate our fintech solutions.
+
+**What will the smart city of the future look like?**
+
+Our company is involved with the United Nations Science-Policy-Business Forum. I serve on its Green Technology Advisory Board. The purpose of the forum and my role on the advisory board is to create best practices across financing, policy, and technology to accelerate sustainable digital economies around the world. In this role, we meet in different forums and high-level working groups to identify the best solutions around the globe, that–from policy, finance, and technology perspectives–have the potential to accelerate sustainable digital economies. We gather insights from cities and organizations that have successfully deployed a particular solution in one area and disseminate these best practices under the umbrella of the United Nations to other member nations, their delegates, and leaders. What governments and organizations essentially get are blueprints that help them accelerate the crafting of their own digital economy frameworks. Through this work, I see the smart city of the future to be locally customized digital ecosystems around the world–and in outer-space–where people work in tandem with technology to improve their lives and their environment.
+
+**What are the main challenges implementing it?**
+
+While the media is pushing and creating a lot of hyped sentiment around every sector of the digital economy–such as smart cities, blockchain, and artificial intelligence–we are still very early and barely scratching the surface. Globally, we need to continue to cultivate the best policies, financing options, and technology frameworks to invest in, and–from an operational standpoint–promote business models that can be sustained in the long-run. In order to continue accelerating the digital economy transformation, our company is going to continue to work with organizations like the United Nations and technologies like Proxeus to drive useful and commercially-viable solutions globally.
+
+**How did you come across Proxeus?**
+
+My team and I spend a lot of time reading and researching new solutions, opportunities, and technologies which can be added to our portfolio. We came across Proxeus in an article about the [Swiss business incorporation use case](https://medium.com/proxeus/proxeus-helps-speeding-up-swiss-business-incorporations-dd0eed421576). In the blockchain space, one of the biggest challenges is not only finding entities that have the technological solution, but also finding the solutions that fit within a commercially-viable use case. Our team’s extensive experience in technology, finance, and law helps us to identify such technological solutions within a specific niche that can then be deployed from a viable commercial standpoint.
+
+**What is your first impression with the Proxeus tool?**
+
+We started using Proxeus back in November 2019 and now, during the first quarter of 2020, we are conducting demonstrations with several financial institutions, international financial centers, and stock exchanges. Our commercial interest lies in digitizing financial instruments onto the blockchain through the Proxeus platform. Within this use case we are currently focusing on green bonds. We recently launched a $1 trillion global green bond issuance initiative through our affiliation with the United Nations Science-Policy-Business Forum. The goal of this initiative is to register $1 trillion in current and future green bonds onto the blockchain in order to increase transparency in the global green bond market, enhance the custody of green bond transaction records, and enhance the audit trail of green bond transaction records. This will assist in increasing confidence and subsequent investments in the global sustainable bond market. More importantly, it will demonstrate the commercial capabilities of blockchain on a large scale which industries worldwide are seeking to achieve. To date, we have digitized over $200 billion in exchange-listed green bonds from around the world onto the Proxeus platform. I will be showcasing this initiative at this year’s United Nations Science-Policy-Business Forum as an example of the policy and commercial work of the Forum in action. This achievement shows the commercial capabilities and benefits of using blockchain to digitize financial instruments.
+
+Using the Proxeus platform has been very simple. It keeps its promise of being the “WordPress for blockchain.” Building out our specific templates and workflows has been a seamless process, and it works great for our demonstrations. We did not have any major issues and all technical questions were immediately answered by the support team. Proxeus has been very useful for us. We see its application globally within different industries, expanding beyond the financial services sector. For example, the Proxeus tool in commercial real estate could be used in a number of workflows to digitize real estate records. It can also be used in the intellectual property sector to digitize patent, trademark, and copyright registrations.
+
+**Are you planning to use Proxeus for future projects as well?**
+
+Yes, we do. The first step is to show proof-of-concepts for viable commercial use cases to institutions. This involves not only showing that blockchain works, but more importantly educating institutions on blockchain and beneficial use cases that they have not yet considered. The next step is to continue to deploy the Proxeus platform in projects with these institutions, as they see the benefits of blockchain within their operations. We definitely see the benefits of the platform and anticipate using it in the long-run.
+
+‍
+
