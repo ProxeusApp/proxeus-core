@@ -339,9 +339,6 @@ Using the Proxeus platform has been very simple. It keeps its promise of being t
 
 Yes, we do. The first step is to show proof-of-concepts for viable commercial use cases to institutions. This involves not only showing that blockchain works, but more importantly educating institutions on blockchain and beneficial use cases that they have not yet considered. The next step is to continue to deploy the Proxeus platform in projects with these institutions, as they see the benefits of blockchain within their operations. We definitely see the benefits of the platform and anticipate using it in the long-run.
 
-‍
-
-
 Proxeus partners with the Swiss Blockchain Institute
 ====================================================
 
@@ -372,3 +369,12 @@ In past articles we explored Proxeus forms, smart templates and the document ser
 -------------------------------
 
 A Proxeus workflow is a series of sequential steps that are carried out based on user-defined rules or conditions in order to execute a business process. Workflows enable Proxeus users to [digitize their know-how](https://medium.com/proxeus/proxeus-wrap-your-know-how-digitally-a99150875ffe) and to make it available to third parties, for free or for a fee paid in XES.
+
+**Creating and editing workflows**
+==================================
+
+‍
+
+![](https://uploads-ssl.webflow.com/5d5ada771e1398913827a622/5e5bd7410e1706ae75824e45_1*19tGOfoXhEn0dRB8VNLv_A.png)
+
+The workflow manager offers an interface to assemble and update workflows by combining [forms](https://medium.com/proxeus/gather-structured-information-using-proxeus-forms-e08abcf103aa) and [smart templates](https://medium.com/proxeus/using-proxeus-smart-templates-957eefb75315). Components are added to the workspace via drag & drop and can then be dynamically linked in a sequential flow. Data sources or external services are integrated through the addition of connectors. The resulting workflow can be given various access rights and made available to third parties in the front-end.
