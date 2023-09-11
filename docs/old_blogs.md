@@ -421,4 +421,51 @@ The workflows can be exported locally and are operable on any Proxeus platform, 
 
 Are you working on interesting use cases pushing the limits of what the framework offers? Are you wondering whether Proxeus can be used to implement your idea? Share your progress with us and get in touch with our dev team, we are always grateful for feedback and happy to support!
 
+‍From beta to v1: Proxeus 2019 review
+====================================
+
+December 20, 2019
+
+The year is slowly coming to an end, a phase which gives us a good opportunity to look back at what happened in the past months and what’s ahead of us. As the American poet T.S. Eliot once wrote: “Only those who will risk going too far can possibly find out how far one can go.”
+
+![](https://uploads-ssl.webflow.com/5d5ada771e1398913827a622/5e5bd8e4512f4e2d00a8774a_1_utOiixUJLtmuWMXg70iFYQ.jpg)
+
+The year is slowly coming to an end, a phase which gives us a good opportunity to look back at what happened in the past months and what’s ahead of us. As the American poet T.S. Eliot once wrote: “Only those who will risk going too far can possibly find out how far one can go.”
+
+This year gave us the chance to explore uncharted territory by deploying Proxeus in new environments, and to work with the community to gather and implement feedback in order to improve the product before and after the [livenet release (v1)](https://medium.com/proxeus/proxeus-v1-0-32144b628349).
+
+Here is a brief overview of what happened in 2019:
+
+**Exploring uncharted territory**
+---------------------------------
+
+Following several Ethereum and Hyperledger projects, the Proxeus technology was successfully leveraged in March to implement a decentralised shipment tracking system based on IOTA. An ambitious prototype was presented in which RFID chips were used to track pallets across physical terminals connected to the blockchain. The terminal would send the tracking data (such as the consignment ID, the terminal name or even the signatory name) directly to the IOTA ledger without any human intervention, triggering the automatic and instantaneous generation via a Proxeus instance of pre-templated documents (such as the Bill of Lading as well as various shipping receipts) based on the data retrieved from the IOTA ledger. Read more about this use case [here](/blog-posts/proxeus-technology-enables-shipment-tracking-system-based-on-iota).
+
+![](https://uploads-ssl.webflow.com/5d5ada771e1398913827a622/5e5bd8be2089e50dbf933aa9_1*ClWizkuEbqTwtQ_weRfCFQ.png)
+
+In a totally different space, Proxeus was used by the International Testing Agency to prototype the digitization of an anti-doping process ahead of the Tokyo 2020 Summer Olympics. The use case was the following: an athlete having medical reasons to take a prohibited substance can apply to receive a certificate granting them an exemption for therapeutic use (TUE). Such exemption is given after consideration of an independent medical board and for a set prohibited substance, in a certain dosage, within a limited period. This TUE request process was standardised using the Proxeus framework, enabling the production and signature of documents with a crypto identity and making the finalized TUE file easily verifiable on a drag and drop interface. Get more information in [this post](/blog-posts/bringing-blockchain-to-the-anti-doping-world).
+
+**Swiss Blockchain Hackathon**
+------------------------------
+
+We jumped into cold water and made the Proxeus software available to the community for the first time at the Swiss Blockchain Hackathon. The team coached several participants to create use cases based on the framework and following this test round, they spent the whole Summer consolidating and improving the software in order to get ready for the Proxeus v1 release.
+
+**Proxeus reaches livenet!**
+----------------------------
+
+![](https://uploads-ssl.webflow.com/5d5ada771e1398913827a622/5d8b1c67d56fb34ebe5cc2be_1*CiLHvbqj2Va7pRSWQ4J4YQ.png)
+
+After months of hard work, we were thrilled to announce the release of Proxeus v1 in September, the first version using XES tokens on livenet. A general overview has been published in [this post](https://medium.com/proxeus/proxeus-v1-0-32144b628349) and the detailed requirements for setting up a platform can be found in the product [handbook](https://docs.google.com/document/d/1C3B1oNY6lOv8Q_AvbKhwlySrS6qTiRl3raPLV6OXr7w/preview). Read through and understand the [documentation](http://doc.proxeus.com/) before attempting to install and run your own instance of Proxeus, and make sure that you always pull Docker images from the official \`proxeus\` DockerHub repository. Not least you should be careful to use the latest version. If you want to give it a quick try first, a [demo platform](http://demo.proxeus.com/) running on the Ropsten testnet has been made available for testing purposes.
+
+**Product improvements and next steps**
+---------------------------------------
+
+![](https://uploads-ssl.webflow.com/5d5ada771e1398913827a622/5e5bd8bec9fe84549d9c5d41_1*PIDb2OBWKvD8b7h0_uD00g.png)
+
+The team spent the last months focused on making improvements, resolving issues reported by users, and giving product or technical support to various community members. We shared updates on projects started in earlier phases such as the [registration of Swiss companies](https://medium.com/proxeus/proxeus-helps-speeding-up-swiss-business-incorporations-dd0eed421576?source=collection_home---4------9-----------------------) and the [certification of investment-grade cars](https://medium.com/proxeus/blockchain-enables-investing-in-classic-cars-for-everybody-not-just-millionaires-5e9dec740aee). Finally, we had a series of fascinating discussions with key ecosystem players exploring ideas at the intersection of blockchain and other fields, such as the [Internet of Things](https://medium.com/proxeus/our-mission-is-to-provide-trusted-real-time-data-as-a-commodity-aeb5a1d5118d) and [social media](https://medium.com/proxeus/its-only-a-matter-of-sitting-down-and-defining-the-processes-fe309312dae3).
+
+The next big step on the roadmap is the open sourcing of Proxeus — a release candidate is currently under review and we will share more information on that as soon as we can.
+
+Once again, thank you all for your overwhelming support — we would be nowhere without the support of our community. As always, our door is open and we welcome feedback on any aspect of the project.
+
 ‍
