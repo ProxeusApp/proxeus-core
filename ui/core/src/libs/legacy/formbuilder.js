@@ -5146,7 +5146,7 @@ var formBuilderHtmlConstruct =
     '               </div>' +
     '               <div class="panel-body fb-inner-body hcbuilder-components-body"><form><div class="hcbuild-comp-body"></div></form></div>' +
     '               <div class="panel-footer">' +
-    '                   <button type="button" class="save-btn btn btn-secondary"><span class="fa fa-save" aria-hidden="true"></span></button>' +
+    '                   <button type="button" title="save" class="save-btn btn btn-secondary"><span class="fa fa-save" aria-hidden="true"></span> Save </button>' +
     '               </div>' +
     '           </div>' +
     '       </div>' +
@@ -5154,7 +5154,7 @@ var formBuilderHtmlConstruct =
     '           <div class="panel panel-default">' +
     '               <div class="panel-body fb-inner-body hcbuilder-settings-body"></div>' +
     '               <div class="panel-footer d-flex flex-row">' +
-    '                   <button type="button" class="save-btn btn btn-secondary"><span class="fa fa-save" aria-hidden="true"></span></button>' +
+    '                   <button type="button" title="save" class="save-btn btn btn-secondary"><span class="fa fa-save" aria-hidden="true"></span>Save</button>' +
     '                   <div class="switch-main"><span>auto save</span><label class="switch"> <input class="auto-save-btn" type="checkbox"> <div class="slider"></div> </label></div>' +
     '                   <div class="clearfix"></div>' +
     '               </div>' +
