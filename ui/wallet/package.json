@@ -24,7 +24,7 @@
     "html-svg-connect": "^2.0.0",
     "human-standard-token-abi": "^2.0.0",
     "interactjs": "1.2.9",
-    "jquery": "^3.5.0",
+    "jquery": "^3.7.1",
     "jquery-ui": "^1.13.2",
     "js-sha3": "^0.7.0",
     "moment": "^2.29.4",
