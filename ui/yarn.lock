@@ -1415,6 +1415,11 @@
   dependencies:
     "@hapi/hoek" "^8.3.0"
 
+"@interactjs/types@1.10.19":
+  version "1.10.19"
+  resolved "https://registry.yarnpkg.com/@interactjs/types/-/types-1.10.19.tgz#74ce9c9d528eb73db0d9ee8e7e407c47c1c5703f"
+  integrity sha512-oEqGmt9/Ob+jz0FUaBzpDXBmf+2dfdhPuEwQcMGH6nQTR2ETGtYIlAnQtADHvnCin+cVkrmqVohfHBysyQr4Lw==
+
 "@intervolga/optimize-cssnano-plugin@^1.0.5":
   version "1.0.6"
   resolved "https://registry.yarnpkg.com/@intervolga/optimize-cssnano-plugin/-/optimize-cssnano-plugin-1.0.6.tgz#be7c7846128b88f6a9b1d1261a0ad06eb5c0fdf8"
@@ -6736,10 +6741,12 @@ inquirer@^7.0.0, inquirer@^7.1.0:
     strip-ansi "^6.0.0"
     through "^2.3.6"
 
-interactjs@1.2.9:
-  version "1.2.9"
-  resolved "https://registry.yarnpkg.com/interactjs/-/interactjs-1.2.9.tgz#ae5a3e5bc4b174b7fe2a432df9ef4ef9cbacbdb6"
-  integrity sha512-dL+Raw4ITmjydNWg4G3nEGADuoNC/NNyJq4Xzu/URuHUfp1anoPKWDTTPJUkhw+In6ODNT0mgQbKWge76QcIFQ==
+interactjs@1.10.19:
+  version "1.10.19"
+  resolved "https://registry.yarnpkg.com/interactjs/-/interactjs-1.10.19.tgz#b0029a3a8f1e11224fce1c7a44bd6d1f4d5753db"
+  integrity sha512-5zWXBrfLnXAyhrxKlhRiud/JxWd3GvZkvdTf8bqjeHWDx9zgiu+qFNA3nnJMszadFCig2GU5zKx9PYrkT87OKA==
+  dependencies:
+    "@interactjs/types" "1.10.19"
 
 internal-ip@^4.3.0:
   version "4.3.0"
