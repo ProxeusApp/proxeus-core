@@ -55,7 +55,7 @@
     "vue-notification": "^1.3.12",
     "vue-password-strength-meter": "^1.3.2",
     "vue-pdf": "github:mchumer/vue-pdf#master",
-    "vue-property-decorator": "^7.0.0",
+    "vue-property-decorator": "^9.1.2",
     "vue-range-slider": "^0.6.0",
     "vue-router": "^3.0.1",
     "vue-scrollto": "^2.11.0",
