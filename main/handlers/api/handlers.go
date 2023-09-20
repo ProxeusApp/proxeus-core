@@ -632,6 +632,14 @@ func LoginHandler(e echo.Context) (err error) {
 	})
 }
 
+// Validates user session cookie
+func ValidateUserSession(e echo.Context) (err error) {
+	c := e.(*www.Context)
+	c.Session(true)
+
+	return c.NoContent(http.StatusOK)
+}
+
 // Returns an object containing
 //
 //	{
@@ -1133,7 +1141,7 @@ func GetProfilePhotoHandler(e echo.Context) error {
 
 	err := userService.GetProfilePhoto(sess, id, c.Response().Writer)
 	if err != nil {
-		return c.NoContent(http.StatusNotFound)
+		return c.NoContent(http.StatusNoContent)
 	}
 	c.Response().Committed = true
 	c.Response().Header().Set("Content-Type", "image/jpeg")
