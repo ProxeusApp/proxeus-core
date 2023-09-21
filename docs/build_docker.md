@@ -92,3 +92,11 @@ For deployment, a `docker-compose-cloud.override.yml` file is provided which inc
 ```
 docker-compose -f docker-compose.yml -f docker-compose-cloud.override.yml up
 ```
+
+You may also want to include custom nodes. There is a sample configuration which can be started like this:
+
+```
+docker-compose -f docker-compose.yml -f docker-compose-cloud.override.yml -f docker-compose-cnode.override.yml up
+```
+
+See `docker-compose-extra.override.yml` for examples with several other nodes.
