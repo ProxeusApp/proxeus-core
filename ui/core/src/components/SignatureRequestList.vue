@@ -1,10 +1,14 @@
 <template>
-    <div class="file-previews bg-light d-flex flex-row flex-wrap py-4">
-      <div class="alert alert-light" role="alert" v-if="requests.length === 0">{{$t('There are no Signature Requests for this File.', 'There are no Signature Requests for this File.')}}</div>
-      <table>
-            <template v-for="request in requests" class="mb-1">
-              <tr><td>
-                <table class="signatures">
+  <div class="file-previews bg-light d-flex flex-row flex-wrap py-4">
+    <div class="alert alert-light" role="alert" v-if="requests.length === 0">{{$t('There are no Signature Requests for this File.', 'There are no Signature Requests for this File.')}}</div>
+    <table class="mb-1">
+              <tr v-if="request.revoked">
+                <td><h5 class="pb-0">{{ $t('Revoked at', 'Revoked at') }}:</h5></td>
+                <td>{s="mb-1">
+      <template v-for="request in requests">
+        <tr>
+          <td>
+            <table class="signatures">
               <tr><td rowspan="37"><span v-if="signatureStatus(request)=='Pending'"
                                         class="material-icons mdi mdi-clock-outline"></span>
                 <span v-else-if="signatureStatus(request)=='Signed'"
@@ -13,28 +17,28 @@
                       class="material-icons mdi mdi-close"></span>
                 <span v-if="signatureStatus(request)=='Revoked'"
                       class="material-icons mdi mdi-minus"></span></td></tr>
-            <tr>
-              <td>
-                <h5 class="pb-0">{{ $t('Signatory', 'Signatory') }}:</h5>
-              </td>
-              <td>{{request.signatoryName}} ({{request.signatoryAddr}})</td>
-              <td rowspan="2">
-                <div v-if="isSignatureStatusPending(request)">
-                <button type="button" class="btn btn-primary" @click="revokeFile(request.signatoryAddr)"
-                        :title="$t('Revoke', 'Revoke')">
-                  <i class="material-icons mr-1">remove_circle_outline</i>
-                  <span>{{$t('Revoke Request', 'Revoke Request')}}</span>
-                </button>
-              </div></td>
-            </tr>
-                  <tr v-if="request.requestedAt">
-                <td><h5 class="pb-0">{{ $t('Requested at', 'Requested at') }}:</h5></td>
-                <td>{{request.requestedAt}}</td>
+              <tr>
+                <td>
+                  <h5 class="pb-0">{{ $t('Signatory', 'Signatory') }}:</h5>
+                </td>
+                <td>{{request.signatoryName}} ({{request.signatoryAddr}})</td>
+                <td rowspan="2">
+                  <div v-if="isSignatureStatusPending(request)">
+                  <button type="button" class="btn btn-primary" @click="revokeFile(request.signatoryAddr)"
+                          :title="$t('Revoke', 'Revoke')">
+                    <i class="material-icons mr-1">remove_circle_outline</i>
+                    <span>{{$t('Revoke Request', 'Revoke Request')}}</span>
+                  </button>
+                </div></td>
               </tr>
-            <tr>
-              <td><h5 class="pb-0">{{ $t('Status', 'Status') }}:</h5></td>
-              <td>{{signatureStatus(request)}}</td>
-            </tr>
+              <tr v-if="request.requestedAt">
+                  <td><h5 class="pb-0">{{ $t('Requested at', 'Requested at') }}:</h5></td>
+                  <td>{{request.requestedAt}}</td>
+                </tr>
+              <tr>
+                <td><h5 class="pb-0">{{ $t('Status', 'Status') }}:</h5></td>
+                <td>{{signatureStatus(request)}}</td>
+              </tr>
               <tr v-if="request.rejected">
                 <td><h5 class="pb-0">{{ $t('Rejected at', 'Rejected at') }}:</h5></td>
                 <td>{{request.rejectedAt}}</td>
@@ -44,10 +48,12 @@
                 <td>{{request.revokedAt}}</td>
               </tr>
               <tr>&nbsp;</tr>
-              </table></td></tr>
-            </template>
-      </table>
-      </div>
+            </table>
+          </td>
+        </tr>
+      </template>
+    </table>
+  </div>
 </template>
 
 <script>
