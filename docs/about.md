@@ -3,7 +3,7 @@
 The association is the governing body responsible for the maintenance and development of the Proxeus software. We also aim to encourage innovation and evangelize the project by launching and supporting community initiatives as well as creating synergies and partnerships with relevant community projects. 
 
 Governance
-==========
+----------
 
 The Association is working to give the project a decentralized structure to allow our members to propose guidance on the software. Our mission is to make the Proxeus software the 'WordPress' of the blockchain - in other words, to democratize access, and lower the costs of deployment of small blockchain applications.
 
@@ -12,12 +12,12 @@ Some of the benefits of getting involved with the Association, is the ability to
 See also the [Contributing](contributing) section, and visit our [Community Forum](https://github.com/ProxeusApp/community/discussions) if you have any questions about the project - or write to us at association@proxeus.org
 
 Statutes
-========
+--------
 
 Proxeus Association is a non-profit association governed by the present statutes and, secondly, by Articles 60 et seq. of the Swiss Civil Code. It is politically neutral, and non-denominational.
 
 OVERVIEW
-========
+--------
 
 ### Article 2
 
@@ -26,7 +26,7 @@ OVERVIEW
 -   Duration: The Association shall be of unlimited duration.
 
 GOALS
-=====
+-----
 
 ### Article 3
 
@@ -41,7 +41,7 @@ The Proxeus software is a powerful workflow engine with blockchain capabilities 
 -   foster innovation and evangelize the project by launching and supporting community initiatives, as well as by creating synergies and partnering with relevant community- driven projects.
 
 RESOURCES
-=========
+---------
 
 ### Article 4
 
@@ -60,7 +60,7 @@ The Association's resources are derived from:
 -   The funds shall be used in accordance with the goals of the Association.
 
 MEMBERS
-=======
+-------
 
 ### Article 5
 
@@ -79,7 +79,7 @@ Membership terminates:
 -   Upon death / bankruptcy / liquidation of a member. In all cases of termination, the membership fee (if applicable) for the current year remains due. Members who have resigned or who are excluded have no rights to any part of the Association's assets. No financial liability of Members: Only the Association's assets may be used for obligations/commitments contracted in its name. Members have no personal liability whatsoever.
 
 ORGANS
-======
+------
 
 ### Article 6
 
@@ -90,7 +90,7 @@ The Association shall include the following organs:
 -   Executive Board
 
 GENERAL ASSEMBLY
-================
+----------------
 
 ### Article 7
 
@@ -159,7 +159,7 @@ Agenda of Ordinary Meeting: The agenda of the Ordinary Meeting of the General As
 -   Miscellaneous business.
 
 EXECUTIVE BOARD
-===============
+---------------
 
 ### Article 13
 
@@ -198,7 +198,7 @@ Legal requirement to elect Auditors: The Auditors have to be elected by the Gene
 Voluntary election of Auditors: The General Assembly may, with a two-thirds majority, request the election of an auditor for a limited audit of the accounting even if the above criteria are not met. Responsibilities of Auditors: The auditor shall check the operating and annual accounts prepared by the Executive Board and present a written and detailed report to the General Assembly.
 
 VARIOUS PROVISIONS
-==================
+------------------
 
 ### Article 17
 
