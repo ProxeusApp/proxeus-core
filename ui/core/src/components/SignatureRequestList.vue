@@ -2,9 +2,6 @@
   <div class="file-previews bg-light d-flex flex-row flex-wrap py-4">
     <div class="alert alert-light" role="alert" v-if="requests.length === 0">{{$t('There are no Signature Requests for this File.', 'There are no Signature Requests for this File.')}}</div>
     <table class="mb-1">
-              <tr v-if="request.revoked">
-                <td><h5 class="pb-0">{{ $t('Revoked at', 'Revoked at') }}:</h5></td>
-                <td>{s="mb-1">
       <template v-for="request in requests">
         <tr>
           <td>
