@@ -5,12 +5,12 @@
 </template>
 
 <script>
-import moment from 'moment'
+// import moment from 'moment'
 
 export default {
   name: 'edit-item',
   components: {
-    moment
+    // moment
   },
   props: {
     element: Object,

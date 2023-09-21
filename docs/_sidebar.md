@@ -1,8 +1,4 @@
-- [![logo](_media/proxeus_logo.svg)](https://proxeus.org)
-
-
-- Proxeus Association
-    - [About](about.md)
+- ![logo](_media/proxeus_logo.svg)
 
 - Getting started
 
