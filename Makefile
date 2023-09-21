@@ -71,6 +71,7 @@ dependencies=go curl
 mocks=main/handlers/blockchain/mock/adapter_mock.go storage/mock/interfaces.go
 bindata=main/handlers/assets/bindata.go test/assets/bindata.go
 golocalimport=github.com/ProxeusApp/proxeus-core
+uiextraflags=NODE_OPTIONS=--openssl-legacy-provider
 
 .PHONY: all
 all: ui server
@@ -93,11 +94,11 @@ update:
 
 .PHONY: ui
 ui:
-	$(MAKE) -C ui
+	$(uiextraflags) $(MAKE) -C ui
 
 .PHONY: ui-dev
 ui-dev:
-	$(MAKE) -C ui serve-main-hosted
+	$(uiextraflags) $(MAKE) -C ui serve-main-hosted
 
 .PHONY: generate
 generate: $(bindata) $(mocks)
