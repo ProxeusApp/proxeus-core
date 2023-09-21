@@ -1,4 +1,5 @@
 ---
+# Here we show how to configure all the extra nodes with default settings.
 # This file is an override and needs to be used like this:
 #
 #  docker-compose -f docker-compose.yml -f docker-compose-extra.override.yml up

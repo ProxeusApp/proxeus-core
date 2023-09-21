@@ -57,5 +57,13 @@ docker-compose --env-file .env -f docker-compose.yml -f docker-compose-local.yml
 For deployment, a `docker-compose-cloud.override.yml` file is provided which includes Nginx, Let's Encrypt and other services used in larger deployments:
 
 ```
-docker-compose -f docker-compose.yml -f docker-compose-cloud.override.yml
+docker-compose -f docker-compose.yml -f docker-compose-cloud.override.yml up
 ```
+
+You may also want to include custom nodes. There is a sample configuration which can be started like this:
+
+```
+docker-compose -f docker-compose.yml -f docker-compose-cloud.override.yml -f docker-compose-cnode.override.yml up
+```
+
+See `docker-compose-extra.override.yml` for examples with several other nodes.
