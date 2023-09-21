@@ -1,12 +1,7 @@
 ---
-# This file is an override and needs to be used in combination with
-# docker-compose.yml using one of the following methods:
+# This file is an override and needs to be used like this:
 #
-# 1. using the -f parameter:
 #  docker-compose -f docker-compose.yml -f docker-compose-cloud.override.yml up
-#
-# 2. renaming the file docker-compose.override.yml (default override):
-#  docker-compose up
 
 version: '3.7'
 

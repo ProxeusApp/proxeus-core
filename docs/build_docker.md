@@ -49,22 +49,13 @@ If you're having trouble, try a clean full Docker build, specifying each of the 
 ```
 make clean
 BUILD_WITH_DOCKER=true make init server-docker
-docker-compose --env-file .env -f docker-compose.yml -f docker-compose.override.yml build
+docker-compose --env-file .env -f docker-compose.yml -f docker-compose-local.yml build
 ```
 
-## Using Docker for deployment
+## Using Docker for production
 
-For deployment, a `docker-compose-cloud.override.yml` file is provide and must be used
-instead of the default `docker-compose.override.yml`:
+For deployment, a `docker-compose-cloud.override.yml` file is provided which includes Nginx, Let's Encrypt and other services used in larger deployments:
 
 ```
 docker-compose -f docker-compose.yml -f docker-compose-cloud.override.yml
-```
-
-## Docker Light version
-
-There is also a Docker Compose configure in one file with a 'minimal' Proxeus installation. The only extra nodes are 'mail-sender' and 'json-sender':
-
-```
-docker-compose -f docker-compose-light.yml up
 ```
