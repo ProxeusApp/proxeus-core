@@ -92,11 +92,3 @@ For deployment, a `docker-compose-cloud.override.yml` file is provided which inc
 ```
 docker-compose -f docker-compose.yml -f docker-compose-cloud.override.yml up
 ```
-
-## Docker Light version
-
-There is also a Docker Compose configure in one file with a 'minimal' Proxeus installation. The only extra nodes are 'mail-sender' and 'json-sender':
-
-```
-docker-compose -f docker-compose-light.yml up
-```

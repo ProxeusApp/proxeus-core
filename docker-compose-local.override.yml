@@ -1,13 +1,12 @@
 ---
-# Use this configuration to load Proxeus from a local build, rather than DockerHub.
 # This file is an override and needs to be used like this:
 #
-#  docker-compose -f docker-compose.yml -f docker-compose-local.override.yml up
+#  docker-compose -f docker-compose.yml -f docker-compose-cloud.override.yml up
 
 version: '3.7'
 
 services:
-  xes-platform:
+  platform:
     image: !reset null
     build:
       context: .

@@ -8,28 +8,21 @@ dependencies:
 
 ## Start with Docker Compose
 
-You easily deploy Proxeus using Docker.  The repository includes several `docker-compose` YAML files that can be used to deploy the platform in different context:
+This is the simplest method to work with Proxeus, and will start a local Proxeus platform
+using images from Docker Hub - or a local build. Check the Environment Variables section, as you will probably need to set up a `.env` file first.
+
+```
+docker-compose up
+```
+
+This deploys Proxeus using Docker.  The repository includes several additional `docker-compose` YAML files that can be used to deploy the platform in different context:
 
 * `docker-compose.yml`
 * `docker-compose-extra.override.yml`
 * `docker-compose-cloud.override.yml`
 * `docker-compose-local.override.yml`
 
-In each case you can then use the **logs** command to see the system status (with the useful `-f` parameter):
-
-`docker-compose logs`
-
-For more usage instructions, visit the [Docker Compose CLI reference](https://docs.docker.com/compose/reference/).
-
-
-In each case you can then use the **logs** command to see the system status (with the useful `-f` parameter):
-
-`docker-compose logs`
-
-For more usage instructions, visit the [Docker Compose CLI reference](https://docs.docker.com/compose/reference/).
-
-
-## Simple Docker Compose
+For example, if you would like to use all the default Proxeus nodes (by default only the Document Service is included) in your deployment:
 
 `docker-compose -f docker-compose.yml -f docker-compose-extra.override.yml up`
 
@@ -69,23 +62,6 @@ docker-compose build
 docker-compose -f docker-compose.yml -f docker-compose-local.override.yml up --remove-orphans
 ```
 
-Please not than in this case, you do not need to specify the docker-compose YAML files as reading the
-`docker-compose.yml` and `docker-compose.override.yml` is the default behaviour.
-
-Environment:
-
-|Name           | Default Value | Description |
-|---------------|-----------------------|------------------------------|
-|PROXEUS_DATA_DIR| `./data` | Path to the directory to use a data store.|
-|PROXEUS_ENCRYPTION_SECRET_KEY|*A random string of 32 characters*|Use a hard key to ensure your database is safe.|
-|PROXEUS_BLOCKCHAIN_CONTRACT_ADDRESS|*0x1d3e5c81bf4bc60d41a8fbbb3d1bae6f03a75f71*|The address of the Proxeus contract.|
-|PROXEUS_INFURA_API_KEY|*Your Infura API Key*|An Infura API Key for Ethereum integration.|
-|PROXEUS_SPARKPOST_API_KEY|*Your SpartPost Key*|A SparkPost API Key for email integration.|
-|PROXEUS_EMAIL_FROM|`no-reply@example.com`|The email address used as sender when Proxeus sends an email.|
-|PROXEUS_PLATFORM_DOMAIN:|`http://xes-platform:1323`|The domain of the running platform.  Mainly used for display|
-|PROXEUS_ALLOW_HTTP:|`false`|Allow the use of HTTP instead of HTTPS =NOT FOR PRODUCTION=|
-
-
 ## Cloud Docker Compose
 
 This is a docker compose override file, i.e. it must be used in conjunction
@@ -107,22 +83,6 @@ docker-compose -f docker-compose.yml -f docker-compose-cloud.override.yml -d up
 
 To simplify your deployment, you can rename `docker-compose-cloud.override.yml` to
 `docker-compose.override.yml` and avoid having to specify the file names in the command.
-
-Environment:
-
-|Name           | Default Value | Description |
-|---------------|-----------------------|------------------------------|
-|PROXEUS_DATA_DIR| `./data` | Path to the directory to use a data store.|
-|PROXEUS_ENCRYPTION_SECRET_KEY|*A random string of 32 characters*|Use a hard key to ensure your database is safe.|
-|PROXEUS_BLOCKCHAIN_CONTRACT_ADDRESS|*0x1d3e5c81bf4bc60d41a8fbbb3d1bae6f03a75f71*|The address of the Proxeus contract.|
-|PROXEUS_INFURA_API_KEY|*Your Infura API Key*|An Infura API Key for Ethereum integration.|
-|PROXEUS_SPARKPOST_API_KEY|*Your SpartPost Key*|A SparkPost API Key for email integration.|
-|PROXEUS_EMAIL_FROM|`no-reply@example.com`|The email address used as sender when Proxeus sends an email.|
-|PROXEUS_PLATFORM_DOMAIN:|`http://xes-platform:1323`|The domain of the running platform.  Mainly used for display|
-|PROXEUS_ALLOW_HTTP:|`false`|Allow the use of HTTP instead of HTTPS =NOT FOR PRODUCTION=|
-|DOCKER_SOCK|`/var/run/docker.sock`| The path to the Docker socket file. Used to allow `Letsencrypt` and `watchtower` to find other containers. |
-|DOCKER_CONFIG|`/root/.docker/config.json`|The path to the docker config file.  Used to access the image repository authentication parameters |
-
 
 ## Custom Docker Deployment
 
