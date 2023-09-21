@@ -24,3 +24,7 @@ For larger deployment and to provide addition scalability and resiliency, Proxeu
 Proxeus requires a Mongodb replica set. 
 
 Please refer to the [mongodb](https://github.com/ProxeusApp/proxeus-core/blob/master/storage/database/db/mongo.go) integration.
+
+If you need to start an instance of Mongo for use in development, it is easy to do so with this Docker command:
+
+`docker run -d -p 27017:27017 -p 27018:27018 -p 27019:27019 --name mongo mongo:jammy`
