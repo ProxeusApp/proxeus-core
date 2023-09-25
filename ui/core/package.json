@@ -54,7 +54,7 @@
     "vue-cookie": "^1.1.4",
     "vue-cropperjs": "^3.0.0",
     "vue-draggable": "^2.0.6",
-    "vue-dynamic": "0.2.1",
+    "vue-dynamic": "0.4.0",
     "vue-error-page": "^1.1.5",
     "vue-flatpickr-component": "^7.0.2",
     "vue-headful": "^2.0.1",

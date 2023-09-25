@@ -11694,10 +11694,10 @@ vue-draggable@^2.0.6:
   resolved "https://registry.yarnpkg.com/vue-draggable/-/vue-draggable-2.0.6.tgz#8ab4c1e90576e19c5676de812cf802b243beb2cb"
   integrity sha512-/FHtAwrhy6a4duF/zr5Sf3oowf3BMHdcEfi1v8SsYYFCNqbKvBFUaiMs7Lw1ZQq2/2j6yvBoAHPKVmuLFSSiJw==
 
-vue-dynamic@0.2.1:
-  version "0.2.1"
-  resolved "https://registry.yarnpkg.com/vue-dynamic/-/vue-dynamic-0.2.1.tgz#5a83767ee36ae51bf85c5a1fce8a9c0ac7765924"
-  integrity sha512-LccOTDAiHazyW3ddn4pwfoM/ksnRgU1X6iHc/IWSqgPWQn/kk6G7jTQ0WAeEMZ73bEt78ZyiTCaEQs5tZbavyg==
+vue-dynamic@0.4.0:
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/vue-dynamic/-/vue-dynamic-0.4.0.tgz#8abd888b7f642698a23d11691e344c03e6a54a83"
+  integrity sha512-7eYLcow8Amh9l6gYchGA/QeuhlUa+iLUxXf10YNQE1caT1PvvTY5HS+55NNb4F8EAOrADGQLryU4P9sRPQR9FQ==
 
 vue-error-page@^1.1.5:
   version "1.1.7"
