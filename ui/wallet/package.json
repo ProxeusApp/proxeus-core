@@ -84,7 +84,7 @@
     "less": "^3.8.1",
     "less-loader": "^4.1.0",
     "postcss-loader": "^3.0.0",
-    "sass-loader": "^10.1.1",
+    "sass-loader": "^13.3.2",
     "vue-template-compiler": "^2.5.17",
     "webpack": "^4.25.1"
   },
