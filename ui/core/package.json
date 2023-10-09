@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "@johmun/vue-tags-input": "^2.0.1",
-    "@mdi/font": "^2.6.95",
+    "@mdi/font": "^7.3.67",
     "@proxeus/wallet": "1.0.0",
     "ajv": "^6.5.2",
     "async": "^2.6.4",
