@@ -9,7 +9,7 @@ import (
 	uuid "github.com/satori/go.uuid"
 
 	"github.com/gorilla/sessions"
-	"github.com/labstack/echo"
+	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo-contrib/session"
 
 	"github.com/ProxeusApp/proxeus-core/sys"

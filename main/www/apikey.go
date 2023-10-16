@@ -5,7 +5,7 @@ import (
 
 	"github.com/ProxeusApp/proxeus-core/sys"
 
-	"github.com/labstack/echo"
+	"github.com/labstack/echo/v4"
 )
 
 // SessionAuthToken create a request session if a valid API Key is found
