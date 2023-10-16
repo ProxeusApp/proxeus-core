@@ -73,7 +73,7 @@
     "@cypress/webpack-preprocessor": "^3.0.0",
     "@vue/cli-plugin-babel": "^4",
     "@vue/cli-plugin-e2e-cypress": "^4",
-    "@vue/cli-plugin-eslint": "^4",
+    "@vue/cli-plugin-eslint": "^5",
     "@vue/cli-service": "^4",
     "@vue/eslint-config-standard": "^4",
     "autoprefixer": "^9.0.1",
