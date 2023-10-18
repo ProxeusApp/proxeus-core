@@ -54,7 +54,7 @@ Please refer to the `docker-compose.yml` file to learn how to configure a Proxeu
 If you want to use a Docker image to build your server (for example, when you are not on a Linux machine or have a newer version of GLIBC than is supported in production), compile as follows:
 
 ```
-BUILD_WITH_DOCKER=true make init server-docker
+BUILD_WITH_DOCKER=true make init ui server-docker build-docker
 docker build .
 ```
 
@@ -75,7 +75,11 @@ docker-compose restart
 This will build the proxeus-core image based on your current project and use a deployed image
 for the document service.
 
-## Using Docker for the build
+## Tips
+
+Having an issue with Go? Make sure it's in your path, e.g.:
+
+`export PATH=$PATH:/usr/local/go/bin`
 
 If you're having trouble, try a clean full Docker build, specifying each of the configuration files:
 

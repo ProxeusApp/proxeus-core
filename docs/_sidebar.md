@@ -8,6 +8,8 @@
 
     - [Quick start](quickstart.md)
     - [User handbook](handbook.md)
+    - [Formulas guide](formulas.md)
+    - [F.A.Q.](faq.md)
 
 - Build and Run
 
