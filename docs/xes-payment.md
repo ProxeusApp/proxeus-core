@@ -33,10 +33,10 @@ timeout|State indicating either an *abandoned or unsuccessful payment attempt* t
 
 The following diagram shows the state transitions of a workflow payment:
 
-![payment state model diagram](_media/xes_payment_state_model.png)
+![payment state model diagram](_media/nodes/xes_payment_state_model.png)
 
 ### Sequence Diagram
-![Sequence Diagram payment flow xes](_media/xes_payment_sequence_diagram.png)
+![Sequence Diagram payment flow xes](_media/nodes/xes_payment_sequence_diagram.png)
 
 ## Known Issues
 Due to the distributed and shared nature of the blockchain, in case multiple Proxeus Platform instances would be running, all payments would be shared between these Proxeus Platform instances. Therefore in the rare case where the same buyer and seller (same eth-address in metamask) use various Platform instances it would be possible to pay for a workflow on one instance and use the workflow without payment on another instance. We mitigate the risk of exploiting this behaviour by checking the from-address, to-address and xes-amount in the backend of the Platform. Thanks to this measure the described issue could potentially only arise, in a scenario where the same buyer and same seller of a workflow would be registered on multiple Proxeus Platform Instances and buyer and seller would both have to be registered on 2 or more of the same Proxeus Platform Instances. In addition to that the price of the workflow would have to exactly match the price on the other instances.

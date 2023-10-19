@@ -1,9 +1,0 @@
----
-version: '3.7'
-
-services:
-  platform:
-    build:
-      context: .
-    environment:
-      PROXEUS_ALLOW_HTTP: "${PROXEUS_ALLOW_HTTP:-true}"

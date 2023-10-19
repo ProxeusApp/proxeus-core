@@ -4,7 +4,7 @@
   <p
     class="success-text my-3">Your account has been registered successfully. Please wait until we have confirmed the activation of your account. If you have received the account activation confirmation and you are still unable to log in, please make sure you are using the correct MetaMask account using the Ethereum Address you listed in the Access Agreement.</p>
   <a target="_blank"
-     href="https://docs.google.com/document/d/1C3B1oNY6lOv8Q_AvbKhwlySrS6qTiRl3raPLV6OXr7w/preview"
+     href="https://doc.proxeus.org/#/handbook"
      class="btn btn-primary">Handbook
   </a>
   <a target="_blank" :href="$t('Privacy Policy url','')"  class="btn btn-secondary ml-2">Privacy Policy</a>

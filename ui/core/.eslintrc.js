@@ -18,6 +18,11 @@ module.exports = {
     'no-undef': 'off',
     'no-useless-escape': 'off',
     'vue/require-v-for-key': 'off',
+    'vue/valid-template-root': 'off',
+    'vue/no-mutating-props': ["error", {
+      "shallowOnly": true
+    }],
+    'vue/multi-word-component-names': 'off',
     'standard/no-callback-literal': 'off'
   },
   parserOptions: {

@@ -2,9 +2,9 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Document</title>
+  <title>Proxeus Documentation</title>
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-  <meta name="description" content="Description">
+  <meta name="description" content="Open source form builder, workflow design, and document validation.">
   <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
   <link rel="stylesheet" href="//unpkg.com/docsify/lib/themes/vue.css">
   <style>
@@ -25,9 +25,26 @@
       coverpage: true,
       logo: '/_media/proxeus_logo.svg',
       loadSidebar: true,
+      subMaxLevel: 1,
       loadNavbar: true,
       name: '',
-      repo: ''
+      repo: '',
+      plugins: [
+    function pageFooter(hook, vm) {
+      let footer = [
+        '<hr/>',
+        '<footer>',
+        '<span>Github : <a href="https://github.com/ProxeusApp"> Proxeus </a></span> </br>' ,
+        '<span>Email  : <a href="mailto:info@proxeus.com"> info@proxeus.com</a> </span></br>',
+        '<span>Address : Effingerstrasse 10, 3011 Bern Switzerland </span> ' ,
+        '</footer>',
+      ].join('');
+
+      hook.afterEach(function (html) {
+        return html + footer;
+      });
+    },
+  ],
     }
   </script>
   <script src="//unpkg.com/docsify/lib/docsify.min.js"></script>
