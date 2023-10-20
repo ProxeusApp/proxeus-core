@@ -1,5 +1,38 @@
 # Docker
 
+Please make sure that you always pull Docker images from the official `proxeus` DockerHub repository and that you are using the latest version.
+
+## Start Proxeus
+
+Run the following command in the directory containing your `docker-compose.yml` file (Linux and OSX):
+```
+export PROXEUS_EMAIL_FROM=<Your valid Sender Email Address>
+export PROXEUS_INFURA_API_KEY=<Your Infura project ID>
+export PROXEUS_SPARKPOST_API_KEY=<Your SparkPost API Key>
+export PROXEUS_ENCRYPTION_SECRET_KEY=<A 32-character random string>
+export PROXEUS_BLOCKCHAIN_CONTRACT_ADDRESS=0x1d3e5c81bf4bc60d41a8fbbb3d1bae6f03a75f71
+export PROXEUS_ALLOW_HTTP=true
+docker-compose up
+```
+
+You can also put these settings into an `.env` file in the same folder as the application.
+
+See [Configuration settings](configure.md) for more details.
+
+## Tweak your Docker setup
+
+Besides the basic Docker Compose configuration, you can extend your installation as follows:
+
+- `docker-compose-cloud.override` for cloud installations, which includes Nginx and Let's Encrypt
+- `docker-compose-example.override` shows how to add another Proxeus Node to your installation
+- `docker-compose-extra.override` includes all officially supported Proxeus Nodes
+- `docker-compose-local.override` if you want to use your local Docker image (details below)
+
+To use one or more of these overrides, start Proxeus as follows:
+
+`docker-compose -f docker-compose.yml -f docker-compose-example.override.yml up`
+
+(you always have to first include `docker-compose.yml`)
 
 ## Build a Docker image
 
@@ -64,10 +97,10 @@ For deployment, a `docker-compose-cloud.override.yml` file is provided which inc
 docker-compose -f docker-compose.yml -f docker-compose-cloud.override.yml up
 ```
 
-You may also want to include custom nodes. There is a sample configuration which can be started like this:
+You may also want to include custom nodes. There is a sample configuration which can be started like this (also possibly in combination with `docker-compose-cloud`):
 
 ```
-docker-compose -f docker-compose.yml -f docker-compose-cloud.override.yml -f docker-compose-cnode.override.yml up
+docker-compose -f docker-compose.yml -f docker-compose-example.override.yml up
 ```
 
 See `docker-compose-extra.override.yml` for examples with several other nodes.
