@@ -9,10 +9,10 @@
 </template>
 
 <script>
-// import SearchBox from '@/components/SearchBox'
-// import ListGroup from '@/components/ListGroup'
-import TopNav from '@/components/layout/TopNav'
-import Verification from '@/components/document/Verification'
+// import SearchBox from '@/components/SearchBox.vue'
+// import ListGroup from '@/components/ListGroup.vue'
+import TopNav from '@/components/layout/TopNav.vue'
+import Verification from '@/components/document/Verification.vue'
 
 export default {
   name: 'document-verification',

@@ -5,11 +5,12 @@
   "description": "Proxeus UI",
   "author": "info@proxeus.com",
   "scripts": {
-    "serve": "node --max_old_space_size=4096 node_modules/.bin/vue-cli-service serve",
-    "build": "vue-cli-service build",
-    "test:unit": "vue-cli-service test:unit",
-    "test:e2e": "vue-cli-service test:e2e",
-    "lint": "vue-cli-service lint",
+    "dev": "vite",
+    "serve": "node --max_old_space_size=4096 node_modules/.bin/vite preview",
+    "build": "vite build",
+    "test:unit": "vite test:unit",
+    "test:e2e": "vite test:e2e",
+    "lint": "eslint --ext .js,.vue --ignore-path .gitignore --fix src",
     "check-node-version": "check-node-version --package"
   },
   "dependencies": {
@@ -96,6 +97,7 @@
     "less": "^3.8.1",
     "less-loader": "^4.1.0",
     "postcss-loader": "^3.0.0",
+    "vue-template-compiler": "^2.7.14",
     "webpack": "^4",
     "worker-loader": "^3"
   },

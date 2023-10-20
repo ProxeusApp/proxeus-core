@@ -96,12 +96,12 @@
 <script>
 import bModal from 'bootstrap-vue/es/components/modal/modal'
 import bModalDirective from 'bootstrap-vue/es/directives/modal/modal'
-import TopNav from '@/components/layout/TopNav'
-import ListGroup from '../components/ListGroup'
-// import ListItem from '../components/ListItem'
+import TopNav from '@/components/layout/TopNav.vue'
+import ListGroup from '../components/ListGroup.vue'
+// import ListItem from '../components/ListItem.vue'
 import mafdc from '@/mixinApp'
-import AnimatedInput from '../components/AnimatedInput'
-import SimpleSelect from '../components/SimpleSelect'
+import AnimatedInput from '../components/AnimatedInput.vue'
+import SimpleSelect from '../components/SimpleSelect.vue'
 
 export default {
   mixins: [mafdc],
