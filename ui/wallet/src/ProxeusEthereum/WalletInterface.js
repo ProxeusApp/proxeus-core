@@ -20,13 +20,13 @@ class WalletInterface {
   // TODO improve checking that current network matches what is expected
   // TODO: network param only for compatibility reasons with blockchain/dapp
   constructor (network = 'sepolia', proxeusFSAddress, forceProxeusWallet = false) {
-    this.useProxeusWallet = forceProxeusWallet || typeof window.ethereum === 'undefined'
-
     // make sure we are using the web3 we want and not the one provided by metamask
     this.web3 = new Web3(Web3.givenProvider || 'ws://localhost:8545')
     this.systemNetworkId = this.getNetworkIdByName(network)
 
     this.useProxeusWallet = forceProxeusWallet || typeof window.ethereum === 'undefined'
+
+    this.useProxeusWallet = (typeof window.ethereum !== 'undefined' && network != this.getNetworkNameById(window.ethereum.networkVersion)) || forceProxeusWallet || typeof window.ethereum === 'undefined'
 
     this.web3.eth.getTransactionReceiptMined = getTransactionReceiptMined
     this.serviceConfig = serviceConfig[network]
@@ -40,7 +40,6 @@ class WalletInterface {
       this.web3.setProvider(
         new this.web3.providers.HttpProvider(
           this.getPublicRPC(network)))
-      this.isPublicRPCUsing = true
     } else {
       if (window.ethereum) {
         this.web3.setProvider(window.ethereum)
@@ -417,18 +416,7 @@ class WalletInterface {
    */
   async getClientProvidedNetwork () {
     const netId = await this.web3.eth.getChainId()
-    switch (netId) {
-      case 5:
-        return 'goerli'
-      case 11155111:
-        return 'sepolia'
-      case 137:
-        return 'polygon'
-      case 80001:
-        return 'polygon-mumbai'
-      default:
-        return 'mainnet'
-    }
+    return this.getNetworkNameById(netId)
   }
 
   getNetworkNameById (netId) {
@@ -446,21 +434,6 @@ class WalletInterface {
     }
   }
 
-  getNetworkIdByName (name) {
-    switch (name) {
-      case 'goerli':
-        return 5
-      case 'sepolia':
-        return 11155111
-      case 'polygon':
-        return 137
-      case 'polygon-mumbai':
-        return 80001
-      default:
-        return 1
-    }
-  }
-
   getPublicRPC (network) {
     switch (network) {
       case 'goerli':
@@ -474,6 +447,11 @@ class WalletInterface {
       default:
         return 'https://ethereum.rpc.thirdweb.com/'
     }
+  }
+
+  async XESAmountPerFile ({ providers }) {
+    const tokensRaw = await this.proxeusFS.XESAmountPerFile({ providers })
+    return this.metamaskUtil.formatBalance(this.web3.utils.toHex(tokensRaw))
   }
 
   async verifyHash (hash) {
