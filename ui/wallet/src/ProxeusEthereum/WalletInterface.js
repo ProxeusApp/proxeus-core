@@ -382,11 +382,6 @@ class WalletInterface {
     }
   }
 
-  async XESAmountPerFile ({ providers }) {
-    const tokensRaw = await this.proxeusFS.XESAmountPerFile({ providers })
-    return this.metamaskUtil.formatBalance(this.web3.utils.toHex(tokensRaw))
-  }
-
   async verifyHash (hash) {
     const result = await this.proxeusFS.fileVerify(hash)
 
