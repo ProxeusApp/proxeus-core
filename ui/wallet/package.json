@@ -31,7 +31,7 @@
     "popper.js": "^1.14.4",
     "sass": "^1.69.4",
     "sortablejs": "^1.7.0",
-    "tippy.js": "^2.5.4",
+    "tippy.js": "^6.3.7",
     "truffle-assertions": "^0.9.1",
     "typeahead": "^0.2.2",
     "underscore": "^1.8.3",

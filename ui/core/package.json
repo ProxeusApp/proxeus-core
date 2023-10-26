@@ -40,7 +40,7 @@
     "popper.js": "^1.14.4",
     "sass": "^1.69.4",
     "sortablejs": "^1.7.0",
-    "tippy.js": "^2.5.4",
+    "tippy.js": "^6.3.7",
     "underscore": "^1.8.3",
     "v-tooltip": "^2.0.0-rc.33",
     "velocity-animate": "^1.5.1",
