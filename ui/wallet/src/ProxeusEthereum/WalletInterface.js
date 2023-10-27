@@ -15,10 +15,10 @@ class WalletInterface {
   // TODO improve checking that current network matches what is expected
   // TODO: network param only for compatibility reasons with blockchain/dapp
   constructor (network = 'sepolia', proxeusFSAddress, forceProxeusWallet = false) {
-    this.useProxeusWallet = forceProxeusWallet || typeof window.ethereum === 'undefined'
-
     // make sure we are using the web3 we want and not the one provided by metamask
     this.web3 = new Web3(Web3.givenProvider || 'ws://localhost:8545')
+
+    this.useProxeusWallet = (typeof window.ethereum !== 'undefined' && network != this.getNetworkNameById(window.ethereum.networkVersion)) || forceProxeusWallet || typeof window.ethereum === 'undefined'
 
     this.web3.eth.getTransactionReceiptMined = getTransactionReceiptMined
     this.serviceConfig = serviceConfig[network]
@@ -31,7 +31,7 @@ class WalletInterface {
       // connect to the network using what was given in the constructor
       this.web3.setProvider(
         new this.web3.providers.HttpProvider(
-          'https://' + network + '.infura.io/'))
+          this.getPublicRPC(network)))
     } else {
       if (window.ethereum) {
         this.web3.setProvider(window.ethereum)
@@ -368,6 +368,10 @@ class WalletInterface {
    */
   async getClientProvidedNetwork () {
     const netId = await this.web3.eth.getChainId()
+    return this.getNetworkNameById(netId)
+  }
+
+  getNetworkNameById (netId) {
     switch (netId) {
       case 5:
         return 'goerli'
@@ -381,6 +385,22 @@ class WalletInterface {
         return 'mainnet'
     }
   }
+
+  getPublicRPC (network) {
+    switch (network) {
+      case 'goerli':
+        return 'https://goerli.rpc.thirdweb.com/'
+      case 'sepolia':
+        return 'https://sepolia.rpc.thirdweb.com/'
+      case 'polygon':
+        return 'https://polygon.rpc.thirdweb.com/'
+      case 'polygon-mumbai':
+        return 'https://mumbai.rpc.thirdweb.com/'
+      default:
+        return 'https://ethereum.rpc.thirdweb.com/'
+    }
+  }
+
 
   async verifyHash (hash) {
     const result = await this.proxeusFS.fileVerify(hash)
