@@ -434,6 +434,21 @@ class WalletInterface {
     }
   }
 
+  getPublicRPC (network) {
+    switch (network) {
+      case 'goerli':
+        return 'https://goerli.rpc.thirdweb.com/'
+      case 'sepolia':
+        return 'https://sepolia.rpc.thirdweb.com/'
+      case 'polygon':
+        return 'https://polygon.rpc.thirdweb.com/'
+      case 'polygon-mumbai':
+        return 'https://mumbai.rpc.thirdweb.com/'
+      default:
+        return 'https://ethereum.rpc.thirdweb.com/'
+    }
+  }
+
   async verifyHash (hash) {
     const result = await this.proxeusFS.fileVerify(hash)
 
