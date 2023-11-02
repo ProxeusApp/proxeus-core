@@ -22,6 +22,7 @@ class WalletInterface {
   constructor(network = 'sepolia', proxeusFSAddress, forceProxeusWallet = false) {
     // make sure we are using the web3 we want and not the one provided by metamask
     this.web3 = new Web3(Web3.givenProvider || 'ws://localhost:8545')
+    this.systemNetworkId = this.getNetworkIdByName(network)
 
     this.useProxeusWallet = forceProxeusWallet || typeof window.ethereum === 'undefined'
 
@@ -37,6 +38,7 @@ class WalletInterface {
       this.web3.setProvider(
         new this.web3.providers.HttpProvider(
           this.getPublicRPC(network)))
+      this.isPublicRPCUsing = true
     } else {
       if (window.ethereum) {
         this.web3.setProvider(window.ethereum)
@@ -65,6 +67,23 @@ class WalletInterface {
           this.proxeusFSContract.options.from = this.wallet.getCurrentAddress()
         }
       })
+    }
+  }
+
+  async validateUserNetwork() {
+    if (window.ethereum && this.systemNetworkId !== window.ethereum.networkVersion) {
+      try {
+        await window.ethereum.request({
+          method: 'wallet_switchEthereumChain',
+          params: [{
+            chainId: this.web3.utils.toHex(this.systemNetworkId)
+          }]
+        })
+
+        this.isIncorrectNetwork = false
+      } catch {
+        this.isIncorrectNetwork = true
+      }
     }
   }
 
@@ -406,6 +425,21 @@ class WalletInterface {
     }
   }
 
+  getNetworkIdByName(name) {
+    switch (name) {
+      case 'goerli':
+        return 5
+      case 'sepolia':
+        return 11155111
+      case 'polygon':
+        return 137
+      case 'polygon-mumbai':
+        return 80001
+      default:
+        return 1
+    }
+  }
+
   getPublicRPC(network) {
     switch (network) {
       case 'goerli':
@@ -420,6 +454,7 @@ class WalletInterface {
         return 'https://ethereum.rpc.thirdweb.com/'
     }
   }
+
 
   async verifyHash(hash) {
     const result = await this.proxeusFS.fileVerify(hash)
