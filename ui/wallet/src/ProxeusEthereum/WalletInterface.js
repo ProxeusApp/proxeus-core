@@ -1,10 +1,15 @@
 import serviceConfig from './config/service-config'
-import { PROXEUS_FS_ABI, XES_TOKEN_ABI } from './config/ABI'
+import {
+  PROXEUS_FS_ABI,
+  XES_TOKEN_ABI
+} from './config/ABI'
 
 import ProxeusWallet from './ProxeusWallet'
 import ProxeusFS from './services/ProxeusFS'
 import MetamaskWallet from './MetamaskWallet'
-import { keccak256 } from 'js-sha3'
+import {
+  keccak256
+} from 'js-sha3'
 import MetamaskUtil from './MetamaskUtil'
 
 import Web3 from 'web3'
@@ -14,7 +19,7 @@ import getTransactionReceiptMined from './helpers/getTransactionReceiptMined'
 class WalletInterface {
   // TODO improve checking that current network matches what is expected
   // TODO: network param only for compatibility reasons with blockchain/dapp
-  constructor (network = 'sepolia', proxeusFSAddress, forceProxeusWallet = false) {
+  constructor(network = 'sepolia', proxeusFSAddress, forceProxeusWallet = false) {
     // make sure we are using the web3 we want and not the one provided by metamask
     this.web3 = new Web3(Web3.givenProvider || 'ws://localhost:8545')
 
@@ -43,8 +48,9 @@ class WalletInterface {
     // add the XES smart contract to the config
     this.xesTokenContract = new this.web3.eth.Contract(
       XES_TOKEN_ABI,
-      this.serviceConfig.XES_TOKEN_ADDRESS,
-      { gas: this.serviceConfig.DEFAULT_GAS_REGULAR }
+      this.serviceConfig.XES_TOKEN_ADDRESS, {
+        gas: this.serviceConfig.DEFAULT_GAS_REGULAR
+      }
     )
     this.setProxeusFsContract(this.serviceConfig.PROXEUS_FS_ADDRESS)
 
@@ -55,24 +61,26 @@ class WalletInterface {
 
       // set the default from address to use on the proxeusFS smart contract
       this.wallet.setupDefaultAccount().then(() => {
-        if (this.wallet.getCurrentAddress() !== null) { this.proxeusFSContract.options.from = this.wallet.getCurrentAddress() }
+        if (this.wallet.getCurrentAddress() !== null) {
+          this.proxeusFSContract.options.from = this.wallet.getCurrentAddress()
+        }
       })
     }
   }
 
-  signMessage (message) {
+  signMessage(message) {
     return this.wallet.signMessage(message)
   }
 
-  getCurrentAddress () {
+  getCurrentAddress() {
     return this.wallet.getCurrentAddress()
   }
 
-  hasAccount () {
+  hasAccount() {
     return this.wallet.getCurrentAddress() !== undefined
   }
 
-  importKeystore (keystore, password) {
+  importKeystore(keystore, password) {
     // optional function on wallet
     if (!this.wallet.importKeystore) {
       return null
@@ -81,7 +89,7 @@ class WalletInterface {
     return this.wallet.importKeystore(keystore, password)
   }
 
-  exportKeystore (password) {
+  exportKeystore(password) {
     // optional function on wallet
     if (!this.wallet.exportKeystore) {
       return null
@@ -90,7 +98,7 @@ class WalletInterface {
     return this.wallet.exportKeystore(password)
   }
 
-  importPrivateKey (privateKey) {
+  importPrivateKey(privateKey) {
     // optional function on wallet
     if (!this.wallet.importPrivateKey) {
       return null
@@ -99,7 +107,7 @@ class WalletInterface {
     return this.wallet.importPrivateKey(privateKey)
   }
 
-  exportPrivateKey () {
+  exportPrivateKey() {
     // optional function on wallet
     if (!this.wallet.exportPrivateKey) {
       return null
@@ -108,17 +116,17 @@ class WalletInterface {
     return this.wallet.exportPrivateKey()
   }
 
-  storePGPPublicKey (pgpPublicKey) {
+  storePGPPublicKey(pgpPublicKey) {
     pgpPublicKey = btoa(pgpPublicKey)
     // TODO: Store keys in constants
     localStorage.setItem('pgpPk', pgpPublicKey)
   }
 
-  loadPGPPublicKey () {
+  loadPGPPublicKey() {
     return atob(localStorage.getItem('pgpPk'))
   }
 
-  exportWalletToBlob (password = '') {
+  exportWalletToBlob(password = '') {
     if (password === '') {
       try {
         const authObj = localStorage.getItem('mnidmao')
@@ -137,10 +145,13 @@ class WalletInterface {
       btoa(JSON.stringify({
         keystore: encryptedKeystore,
         pgpKeys: this.web3.eth.accounts.wallet.PGPKeys
-      }))], { type: 'text/plain' })
+      }))
+    ], {
+      type: 'text/plain'
+    })
   }
 
-  importWalletFromBlob (blob, password) {
+  importWalletFromBlob(blob, password) {
     const reader = new FileReader()
     // first set the reader event listener and wrap it in a promise
     const promise = new Promise((resolve, reject) => {
@@ -157,7 +168,9 @@ class WalletInterface {
             this.proxeusFSContract.options.from = this.getCurrentAddress()
 
             // save the pgp keys, encrypted keystore, and password on local storage
-            localStorage.setItem('mnidmao', btoa(JSON.stringify({ password })))
+            localStorage.setItem('mnidmao', btoa(JSON.stringify({
+              password
+            })))
             localStorage.setItem('mnidmpgp',
               btoa(JSON.stringify(parsed.pgpKeys[this.getCurrentAddress()])))
             localStorage.setItem('mnidmks',
@@ -187,7 +200,7 @@ class WalletInterface {
    *
    * @param password - the password that protects the keystore
    */
-  saveWallet (password) {
+  saveWallet(password) {
     let encryptedKeystore = this.exportKeystore(password)
     if (encryptedKeystore.length === 0) {
       return false
@@ -216,7 +229,7 @@ class WalletInterface {
    *
    * @param password - the password that protects the keystore
    */
-  loadWallet (password = '') {
+  loadWallet(password = '') {
     const authObj = localStorage.getItem('mnidmao')
     let pgp = localStorage.getItem('mnidmpgp')
     let encryptedKeystore = this.getKeystoreFromLocalStorage()
@@ -250,11 +263,11 @@ class WalletInterface {
     return true
   }
 
-  lockAccount () {
+  lockAccount() {
     localStorage.removeItem('mnidmao')
   }
 
-  logout () {
+  logout() {
     localStorage.removeItem('mnidmao')
     localStorage.removeItem('mnidmks')
     localStorage.removeItem('mnidmpgp')
@@ -264,11 +277,11 @@ class WalletInterface {
     this.web3.eth.accounts.wallet.clear()
   }
 
-  getKeystoreFromLocalStorage () {
+  getKeystoreFromLocalStorage() {
     return localStorage.getItem('mnidmks')
   }
 
-  getPasswordFromLocalStorage () {
+  getPasswordFromLocalStorage() {
     try {
       const authObj = localStorage.getItem('mnidmao')
       return JSON.parse(atob(authObj)).password
@@ -284,9 +297,12 @@ class WalletInterface {
    * @param publicKey
    * @param privateKey
    */
-  importPGPKeyPair (address, publicKey, privateKey) {
+  importPGPKeyPair(address, publicKey, privateKey) {
     if (!this.web3.eth.accounts.wallet.PGPKeys) this.web3.eth.accounts.wallet.PGPKeys = {}
-    this.web3.eth.accounts.wallet.PGPKeys[address] = { publicKey, privateKey }
+    this.web3.eth.accounts.wallet.PGPKeys[address] = {
+      publicKey,
+      privateKey
+    }
   }
 
   /*
@@ -295,11 +311,11 @@ class WalletInterface {
    * @param address - the ethereum wallet address to which the PGP key pair relates to
    * @return Object with two fields: "privateKey" and "publicKey"
    */
-  exportPGPKeyPair (address) {
+  exportPGPKeyPair(address) {
     return this.web3.eth.accounts.wallet.PGPKeys[address]
   }
 
-  createNewAccount () {
+  createNewAccount() {
     return this.web3.eth.accounts.wallet.create(1)
   }
 
@@ -307,16 +323,18 @@ class WalletInterface {
    * Everything below this comment needs to be moved outside of the wallet libray
    */
 
-  hashFile (arrBuffer) {
+  hashFile(arrBuffer) {
     return keccak256(arrBuffer)
   }
 
-  getDocumentRegistrationTx (hash, proxeusFSContract) {
+  getDocumentRegistrationTx(hash, proxeusFSContract) {
     const contract = (proxeusFSContract === undefined) ? this.proxeusFSContract : proxeusFSContract.contract
     // this one is based on events and not promises, so can't use async
     return new Promise((resolve, reject) => {
       contract.getPastEvents('UpdatedEvent', {
-        filter: { hash: hash },
+        filter: {
+          hash: hash
+        },
         fromBlock: 0
       }, (error, result) => {
         if (error) {
@@ -331,12 +349,13 @@ class WalletInterface {
     })
   }
 
-  setProxeusFsContract (address) {
+  setProxeusFsContract(address) {
     // add the document registry smart contract to the config
     this.proxeusFSContract = new this.web3.eth.Contract(
       PROXEUS_FS_ABI,
-      address,
-      { gas: this.serviceConfig.DEFAULT_GAS_REGULAR }
+      address, {
+        gas: this.serviceConfig.DEFAULT_GAS_REGULAR
+      }
     )
 
     // Attach proxeus FS Service
@@ -348,13 +367,14 @@ class WalletInterface {
    *
    * @return array of past contract instances
    */
-  getAllProxeusFsServices () {
+  getAllProxeusFsServices() {
     const proxeusFSPastContracts = []
     for (const address of this.serviceConfig.PROXEUS_FS_PAST_ADDRESSES) {
       const proxeusFSContract = new this.web3.eth.Contract(
         PROXEUS_FS_ABI,
-        address,
-        { gas: this.serviceConfig.DEFAULT_GAS_REGULAR }
+        address, {
+          gas: this.serviceConfig.DEFAULT_GAS_REGULAR
+        }
       )
       proxeusFSPastContracts.push(new ProxeusFS(this.web3, proxeusFSContract))
     }
@@ -366,12 +386,12 @@ class WalletInterface {
    *
    * @return string
    */
-  async getClientProvidedNetwork () {
+  async getClientProvidedNetwork() {
     const netId = await this.web3.eth.getChainId()
     return this.getNetworkNameById(netId)
   }
 
-  getNetworkNameById (netId) {
+  getNetworkNameById(netId) {
     switch (netId) {
       case 5:
         return 'goerli'
@@ -386,7 +406,7 @@ class WalletInterface {
     }
   }
 
-  getPublicRPC (network) {
+  getPublicRPC(network) {
     switch (network) {
       case 'goerli':
         return 'https://goerli.rpc.thirdweb.com/'
@@ -401,7 +421,7 @@ class WalletInterface {
     }
   }
 
-  async verifyHash (hash) {
+  async verifyHash(hash) {
     const result = await this.proxeusFS.fileVerify(hash)
 
     if (result && result[0] === true) {
@@ -417,7 +437,7 @@ class WalletInterface {
     throw new Error('Could not verify hash.')
   }
 
-  async fileVerify (hash) {
+  async fileVerify(hash) {
     const result = await this.proxeusFS.fileVerify(hash)
 
     if (result && result[0] === true) {
@@ -433,7 +453,7 @@ class WalletInterface {
     throw new Error('Could not verify hash.')
   }
 
-  formatBalance (decimalsToKeep, tokensRaw) {
+  formatBalance(decimalsToKeep, tokensRaw) {
     if (decimalsToKeep !== undefined) {
       return this.metamaskUtil.formatBalance(this.web3.utils.toHex(tokensRaw),
         decimalsToKeep)
@@ -442,7 +462,7 @@ class WalletInterface {
     }
   }
 
-  transferETH (to, amount) {
+  transferETH(to, amount) {
     return this.web3.eth.sendTransaction({
       to: to,
       value: amount,
@@ -450,16 +470,16 @@ class WalletInterface {
     })
   }
 
-  async getETHBalance (decimalsToKeep) {
+  async getETHBalance(decimalsToKeep) {
     return this.formatBalance(decimalsToKeep, await this.web3.eth.getBalance(this.getCurrentAddress()))
   }
 
   // optional callback parameter
-  transferXES (to, amount, callback) {
+  transferXES(to, amount, callback) {
     return this.wallet.transferXES(to, amount, callback)
   }
 
-  async getXESBalance (decimalsToKeep, address) {
+  async getXESBalance(decimalsToKeep, address) {
     if (address === undefined) {
       address = this.getCurrentAddress()
     }
@@ -469,13 +489,18 @@ class WalletInterface {
     return this.formatBalance(decimalsToKeep, tokensRaw)
   }
 
-  approveXES (spender, value) {
+  approveXES(spender, value) {
     return this.xesTokenContract.methods.approve(spender,
-      this.web3.utils.toWei(value.toString()))
-      .send({ from: this.getCurrentAddress() })
+        this.web3.utils.toWei(value.toString()))
+      .send({
+        from: this.getCurrentAddress()
+      })
   }
 
-  async getAllowance ({ spender, decimalsToKeep }) {
+  async getAllowance({
+    spender,
+    decimalsToKeep
+  }) {
     const owner = this.getCurrentAddress()
     const tokensRaw = await this.xesTokenContract.methods.allowance(owner,
       spender).call()
@@ -488,20 +513,22 @@ class WalletInterface {
     }
   }
 
-  txMined (tx) {
+  txMined(tx) {
     return this.web3.eth.getTransactionReceiptMined(tx)
   }
 
-  async getFileSignedEvent (signerAddress) {
+  async getFileSignedEvent(signerAddress) {
     const arrEvents = await this.proxeusFSContract.getPastEvents(
       'FileSignedEvent', {
-        filter: { signer: signerAddress },
+        filter: {
+          signer: signerAddress
+        },
         fromBlock: 0
       })
     return arrEvents[0] || null
   }
 
-  async getRegistrationTxBlock (signerAddress) {
+  async getRegistrationTxBlock(signerAddress) {
     const event = await this.getFileSignedEvent(signerAddress)
     if (event === null) {
       return null
@@ -513,7 +540,7 @@ class WalletInterface {
     }
   }
 
-  async getBlock (blockHash) {
+  async getBlock(blockHash) {
     return await this.web3.eth.getBlock(blockHash)
   }
 }
