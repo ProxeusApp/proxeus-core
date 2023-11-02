@@ -70,9 +70,13 @@ class WalletInterface {
     }
   }
 
-  async validateUserNetwork() {
-    if (window.ethereum && this.systemNetworkId !== window.ethereum.networkVersion) {
+  async validateUserNetwork(blockCb, unblockCb) {
+    if (window.ethereum && this.systemNetworkId.toString() !== window.ethereum.networkVersion) {
       try {
+        if (blockCb) {
+          blockCb()
+        }
+
         await window.ethereum.request({
           method: 'wallet_switchEthereumChain',
           params: [{
@@ -83,6 +87,10 @@ class WalletInterface {
         this.isIncorrectNetwork = false
       } catch {
         this.isIncorrectNetwork = true
+      } finally {
+        if (unblockCb) {
+          unblockCb()
+        }
       }
     }
   }
@@ -454,7 +462,6 @@ class WalletInterface {
         return 'https://ethereum.rpc.thirdweb.com/'
     }
   }
-
 
   async verifyHash(hash) {
     const result = await this.proxeusFS.fileVerify(hash)
