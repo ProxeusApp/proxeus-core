@@ -113,63 +113,10 @@
       </div>
       <div class="text-center mt-2">
         <div>
-          <hr v-show="!validationException" class="w-75"/>
-          <div class="container text-md-left text-center">
-            <div v-show="timestamp" class="row mb-2">
-              <div
-                class="offset-md-2 col-md-3 pr-0 text-hint">{{ $t('Verified file timestamp', 'Registration date:') }}
-              </div>
-              <div class="col-md-5">{{ timestamp }}</div>
-            </div>
-            <div v-show="valid && hash" class="row mb-2">
-              <div class="offset-md-2 col-md-3 pr-0 text-hint">{{ $t('Verified file hash', 'File Hash:') }}</div>
-              <div class="col-md-5 break-word">{{ hash | addressOrHash }}
-              </div>
-            </div>
-            <div class="row mb-2" v-show="contract">
-              <div
-                class="offset-md-2 col-md-3 pr-0 text-hint">{{ $t('Verified file contract addr', 'Contract Address:') }}
-              </div>
-              <div class="col-md-5">
-                <a class="break-word" :title="contract" target="_blank"
-                   :href="'https://' + network + 'etherscan.io/address/' + contract" v-if="contract">
-                  {{ contract | addressOrHash}}
-                  <i class="material-icons md-14 mdi mdi-launch"></i>
-                </a>
-              </div>
-            </div>
-            <div class="row" v-show="tx">
-              <div class="offset-md-2 col-md-3 pr-0 text-hint">{{ $t('Verified file transaction', 'Transaction:') }}
-              </div>
-              <div class="col-md-5">
-                <a class="break-word" :title="tx" target="_blank" :href="'https://' + network + 'etherscan.io/tx/' + tx"
-                   v-if="tx">
-                  {{ tx | addressOrHash}}
-                  <i class="material-icons md-14 mdi mdi-launch"></i>
-                </a>
-              </div>
-            </div>
-            <div v-show="signatures.length > 0" class="row mb-2">
-              <div class="offset-md-2 col-md-3 pr-0 text-hint">{{ $t('Verified file signers', 'Signers:') }}</div>
-              <div class="col-md-5">
-                <div class="signer" v-for="signature in signatures">
-                  {{ signature.address | addressOrHash}} {{$t('on')}}
-                  <a class="break-word text-hint" :title="signature.txHash" target="_blank"
-                     :href="'https://' + network + 'etherscan.io/tx/' + signature.txHash" v-if="signature.txHash">
-                    {{ signature.time }}
-                    <i class="material-icons md-14 mdi mdi-launch"></i>
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
-
           <div class="text-hint w-100 px-md-5 mt-2 pt-0">
             <p
               v-show="isIncorrectNetwork">{{ $t('Error incorrect network', 'Document can not be verified within incorrect network.') }}</p>
           </div>
-
-          <hr class="w-75" v-show="valid"/>
         </div>
       </div>
     </div>
