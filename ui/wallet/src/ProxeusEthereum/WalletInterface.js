@@ -38,6 +38,7 @@ class WalletInterface {
       this.web3.setProvider(
         new this.web3.providers.HttpProvider(
           this.getPublicRPC(network)))
+      this.isPublicRPCUsing = true
     } else {
       if (window.ethereum) {
         this.web3.setProvider(window.ethereum)
@@ -66,6 +67,23 @@ class WalletInterface {
           this.proxeusFSContract.options.from = this.wallet.getCurrentAddress()
         }
       })
+    }
+  }
+
+  async validateUserNetwork() {
+    if (window.ethereum && this.systemNetworkId !== window.ethereum.networkVersion) {
+      try {
+        await window.ethereum.request({
+          method: 'wallet_switchEthereumChain',
+          params: [{
+            chainId: this.web3.utils.toHex(this.systemNetworkId)
+          }]
+        })
+
+        this.isIncorrectNetwork = false
+      } catch {
+        this.isIncorrectNetwork = true
+      }
     }
   }
 
@@ -404,6 +422,21 @@ class WalletInterface {
         return 'polygon-mumbai'
       default:
         return 'mainnet'
+    }
+  }
+
+  getNetworkIdByName(name) {
+    switch (name) {
+      case 'goerli':
+        return 5
+      case 'sepolia':
+        return 11155111
+      case 'polygon':
+        return 137
+      case 'polygon-mumbai':
+        return 80001
+      default:
+        return 1
     }
   }
 

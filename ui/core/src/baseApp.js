@@ -396,7 +396,9 @@ export default {
       if (this.blockchainNet && this.blockchainProxeusFSAddress) {
         this.wallet = new WalletInterface(this.blockchainNet, this.blockchainProxeusFSAddress)
 
-        await this.wallet.validateUserNetwork(() => this.$root.$emit('service-off'), () => this.$root.$emit('service-on'))
+        this.$root.$emit('service-off')
+        await this.wallet.validateUserNetwork()
+        this.$root.$emit('service-on')
       }
     },
     acknowledgeFirstLogin () {
