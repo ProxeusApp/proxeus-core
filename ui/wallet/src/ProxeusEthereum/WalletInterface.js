@@ -401,7 +401,6 @@ class WalletInterface {
     }
   }
 
-
   async verifyHash (hash) {
     const result = await this.proxeusFS.fileVerify(hash)
 
