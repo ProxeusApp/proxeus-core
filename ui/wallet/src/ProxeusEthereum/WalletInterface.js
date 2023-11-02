@@ -26,7 +26,7 @@ class WalletInterface {
 
     this.useProxeusWallet = forceProxeusWallet || typeof window.ethereum === 'undefined'
 
-    this.useProxeusWallet = (typeof window.ethereum !== 'undefined' && network != this.getNetworkNameById(window.ethereum.networkVersion)) || forceProxeusWallet || typeof window.ethereum === 'undefined'
+    this.useProxeusWallet = forceProxeusWallet || typeof window.ethereum === 'undefined'
 
     this.web3.eth.getTransactionReceiptMined = getTransactionReceiptMined
     this.serviceConfig = serviceConfig[network]
