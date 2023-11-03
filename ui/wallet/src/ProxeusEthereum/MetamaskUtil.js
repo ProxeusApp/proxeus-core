@@ -15,7 +15,7 @@ class MetamaskUtil {
       gwei: '1000000000',
       szabo: '1000000',
       finney: '1000',
-      ether: 1,
+      ether: '1',
       kether: 0.001,
       mether: 0.000001,
       gether: 0.000000001,
