@@ -9,12 +9,12 @@ class MetamaskUtil {
     this.MIN_GAS_PRICE_BN = this.MIN_GAS_PRICE_GWEI_BN.mul(this.GWEI_FACTOR)
 
     this.valueTable = {
-      wei: 1e18,
-      kwei: 1e15,
-      mwei: 1e12,
-      gwei: 1e9,
-      szabo: 1e6,
-      finney: 1e3,
+      wei: '1000000000000000000',
+      kwei: '1000000000000000',
+      mwei: '1000000000000',
+      gwei: '1000000000',
+      szabo: '1000000',
+      finney: '1000',
       ether: 1,
       kether: 0.001,
       mether: 0.000001,
