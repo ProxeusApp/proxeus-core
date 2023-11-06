@@ -5,15 +5,17 @@ When starting the server for the first time, you will need to configure it.
 Open http://localhost:1323/init to configure your server.  Use the
 configuration below as an example.
 
-## Document Service URL
-```
-https://dev-ds.proxeus.com/
-```
+**Note:** that your system configuration at this point will be reflected in the local configuration database under `data/proxeus-platform/settings/main.json`. Any future changes to the configuration must be made here - the environment variables will not be propagated, unless you delete this file to reset the deployment.
 
 ## Infura API Key
-Generate a  [infura API Key](https://infura.io)
+
+Generate an [Infura API Key](https://infura.io)
 
 ## Blockchain File Storage contract address 
+
+You can switch between the networks using the environment configuration `PROXEUS_BLOCKCHAIN_NET`.
+For your convenience, a smart contract is deployed on several networks at the following addresses:
+
 ### Sepolia
 ```
 0x9bc518Fd070BE3DBB07399261688015744a7FB02
@@ -46,15 +48,15 @@ Generate a  [infura API Key](https://infura.io)
 ```
 [Verify on Etherscan](https://polygonscan.com/address/0x60970BeFda93464A105DD21Dc6a30B69C5B5c6e4)
 
-
-
 Alternatively: deploy your own smart contract from [ProxeusFS.sol](https://github.com/ProxeusApp/storage-app/blob/master/spp/eth/solidity/ProxeusFS.sol)
 
 
 ## Email from
+
 ```
 no-reply@proxeus.com
 ```
+
 ## Sparkpost API Key
 
 Set up a free account on [SparkPost](https://www.sparkpost.com)
@@ -69,6 +71,12 @@ youremail@address.com
 ## Encryption Secret Key
 
 This is a salt to hash your user's passwords in the database. You can use any value, with preference to hard generated strings. Make sure that it is exactly 32 characters long. Do not change the key on a running instance. This can only be set using an environment variable.
+
+## Document Service URL
+
+This only needs to be changed if you are running the service on a separate machine. See the documentation at https://github.com/ProxeusApp/document-service
+
+---
 
 # Full Configuration
 

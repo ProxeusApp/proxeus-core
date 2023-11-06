@@ -31,24 +31,6 @@ If you wish to build the project form the source code, follow the instructions i
 
 Please read the [Developer Manual](https://doc.proxeus.com) to learn more about the Proxeus platform.
 
-### Infura and SparkPost
-
-The Proxeus platform currently depends on [Infura](https://infura.io/) for blockchain services. Supported chains include:
-
-- ethereum: sepolia
-- ethereum: goerli
-- ethereum: mainnet
-- polygon: mumbai
-- polygon: mainnet
-
-Create an account to get an API Keys. These keys need to be added to corresponding environment variables, or entered when deploying a "one-click" instance.
-
-Proxeus works best with [SparkPost](https://www.sparkpost.com/) for email integration. 
-
-Please note that the domain you set up on SparkPost MUST match the **reply-to** e-mail address that you configure in the next step in order to create accounts and receive e-mails on your instance.
-
-If all goes well, Proxeus should be available at http://localhost:1323. The next step will be to [configure](docs/configure.md) your instance for the first time.
-
 ## Contributing
 
 As an open-source project, we welcome any kind of community involvement, whether that is by contributing code, reporting issues or
