@@ -3609,7 +3609,7 @@ var FT_SettingsTab = function (fb, jqEl) {
         '       <small><span class="fa fa-arrow-down text-secondary" aria-hidden="true"></span></small>' +
         '   </button>' +
         '<button type="button" class="btn btn-danger array-item-del">' +
-        '       <span class="fa fa-minus" aria-hidden="true"></span>' +
+        '       <span class="fa fa-minus" aria-hidden="true">3</span>' +
         '   </button>' +
         '</div>'
     }
@@ -3856,10 +3856,11 @@ var FT_SettingsTab = function (fb, jqEl) {
     },
     deleteButton: {
       addAllDeleteButton: function (fb, baseEle) {
+        var skipValidateFor = ['datePattern']
         baseEle.find('[name*="validate."]').each(function () {
           var t = $(this)
           var m = /^((\[\d+\]\.)?(validate\.[A-Za-z]+)\.?)/.exec(t.attr('name'))
-          if (t.attr('type') !== 'hidden' && m && m.length > 3) {
+          if (t.attr('type') !== 'hidden' && m && m.length > 3 && !skipValidateFor.find(s => m[3].endsWith(s))) {
             fb.settingsTab.validate.deleteButton.addDeleteButton(fb, m[0], t.nextParentWithClass('hcbuilder-settings-tbl').parent().find('.hcbuilder-settings-tbl>tbody>tr>td:last-child'))
           }
         })
