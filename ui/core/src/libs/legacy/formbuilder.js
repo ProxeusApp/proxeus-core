@@ -29,20 +29,17 @@ var FT_FormBuilder = function (jqEl, options) {
     })
     options = $.extend({
       file: {
-        requestTypes: function (callback) {
-        }
+        requestTypes: function (callback) {}
       },
       component: {
-        requestComp: function (id, callback) {
-        },
-        searchComp: function (text, callback) {
-        },
-        storeComp: function (comp, callback) {
-        },
-        deleteComp: function (id, callback) {
-        }
+        requestComp: function (id, callback) {},
+        searchComp: function (text, callback) {},
+        storeComp: function (comp, callback) {},
+        deleteComp: function (id, callback) {}
       },
-      componentsTab: { components: {} },
+      componentsTab: {
+        components: {}
+      },
       vars: []
     }, options)
     this.fbid = this.randomId()
@@ -137,16 +134,21 @@ var FT_FormBuilder = function (jqEl, options) {
             if (e.keyCode == fb.ctrlKey || e.keyCode == fb.cmdKey){}
         });**/
   }
-  this.adjustHeight = function (t, scrollOffset) {
-  }
+  this.adjustHeight = function (t, scrollOffset) {}
   this.calcContainerHeight = function (t, force) {
     if (t.el.is(':visible')) {
       if (force || !t.containerHeightWithoutInnerBody) {
         if (!t.innerBody || !t.innerBody.length) {
           t.innerBody = t.el.find('.fb-inner-body')
-          t.innerBody.css({ 'height': '0', 'min-height': '0' })
+          t.innerBody.css({
+            'height': '0',
+            'min-height': '0'
+          })
           t.containerHeightWithoutInnerBody = t.el.children('.panel').outerHeight(true)
-          t.innerBody.css({ 'height': '', 'min-height': '' })
+          t.innerBody.css({
+            'height': '',
+            'min-height': ''
+          })
         }
         this.adjustHeight(t, 0)
       }
@@ -310,17 +312,35 @@ var FT_Workspace = function (fb, jqEl, comps) {
           workspaceTab.selectComponent(null, $trigger)
           if ($trigger.hasClass('fbc-grp-parent')) {
             items = {
-              'paste': { name: 'Paste', icon: 'paste' },
-              'delete': { name: 'Delete', icon: 'delete' }
+              'paste': {
+                name: 'Paste',
+                icon: 'paste'
+              },
+              'delete': {
+                name: 'Delete',
+                icon: 'delete'
+              }
             }
           } else {
             items = {
-              'copy': { name: 'Copy', icon: 'copy' },
-              'paste': { name: 'Paste', icon: 'paste' },
-              'delete': { name: 'Delete', icon: 'delete' }
+              'copy': {
+                name: 'Copy',
+                icon: 'copy'
+              },
+              'paste': {
+                name: 'Paste',
+                icon: 'paste'
+              },
+              'delete': {
+                name: 'Delete',
+                icon: 'delete'
+              }
             }
             if (workspaceTab.fb.options.userAllowedToEditComponents) {
-              items.copyToComp = { name: 'Copy to Components', icon: 'copy' }
+              items.copyToComp = {
+                name: 'Copy to Components',
+                icon: 'copy'
+              }
             }
           }
           if (!localStorage.getItem('ws-clipboard')) {
@@ -403,7 +423,8 @@ var FT_Workspace = function (fb, jqEl, comps) {
     }
   }
   this.updateMetaData = function (compSettings, metaData, updateOrderOfAll) {
-    var c = this.fb.compiler; var compMain
+    var c = this.fb.compiler;
+    var compMain
     if (compSettings && metaData) {
       compMain = c.getCompMainObject(compSettings)
       if (metaData.compId) {
@@ -414,11 +435,14 @@ var FT_Workspace = function (fb, jqEl, comps) {
       }
     }
     if (updateOrderOfAll) {
-      var ws = this; var $fbComp
+      var ws = this;
+      var $fbComp
       c.compsLoop(this.components, function (compId, comp) {
         compMain = c.getCompMainObject(comp)
         $fbComp = ws.getActiveBody().find('#' + compId)
-        ws.updateMetaData(ws.components[compId], { order: $fbComp.index() }, null)
+        ws.updateMetaData(ws.components[compId], {
+          order: $fbComp.index()
+        }, null)
         return true
       })
     }
@@ -436,33 +460,31 @@ var FT_Workspace = function (fb, jqEl, comps) {
     }
     if (jsonSettings && this.fb.compiler.sizeOf(jsonSettings) > 0) {
       // workspace.reInitDragAndDropEvent()
-      this.recompileWorkspace(htmlStr, jsonSettings
-        , function (compId) {
-          return workspace.fb.componentsTab.getComponentById(compId)
-        }, function (compiled) {
-          // workspace.compiledWorkspaceData = compiled;
-          workspace.fb.htmlRenderer(compiled, jsonSettings, function (renderedWorkspaceData) {
-            var $renderedWorkspace = $(renderedWorkspaceData)
-            workspace.beforeInserting($renderedWorkspace)
-            workspace.body.html($renderedWorkspace)
-            workspace.form = workspace.body.children('form:first')
-            workspace.form.addClass('fbc-dz fws-main')
-            workspace.fb.settingsTab.clearBody()
-            workspace.checkFormChilds()
-            workspace.form.find('.fb-component').each(function () {
-              this.addEventListener('click', function (e) {
-                return workspace.selectComponent(e, $(this))
-              }, false)
-            })
-
-            setTimeout(function () {
-              workspace.setStuffWeDontNeedToStore(workspace.form)
-            }, 600)
-            workspace.reInitDragAndDropEvent()
-            workspace.afterInserting(workspace.body)
+      this.recompileWorkspace(htmlStr, jsonSettings, function (compId) {
+        return workspace.fb.componentsTab.getComponentById(compId)
+      }, function (compiled) {
+        // workspace.compiledWorkspaceData = compiled;
+        workspace.fb.htmlRenderer(compiled, jsonSettings, function (renderedWorkspaceData) {
+          var $renderedWorkspace = $(renderedWorkspaceData)
+          workspace.beforeInserting($renderedWorkspace)
+          workspace.body.html($renderedWorkspace)
+          workspace.form = workspace.body.children('form:first')
+          workspace.form.addClass('fbc-dz fws-main')
+          workspace.fb.settingsTab.clearBody()
+          workspace.checkFormChilds()
+          workspace.form.find('.fb-component').each(function () {
+            this.addEventListener('click', function (e) {
+              return workspace.selectComponent(e, $(this))
+            }, false)
           })
-        }
-      )
+
+          setTimeout(function () {
+            workspace.setStuffWeDontNeedToStore(workspace.form)
+          }, 600)
+          workspace.reInitDragAndDropEvent()
+          workspace.afterInserting(workspace.body)
+        })
+      })
     } else {
       this.renderNew()
     }
@@ -635,7 +657,8 @@ var FT_Workspace = function (fb, jqEl, comps) {
           }
           var $eles, i
           $eles = $fbComp.find('.fb-drop-here')
-          var $fbDropHere; var hasDrops = false
+          var $fbDropHere;
+          var hasDrops = false
           for (i = 0; i < $eles.length; ++i) {
             $fbDropHere = $($eles[i])
             var $compChildsHolder = $fbDropHere.parent()
@@ -885,7 +908,10 @@ var FT_Workspace = function (fb, jqEl, comps) {
           handlePercentX: 0,
           handlePercentY: 0
         },
-        mousePos: { x: 0, y: 0 },
+        mousePos: {
+          x: 0,
+          y: 0
+        },
         _setDim: function ($t, startPos) {
           this.dim.mt = parseFloat($t.css('marginTop'))
           this.dim.ml = parseFloat($t.css('marginLeft'))
@@ -902,8 +928,15 @@ var FT_Workspace = function (fb, jqEl, comps) {
           this.dim.handleX = this.dim.handlePercentX * this.dim.w / 100
           this.dim.handleY = this.dim.handlePercentY * this.dim.h / 100
         },
-        tl: { x: 0, y: 0 },
-        dragCompPosition: { scrollOffsetY: 0, top: 0, left: 0 },
+        tl: {
+          x: 0,
+          y: 0
+        },
+        dragCompPosition: {
+          scrollOffsetY: 0,
+          top: 0,
+          left: 0
+        },
         _updateOrgPos: function (target) {
           if (!target) {
             target = this.$dragComp
@@ -1182,7 +1215,9 @@ var FT_Workspace = function (fb, jqEl, comps) {
   this.updateDfsId = function (oldId, newId) {
     var visibleFbComp = this.body.find(".fb-component[data-dfsId='" + oldId + "']")
     visibleFbComp.attr('data-dfsId', newId)
-    this.updateMetaData(this.components[visibleFbComp.attr('id')], { compId: newId })
+    this.updateMetaData(this.components[visibleFbComp.attr('id')], {
+      compId: newId
+    })
   }
   this.componentChanged = function (dfsId, component) {
     var _ = this
@@ -1196,7 +1231,9 @@ var FT_Workspace = function (fb, jqEl, comps) {
   }
   this.updateComponentWithSettingsMerge = function (workspaceCompEl, dfsId, component) {
     var compId = workspaceCompEl.attr('id')
-    this.fb.settingsTab.currentCompId({ release: true })// to ensure the settings on the ui are created fresh
+    this.fb.settingsTab.currentCompId({
+      release: true
+    }) // to ensure the settings on the ui are created fresh
     var newSettings = this.fb.deepCopySettings(component.settings, this.components[compId])
     this.body.find('.fb-component.selected').removeClass('selected')
     this.updateComponent(compId, newSettings)
@@ -1268,7 +1305,8 @@ var FT_Workspace = function (fb, jqEl, comps) {
     }
   }
   this.addComponent = function (jqEl, isNew, index) {
-    var compId = jqEl.attr('id'); var dfsId = jqEl.attr('data-dfsId')
+    var compId = jqEl.attr('id');
+    var dfsId = jqEl.attr('data-dfsId')
     var p = jqEl.nextParentWithClass('fbc-grp')
     if (p && p.length) {
       jqEl.data('lastFbcGrpIndex', p.attr('data-index'))
@@ -1277,7 +1315,10 @@ var FT_Workspace = function (fb, jqEl, comps) {
       index = jqEl.index()
     }
     if (!isNew && compId && compId.length > 5) {
-      this.updateMetaData(this.components[compId], { compId: dfsId, order: index }, true)
+      this.updateMetaData(this.components[compId], {
+        compId: dfsId,
+        order: index
+      }, true)
       return
     }
     if (!compId || compId.length < 5) {
@@ -1300,7 +1341,10 @@ var FT_Workspace = function (fb, jqEl, comps) {
       }, false)
     })
 
-    this.updateMetaData(this.components[compId], { compId: dfsId, order: index }, true)
+    this.updateMetaData(this.components[compId], {
+      compId: dfsId,
+      order: index
+    }, true)
     this.beforeInserting(jqEl, this.form)
     this.afterInserting(jqEl, this.form)
   }
@@ -1438,7 +1482,10 @@ var FT_Workspace = function (fb, jqEl, comps) {
         var dfsId = compMain['_compId']
         var template = this.fb.componentsTab.getTemplateById(dfsId)
         if (dfsId && template) {
-          var component = { template: template, settings: pastedCompJson }
+          var component = {
+            template: template,
+            settings: pastedCompJson
+          }
           var _ = this
           success = true
           this.fb.componentsTab.componentTojqElement(dfsId, component, function (newJqEl) {
@@ -1469,7 +1516,9 @@ var FT_Workspace = function (fb, jqEl, comps) {
                 return _.selectComponent(e, $(this))
               }, false)
             })
-            _.updateMetaData(pastedCompJson, { compId: dfsId }, true)
+            _.updateMetaData(pastedCompJson, {
+              compId: dfsId
+            }, true)
             _.afterInserting(newJqEl, _.form)
             _.actionManager.mayShow(_.body)
           })
@@ -1622,12 +1671,12 @@ var FT_Workspace = function (fb, jqEl, comps) {
           var t = $(this)
           var id = t.attr('data-dfsid')
           var c = '.hcbuild-main .fb-workspace .fb-component[data-dfsid="' + id + '"] {' +
-                        'border-right: 2px solid ' + _.getRandomColor(id) + ';' +
-                        '}'
+            'border-right: 2px solid ' + _.getRandomColor(id) + ';' +
+            '}'
           _.addLocalCss(c)
           c = '.hcbuild-main .htmlComponents .fb-component[data-dfsid="' + id + '"]{' +
-                        'border-left: 2px solid ' + _.getRandomColor(id) + ';' +
-                        '}'
+            'border-left: 2px solid ' + _.getRandomColor(id) + ';' +
+            '}'
           _.addLocalCss(c)
           var startId
           t = t.findVisibleInputOrRefElement()
@@ -1741,16 +1790,16 @@ var FT_Workspace = function (fb, jqEl, comps) {
       if (!this.localCssEl) {
         var c = ''
         c = '.hcbuild-main .fb-workspace .fb-component {' +
-                    'border-right: 2px solid #c3c3c3;' +
-                    '}'
+          'border-right: 2px solid #c3c3c3;' +
+          '}'
         this.localCssMap[c] = 1
         c = '.hcbuild-main .htmlComponents  .fb-component {' +
-                    'border-left: 2px solid #c3c3c3;' +
-                    '}'
+          'border-left: 2px solid #c3c3c3;' +
+          '}'
         this.localCssMap[c] = 1
         c = '.hcbuild-main .am-endpoint-main>i {' +
-                    'border-right: none !important;' +
-                    '}'
+          'border-right: none !important;' +
+          '}'
         this.localCssMap[c] = 1
         this.localCssEl = $('<style type="text/css"></style>')
         this.fb.el.append(this.localCssEl)
@@ -1758,7 +1807,8 @@ var FT_Workspace = function (fb, jqEl, comps) {
       if (css) {
         this.localCssMap[css] = 1
       }
-      var allCss = ''; var key
+      var allCss = '';
+      var key
       for (key in this.localCssMap) {
         if (this.localCssMap.hasOwnProperty(key)) {
           allCss += key
@@ -1805,7 +1855,9 @@ var FT_Workspace = function (fb, jqEl, comps) {
     _colorAlreadySet: {},
     getRandomColor: function (id) {
       if (!this._randomColor[id]) {
-        var tryCount = 6; var i = 0; var color
+        var tryCount = 6;
+        var i = 0;
+        var color
         for (; i < tryCount; ++i) {
           color = this.colorSet[this.fb.randomIntBetween(0, this.colorSet.length - 1)]
           if (!this._colorAlreadySet[color]) {
@@ -1834,7 +1886,7 @@ var FT_Workspace = function (fb, jqEl, comps) {
       }
       return this.getRandomLineOffsetForMap[id]
     }
-  }// end of connectionManager
+  } // end of connectionManager
   /**
      "action":{
              "source":[{"_destComp":"", "_index":"", "regex":"regex"}],
@@ -1965,7 +2017,9 @@ var FT_Workspace = function (fb, jqEl, comps) {
       var srcComp = this.ws.components[data.srcCompId]
       var srcCompFieldObj = this.ws.fb.compiler.getCompFieldObjectByName(srcComp, data.name)
       if (!srcCompFieldObj.action) {
-        srcCompFieldObj.action = { source: [data.source] }
+        srcCompFieldObj.action = {
+          source: [data.source]
+        }
       } else {
         if (!$.isArray(srcCompFieldObj.action['source'])) {
           srcCompFieldObj.action['source'] = []
@@ -1980,10 +2034,16 @@ var FT_Workspace = function (fb, jqEl, comps) {
       var destComp = this.ws.components[data.source._destCompId]
       var destCompFieldObj = this.ws.fb.compiler.getCompMainObject(destComp)
       if (!destCompFieldObj.action) {
-        destCompFieldObj.action = { 'destination': { 'transition': this.transition } }
+        destCompFieldObj.action = {
+          'destination': {
+            'transition': this.transition
+          }
+        }
       } else {
         if (!destCompFieldObj.action['destination'] || !destCompFieldObj.action['destination']['transition']) {
-          destCompFieldObj.action['destination'] = { 'transition': this.transition }
+          destCompFieldObj.action['destination'] = {
+            'transition': this.transition
+          }
         }
       }
       var settignsCompId = this.ws.fb.settingsTab.currentCompId()
@@ -2052,7 +2112,8 @@ var FT_Workspace = function (fb, jqEl, comps) {
       return data.destCounter > 1
     },
     _drawPointerAndLines: function ($target) {
-      var _ = this; var key
+      var _ = this;
+      var key
       if ($target.hasClass('fb-component')) {
         this.update($target.nextAll('.fb-component').addBack())
       } else {
@@ -2142,8 +2203,7 @@ var FT_Workspace = function (fb, jqEl, comps) {
                 lines.splice(l, 1)
               }
             }
-          } catch (e) {
-          }
+          } catch (e) {}
           $line.remove()
         }
         t.remove()
@@ -2191,7 +2251,9 @@ var FT_Workspace = function (fb, jqEl, comps) {
         _index: _index,
         compId: compId
       }
-      var sourceItems; var $endpoint; var psel
+      var sourceItems;
+      var $endpoint;
+      var psel
       psel = "i[compRef='" + compId + "'][_index='" + _index + "'][_name='" + comp.name + "']"
       sourceItems = this._getSourceItemsFromComp(comp, _index)
       var hasSrcConnections = false
@@ -2316,7 +2378,10 @@ var FT_Workspace = function (fb, jqEl, comps) {
       let $t = $(target)
       if ($t.hasClass('am-endpoint')) {
         _.$targetEndpoint = $t
-        _.intrDz.ondragenter({ target: _.$targetEndpoint[0], relatedTarget: _.$dragPointer[0] })
+        _.intrDz.ondragenter({
+          target: _.$targetEndpoint[0],
+          relatedTarget: _.$dragPointer[0]
+        })
       }
     },
     _dragleave: function (e) {
@@ -2324,19 +2389,25 @@ var FT_Workspace = function (fb, jqEl, comps) {
         return
       }
       if (_.$targetEndpoint) {
-        _.intrDz.ondragleave({ target: _.$targetEndpoint[0], relatedTarget: _.$dragPointer[0] })
+        _.intrDz.ondragleave({
+          target: _.$targetEndpoint[0],
+          relatedTarget: _.$dragPointer[0]
+        })
         _.$targetEndpoint = null
       }
     },
     _dropcheck: function () {
       if (_.$targetEndpoint && _.$targetEndpoint.length && _._isInside(_.$targetEndpoint[0].getBoundingClientRect())) {
-        _.intrDz.ondrop({ target: _.$targetEndpoint[0], relatedTarget: _.$dragPointer[0] })
+        _.intrDz.ondrop({
+          target: _.$targetEndpoint[0],
+          relatedTarget: _.$dragPointer[0]
+        })
       }
     },
-    _isInside (r) {
+    _isInside(r) {
       return r && this.lastY > r.top && this.lastY < r.bottom && this.lastX > r.left && this.lastX < r.right
     },
-    _enableDropzoneEntpoints (pointer) {
+    _enableDropzoneEntpoints(pointer) {
       var _ = this
       var $endpoints = this.ws.body.find('.fws-main:first')
       $endpoints = $endpoints.find('.am-endpoint')
@@ -2348,10 +2419,13 @@ var FT_Workspace = function (fb, jqEl, comps) {
         // this.addEventListener("touchmove", _._dragenter, false);
         this.addEventListener('mouseover', _._dragenter, false)
         this.addEventListener('mouseout', _._dragleave, false)
-        _.intrDz.ondropactivate({ target: this, relatedTarget: pointer })
+        _.intrDz.ondropactivate({
+          target: this,
+          relatedTarget: pointer
+        })
       })
     },
-    _disableDropzoneEntpoints (pointer) {
+    _disableDropzoneEntpoints(pointer) {
       var _ = this
       var $endpoints = this.ws.body.find('.fws-main:first')
       $endpoints = $endpoints.find('.am-endpoint')
@@ -2359,7 +2433,10 @@ var FT_Workspace = function (fb, jqEl, comps) {
         // this.removeEventListener("touchmove", _._dragenter, false);
         this.removeEventListener('mouseover', _._dragenter, false)
         this.removeEventListener('mouseout', _._dragleave, false)
-        _.intrDz.ondropdeactivate({ target: this, relatedTarget: pointer })
+        _.intrDz.ondropdeactivate({
+          target: this,
+          relatedTarget: pointer
+        })
       })
     },
     _initDropzone: function () {
@@ -2595,7 +2672,10 @@ var FT_Workspace = function (fb, jqEl, comps) {
               if (!_._removeIfStartPointerExists($pointer)) {
                 e.target.style.webkitTransform = e.target.style.transform = 'translate(0, 0)'
                 var pos = $pointer.data('src').positionOfUnderlying(_.$pointLayer)
-                $pointer.css({ top: pos.y + 'px', left: pos.x + 'px' })
+                $pointer.css({
+                  top: pos.y + 'px',
+                  left: pos.x + 'px'
+                })
                 $pointer.data('line').attr('visibility', 'hidden')
                 $pointer.data('lastEndpoint', null)
               }
@@ -2632,8 +2712,7 @@ var FT_Workspace = function (fb, jqEl, comps) {
               lines.splice(l, 1)
             }
           }
-        } catch (e) {
-        }
+        } catch (e) {}
         $line.remove()
         $pointer.remove()
         return true
@@ -2711,7 +2790,10 @@ var FT_Workspace = function (fb, jqEl, comps) {
         height: h + 'px',
         width: w + 'px'
       })
-      $pointer.css({ top: startPos.y + 'px', left: startPos.x + 'px' })
+      $pointer.css({
+        top: startPos.y + 'px',
+        left: startPos.x + 'px'
+      })
 
       $pointer.data('line').attr('visibility', 'hidden')
       $pointer.data('connected', false)
@@ -2781,9 +2863,10 @@ var FT_Workspace = function (fb, jqEl, comps) {
       }
       return true
     }
-  }// end of actionManager
+  } // end of actionManager
   this.sizeOf = function (obj) {
-    var size = 0; var key
+    var size = 0;
+    var key
     for (key in obj) {
       if (obj.hasOwnProperty(key)) size++
     }
@@ -2928,7 +3011,7 @@ var FT_Workspace = function (fb, jqEl, comps) {
   }
   this.fb = null
   this.el = null
-  this.components = {}/** {"compId":{..settings..}**/
+  this.components = {} /** {"compId":{..settings..}**/
   this.init(fb, jqEl, comps)
 }
 
@@ -2975,11 +3058,23 @@ var FT_ComponentsTab = function (fb, jqEl) {
           }
         },
         items: {
-          'edit': { name: 'Edit', icon: 'edit' },
+          'edit': {
+            name: 'Edit',
+            icon: 'edit'
+          },
           // "cut": {name: "Cut", icon: "cut"},
-          'copy': { name: 'Copy', icon: 'copy' },
-          'paste': { name: 'Paste', icon: 'paste' },
-          'delete': { name: 'Delete', icon: 'delete' }
+          'copy': {
+            name: 'Copy',
+            icon: 'copy'
+          },
+          'paste': {
+            name: 'Paste',
+            icon: 'paste'
+          },
+          'delete': {
+            name: 'Delete',
+            icon: 'delete'
+          }
         }
       })
     }
@@ -2997,7 +3092,7 @@ var FT_ComponentsTab = function (fb, jqEl) {
         var index = 1
         while (!fbComponent.hasClass('fb-component')) {
           fbComponent = fbComponent.parent()
-          ++index
+            ++index
           if (maxIndex < index) {
             break
           }
@@ -3035,10 +3130,10 @@ var FT_ComponentsTab = function (fb, jqEl) {
               }
               data[key].settings = _.fb.deepCopySettings(data[key].settings, _.getDefaultSettingsDescriptor())
               searchedComponents[key] = {
-                template: data[key].template,
-                settings: data[key].settings
-              }
-              ++compsCount
+                  template: data[key].template,
+                  settings: data[key].settings
+                }
+                ++compsCount
             }
           }
           if (compsCount > 0) {
@@ -3080,10 +3175,10 @@ var FT_ComponentsTab = function (fb, jqEl) {
               //   data[key].settings.action = "";
               // }
               componentsTab.components[key] = {
-                template: data[key].template,
-                settings: data[key].settings
-              }
-              ++count
+                  template: data[key].template,
+                  settings: data[key].settings
+                }
+                ++count
             }
           }
         }
@@ -3113,7 +3208,7 @@ var FT_ComponentsTab = function (fb, jqEl) {
   this.el = null
   this.templates = null
   this.copiedComponentDfsId = null
-  this.components = {}// {"someDfsId":{template:"", settings:{}}};
+  this.components = {} // {"someDfsId":{template:"", settings:{}}};
   // same as components but this one is not being emptied when searching for components
   // it is needed to prevent from compile issues when re-rending components on the workspace
   this.backupComponents = {}
@@ -3137,7 +3232,11 @@ var FT_ComponentsTab = function (fb, jqEl) {
       if (this.storeQueue.hasOwnProperty(key)) {
         if (this.components[key]) {
           var updateComp = this.components[key]
-          var newComp = { id: key, template: updateComp.template, settings: updateComp.settings }
+          var newComp = {
+            id: key,
+            template: updateComp.template,
+            settings: updateComp.settings
+          }
           this.fb.options.component.storeComp(newComp, function (data) {
             if (data && data.oldId && data.newId) {
               componentsTab.updateDfsId(data.oldId, data.newId)
@@ -3250,7 +3349,11 @@ var FT_ComponentsTab = function (fb, jqEl) {
               for (var i = 0; i < deliveredCollector.length; ++i) {
                 $refComp = $(deliveredCollector[i])
                 _.body.append($refComp)
-                try { _.fb.workspace.dragAndDropManager.attachDragEvent($refComp, true) } catch (eee) { console.log(eee) }
+                try {
+                  _.fb.workspace.dragAndDropManager.attachDragEvent($refComp, true)
+                } catch (eee) {
+                  console.log(eee)
+                }
               }
               setTimeout(function () {
                 _.fb.workspace.connectionManager.update()
@@ -3262,7 +3365,8 @@ var FT_ComponentsTab = function (fb, jqEl) {
     }
   }
   this.sizeOf = function (obj) {
-    var size = 0; var key
+    var size = 0;
+    var key
     for (key in obj) {
       if (obj.hasOwnProperty(key)) size++
     }
@@ -3327,218 +3431,200 @@ var FT_SettingsTab = function (fb, jqEl) {
   this.templates = {
     settings: {
       label: '<label class="fbs-lbl {{pathClass}}" for="{{id}}">{{varToLabel label}}</label>',
-      hiddenField:
-            '{{#ifEq type "checkbox"}}' +
-            '<input style="display: none;" class="hidden {{pathClass}}" id="{{id}}" type="{{type}}" name="{{path}}" {{#unless typeText}}{{#val}}checked="checked"{{/val}}{{/unless}}  {{#if typeText}}value="{{val}}"{{/if}}>' +
-            '{{else}}' +
-            '<input style="display: none;" class="hidden {{pathClass}}" id="{{id}}" type="{{type}}" name="{{path}}" {{#unless typeText}}{{#val}}checked="checked"{{/val}}{{/unless}}  {{#if typeText}}value="{{val}}"{{/if}}>' +
-            '{{/ifEq}}',
-      field:
-            '   <table class="hcbuilder-settings-tbl">' +
-            '       <tbody><tr>' +
-            '           {{#if createI18nEl}}' +
-            '           <td class="switch-td">' +
-            '               <label class="i18n-toggle">' +
-            '                   <input class="i18n-switch" data-targetid="{{id}}" type="checkbox" {{#if i18nChecked}}checked="checked"{{/if}}>' +
-            '                   <div class="slider"><span class="i18n-vertical">i18n</span></div>' +
-            '               </label>' +
-            '           </td>' +
-            '           {{/if}}' +
-            '           <td>' +
-            '               {{#ifEq type "checkbox"}}' +
-            '               <label class="switch"><input class="{{pathClass}} {{#if typeText}}form-control{{/if}} {{#if i18nChecked}}i18n-active{{/if}}" id="{{id}}" type="{{type}}" name="{{path}}" {{#unless typeText}}{{#val}}checked="checked"{{/val}}{{/unless}}  {{#if typeText}}value="{{escapeForAttr val}}"{{/if}}> <div class="slider"></div> </label>' +
-            '               {{else}}' +
-            '               <input class="{{pathClass}} {{#if typeText}}form-control{{/if}} {{#if i18nChecked}}i18n-active{{/if}}" id="{{id}}" type="{{type}}" name="{{path}}" {{#unless typeText}}{{#val}}checked="checked"{{/val}}{{/unless}}  {{#if typeText}}value="{{escapeForAttr val}}"{{/if}}>' +
-            '               {{/ifEq}}' +
-            '           </td>' +
-            '       </tr></tbody>' +
-            '   </table>',
-      enumField:
-            '   <table class="hcbuilder-settings-tbl enum-field">' +
-            '       <tbody><tr>' +
-            '           <td>' +
-            '               {{#each val.all}}' +
-            '               <div class="fancy-el fancy-radio float-left">' +
-            '                   <input type="radio" {{#ifEq @index @root.val.selected}}checked="checked"{{/ifEq}} id="{{@root.path}}{{@index}}" name="{{@root.path}}.selected" value="{{@index}}" />' +
-            '                   <label for="{{@root.path}}{{@index}}"><span><i></i></span><p>{{this}}</p></label>' +
-            '               </div>' +
-            '               {{/each}}' +
-            '               {{#each val.all}}' +
-            '                   <input type="hidden" name="{{@root.path}}.all[{{@index}}]" value="{{this}}"/>' +
-            '               {{/each}}' +
-            '           </td>' +
-            '       </tr></tbody>' +
-            '   </table>',
-      enumFieldSelect:
-            '   <table class="hcbuilder-settings-tbl enum-field">' +
-            '       <tbody><tr>' +
-            '           {{#ifEq label "file"}}<td><table><tr><td>exact</td><td>' +
-            '               <label class="switch" style="margin-right: 10px;margin-left: 5px;"><input class="file-exact {{pathClass}}exact " type="checkbox" data-path="{{path}}" data-key="{{key}}" name="{{path}}.exact" {{#if val.exact}}checked="checked"{{/if}}> <div class="slider"></div> </label>' +
-            '           </td></tr></table></td>{{/ifEq}}' +
-            '           <td>' +
-            '               <select class="{{pathClass}}" id="{{id}}" name="{{@root.path}}.selected">' +
-            '                   {{#each val.all}}' +
-            '                   <option {{#ifEq @index @root.val.selected}}selected="selected"{{/ifEq}} value="{{@index}}">{{this}}</option>' +
-            '                   {{/each}}' +
-            '               </select>' +
-            '               {{#each val.all}}' +
-            '                   <input type="hidden" name="{{@root.path}}.all[{{@index}}]" value="{{this}}"/>' +
-            '               {{/each}}' +
-            '           </td>' +
-            '       </tr></tbody>' +
-            '   </table>'
+      hiddenField: '{{#ifEq type "checkbox"}}' +
+        '<input style="display: none;" class="hidden {{pathClass}}" id="{{id}}" type="{{type}}" name="{{path}}" {{#unless typeText}}{{#val}}checked="checked"{{/val}}{{/unless}}  {{#if typeText}}value="{{val}}"{{/if}}>' +
+        '{{else}}' +
+        '<input style="display: none;" class="hidden {{pathClass}}" id="{{id}}" type="{{type}}" name="{{path}}" {{#unless typeText}}{{#val}}checked="checked"{{/val}}{{/unless}}  {{#if typeText}}value="{{val}}"{{/if}}>' +
+        '{{/ifEq}}',
+      field: '   <table class="hcbuilder-settings-tbl">' +
+        '       <tbody><tr>' +
+        '           {{#if createI18nEl}}' +
+        '           <td class="switch-td">' +
+        '               <label class="i18n-toggle">' +
+        '                   <input class="i18n-switch" data-targetid="{{id}}" type="checkbox" {{#if i18nChecked}}checked="checked"{{/if}}>' +
+        '                   <div class="slider"><span class="i18n-vertical">i18n</span></div>' +
+        '               </label>' +
+        '           </td>' +
+        '           {{/if}}' +
+        '           <td>' +
+        '               {{#ifEq type "checkbox"}}' +
+        '               <label class="switch"><input class="{{pathClass}} {{#if typeText}}form-control{{/if}} {{#if i18nChecked}}i18n-active{{/if}}" id="{{id}}" type="{{type}}" name="{{path}}" {{#unless typeText}}{{#val}}checked="checked"{{/val}}{{/unless}}  {{#if typeText}}value="{{escapeForAttr val}}"{{/if}}> <div class="slider"></div> </label>' +
+        '               {{else}}' +
+        '               <input class="{{pathClass}} {{#if typeText}}form-control{{/if}} {{#if i18nChecked}}i18n-active{{/if}}" id="{{id}}" type="{{type}}" name="{{path}}" {{#unless typeText}}{{#val}}checked="checked"{{/val}}{{/unless}}  {{#if typeText}}value="{{escapeForAttr val}}"{{/if}}>' +
+        '               {{/ifEq}}' +
+        '           </td>' +
+        '       </tr></tbody>' +
+        '   </table>',
+      enumField: '   <table class="hcbuilder-settings-tbl enum-field">' +
+        '       <tbody><tr>' +
+        '           <td>' +
+        '               {{#each val.all}}' +
+        '               <div class="fancy-el fancy-radio float-left">' +
+        '                   <input type="radio" {{#ifEq @index @root.val.selected}}checked="checked"{{/ifEq}} id="{{@root.path}}{{@index}}" name="{{@root.path}}.selected" value="{{@index}}" />' +
+        '                   <label for="{{@root.path}}{{@index}}"><span><i></i></span><p>{{this}}</p></label>' +
+        '               </div>' +
+        '               {{/each}}' +
+        '               {{#each val.all}}' +
+        '                   <input type="hidden" name="{{@root.path}}.all[{{@index}}]" value="{{this}}"/>' +
+        '               {{/each}}' +
+        '           </td>' +
+        '       </tr></tbody>' +
+        '   </table>',
+      enumFieldSelect: '   <table class="hcbuilder-settings-tbl enum-field">' +
+        '       <tbody><tr>' +
+        '           {{#ifEq label "file"}}<td><table><tr><td>exact</td><td>' +
+        '               <label class="switch" style="margin-right: 10px;margin-left: 5px;"><input class="file-exact {{pathClass}}exact " type="checkbox" data-path="{{path}}" data-key="{{key}}" name="{{path}}.exact" {{#if val.exact}}checked="checked"{{/if}}> <div class="slider"></div> </label>' +
+        '           </td></tr></table></td>{{/ifEq}}' +
+        '           <td>' +
+        '               <select class="{{pathClass}}" id="{{id}}" name="{{@root.path}}.selected">' +
+        '                   {{#each val.all}}' +
+        '                   <option {{#ifEq @index @root.val.selected}}selected="selected"{{/ifEq}} value="{{@index}}">{{this}}</option>' +
+        '                   {{/each}}' +
+        '               </select>' +
+        '               {{#each val.all}}' +
+        '                   <input type="hidden" name="{{@root.path}}.all[{{@index}}]" value="{{this}}"/>' +
+        '               {{/each}}' +
+        '           </td>' +
+        '       </tr></tbody>' +
+        '   </table>'
     }
   }
   this.templates.startIndention =
-        '<div{{#if hidden}} style="display:none;" {{/if}} class="{{pathClass}} relative-parent row {{#if path}}root-row {{/if}}indention{{#if isValidate}} validation-parent{{/if}}">' +
-        '   <div class="col-md-{{#if path}}3{{else}}1{{/if}}">' +
-        '       {{#if path}}<label class="fbs-lbl {{pathClass}}" name="{{path}}" >{{label}}</label>{{/if}}' +
-        '       {{#if isArray}}' +
-        '       <button type="button" name="{{path}}" class="array-add btn btn-secondary" >' +
-        '           <span class="fa fa-plus" aria-hidden="true"></span>' +
-        '       </button>' +
-        '       {{/if}}' +
-        '   </div>' +
-        '   <div class="col-md-{{#if path}}9{{else}}11{{/if}}">' +
-        '       <div class="array-childs">'
+    '<div{{#if hidden}} style="display:none;" {{/if}} class="{{pathClass}} relative-parent row {{#if path}}root-row {{/if}}indention{{#if isValidate}} validation-parent{{/if}}">' +
+    '   <div class="col-md-{{#if path}}3{{else}}1{{/if}}">' +
+    '       {{#if path}}<label class="fbs-lbl {{pathClass}}" name="{{path}}" >{{label}}</label>{{/if}}' +
+    '       {{#if isArray}}' +
+    '       <button type="button" name="{{path}}" class="array-add btn btn-secondary" >' +
+    '           <span class="fa fa-plus" aria-hidden="true"></span>' +
+    '       </button>' +
+    '       {{/if}}' +
+    '   </div>' +
+    '   <div class="col-md-{{#if path}}9{{else}}11{{/if}}">' +
+    '       <div class="array-childs">'
   this.templates.endIndention =
-        '       </div>' +
-        '   </div>' +
-        '   <button type="button" class="btn btn-danger array-item-del simple-item">' +
-        '       <span class="fa fa-minus" aria-hidden="true"></span>' +
-        '   </button>' +
-        '</div>'
+    '       </div>' +
+    '   </div>' +
+    '</div>'
 
   this.templates.enumRowSingle =
-        '<div class="{{#if select}}fb-field-group row{{else}}relative-parent fb-field-group row {{#if path}}root-row {{/if}}{{/if}}">' +
-        '   {{#if label}}' +
-        '   <div class="col-md-{{#ifEq label "file"}}2{{else}}3{{/ifEq}}">' +
-        this.templates.settings.label +
-        '   </div>' +
-        '   {{/if}}' +
-        '   <div class="col-md-{{#ifEq label "file"}}6{{else}}{{#if select}}5{{else}}{{#if label}}9{{else}}12{{/if}}{{/if}}{{/ifEq}}">{{#if select}}' +
-        this.templates.settings.enumFieldSelect + '{{else}}' + this.templates.settings.enumField +
-        '   {{/if}}</div>' +
-        '   {{#unless select}}{{#if label}}' +
-        '   <button type="button" class="btn btn-danger array-item-del simple-item">' +
-        '       <span class="fa fa-minus" aria-hidden="true"></span>' +
-        '   </button>' +
-        '   {{/if}}{{/unless}}' +
-        '</div>'
+    '<div class="{{#if select}}fb-field-group row{{else}}relative-parent fb-field-group row {{#if path}}root-row {{/if}}{{/if}}">' +
+    '   {{#if label}}' +
+    '   <div class="col-md-{{#ifEq label "file"}}2{{else}}3{{/ifEq}}">' +
+    this.templates.settings.label +
+    '   </div>' +
+    '   {{/if}}' +
+    '   <div class="col-md-{{#ifEq label "file"}}6{{else}}{{#if select}}5{{else}}{{#if label}}9{{else}}12{{/if}}{{/if}}{{/ifEq}}">{{#if select}}' +
+    this.templates.settings.enumFieldSelect + '{{else}}' + this.templates.settings.enumField +
+    '   {{/if}}</div>' +
+    '   {{#unless select}}{{#if label}}' +
+    '   {{/if}}{{/unless}}' +
+    '</div>'
 
   this.templates.inputRowSingleDate =
-        '<div class="fb-field-group row vdf">' +
-        '   <div class="col-md-12">' +
-        '       <div class="row">' +
-        '           <div class="col-md-3">' +
-        this.templates.settings.label +
-        '           </div>' +
-        '           <div class="col-md-{{#if label}}9{{else}}12{{/if}}">' +
-        '               <table class="hcbuilder-settings-tbl">' +
-        '                   <tbody name="{{path}}"><tr>' +
-        '                       <td class="td-min vdf-ext-main vdf-before vdf-inactive">' +
-        '                           <table class="vdf-input"><tbody><tr>' +
-        '                               <td class="td-min">' +
-        '                                   <input class="form-control vdf-date vdf-var" placeholder="now or variable name" type="text" data-dval="undefined" name="{{path}}.before.date" value="{{val.before.date}}"/>' +
-        '                                   <span class="{{#if val.before.date}}vdf-true {{/if}}glyphicon glyphicon-calendar" aria-hidden="true"></span>' +
-        '                               </td>' +
-        '                               <td class="td-min">' +
-        '                                   <input class="form-control vdf-pattern" placeholder="dd.MM.yyyy HH:mm:ss" type="text" data-dval="undefined" name="{{path}}.before.pattern" value="{{val.before.pattern}}"/>' +
-        '                                   <span class="{{#if val.before.pattern}}vdf-true {{/if}}glyphicon glyphicon-equalizer" aria-hidden="true"></span>' +
-        '                               </td>' +
-        '                               <td class="td-min">' +
-        '                                   <input class="form-control vdf-val" placeholder="01.01.2017 23:59:59" type="text" data-dval="undefined" name="{{path}}.before.val" value="{{val.before.val}}"/>' +
-        '                                   <span class="{{#if val.before.val}}vdf-true {{/if}}glyphicon glyphicon-dashboard" aria-hidden="true"></span>' +
-        '                               </td>' +
-        '                           </tr></tbody></table>' +
-        '                           <span class="vdf-ext{{#if val.before}} vdf-true{{/if}} glyphicon glyphicon-step-backward" aria-hidden="true"></span>' +
-        '                       </td>' +
-        '                       <td>' +
-        '                           <input class="form-control" id="{{id}}" placeholder="dd.MM.yyyy HH:mm:ss" type="{{type}}" name="{{path}}.pattern" value="{{val.pattern}}" />' +
-        '                       </td>' +
-        '                       <td class="td-min vdf-ext-main vdf-after vdf-inactive">' +
-        '                           <table class="vdf-input"><tbody><tr>' +
-        '                               <td class="td-min">' +
-        '                                   <input class="form-control vdf-date vdf-var" placeholder="now or variable name" type="text" data-dval="undefined" name="{{path}}.after.date" value="{{val.after.date}}"/>' +
-        '                                   <span class="{{#if val.after.date}}vdf-true {{/if}}glyphicon glyphicon-calendar" aria-hidden="true"></span>' +
-        '                               </td>' +
-        '                               <td class="td-min">' +
-        '                                   <input class="form-control vdf-pattern" placeholder="dd.MM.yyyy HH:mm:ss" type="text" data-dval="undefined" name="{{path}}.after.pattern" value="{{val.after.pattern}}"/>' +
-        '                                   <span class="{{#if val.after.pattern}}vdf-true {{/if}}glyphicon glyphicon-equalizer" aria-hidden="true"></span>' +
-        '                               </td>' +
-        '                               <td class="td-min">' +
-        '                                   <input class="form-control vdf-val" placeholder="01.01.2017 23:59:59" type="text" data-dval="undefined" name="{{path}}.after.val" value="{{val.after.val}}"/>' +
-        '                                   <span class="{{#if val.after.val}}vdf-true {{/if}}glyphicon glyphicon-dashboard" aria-hidden="true"></span>' +
-        '                               </td>' +
-        '                           </tr></tbody></table>' +
-        '                           <span class="vdf-ext{{#if val.after}} vdf-true{{/if}} glyphicon glyphicon-step-forward" aria-hidden="true"></span>' +
-        '                       </td>' +
-        '                   </tr></tbody>' +
-        '               </table>' +
-        '           </div>' +
-        '       </div>' +
-        '   </div>' +
-        '</div>'
+    '<div class="fb-field-group row vdf">' +
+    '   <div class="col-md-12">' +
+    '       <div class="row">' +
+    '           <div class="col-md-3">' +
+    this.templates.settings.label +
+    '           </div>' +
+    '           <div class="col-md-{{#if label}}9{{else}}12{{/if}}">' +
+    '               <table class="hcbuilder-settings-tbl">' +
+    '                   <tbody name="{{path}}"><tr>' +
+    '                       <td class="td-min vdf-ext-main vdf-before vdf-inactive">' +
+    '                           <table class="vdf-input"><tbody><tr>' +
+    '                               <td class="td-min">' +
+    '                                   <input class="form-control vdf-date vdf-var" placeholder="now or variable name" type="text" data-dval="undefined" name="{{path}}.before.date" value="{{val.before.date}}"/>' +
+    '                                   <span class="{{#if val.before.date}}vdf-true {{/if}}glyphicon glyphicon-calendar" aria-hidden="true"></span>' +
+    '                               </td>' +
+    '                               <td class="td-min">' +
+    '                                   <input class="form-control vdf-pattern" placeholder="dd.MM.yyyy HH:mm:ss" type="text" data-dval="undefined" name="{{path}}.before.pattern" value="{{val.before.pattern}}"/>' +
+    '                                   <span class="{{#if val.before.pattern}}vdf-true {{/if}}glyphicon glyphicon-equalizer" aria-hidden="true"></span>' +
+    '                               </td>' +
+    '                               <td class="td-min">' +
+    '                                   <input class="form-control vdf-val" placeholder="01.01.2017 23:59:59" type="text" data-dval="undefined" name="{{path}}.before.val" value="{{val.before.val}}"/>' +
+    '                                   <span class="{{#if val.before.val}}vdf-true {{/if}}glyphicon glyphicon-dashboard" aria-hidden="true"></span>' +
+    '                               </td>' +
+    '                           </tr></tbody></table>' +
+    '                           <span class="vdf-ext{{#if val.before}} vdf-true{{/if}} glyphicon glyphicon-step-backward" aria-hidden="true"></span>' +
+    '                       </td>' +
+    '                       <td>' +
+    '                           <input class="form-control" id="{{id}}" placeholder="dd.MM.yyyy HH:mm:ss" type="{{type}}" name="{{path}}.pattern" value="{{val.pattern}}" />' +
+    '                       </td>' +
+    '                       <td class="td-min vdf-ext-main vdf-after vdf-inactive">' +
+    '                           <table class="vdf-input"><tbody><tr>' +
+    '                               <td class="td-min">' +
+    '                                   <input class="form-control vdf-date vdf-var" placeholder="now or variable name" type="text" data-dval="undefined" name="{{path}}.after.date" value="{{val.after.date}}"/>' +
+    '                                   <span class="{{#if val.after.date}}vdf-true {{/if}}glyphicon glyphicon-calendar" aria-hidden="true"></span>' +
+    '                               </td>' +
+    '                               <td class="td-min">' +
+    '                                   <input class="form-control vdf-pattern" placeholder="dd.MM.yyyy HH:mm:ss" type="text" data-dval="undefined" name="{{path}}.after.pattern" value="{{val.after.pattern}}"/>' +
+    '                                   <span class="{{#if val.after.pattern}}vdf-true {{/if}}glyphicon glyphicon-equalizer" aria-hidden="true"></span>' +
+    '                               </td>' +
+    '                               <td class="td-min">' +
+    '                                   <input class="form-control vdf-val" placeholder="01.01.2017 23:59:59" type="text" data-dval="undefined" name="{{path}}.after.val" value="{{val.after.val}}"/>' +
+    '                                   <span class="{{#if val.after.val}}vdf-true {{/if}}glyphicon glyphicon-dashboard" aria-hidden="true"></span>' +
+    '                               </td>' +
+    '                           </tr></tbody></table>' +
+    '                           <span class="vdf-ext{{#if val.after}} vdf-true{{/if}} glyphicon glyphicon-step-forward" aria-hidden="true"></span>' +
+    '                       </td>' +
+    '                   </tr></tbody>' +
+    '               </table>' +
+    '           </div>' +
+    '       </div>' +
+    '   </div>' +
+    '</div>'
 
   this.templates.inputRowSingle =
-        '<div class="relative-parent fb-field-group row {{#if path}}root-row {{/if}}">' +
-        '   {{#if label}}' +
-        '   <div class="col-md-3">' +
-        this.templates.settings.label +
-        '   </div>' +
-        '   {{/if}}' +
-        '   <div class="col-md-{{#if label}}9{{else}}12{{/if}}">' +
-        this.templates.settings.field +
-        '   </div>' +
-        '   {{#if label}}' +
-        '   <button type="button" class="btn btn-danger array-item-del simple-item">' +
-        '       <span class="fa fa-minus" aria-hidden="true"></span>' +
-        '   </button>' +
-        '   {{/if}}' +
-        '</div>'
+    '<div class="relative-parent fb-field-group row {{#if path}}root-row {{/if}}">' +
+    '   {{#if label}}' +
+    '   <div class="col-md-3">' +
+    this.templates.settings.label +
+    '   </div>' +
+    '   {{/if}}' +
+    '   <div class="col-md-{{#if label}}9{{else}}12{{/if}}">' +
+    this.templates.settings.field +
+    '   </div>' +
+    '   {{#if label}}' +
+    '   {{/if}}' +
+    '</div>'
 
   this.templates.inputRowMultiple =
-        '<div class="fb-field-group row">' +
-        '   {{#if label}}' +
-        '   <div class="col-md-3">' +
-        this.templates.settings.label +
-        '   </div>' +
-        '   {{/if}}' +
-        '   <div class="col-md-{{#if label}}5{{else}}6{{/if}}">' +
-        this.templates.settings.field +
-        '   </div>' +
-        '</div>'
+    '<div class="fb-field-group row">' +
+    '   {{#if label}}' +
+    '   <div class="col-md-3">' +
+    this.templates.settings.label +
+    '   </div>' +
+    '   {{/if}}' +
+    '   <div class="col-md-{{#if label}}5{{else}}6{{/if}}">' +
+    this.templates.settings.field +
+    '   </div>' +
+    '</div>'
   this.templates.array = {
     item: {
-      start:
-                '<div class="relative-parent array-item">',
-      end:
-            '<button type="button" class="btn btn-light btn-sm array-item-move array-item-move-up">' +
-            '       <small><span class="fa fa-arrow-up text-secondary" aria-hidden="true"></span></small>' +
-            '   </button>' +
-            '<button type="button" class="btn btn-light btn-sm array-item-move array-item-move-down">' +
-            '       <small><span class="fa fa-arrow-down text-secondary" aria-hidden="true"></span></small>' +
-            '   </button>' +
-            '<button type="button" class="btn btn-danger array-item-del">' +
-            '       <span class="fa fa-minus" aria-hidden="true"></span>' +
-            '   </button>' +
-            '</div>'
+      start: '<div class="relative-parent array-item">',
+      end: '<button type="button" class="btn btn-light btn-sm array-item-move array-item-move-up">' +
+        '       <small><span class="fa fa-arrow-up text-secondary" aria-hidden="true"></span></small>' +
+        '   </button>' +
+        '<button type="button" class="btn btn-light btn-sm array-item-move array-item-move-down">' +
+        '       <small><span class="fa fa-arrow-down text-secondary" aria-hidden="true"></span></small>' +
+        '   </button>' +
+        '<button type="button" class="btn btn-danger array-item-del">' +
+        '       <span class="fa fa-minus" aria-hidden="true"></span>' +
+        '   </button>' +
+        '</div>'
     }
   }
   this.templates.validate = {
-    dropDown:
-        '<div class="dropdown validate-dropdown">' +
-        '  <button class="btn dropdown-toggle validate-dropdown-toggle" type="button" id="{{id}}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">' +
-        '   {{label}}' +
-        '  </button>' +
-        '  <div class="dropdown-menu fb-validation-menu" aria-labelledby="{{id}}">{{lis}}</div>' +
-        '</div>',
-    dropDownLi:
-        '<li class="{{#if disabled}}disabled{{/if}}">' +
-        '   <a href="javascript:void(0)" data-key="{{key}}" data-exact="{{val.exact}}" data-kind="{{val.kind}}" name="{{path}}.{{key}}">{{key}}</a>' +
-        '</li>',
-    deleteBtn:
-      '<td class="td-min"><button type="button" name="{{path}}" class="btn btn-danger validation-del">' +
+    dropDown: '<div class="dropdown validate-dropdown">' +
+      '  <button class="btn dropdown-toggle validate-dropdown-toggle" type="button" id="{{id}}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">' +
+      '   {{label}}' +
+      '  </button>' +
+      '  <div class="dropdown-menu fb-validation-menu" aria-labelledby="{{id}}">{{lis}}</div>' +
+      '</div>',
+    dropDownLi: '<li class="{{#if disabled}}disabled{{/if}}">' +
+      '   <a href="javascript:void(0)" data-key="{{key}}" data-exact="{{val.exact}}" data-kind="{{val.kind}}" name="{{path}}.{{key}}">{{key}}</a>' +
+      '</li>',
+    deleteBtn: '<td class="td-min"><button type="button" name="{{path}}" class="btn btn-danger validation-del">' +
       '   <span class="fa fa-minus" aria-hidden="true"></span>' +
       '</button></td>'
   }
@@ -3627,17 +3713,26 @@ var FT_SettingsTab = function (fb, jqEl) {
           val = _.validate.dropdown.defaults[key]
           if (typeof val === 'boolean') {
             type = 'checkbox'
-            htmlStr = _.transformer.json.createInputRow({ fb: fb, val: val }, key, path, type, true)
+            htmlStr = _.transformer.json.createInputRow({
+              fb: fb,
+              val: val
+            }, key, path, type, true)
           } else if (key === 'file' || fb.isEnum(val)) {
             if (!val) {
               val = {}
             }
             val.exact = _this.attr('data-exact')
             val.kind = _this.attr('data-kind')
-            htmlStr = _.transformer.json.enumToHtmlInput({ fb: fb, val: val }, key, path)
-          } else /* if(typeof val === 'string') */{
+            htmlStr = _.transformer.json.enumToHtmlInput({
+              fb: fb,
+              val: val
+            }, key, path)
+          } else /* if(typeof val === 'string') */ {
             type = 'text'
-            htmlStr = _.transformer.json.createInputRow({ fb: fb, val: val }, key, path, type, true)
+            htmlStr = _.transformer.json.createInputRow({
+              fb: fb,
+              val: val
+            }, key, path, type, true)
           }
           var newEl = $(htmlStr)
           _.validate.file.createExactSwitchEvent(fb, newEl)
@@ -3662,7 +3757,9 @@ var FT_SettingsTab = function (fb, jqEl) {
         if (_t.data('exact')) {
           try {
             _t.attr('title', fb.fileTypes['Exact'][selected]['MIME']['Value'])
-          } catch (e) { console.log(e) }
+          } catch (e) {
+            console.log(e)
+          }
         } else {
           try {
             var arr = fb.fileTypes['Vague'][selected]
@@ -3675,7 +3772,9 @@ var FT_SettingsTab = function (fb, jqEl) {
               }
             }
             _t.attr('title', t)
-          } catch (e) { console.log(e) }
+          } catch (e) {
+            console.log(e)
+          }
         }
       },
       createExactSwitchEvent: function (fb, el) {
@@ -3686,8 +3785,13 @@ var FT_SettingsTab = function (fb, jqEl) {
           var exact = _this.is(':checked')
           var path = _this.attr('data-path')
           var key = 'file'
-          var val = { exact: exact }
-          var hStr = _.transformer.json.enumToHtmlInput({ fb: fb, val: val }, key, path)
+          var val = {
+            exact: exact
+          }
+          var hStr = _.transformer.json.enumToHtmlInput({
+            fb: fb,
+            val: val
+          }, key, path)
           var newEl = $(hStr)
           var fileExactSwitch = newEl.find('input.file-exact')
           fileExactSwitch.click(fileExactClickEvent)
@@ -3763,7 +3867,9 @@ var FT_SettingsTab = function (fb, jqEl) {
       addDeleteButton: function (fb, path, el) {
         var _ = fb.settingsTab
         if (el.find('.validation-del').length === 0) {
-          var htmlStr = fb.compileTemplate(_.templates.validate.deleteBtn, { path: path }, 'templates.validate.deleteBtn')
+          var htmlStr = fb.compileTemplate(_.templates.validate.deleteBtn, {
+            path: path
+          }, 'templates.validate.deleteBtn')
           var newDelEl = $(htmlStr)
           // _.validate.deleteButton.createDeleteEvent(fb, newDelEl);
           el.after(newDelEl)
@@ -3855,11 +3961,25 @@ var FT_SettingsTab = function (fb, jqEl) {
         }
       },
       toHtmlInput: function (fb, json) {
-        var buffer = { html: '', objPath: '' }
+        var buffer = {
+          html: '',
+          objPath: ''
+        }
         if ($.isArray(json)) {
-          this.arrayToHtmlInput({ fb: fb, key: '', val: json, buffer: buffer, rootWrap: true }, '')
+          this.arrayToHtmlInput({
+            fb: fb,
+            key: '',
+            val: json,
+            buffer: buffer,
+            rootWrap: true
+          }, '')
         } else {
-          this.objectToHtmlInput({ fb: fb, key: '', val: json, buffer: buffer }, '')
+          this.objectToHtmlInput({
+            fb: fb,
+            key: '',
+            val: json,
+            buffer: buffer
+          }, '')
         }
         var $html = $(buffer.html)
         fb.settingsTab.validate.dropdown.replaceLabel(json, fb, $html)
@@ -3937,13 +4057,12 @@ var FT_SettingsTab = function (fb, jqEl) {
           _thisNameEl.addClass('var-name')
           _thisNameEl.attr('autocomplete', 'off')
           _thisNameEl.attr('spellcheck', 'false')
-          _thisNameEl.typeahead(
-            {
-              minLength: 0,
-              autoSelect: true,
-              source: _fbOptions.varNameFunction ? _fbOptions.varNameFunction : _fbOptions.vars,
-              items: 20
-            })
+          _thisNameEl.typeahead({
+            minLength: 0,
+            autoSelect: true,
+            source: _fbOptions.varNameFunction ? _fbOptions.varNameFunction : _fbOptions.vars,
+            items: 20
+          })
         })
 
         var connectorSelector = 'input.connector'
@@ -3952,13 +4071,12 @@ var FT_SettingsTab = function (fb, jqEl) {
           var _thisNameEl = $(this)
           _thisNameEl.attr('autocomplete', 'off')
           _thisNameEl.attr('spellcheck', 'false')
-          _thisNameEl.typeahead(
-            {
-              minLength: 0,
-              autoSelect: true,
-              source: _fbOptions.varConnectorsFunction,
-              items: 20
-            })
+          _thisNameEl.typeahead({
+            minLength: 0,
+            autoSelect: true,
+            source: _fbOptions.varConnectorsFunction,
+            items: 20
+          })
           $(_thisNameEl).on('click', function () {
             $(_thisNameEl).typeahead('lookup').focus()
           })
@@ -3997,7 +4115,7 @@ var FT_SettingsTab = function (fb, jqEl) {
           settingsTab.settingsChanged(arrayAddEl, 'click')
         })
 
-        function moveArrayItem (target, direction) {
+        function moveArrayItem(target, direction) {
           let $arrayMoveUpEl = target
           let _arrayItem = $arrayMoveUpEl.parent()
 
@@ -4045,8 +4163,7 @@ var FT_SettingsTab = function (fb, jqEl) {
           var arrayDelBtn = $(this)
           var _arrayItem = arrayDelBtn.parent()
           if (!arrayDelBtn.hasClass('simple-item')) {
-            if (_arrayItem.is(':last-child')) {
-            } else {
+            if (_arrayItem.is(':last-child')) {} else {
               var _arrayIndention = _arrayItem.nextParentWithClass('indention')
               var arrayAddBtn = _arrayIndention.find('.array-add')
               var _arrayParentPath = arrayAddBtn.attr('name')
@@ -4131,7 +4248,9 @@ var FT_SettingsTab = function (fb, jqEl) {
         if (iHideIt) {
           o.isParentHidden = false
         } else {
-          if (key) { o.buffer.html += this.endIndention(o) }
+          if (key) {
+            o.buffer.html += this.endIndention(o)
+          }
         }
         return o.buffer
       },
@@ -4364,20 +4483,20 @@ var FT_SettingsTab = function (fb, jqEl) {
             return true
           }
           if (!event.ctrlKey && (code > 46 || code < 9 ||
-                            (code !== 9 &&
-                                code !== 16 &&
-                                code !== 17 &&
-                                code !== 18 &&
-                                code !== 33 &&
-                                code !== 34 &&
-                                code !== 35 &&
-                                code !== 36 &&
-                                code !== 37 &&
-                                code !== 38 &&
-                                code !== 39 &&
-                                code !== 40 &&
-                                code !== 45 &&
-                                code !== 46))) {
+              (code !== 9 &&
+                code !== 16 &&
+                code !== 17 &&
+                code !== 18 &&
+                code !== 33 &&
+                code !== 34 &&
+                code !== 35 &&
+                code !== 36 &&
+                code !== 37 &&
+                code !== 38 &&
+                code !== 39 &&
+                code !== 40 &&
+                code !== 45 &&
+                code !== 46))) {
             settingsTab.settingsChanged(t, 'keyup')
           }
         }
@@ -4397,12 +4516,12 @@ var FT_SettingsTab = function (fb, jqEl) {
     },
     html: {
       /**
-             * data-dval ["undefined" = don't assign, "null" assign empty, "some val" assign with this if empty]
-             * @param fb
-             * @param jqEl
-             * @param o
-             * @returns {*}
-             */
+       * data-dval ["undefined" = don't assign, "null" assign empty, "some val" assign with this if empty]
+       * @param fb
+       * @param jqEl
+       * @param o
+       * @returns {*}
+       */
       toJsonSettings: function (fb, jqEl, o) {
         if (!o) {
           o = $.isArray(fb.settingsTab.currentSettings) ? [] : {}
@@ -4510,7 +4629,10 @@ var FT_SettingsTab = function (fb, jqEl) {
         fb.compiler.deepLoopOverJson(o, {
           'object': function (value, keyOrIndex, obj) {
             if (keyOrIndex === 'file' && value && value.all) {
-              obj.file = { exact: value.exact, kind: value.all[value.selected] }
+              obj.file = {
+                exact: value.exact,
+                kind: value.all[value.selected]
+              }
             }
             return true
           }
@@ -4545,8 +4667,7 @@ var FT_SettingsTab = function (fb, jqEl) {
               }
               try {
                 arrayIndex = parseInt(strArray[i].match(/(\d+)/g)[0])
-              } catch (e) {
-              }
+              } catch (e) {}
             } else if (strArray[i] === '.') { // object
               if (arrayPointer) {
                 if (typeof o[arrayIndex] !== 'object') {
@@ -4575,7 +4696,8 @@ var FT_SettingsTab = function (fb, jqEl) {
     }
   }
   this.sizeOf = function (obj) {
-    var size = 0; var key
+    var size = 0;
+    var key
     for (key in obj) {
       if (obj.hasOwnProperty(key)) size++
     }
@@ -4586,26 +4708,26 @@ var FT_SettingsTab = function (fb, jqEl) {
     var notifEle = this.body.find(selector)
     if (!notifEle || notifEle.length === 0) {
       var template =
-                '<div class="inline-notification">' +
-                '   <div class="row">' +
-                '       <div class="col-md-2"></div>' +
-                '       <div class="col-md-8 inline-notification-holder">' +
-                '           <div class="alert alert-{{status}} alert-dismissible" role="alert" style="width: 100%;z-index: 2;">' +
-                '               <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>' +
-                '               {{message}}' +
-                '           </div>' +
-                '       </div>' +
-                '       <div class="col-md-2"></div>' +
-                '   </div>' +
-                '</div>'
+        '<div class="inline-notification">' +
+        '   <div class="row">' +
+        '       <div class="col-md-2"></div>' +
+        '       <div class="col-md-8 inline-notification-holder">' +
+        '           <div class="alert alert-{{status}} alert-dismissible" role="alert" style="width: 100%;z-index: 2;">' +
+        '               <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>' +
+        '               {{message}}' +
+        '           </div>' +
+        '       </div>' +
+        '       <div class="col-md-2"></div>' +
+        '   </div>' +
+        '</div>'
       var htmlStr = this.fb.compileTemplate(template, obj)
       this.body.prepend(htmlStr)
     } else {
       var alertTemplate =
-                '           <div class="alert alert-{{status}} alert-dismissible" role="alert" style="width: 100%;z-index: 2;">' +
-                '               <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>' +
-                '               {{message}}' +
-                '           </div>'
+        '           <div class="alert alert-{{status}} alert-dismissible" role="alert" style="width: 100%;z-index: 2;">' +
+        '               <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>' +
+        '               {{message}}' +
+        '           </div>'
       notifEle.html(this.fb.compileTemplate(alertTemplate, obj))
     }
   }
@@ -4720,8 +4842,7 @@ var FT_SettingsTab = function (fb, jqEl) {
     this.fb.workspace.unHighlightComponent(this.compId)
     this.fb.workspace.connectionManager.update()
   }
-  this.focusInput = function () {
-  }
+  this.focusInput = function () {}
   this.init(fb, jqEl)
 }
 
@@ -4740,28 +4861,23 @@ var FT_BuilderTab = function (fb, jqEl) {
       if (!splitLayoutMain.attr('id')) {
         splitLayoutMain.attr('id', this.fb.randomId())
       }
-      this.layout = splitLayoutMain.layout(
-        {
-          closable: false,	// pane can open & close
-          resizable: true,	// when open, pane can be resized
-          slidable: true,	// when closed, pane can 'slide' open over other panes - closes on mouse-out
-          livePaneResizing: true,
-          stateManagement__enabled: true, // automatic cookie load & save enabled by default
-          showDebugMessages: false, // log and/or display messages from debugging & testing code
-          minSize: 0.1,
-          size: 0.5,
-          maxSize: 0.9,
-          west: {
-          },
-          center: {
-          }
-        }
-      )
+      this.layout = splitLayoutMain.layout({
+        closable: false, // pane can open & close
+        resizable: true, // when open, pane can be resized
+        slidable: true, // when closed, pane can 'slide' open over other panes - closes on mouse-out
+        livePaneResizing: true,
+        stateManagement__enabled: true, // automatic cookie load & save enabled by default
+        showDebugMessages: false, // log and/or display messages from debugging & testing code
+        minSize: 0.1,
+        size: 0.5,
+        maxSize: 0.9,
+        west: {},
+        center: {}
+      })
     } catch (exceptionWhenInitSplitPane) {
       console.log(exceptionWhenInitSplitPane)
       this.layout = {
-        resizeAll: function () {
-        }
+        resizeAll: function () {}
       }
     }
 
@@ -4878,8 +4994,12 @@ var FT_BuilderTab = function (fb, jqEl) {
             }
           }
           fullscreenTarget.removeClass('fullscreen')
-          fullscreenTarget.css({ 'height': '' })
-          fullscreenTarget.find('.panel-body').css({ 'height': '' })
+          fullscreenTarget.css({
+            'height': ''
+          })
+          fullscreenTarget.find('.panel-body').css({
+            'height': ''
+          })
           fullscreenBtn.find('span.glyphicon').removeClass('glyphicon-resize-small')
           fullscreenBtn.find('span.glyphicon').addClass('glyphicon-fullscreen')
         } else {
@@ -4956,7 +5076,9 @@ var FT_BuilderTab = function (fb, jqEl) {
           this.possibleToStore = true
           this.enableSaveBtn(true)
           return
-        } catch (e) { console.log(e) }
+        } catch (e) {
+          console.log(e)
+        }
       }
     }
     this.possibleToStore = false
@@ -4973,7 +5095,10 @@ var FT_BuilderTab = function (fb, jqEl) {
     var settings = $.parseJSON(this.settingsEditor.getValue())
     var template = this.templateEditor.getValue()
     this.fb.compiler.cacheTemplate(this.dfsId, template)
-    this.fb.componentsTab.addComponent(this.dfsId, { template: template, settings: settings })
+    this.fb.componentsTab.addComponent(this.dfsId, {
+      template: template,
+      settings: settings
+    })
     this.editMode()
     this.editorsValueSaved()
   }
@@ -5043,8 +5168,7 @@ var FT_BuilderTab = function (fb, jqEl) {
     saveBtn.addClass('hcb-changed')
     try {
       _.aceEditorResize($(editor.container))
-    } catch (eee) {
-    }
+    } catch (eee) {}
   }
   this.enableSaveBtn = function (enable) {
     var saveBtn = this.el.find('.build-btn')
@@ -5082,14 +5206,13 @@ var FT_BuilderTab = function (fb, jqEl) {
     aceEditorEl.width(stretchEditorWidth)
     aceEditorEl.height(stretchEditorHeight)
   }
-  this.tabHidden = function () {
-  }
+  this.tabHidden = function () {}
   this.init(fb, jqEl)
 }
 
 var formBuilderHtmlConstruct =
-    '<div id="htmlFormWorkspace" class="col-sm-6 fb-workspace">' +
-    '   ' +
+  '<div id="htmlFormWorkspace" class="col-sm-6 fb-workspace">' +
+  '   ' +
   `<div class="row"><div class="col-sm-12"><ul class="nav nav-fb">
             <li class="nav-item">
             <a class="nav-link active ws-mode mode-workspace" href="#">Workspace</a>
@@ -5102,90 +5225,90 @@ var formBuilderHtmlConstruct =
             </li>
             </ul></div></div>` +
   '<div class="col-md-4 d-none">' +
-'           <label class="ws-mode ws-connections" style="float:right;">' +
-'               <input type="checkbox" checked="checked">' +
-'               <div class="slider"><span class="ws-mode-text">connection</span></div>' +
-'           </label>' +
-'       </div>' +
-    '   ' +
-    '   <div class="hcbuild-workspace-body wsbody container-fluid">' +
-    '      <div class="connectionLayer">' +
-    '       <svg class="dragline" height="0" width="0">' +
-    '       </svg>' +
-    '       <svg class="fbcm connections" height="0" width="0"></svg>' +
-    '       <svg class="fbcm am-connections" height="0" width="0"></svg>' +
-    '   </div><div class="am-point-layer am-point-main"></div><div class="ws-holder"></div></div>' +
-    '   <div class="hcbuild-workspace-test-main wsbody" style="display:none;">' +
-    '       <div class="panel panel-default">' +
-    '           <div class="panel-body workspace-test-body"></div>' +
-    '           <div class="panel-footer">' +
-    '               <div class="workspace-test-btns row">' +
-    '                   <div class="col-md-12">' +
-    '                       <button type="button" class="submit-test btn btn-primary" style="float:right;margin-left: 5px;"><span class="fa fa-play text-white" aria-hidden="true"></span></button>' +
-    '                       <button type="button" class="clear-form-data btn btn-primary" style="float:right;"><span class="fa fa-redo-alt text-white" aria-hidden="true"></span></button>' +
-    '                   </div>' +
-    '               </div>' +
-    '           </div>' +
-    '       </div>' +
-    '   </div>' +
-    '</div>' +
-    '<div class="col-sm-6 hcbuilder">' +
-    '   <div class="fb-sticky-right-nn"><div class="hcbuilder-main"><ul class="nav nav-fb">' +
-    '       <li class="nav-item"><a class="htmlComponents nav-link active" data-toggle="tab" href="#htmlComponents">Components</a></li>' +
-    '       <li class="nav-item"><a class="htmlComponentSettings nav-link" data-toggle="tab" href="#htmlComponentSettings">Properties</a></li>' +
-    '       <li class="nav-item"><a class="htmlComponentBuilder nav-link" data-toggle="tab" href="#htmlComponentBuilder">Builder</a></li>' +
-    '   </ul>' +
-    '   <div class="tab-content">' +
-    '       <div id="htmlComponents" class="htmlComponents tab-pane in active">' +
-    '           <div class="panel panel-default">' +
-    '               <div class="panel-heading">' +
-    '                   <div class="input-group input-group-lg fb-comp-search-group">' +
-    '                       <span class="input-group-addon" id="sizing-addon1"><span class="fa fa-search" aria-hidden="true"></span></span>' +
-    '                       <input type="text" class="fb-comp-search-field form-control" placeholder="Search: textarea, checkbox, radio ..." aria-describedby="sizing-addon1">' +
-    '                   </div>' +
-    '               </div>' +
-    '               <div class="panel-body fb-inner-body hcbuilder-components-body"><form><div class="hcbuild-comp-body"></div></form></div>' +
-    '               <div class="panel-footer">' +
-    '                   <button type="button" class="save-btn btn btn-secondary"><span class="fa fa-save" aria-hidden="true"></span></button>' +
-    '               </div>' +
-    '           </div>' +
-    '       </div>' +
-    '       <div id="htmlComponentSettings" class="htmlComponentSettings tab-pane">' +
-    '           <div class="panel panel-default">' +
-    '               <div class="panel-body fb-inner-body hcbuilder-settings-body"></div>' +
-    '               <div class="panel-footer d-flex flex-row">' +
-    '                   <button type="button" class="save-btn btn btn-secondary"><span class="fa fa-save" aria-hidden="true"></span></button>' +
-    '                   <div class="switch-main"><span>auto save</span><label class="switch"> <input class="auto-save-btn" type="checkbox"> <div class="slider"></div> </label></div>' +
-    '                   <div class="clearfix"></div>' +
-    '               </div>' +
-    '           </div>' +
-    '       </div>' +
-    '       <div id="htmlComponentBuilder" class="htmlComponentBuilder tab-pane fullscreen-target">' +
-    '           <div class="panel panel-default" >' +
-    '               <div class="panel-body fb-inner-body split-layout-main" >' +
-    '                                       <div class="ui-layout-west ">' +
-    '                                           <div class="hcbuild-container ace-workaround">' +
-    '                                               <div id="hcbuild-editor" class="hcbuild-editor" ></div>' +
-    '                                           </div>' +
-    '                                       </div>' +
-    '                                       <div class="ui-layout-center">' +
-    '                                           <div class="hcbuild-container ace-workaround">' +
-    '                                               <div id="hcbuild-json-settings" class="hcbuild-json-settings" ></div>' +
-    '                                           </div>' +
-    '                                       </div>' +
-    '                               <div class="ui-layout-south hcbuild-container">' +
-    '                                   <div class="hcbuild-container"><div class="hcbuild-viewer" ></div></div>' +
-    '                               </div>' +
-    '               </div>' +
-    '               <div class="panel-footer">' +
-    '                   <button type="button" class="new-btn btn btn-primary" ><span class="fa fa-plus" aria-hidden="true"></span></button>' +
-    '                   <button type="button" class="build-btn btn btn-secondary"><span class="fa fa-save" aria-hidden="true"></span></button>' +
-    '                   <button type="button" class="fullscreen-btn btn btn-secondary"><span class="fa fa-expand" aria-hidden="true"></span></button>' +
-    '               </div>' +
-    '           </div>' +
-    '       </div>' +
-    '   </div></div></div>' +
-    '</div>'
+  '           <label class="ws-mode ws-connections" style="float:right;">' +
+  '               <input type="checkbox" checked="checked">' +
+  '               <div class="slider"><span class="ws-mode-text">connection</span></div>' +
+  '           </label>' +
+  '       </div>' +
+  '   ' +
+  '   <div class="hcbuild-workspace-body wsbody container-fluid">' +
+  '      <div class="connectionLayer">' +
+  '       <svg class="dragline" height="0" width="0">' +
+  '       </svg>' +
+  '       <svg class="fbcm connections" height="0" width="0"></svg>' +
+  '       <svg class="fbcm am-connections" height="0" width="0"></svg>' +
+  '   </div><div class="am-point-layer am-point-main"></div><div class="ws-holder"></div></div>' +
+  '   <div class="hcbuild-workspace-test-main wsbody" style="display:none;">' +
+  '       <div class="panel panel-default">' +
+  '           <div class="panel-body workspace-test-body"></div>' +
+  '           <div class="panel-footer">' +
+  '               <div class="workspace-test-btns row">' +
+  '                   <div class="col-md-12">' +
+  '                       <button type="button" class="submit-test btn btn-primary" style="float:right;margin-left: 5px;"><span class="fa fa-play text-white" aria-hidden="true"></span></button>' +
+  '                       <button type="button" class="clear-form-data btn btn-primary" style="float:right;"><span class="fa fa-redo-alt text-white" aria-hidden="true"></span></button>' +
+  '                   </div>' +
+  '               </div>' +
+  '           </div>' +
+  '       </div>' +
+  '   </div>' +
+  '</div>' +
+  '<div class="col-sm-6 hcbuilder">' +
+  '   <div class="fb-sticky-right-nn"><div class="hcbuilder-main"><ul class="nav nav-fb">' +
+  '       <li class="nav-item"><a class="htmlComponents nav-link active" data-toggle="tab" href="#htmlComponents">Components</a></li>' +
+  '       <li class="nav-item"><a class="htmlComponentSettings nav-link" data-toggle="tab" href="#htmlComponentSettings">Properties</a></li>' +
+  '       <li class="nav-item"><a class="htmlComponentBuilder nav-link" data-toggle="tab" href="#htmlComponentBuilder">Builder</a></li>' +
+  '   </ul>' +
+  '   <div class="tab-content">' +
+  '       <div id="htmlComponents" class="htmlComponents tab-pane in active">' +
+  '           <div class="panel panel-default">' +
+  '               <div class="panel-heading">' +
+  '                   <div class="input-group input-group-lg fb-comp-search-group">' +
+  '                       <span class="input-group-addon" id="sizing-addon1"><span class="fa fa-search" aria-hidden="true"></span></span>' +
+  '                       <input type="text" class="fb-comp-search-field form-control" placeholder="Search: textarea, checkbox, radio ..." aria-describedby="sizing-addon1">' +
+  '                   </div>' +
+  '               </div>' +
+  '               <div class="panel-body fb-inner-body hcbuilder-components-body"><form><div class="hcbuild-comp-body"></div></form></div>' +
+  '               <div class="panel-footer">' +
+  '                   <button type="button" class="save-btn btn btn-secondary"><span class="fa fa-save" aria-hidden="true"></span></button>' +
+  '               </div>' +
+  '           </div>' +
+  '       </div>' +
+  '       <div id="htmlComponentSettings" class="htmlComponentSettings tab-pane">' +
+  '           <div class="panel panel-default">' +
+  '               <div class="panel-body fb-inner-body hcbuilder-settings-body"></div>' +
+  '               <div class="panel-footer d-flex flex-row">' +
+  '                   <button type="button" class="save-btn btn btn-secondary"><span class="fa fa-save" aria-hidden="true"></span></button>' +
+  '                   <div class="switch-main"><span>auto save</span><label class="switch"> <input class="auto-save-btn" type="checkbox"> <div class="slider"></div> </label></div>' +
+  '                   <div class="clearfix"></div>' +
+  '               </div>' +
+  '           </div>' +
+  '       </div>' +
+  '       <div id="htmlComponentBuilder" class="htmlComponentBuilder tab-pane fullscreen-target">' +
+  '           <div class="panel panel-default" >' +
+  '               <div class="panel-body fb-inner-body split-layout-main" >' +
+  '                                       <div class="ui-layout-west ">' +
+  '                                           <div class="hcbuild-container ace-workaround">' +
+  '                                               <div id="hcbuild-editor" class="hcbuild-editor" ></div>' +
+  '                                           </div>' +
+  '                                       </div>' +
+  '                                       <div class="ui-layout-center">' +
+  '                                           <div class="hcbuild-container ace-workaround">' +
+  '                                               <div id="hcbuild-json-settings" class="hcbuild-json-settings" ></div>' +
+  '                                           </div>' +
+  '                                       </div>' +
+  '                               <div class="ui-layout-south hcbuild-container">' +
+  '                                   <div class="hcbuild-container"><div class="hcbuild-viewer" ></div></div>' +
+  '                               </div>' +
+  '               </div>' +
+  '               <div class="panel-footer">' +
+  '                   <button type="button" class="new-btn btn btn-primary" ><span class="fa fa-plus" aria-hidden="true"></span></button>' +
+  '                   <button type="button" class="build-btn btn btn-secondary"><span class="fa fa-save" aria-hidden="true"></span></button>' +
+  '                   <button type="button" class="fullscreen-btn btn btn-secondary"><span class="fa fa-expand" aria-hidden="true"></span></button>' +
+  '               </div>' +
+  '           </div>' +
+  '       </div>' +
+  '   </div></div></div>' +
+  '</div>'
 
 if (!String.prototype.startsWith) {
   (function () {
@@ -5250,7 +5373,9 @@ if (typeof String.prototype.endsWith !== 'function') {
   }
 }
 String.prototype.toUniqueHash = function () {
-  var hash = 0; var i; var chr
+  var hash = 0;
+  var i;
+  var chr
   if (this.length === 0) return hash
   for (i = 0; i < this.length; i++) {
     chr = this.charCodeAt(i)
@@ -5271,7 +5396,7 @@ $.fn.nextParentWithClass = function (attrClass) {
   var parent = this.parent()
   while (!parent.hasClass(attrClass)) {
     parent = parent.parent()
-    ++index
+      ++index
     if (maxIndex < index) {
       return $([])
     }
@@ -5316,7 +5441,8 @@ $.fn.findVisibleInputOrRefElement = function () {
   }
 }
 $.fn.positionOfUnderlying = function (ctxEl) {
-  var start = this.offset(); var mainLayer = ctxEl.offset()
+  var start = this.offset();
+  var mainLayer = ctxEl.offset()
   return {
     x: start.left + 0.5 * this.outerWidth() - mainLayer.left,
     y: start.top + 0.5 * this.outerHeight() - mainLayer.top
@@ -5349,8 +5475,7 @@ $.fn.renameAttr = function (oldName, newName) {
 
 var fbDefaultComponents = {
   'HC1': {
-    'template':
-        `
+    'template': `
         <div class=" form-group">
             <div class="col-md-12">
               <h1>{{label}}</h1>
@@ -5364,8 +5489,7 @@ var fbDefaultComponents = {
     }
   },
   'HC2': {
-    'template':
-      `
+    'template': `
       <div class=" form-group">
         <div class="col-md-12">
           <label class="control-label" for="{{id}}">{{label}}</label>
@@ -5389,8 +5513,7 @@ var fbDefaultComponents = {
     }
   },
   'HC3': {
-    'template':
-        `
+    'template': `
      <div class="form-group">
     \t   <div class="col-md-12 field-parent">
     \t       <label class="control-label" >{{label}}</label>
@@ -5420,18 +5543,15 @@ var fbDefaultComponents = {
       'validate': {
         'required': true
       },
-      'values': [
-        {
-          'help': '',
-          'label': '...',
-          'value': 'val'
-        }
-      ]
+      'values': [{
+        'help': '',
+        'label': '...',
+        'value': 'val'
+      }]
     }
   },
   'HC5': {
-    'template':
-        `
+    'template': `
         <div class="form-group">
           <label class="col-sm-12 col-md-12 col-lg-12 control-label">{{label}}</label>
       \t  <div class="col-sm-12 col-md-12 col-lg-12 field-parent">
@@ -5475,18 +5595,15 @@ var fbDefaultComponents = {
       'validate': {
         'required': true
       },
-      'values': [
-        {
-          'help': '',
-          'label': '...',
-          'value': '1'
-        }
-      ]
+      'values': [{
+        'help': '',
+        'label': '...',
+        'value': '1'
+      }]
     }
   },
   'HC7': {
-    'template':
-        `
+    'template': `
     <div class="form-group">
       <div class="col-md-12">
         <label class="control-label" for="{{id}}">{{label}}</label>
@@ -5509,8 +5626,7 @@ var fbDefaultComponents = {
     }
   },
   'HC8': {
-    'template':
-      `
+    'template': `
         <div class="form-group">
             <div class="col-md-12">
                 <label class="control-label" for="{{id}}">{{label}}</label>
@@ -5536,8 +5652,7 @@ var fbDefaultComponents = {
       'validate': {
         'required': true
       },
-      'values': [
-        {
+      'values': [{
           'label': 'Select',
           'value': 'val1'
         },
@@ -5549,8 +5664,7 @@ var fbDefaultComponents = {
     }
   },
   'HC9': {
-    'template':
-      `
+    'template': `
       <div class="form-group">
         <div class="col-md-12">
           <label class="control-label" for="dfId{{id}}">{{label}}</label>
@@ -5587,8 +5701,7 @@ var fbDefaultComponents = {
     }
   },
   'HC10': {
-    'template':
-      `
+    'template': `
       <div class="array form-group">
       \t    <div class="col-md-12">
       \t\t    <div class="row">
@@ -5718,8 +5831,7 @@ var fbDefaultComponents = {
       \t    </script>
       </div>
         `,
-    'settings': [
-      {
+    'settings': [{
         'columnClass': {
           'all': [
             'auto',
@@ -5731,12 +5843,10 @@ var fbDefaultComponents = {
           ],
           'selected': 0
         },
-        'dropdownValues': [
-          {
-            'label': 'Label',
-            'value': 'Value'
-          }
-        ],
+        'dropdownValues': [{
+          'label': 'Label',
+          'value': 'Value'
+        }],
         'help': 'help text',
         'initialRows': 1,
         'label': 'Dynamic List',
@@ -5756,12 +5866,10 @@ var fbDefaultComponents = {
         }
       },
       {
-        'dropdownValues': [
-          {
-            'label': 'Label',
-            'value': 'Value'
-          }
-        ],
+        'dropdownValues': [{
+          'label': 'Label',
+          'value': 'Value'
+        }],
         'name': '',
         'placeholder': 'Placeholder',
         'type': {
@@ -5780,8 +5888,7 @@ var fbDefaultComponents = {
     ]
   },
   'HC11': {
-    'template':
-      `
+    'template': `
       <div class="form-group">
       \t    {{#each this}}    <label class="col-md-12 control-label" for="{{id}}">{{label}}</label>
       \t    <div class="col-md-12 field-parent">
@@ -5791,22 +5898,19 @@ var fbDefaultComponents = {
       \t    {{/each}}
       </div>
         `,
-    'settings': [
-      {
-        'autocomplete': 'on',
-        'help': 'help text',
-        'label': 'Grouped simple fields',
-        'name': '',
-        'placeholder': 'Placeholder',
-        'validate': {
-          'required': true
-        }
+    'settings': [{
+      'autocomplete': 'on',
+      'help': 'help text',
+      'label': 'Grouped simple fields',
+      'name': '',
+      'placeholder': 'Placeholder',
+      'validate': {
+        'required': true
       }
-    ]
+    }]
   },
   'HC12': {
-    'template':
-      `
+    'template': `
       <div>
           <div class="col-md-12">
               {{#eachCount rows}}
@@ -5840,26 +5944,24 @@ var fbDefaultComponents = {
       },
       '_searchHelper': 'group,parent,grp,container,box',
       'access': {},
-      'column': [
-        {
-          'all': [
-            'auto',
-            '8%',
-            '16%',
-            '25%',
-            '33%',
-            '42%',
-            '50%',
-            '58%',
-            '67%',
-            '75%',
-            '84%',
-            '92%',
-            '100%'
-          ],
-          'selected': 12
-        }
-      ],
+      'column': [{
+        'all': [
+          'auto',
+          '8%',
+          '16%',
+          '25%',
+          '33%',
+          '42%',
+          '50%',
+          '58%',
+          '67%',
+          '75%',
+          '84%',
+          '92%',
+          '100%'
+        ],
+        'selected': 12
+      }],
       'rows': 1
     }
   }
