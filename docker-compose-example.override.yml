@@ -1,0 +1,21 @@
+---
+# This file is an override and needs to be used like this:
+#
+#  docker-compose -f docker-compose.yml -f docker-compose-example.override.yml up
+
+version: '3.7'
+
+services:
+  node-crypto-forex-rates:
+    networks:
+      - reverse-proxy
+    labels:
+      com.centurylinklabs.watchtower.enable: "true"
+    environment:
+      # Replace values for reverse-proxy
+      VIRTUAL_HOST: ${NODE_CRYPTO_FOREX_RATES_VIRTUAL_HOST:-proxeus.example.com}
+      VIRTUAL_PORT: 8011
+      # Replace values for letsencrypt
+      LETSENCRYPT_HOST: ${NODE_CRYPTO_FOREX_RATES_VIRTUAL_HOST:-proxeus.example.com}
+      LETSENCRYPT_EMAIL: ${LETSENCRYPT_EMAIL:-admin@example.com}
+    restart: unless-stopped

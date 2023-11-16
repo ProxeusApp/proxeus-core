@@ -383,7 +383,7 @@ export default {
         this.handleError(err)
       })
     },
-    setConfig (d) {
+    async setConfig (d) {
       if (d.blockchainNet) {
         this.blockchainNet = d.blockchainNet
       }
@@ -395,6 +395,8 @@ export default {
       }
       if (this.blockchainNet && this.blockchainProxeusFSAddress) {
         this.wallet = new WalletInterface(this.blockchainNet, this.blockchainProxeusFSAddress)
+
+        await this.wallet.validateUserNetwork(() => this.$root.$emit('service-off'), () => this.$root.$emit('service-on'))
       }
     },
     acknowledgeFirstLogin () {
