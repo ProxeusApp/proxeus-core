@@ -54,7 +54,7 @@ Please refer to the `docker-compose.yml` file to learn how to configure a Proxeu
 If you want to use a Docker image to build your server (for example, when you are not on a Linux machine or have a newer version of GLIBC than is supported in production), compile as follows:
 
 ```
-BUILD_WITH_DOCKER=true make init ui server-docker build-docker
+BUILD_WITH_DOCKER=true make init server-docker
 docker build .
 ```
 
