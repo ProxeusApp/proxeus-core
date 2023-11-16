@@ -80,11 +80,11 @@ init:
 	@for d in $(dependencies); do (echo "Checking $$d is installed... " && which $$d ) || ( echo "Please install $$d before continuing" && exit 1 ); done
 	@go version
 	go install github.com/go-bindata/go-bindata/...
-	go install github.com/golang/mock/mockgen
-	go install github.com/wadey/gocovmerge
-	go install golang.org/x/tools/...
-	go install golang.org/x/tools/cmd/goimports
-	go install golang.org/x/tools/cmd/godoc
+	go install github.com/golang/mock/mockgen@latest
+	go install github.com/wadey/gocovmerge@latest
+	go install golang.org/x/tools/...@latest
+	go install golang.org/x/tools/cmd/goimports@latest
+	go install golang.org/x/tools/cmd/godoc@latest
 
 .PHONY: update
 update:
