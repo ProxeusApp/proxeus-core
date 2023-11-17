@@ -1,4 +1,4 @@
-[![CircleCI](https://circleci.com/gh/proxeusapp/proxeus-core.svg?style=shield)](https://circleci.com/gh/proxeusapp/proxeus-core.svg)
+[![CircleCI](https://circleci.com/gh/ProxeusApp/proxeus-core.svg?style=shield)](https://circleci.com/gh/ProxeusApp/proxeus-core.svg)
 
 ![](docs/_media/logo.png)
 
