@@ -156,6 +156,8 @@ const CancelToken = axios.CancelToken
 window.libreHub = libreHub
 
 export default {
+  // TODO: <template> is an HTML reserved word but is used all over the place
+  // eslint-disable-next-line vue/no-reserved-component-names
   name: 'Template',
   mixins: [mafdc, Searchable, FormChangeAlert, DelayedInputEvent],
   components: {

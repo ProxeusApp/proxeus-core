@@ -1,5 +1,38 @@
 # Docker
 
+Please make sure that you always pull Docker images from the official `proxeus` DockerHub repository and that you are using the latest version.
+
+## Start Proxeus
+
+Run the following command in the directory containing your `docker-compose.yml` file (Linux and OSX):
+```
+export PROXEUS_EMAIL_FROM=<Your valid Sender Email Address>
+export PROXEUS_INFURA_API_KEY=<Your Infura project ID>
+export PROXEUS_SPARKPOST_API_KEY=<Your SparkPost API Key>
+export PROXEUS_ENCRYPTION_SECRET_KEY=<A 32-character random string>
+export PROXEUS_BLOCKCHAIN_CONTRACT_ADDRESS=0x1d3e5c81bf4bc60d41a8fbbb3d1bae6f03a75f71
+export PROXEUS_ALLOW_HTTP=true
+docker-compose up
+```
+
+You can also put these settings into an `.env` file in the same folder as the application.
+
+See [Configuration settings](configure.md) for more details.
+
+## Tweak your Docker setup
+
+Besides the basic Docker Compose configuration, you can extend your installation as follows:
+
+- `docker-compose-cloud.override` for cloud installations, which includes Nginx and Let's Encrypt
+- `docker-compose-example.override` shows how to add another Proxeus Node to your installation
+- `docker-compose-extra.override` includes all officially supported Proxeus Nodes
+- `docker-compose-local.override` if you want to use your local Docker image (details below)
+
+To use one or more of these overrides, start Proxeus as follows:
+
+`docker-compose -f docker-compose.yml -f docker-compose-example.override.yml up`
+
+(you always have to first include `docker-compose.yml`)
 
 ## Build a Docker image
 
@@ -42,29 +75,33 @@ docker-compose restart
 This will build the proxeus-core image based on your current project and use a deployed image
 for the document service.
 
-## Using Docker for the build
+## Tips
+
+Having an issue with Go? Make sure it's in your path, e.g.:
+
+`export PATH=$PATH:/usr/local/go/bin`
 
 If you're having trouble, try a clean full Docker build, specifying each of the configuration files:
 
 ```
 make clean
 BUILD_WITH_DOCKER=true make init server-docker
-docker-compose --env-file .env -f docker-compose.yml -f docker-compose.override.yml build
+docker-compose --env-file .env -f docker-compose.yml -f docker-compose-local.yml build
 ```
 
-## Using Docker for deployment
+## Using Docker for production
 
-For deployment, a `docker-compose-cloud.override.yml` file is provide and must be used
-instead of the default `docker-compose.override.yml`:
-
-```
-docker-compose -f docker-compose.yml -f docker-compose-cloud.override.yml
-```
-
-## Docker Light version
-
-There is also a Docker Compose configure in one file with a 'minimal' Proxeus installation. The only extra nodes are 'mail-sender' and 'json-sender':
+For deployment, a `docker-compose-cloud.override.yml` file is provided which includes Nginx, Let's Encrypt and other services used in larger deployments:
 
 ```
-docker-compose -f docker-compose-light.yml up
+docker-compose -f docker-compose.yml -f docker-compose-cloud.override.yml up
 ```
+
+You may also want to include custom nodes. There is a sample configuration which can be started like this (also possibly in combination with `docker-compose-cloud`):
+
+```
+docker-compose -f docker-compose.yml -f docker-compose-example.override.yml up
+
+```
+
+See `docker-compose-extra.override.yml` for examples with several other nodes.

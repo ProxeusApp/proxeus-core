@@ -58,7 +58,7 @@ coverpkg=$(subst $(space),$(comma), $(filter-out %/mock %/assets, $(shell go lis
 startproxeus=PROXEUS_DATA_DIR=$(1)/data PROXEUS_SETTINGS_FILE=$(1)/settings/main.json PROXEUS_TEST_MODE=true artifacts/proxeus &
 stopproxeus=pkill proxeus
 startds=curl -s http://localhost:2115 > /dev/null || ( PROXEUS_DATA_DIR=$(1) docker-compose up -d document-service && touch $(1)/ds-started )
-startnodes=curl -s http://localhost:8011 > /dev/null || (PROXEUS_PLATFORM_DOMAIN=http://$(DOCKER_GATEWAY):1323 NODE_CRYPTO_RATES_URL=http://localhost:8011 REGISTER_RETRY_INTERVAL=1 docker-compose up -d node-crypto-forex-rates && touch $(1)/nodes-started )
+startnodes=curl -s http://localhost:8011 > /dev/null || (PROXEUS_PLATFORM_DOMAIN=http://$(DOCKER_GATEWAY):1323 NODE_CRYPTO_RATES_URL=http://localhost:8011 REGISTER_RETRY_INTERVAL=1 docker-compose -f docker-compose.yml -f docker-compose-extra.override.yml up -d node-crypto-forex-rates && touch $(1)/nodes-started )
 startmongo=nc -z localhost 27017 2> /dev/null || (docker run -d -p 27017:27017 -p 27018:27018 -p 27019:27019 proxeus/mongo-dev-cluster && sleep 10 && touch $(1)/mongo-started)
 
 ifeq ($(coverage),true)
@@ -79,12 +79,12 @@ all: ui server
 init:
 	@for d in $(dependencies); do (echo "Checking $$d is installed... " && which $$d ) || ( echo "Please install $$d before continuing" && exit 1 ); done
 	@go version
-	go install github.com/go-bindata/go-bindata/...
-	go install github.com/golang/mock/mockgen
-	go install github.com/wadey/gocovmerge
-	go install golang.org/x/tools/...
-	go install golang.org/x/tools/cmd/goimports
-	go install golang.org/x/tools/cmd/godoc
+	go install github.com/go-bindata/go-bindata/...@latest
+	go install github.com/golang/mock/mockgen@latest
+	go install github.com/wadey/gocovmerge@latest
+	go install golang.org/x/tools/...@latest
+	go install golang.org/x/tools/cmd/goimports@latest
+	go install golang.org/x/tools/cmd/godoc@latest
 
 .PHONY: update
 update:

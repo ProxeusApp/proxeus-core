@@ -66,6 +66,7 @@ func MainHostedAPI(e *echo.Echo, s *www.Security, version string) {
 		{GET, PUBLIC, "/api/config", api.ConfigHandler(version)},
 
 		// authentication
+		{GET, PUBLIC, "/api/session/validate", api.ValidateUserSession},
 		{GET, PUBLIC, "/api/session/token", api.GetSessionTokenHandler},
 		{DELETE, USER, "/api/session/token", api.DeleteSessionTokenHandler},
 		{GET, PUBLIC, "/api/challenge", api.ChallengeHandler},       // Need session

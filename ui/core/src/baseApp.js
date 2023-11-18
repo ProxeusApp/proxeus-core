@@ -73,15 +73,13 @@ export default {
         if (this.me.role >= 100) {
           return true
         }
-      } catch (e) {
-      }
+      } catch (e) {}
       try {
         // check public
         if (item.publicByID[0] === 2) {
           return true
         }
-      } catch (e) {
-      }
+      } catch (e) {}
 
       try {
         // check owner
@@ -92,8 +90,7 @@ export default {
           item.grant[this.me.id][0] === 2) {
           return true
         }
-      } catch (e) {
-      }
+      } catch (e) {}
       try {
         // check group
         if (this.me.role !== 0) {
@@ -102,8 +99,7 @@ export default {
             return true
           }
         }
-      } catch (e) {
-      }
+      } catch (e) {}
 
       // check others
       try {
@@ -111,8 +107,7 @@ export default {
           // others have write rights
           return true
         }
-      } catch (e) {
-      }
+      } catch (e) {}
       return false
     },
     handleError (o) {
@@ -152,14 +147,29 @@ export default {
     },
     setSelectedLang (lang) {
       if (lang) {
-        this.$cookie.set('lang', lang, { expires: '1Y' })
+        this.$cookie.set('lang', lang, {
+          expires: '1Y'
+        })
         this.reloadI18n()
       } else {
         this.$cookie.delete('lang')
         this.$i18n.set(this.fallbackLang())
       }
     },
+    checkUserHasSession () {
+      return !!localStorage.getItem('userhassession')
+    },
+    initUserHasSession () {
+      localStorage.setItem('userhassession', true)
+    },
+    deleteUserHasSession () {
+      localStorage.removeItem('userhassession')
+    },
     loadMe (clb) {
+      if (!this.checkUserHasSession()) {
+        return
+      }
+
       axios.get('/api/me').then((response) => {
         this.me = response.data
         this.$root.$emit('me', this.me)
@@ -171,6 +181,7 @@ export default {
           }
         }
       }, (err) => {
+        this.deleteUserHasSession()
         this.handleError(err)
       })
     },
@@ -305,6 +316,9 @@ export default {
         this.handleError(err)
       })
     },
+    async validateSessionCookie () {
+      return axios.get('/api/session/validate')
+    },
     loadMeta (clb) {
       axios.get('/api/i18n/meta').then((response) => {
         this.meta = response.data
@@ -369,7 +383,7 @@ export default {
         this.handleError(err)
       })
     },
-    setConfig (d) {
+    async setConfig (d) {
       if (d.blockchainNet) {
         this.blockchainNet = d.blockchainNet
       }
@@ -381,6 +395,8 @@ export default {
       }
       if (this.blockchainNet && this.blockchainProxeusFSAddress) {
         this.wallet = new WalletInterface(this.blockchainNet, this.blockchainProxeusFSAddress)
+
+        await this.wallet.validateUserNetwork(() => this.$root.$emit('service-off'), () => this.$root.$emit('service-on'))
       }
     },
     acknowledgeFirstLogin () {
@@ -396,14 +412,14 @@ export default {
       get () {
         return this.$root.$children[0]
       },
-      set (a) {
-      }
+      set (a) {}
     }
   },
   created () {
     const tmpLangToPreventFromWarnings = 'en'
     this.$i18n.fallback(tmpLangToPreventFromWarnings)
     this.$i18n.set(tmpLangToPreventFromWarnings)
+    this.validateSessionCookie()
     this.loadMeta()
     this.loadConfig()
     this.loadMe()

@@ -1,6 +1,6 @@
-This README is only about the license loader of the project.
+This folder is only for the license loader of the project.
 
-Go to [docs/README](../docs/README.md) for developer instructions.
+Go to [docs/README](../docs/README.md) for user and developer instructions.
 
 # How to generate the ACKNOWLEDGEMENTS file
 
