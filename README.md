@@ -1,17 +1,15 @@
 [![CircleCI](https://circleci.com/gh/ProxeusApp/proxeus-core.svg?style=shield)](https://circleci.com/gh/ProxeusApp/proxeus-core.svg)
 
-![](docs/_media/logo.png)
-
 # Proxeus Core
 --------------
 
 Proxeus combines a powerful automation tool with a form builder, document generator and blockchain connection - enabling you to digitize, secure, and tap into the value of data flows. Access the full source code of available modules and extensions [@ProxeusApp](https://github.com/ProxeusApp).
 
-![Screenshot of Proxeus workflow from the handbook](https://github.com/ProxeusApp/community/raw/master/handbook/Proxeus%20-%20The%20Complete%20Handbook_html_10299e76126cc024.png)
+![Screenshot of Proxeus workflow from the handbook](docs/handbook/Proxeus%20-%20The%20Complete%20Handbook_html_10299e76126cc024.png)
 
 ## User Guides
 
-Get help to make the most of the platform in the **[User Handbook](https://github.com/ProxeusApp/community/blob/master/handbook/handbook.md)**.
+Get help to make the most of the platform in the **[User Handbook](https://doc.proxeus.org/#/handbook)**.
 
 To learn more about Smart Contracts using Solidity, see the documentation in the [proxeus-contract](https://github.com/ProxeusApp/proxeus-contract).
 
@@ -27,16 +25,20 @@ In addition to the developer guidelines below, several "one-click" deployment co
 - [Linode StackScript](deploy/linode/README.md)
 - [DigitalOcean Droplet](deploy/digitalocean/README.md)
 
-Join the [Discussions](https://github.com/ProxeusApp/community/discussions/3) if you are interested in seeing additional providers on this list.
+Currently supported Blockchains include:
 
-If you wish to build the project form the source code, follow the instructions in [Build all](docs/build_all.md).
+- Ethereum: mainnet, sepolia, goerli
+- Polygon: mainnet, mumbai
 
-Please read the [Developer Manual](https://doc.proxeus.com) to learn more about the Proxeus platform.
+If you wish to build the project from source code, follow the instructions in [Build all](docs/build_all.md). 
+
+Join the [Discussions](https://github.com/ProxeusApp/community/discussions/3) if you have any questions.
 
 ## Contributing
 
-As an open-source project, we welcome any kind of community involvement, whether that is by contributing code, reporting issues or
-engaging in insightful discussions. Especially, we are looking forward to receiving contributions for external workflow nodes.
+As an open-source project, we welcome any kind of community involvement, whether that is by contributing code, reporting issues or engaging in insightful discussions. Especially, we are looking forward to receiving contributions for external workflow nodes.
+
+Please read the [Developer Manual](https://doc.proxeus.com) to learn more about developing on the Proxeus platform.
 
 See the **[Contributing Guide](docs/contributing.md)** for further directions.
 
@@ -52,16 +54,4 @@ Licensed under the GNU GENERAL PUBLIC LICENSE. You may read a copy of the [Licen
 
 Like so many projects, this effort has roots in many places. The list can be found in [ACKNOWLEDGEMENTS](ACKNOWLEDGEMENTS).
 
-## Supported Chains
-
-Ethereum
-
-- mainnet
-- sepolia
-- goerli
-
-Polygon
-
-- mainnet
-- mumbai
-
+![](docs/_media/logo.png)
