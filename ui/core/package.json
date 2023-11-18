@@ -19,7 +19,7 @@
     "@proxeus/wallet": "1.0.0",
     "@vitejs/plugin-vue": "^1",
     "ajv": "^6.5.2",
-    "async": "^3.2.4",
+    "async": "^3.2.5",
     "axios": "^0.21.1",
     "babel-runtime": "^6.26.0",
     "bootstrap": "^4.1.2",
@@ -56,7 +56,7 @@
     "vue-clipboard2": "^0.2.1",
     "vue-codemirror": "^4.0.5",
     "vue-cookie": "^1.1.4",
-    "vue-cropperjs": "^3.0.0",
+    "vue-cropperjs": "^4.2.0",
     "vue-draggable": "^2.0.6",
     "vue-dynamic": "0.2.1",
     "vue-error-page": "^1.1.5",
@@ -82,7 +82,7 @@
     "zxcvbn": "^4.4.2"
   },
   "devDependencies": {
-    "@cypress/webpack-preprocessor": "^3.0.0",
+    "@cypress/webpack-preprocessor": "^4.1.5",
     "@vue/eslint-config-standard": "^5.1.2",
     "autoprefixer": "^9.0.1",
     "babel-eslint": "^10.1.0",
