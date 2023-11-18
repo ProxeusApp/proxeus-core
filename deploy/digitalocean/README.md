@@ -16,7 +16,7 @@ This script is maintained for the community by Proxeus Association
 5. It takes a few minutes for the server to boot and install, then you should be able to open `http://<your DO's IP address or domain>:1323/init`
 6. A configuration screen will be shown where you can set up an admin account and check settings.
 
-Once your server is running, visit the [User Handbook](https://github.com/ProxeusApp/community/blob/master/handbook/handbook.md) to get started.
+Once your server is running, visit the [User Handbook](https://doc.proxeus.org/#/handbook) to get started.
 
 To view the logs connect to your droplet using an SSH client program. Then paste this into the console to see the logs being updated in real time:
 

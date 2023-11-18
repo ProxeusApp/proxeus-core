@@ -227,9 +227,6 @@ jobs:
           command: |
             echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
             docker push $CONTAINER_IMAGE_NAME:latest
-      - run:
-          name: Tag the latest Docker release with current Git version
-          command: docker tag $CONTAINER_IMAGE_NAME:$CIRCLE_TAG $CONTAINER_IMAGE_NAME:latest
 
 workflows:
   version: 2
