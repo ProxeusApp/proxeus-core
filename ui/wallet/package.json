@@ -14,7 +14,7 @@
     "async": "^3.2.5",
     "axios": "^0.21.1",
     "bootstrap": "^4.1.2",
-    "bootstrap-vue": "2.0.0-rc.12",
+    "bootstrap-vue": "2.23.1",
     "brace": "^0.11.1",
     "codemirror": "^5.39.2",
     "ethereumjs-util": "^7.1.5",
