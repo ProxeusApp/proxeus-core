@@ -1,11 +1,17 @@
 #!/bin/bash
-#specify values for local variables
 
+# Specify values for local variables
 #FQDN=<value>
 #INFURA=<value>
 #SPARKPOST=<value>
 #ADMINEMAIL=<value>
 
+
+## Performing the installation
+exec 1> >(tee -a "/var/log/stackscript.log") 2>&1
+function log {
+  echo "### $1 -- `date '+%D %T'`"
+}
 
 log "Configuring System Updates"
 apt-get -o Acquire::ForceIPv4=true update -y
@@ -109,7 +115,7 @@ cd /srv/proxeus
 # make init server-docker
 
 log "Starting cloud deployment via docker-compose"
-docker-compose --env-file .env -f docker-compose.yml -f docker-compose-cloud.override.yml up -d &
+docker-compose --env-file .env -f docker-compose.yml -f docker-compose-cloud.override.yml up -d >/dev/null 2>&1
 
 # Open http://$FQDN:1323/init to configure your server
 log "After a minute, open: http://$FQDN:1323/init"
