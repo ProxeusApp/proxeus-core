@@ -9,12 +9,25 @@ This script is maintained for the community by Proxeus Association
 
 ## Instructions
 
-1. Create fresh DO droplet with Ubuntu v.20+ with any basic Provision configuration
-2. You will need to have your API keys for Infura and Sparkpost handy - see the root README for further details.
-3. add executive permission for deploy.sh ( chmod +x deploy.sh )
-4. run $PWD/proxeus-core/deploy/digitalocean/deploy.sh
-5. It takes a few minutes for the server to boot and install, then you should be able to open `http://<your DO's IP address or domain>:1323/init`
-6. A configuration screen will be shown where you can set up an admin account and check settings.
+1. Create fresh DO droplet with Ubuntu v.20+ with any basic Provision configuration. [Here](https://docs.digitalocean.com/products/droplets/getting-started/recommended-droplet-setup) you can find some help how to set up a production-ready droplet.
+2. Make sure your API keys for Infura and Sparkpost.
+3. Get the deployment script and make it executable:
+```bash
+wget https://raw.githubusercontent.com/ProxeusApp/proxeus-core/main/deploy/digitalocean/deploy.sh && chmod +x deploy.sh
+```
+4. Enter all the necessary variables, where **FQDN** - domain name for the future server, **INFURA** - your Infura API key, **SPARKPOST** - your SparkPost API key, **ADMINEMAIL** - admin email (in format like admin@proxeus.org). It can be done by editing the script file directly or by shell "export" command:
+```bash
+export FQDN=[value]
+export INFURA=[value]
+export SPARKPOST=[value]
+export ADMINEMAIL=[value]
+```
+5. Run deployment process (go through it carefully, it may ask you any additional confirmation):
+```bash
+./deploy.sh
+```
+7. It takes a few minutes for the server to boot and install, then you should be able to open `http://<your DO's IP address or domain>:1323/init`
+8. A configuration screen will be shown where you can set up an admin account and check settings.
 
 Once your server is running, visit the [User Handbook](https://doc.proxeus.org/#/handbook) to get started.
 
