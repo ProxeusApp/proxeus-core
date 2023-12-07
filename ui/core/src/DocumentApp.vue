@@ -107,13 +107,19 @@ export default {
     color: $primary;
   }
 
+  body {
+    overflow: hidden;
+  }
+
   .navbar h1 {
     margin-bottom: 0;
   }
 
   .app-main {
-    @media (max-width: 767px) {
-      max-width: 100% !important;
+    max-width: calc(100% - 265px);
+
+    @media (max-width: 979px) {
+      max-width: calc(100% - 80px);
     }
   }
 
