@@ -59,7 +59,7 @@ require (
 	google.golang.org/protobuf v1.31.0 // indirect
 )
 
-require go.mongodb.org/mongo-driver v1.13.0
+require go.mongodb.org/mongo-driver v1.13.1
 
 require (
 	github.com/Microsoft/go-winio v0.6.1 // indirect
