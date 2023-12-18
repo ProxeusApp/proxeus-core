@@ -44,7 +44,6 @@ require (
 	github.com/gorilla/context v1.1.2 // indirect
 	github.com/gorilla/websocket v1.5.1 // indirect
 	github.com/klauspost/compress v1.17.3 // indirect
-	github.com/labstack/echo v3.3.10+incompatible // indirect
 	github.com/labstack/echo-contrib v0.15.0
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/sergi/go-diff v1.3.1 // indirect
@@ -116,7 +115,6 @@ require (
 
 replace (
 	github.com/ProxeusApp/proxeus-core => ./
-	github.com/labstack/echo-contrib => github.com/labstack/echo-contrib v0.0.0-20180222075343-7d9d9632a4aa // fix https://github.com/ProxeusApp/proxeus-core/issues/216
 	gopkg.in/gavv/httpexpect.v2 => github.com/gavv/httpexpect/v2 v2.2.0 // fix https://github.com/gavv/httpexpect/issues/60
 	gopkg.in/urfave/cli.v1 => github.com/urfave/cli v1.22.5 // fix https://github.com/ProxeusApp/proxeus-core/issues/213
 )
