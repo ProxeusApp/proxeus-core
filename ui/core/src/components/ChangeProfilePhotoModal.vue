@@ -12,10 +12,10 @@
 </template>
 
 <script>
-import bModal from 'bootstrap-vue/es/components/modal/modal'
-import bModalDirective from 'bootstrap-vue/es/directives/modal/modal'
+// import bModal from 'bootstrap-vue/es/components/modal/modal'
+// import bModalDirective from 'bootstrap-vue/es/directives/modal/modal'
 import mafdc from '@/mixinApp'
-import ChangeProfilePhoto from './ChangeProfilePhoto'
+import ChangeProfilePhoto from './ChangeProfilePhoto.vue'
 
 export default {
   mixins: [mafdc],

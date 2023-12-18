@@ -70,9 +70,9 @@
 </template>
 
 <script>
-import bModal from 'bootstrap-vue/es/components/modal/modal'
+// import bModal from 'bootstrap-vue/es/components/modal/modal'
 // import bBtn from 'bootstrap-vue/es/components/button/button'
-import bModalDirective from 'bootstrap-vue/es/directives/modal/modal'
+// import bModalDirective from 'bootstrap-vue/es/directives/modal/modal'
 import mafdc from '@/mixinApp'
 
 const uploadUrl = '/api/admin/template/upload/:id/:lang'

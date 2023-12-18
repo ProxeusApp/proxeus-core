@@ -94,8 +94,6 @@
 </template>
 
 <script>
-import bModal from 'bootstrap-vue/es/components/modal/modal'
-import bModalDirective from 'bootstrap-vue/es/directives/modal/modal'
 import TopNav from '@/components/layout/TopNav.vue'
 import ListGroup from '../components/ListGroup.vue'
 // import ListItem from '../components/ListItem.vue'

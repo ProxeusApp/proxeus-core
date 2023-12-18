@@ -137,7 +137,7 @@ import Spinner from '@/components/Spinner.vue'
 import SearchBox from '@/components/SearchBox.vue'
 // import bModal from 'bootstrap-vue/es/components/modal/modal'
 // import bBtn from 'bootstrap-vue/es/components/button/button'
-import bModalDirective from 'bootstrap-vue/es/directives/modal/modal'
+//import bModalDirective from 'bootstrap-vue/es/directives/modal/modal'
 import libreHub from '../libs/libreTmplAssistance.min.js'
 
 import Searchable from '../mixins/searchable'

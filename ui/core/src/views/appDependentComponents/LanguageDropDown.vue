@@ -3,7 +3,7 @@
                :onSelect="onSelect" :options="app.meta.activeLangs"/>
 </template>
 <script>
-import SimpleSelect from '@/components/SimpleSelect'
+import SimpleSelect from '@/components/SimpleSelect.vue'
 import mafdc from '@/mixinApp'
 
 export default {

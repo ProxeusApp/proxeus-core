@@ -73,9 +73,9 @@
 </template>
 
 <script>
-import SearchBox from './SearchBox'
-import Trigger from './Trigger'
-import ListItem from './ListItem'
+import SearchBox from './SearchBox.vue'
+import Trigger from './Trigger.vue'
+import ListItem from './ListItem.vue'
 import mafdc from '@/mixinApp'
 
 export default {
