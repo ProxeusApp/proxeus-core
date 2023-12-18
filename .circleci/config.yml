@@ -6,7 +6,7 @@ parameters:
     type: string
     default: "1.20"
   nodejs-tag:
-    type: integer
+    type: string
     default: "18.19"
 
 executors:
