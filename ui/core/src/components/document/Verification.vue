@@ -6,7 +6,7 @@
       <div class="light-text mx-auto mt-5"
            v-show="!wallet || initialized === false">{{ $t('Connecting with the blockchain ...') }}
       </div>
-      <div class="dropbox bg-white pl-0" v-if="initialized"
+      <div class="dropbox bg-white pl-0" v-if="initialized && !hasPreinitError"
            :class="{hasDocuments}">
         <file-drop-box @dropped="drop"></file-drop-box>
         <p class="w-100 text-center" v-if="!hasDocuments">
@@ -15,8 +15,13 @@
             </span>
         </p>
       </div>
-      <div class="stats col-sm-12 p-0" v-show="hasDocuments">
+      <div class="stats col-sm-12 p-0" v-show="hasDocuments && !hasPreinitError">
         <verification-file-entry :singleFile="files.length === 1" v-for="file in files" :key="file.name" :file="file"
+                                 :wallet="wallet"
+                                 :thumbnail="thumbnail"></verification-file-entry>
+      </div>
+      <div class="stats col-sm-12 p-0" v-show="hasPreinitError">
+        <verification-file-entry :hasPreinitError="true"
                                  :wallet="wallet"
                                  :thumbnail="thumbnail"></verification-file-entry>
       </div>
@@ -34,10 +39,10 @@
 </template>
 
 <script>
-import FileDropBox from '../template/FileDropBox'
-import VerificationFileEntry from './VerificationFileEntry'
-import Spinner from '../Spinner'
-import ProxeusLogo from '../ProxeusLogo'
+import FileDropBox from '../template/FileDropBox.vue'
+import VerificationFileEntry from './VerificationFileEntry.vue'
+import Spinner from '../Spinner.vue'
+import ProxeusLogo from '../ProxeusLogo.vue'
 import mafdc from '@/mixinApp'
 
 export default {
@@ -65,6 +70,9 @@ export default {
   created () {
   },
   computed: {
+    hasPreinitError () {
+      return this.wallet().isIncorrectNetwork === true
+    }
   },
   methods: {
     drop (file) {

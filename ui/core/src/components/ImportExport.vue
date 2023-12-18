@@ -73,11 +73,11 @@
 
 <script>
 import mafdc from '@/mixinApp'
-import ImexResults from '../components/ImexResults'
-import Checkbox from '../components/Checkbox'
-import ImportOnly from './ImportOnly'
-import NavTabs from '@/components/nav-tabs/NavTabs'
-import Tab from '@/components/nav-tabs/Tab'
+import ImexResults from '@/components/ImexResults.vue'
+import Checkbox from '@/components/Checkbox.vue'
+import ImportOnly from './ImportOnly.vue'
+import NavTabs from '@/components/nav-tabs/NavTabs.vue'
+import Tab from '@/components/nav-tabs/Tab.vue'
 
 export default {
   mixins: [mafdc],

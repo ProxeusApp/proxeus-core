@@ -17,6 +17,8 @@ import VueAppend from 'vue-append'
 import VTooltip from 'v-tooltip'
 import ErrorPage from 'vue-error-page'
 import VueClipboard from 'vue-clipboard2'
+import ModalPlugin from 'bootstrap-vue'
+Vue.use(ModalPlugin)
 
 /*
  *

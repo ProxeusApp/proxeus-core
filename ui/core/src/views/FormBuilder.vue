@@ -29,14 +29,13 @@
 </template>
 
 <script>
-import TopNav from '@/components/layout/TopNav'
+import TopNav from '@/components/layout/TopNav.vue'
 // eslint-disable-next-line no-unused-vars,camelcase
 import _ from 'lodash'
 // eslint-disable-next-line camelcase
 import FT_FormBuilder from '../libs/legacy/formbuilder'
-import NameAndDetailInput from '../components/NameAndDetailInput'
-import PermissionDialog from './appDependentComponents/permDialog/PermissionDialog'
-// import SaveBtn from './appDependentComponents/SaveBtn'
+import NameAndDetailInput from '../components/NameAndDetailInput.vue'
+import PermissionDialog from './appDependentComponents/permDialog/PermissionDialog.vue'
 import mafdc from '@/mixinApp'
 import formChangeAlert from '../mixins/form-change-alert'
 export default {

@@ -5,16 +5,16 @@
       <spinner v-show="loading" background="transparent" color="#eee" :margin="10" cls="position-relative"></spinner>
       <i v-show="valid" class="text-success material-icons md-60 mdi mdi-check-circle"></i>
       <i v-show="notFound" class="text-danger material-icons md-60 mdi mdi-close-circle"></i>
-      <i v-show="invalid || errorValidating" class="text-danger material-icons md-60 mdi mdi-alert-circle"></i>
+      <i v-show="invalid || validationException" class="text-danger material-icons md-60 mdi mdi-alert-circle"></i>
     </div>
     <div v-if="!loading">
       <div class="break-word mx-auto mt-2 mb-0">
         <h4 v-show="valid"
-            class="text-success">{{ $t('Verified file is valid', 'The file {filename} is valid.', {filename: file.name}) }}</h4>
+            class="text-success">{{ $t('Verified file is valid', 'The file {filename} is valid.', {filename: file?.name}) }}</h4>
         <h4 v-show="invalid"
-            class="text-danger">{{ $t('Verified file revoked', 'The file {filename} has been revoked.', {filename: file.name}) }}</h4>
+            class="text-danger">{{ $t('Verified file revoked', 'The file {filename} has been revoked.', {filename: file?.name}) }}</h4>
         <h4 v-show="notFound"
-            class="text-danger">{{ $t('Verified file is invalid', 'The file {filename} is invalid.', {filename: file.name}) }}</h4>
+            class="text-danger">{{ $t('Verified file is invalid', 'The file {filename} is invalid.', {filename: file?.name}) }}</h4>
       </div>
       <div class="text-center mt-2">
         <div v-show="valid" class="mb-2">
@@ -26,7 +26,7 @@
           </a>
         </div>
         <div v-if="showDetails === true || !valid">
-          <hr v-show="!errorValidating" class="w-75"/>
+          <hr v-show="!validationException" class="w-75"/>
           <div class="container text-md-left text-center">
             <div v-show="timestamp" class="row mb-2">
               <div
@@ -87,6 +87,8 @@
               v-show="invalid">{{ $t('Verified file invalid explanation', 'This file has been recognised as authentic but has since been declared invalid. It may have expired or been recalled by the issuer.') }}</p>
             <p
               v-show="errorValidating">{{ $t('Error while verifying file', 'File hash could not been verified due to technical problems. Please try again.') }}</p>
+            <p
+              v-show="errorPublicRPC">{{ $t('Error while using public RPC', 'Please install Metamask extension to verify file.') }}</p>
           </div>
 
           <hr class="w-75" v-show="valid"/>
@@ -101,6 +103,24 @@
     </div>
 
   </div>
+  <div v-else-if="hasPreinitError" class="text-center p-3 border border-2 border-light">
+    <div class="pb-1">
+     <i class="text-danger material-icons md-60 mdi mdi-alert-circle"></i>
+    </div>
+    <div>
+      <div class="break-word mx-auto mt-2 mb-0">
+        <h4 class="text-danger">{{ $t('Unable to verify a document', 'Unable to verify a document') }}</h4>
+      </div>
+      <div class="text-center mt-2">
+        <div>
+          <div class="text-hint w-100 px-md-5 mt-2 pt-0">
+            <p
+              v-show="isIncorrectNetwork">{{ $t('Error incorrect network', 'Document can not be verified within incorrect network.') }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
   <div v-else class="border border-2 border-light mb-2 container">
     <div class="row list-item">
       <div class="bg-light col-lg-1 px-1 status-holder text-center">
@@ -108,22 +128,22 @@
           <spinner v-show="loading" background="transparent" color="#eee" :margin="16"
                    cls="position-relative"></spinner>
           <i v-show="notFound" class="text-danger material-icons md-36 mdi mdi-close-circle"></i>
-          <i v-show="invalid || errorValidating" class="text-danger material-icons md-36 mdi mdi-alert-circle"></i>
+          <i v-show="invalid || validationException || isIncorrectNetwork" class="text-danger material-icons md-36 mdi mdi-alert-circle"></i>
           <i v-show="loading === false && status" class="text-success material-icons md-36 mdi mdi-check-circle"></i>
         </div>
       </div>
       <div class="py-2 pl-3 pr-2 col-lg-8">
         <div>
-          <p class="filename mb-0">{{ file.name }}</p>
+          <p class="filename mb-0">{{ file?.name }}</p>
           <div v-show="!loading">
             <small v-show="valid"
-                   class="text-success">{{ $t('Verified file is valid', 'The file {filename} is valid.', {filename: file.name}) }}
+                   class="text-success">{{ $t('Verified file is valid', 'The file {filename} is valid.', {filename: file?.name}) }}
             </small>
             <small v-show="invalid"
-                   class="text-danger">{{ $t('Verified file revoked', 'The file {filename} has been revoked.', {filename: file.name}) }}
+                   class="text-danger">{{ $t('Verified file revoked', 'The file {filename} has been revoked.', {filename: file?.name}) }}
             </small>
             <small v-show="notFound"
-                   class="text-danger">{{ $t('Verified file is invalid', 'The file {filename} is invalid.', {filename: file.name}) }}
+                   class="text-danger">{{ $t('Verified file is invalid', 'The file {filename} is invalid.', {filename: file?.name}) }}
             </small>
           </div>
         </div>
@@ -144,6 +164,9 @@
         </small>
         <small class="text-hint" v-show="errorValidating">
           {{ $t('Error while verifying file', 'File could not been verified due to technical problems. Please try again.') }}
+        </small>
+        <small class="text-hint" v-show="errorPublicRPC">
+          {{ $t('Error while using public RPC', 'Please install Metamask extension to verify file.') }}
         </small>
 
         <small v-show="showDetails" class="text-hint text-left">
@@ -199,11 +222,11 @@
 </template>
 
 <script>
-import Spinner from '../Spinner'
+import Spinner from '../Spinner.vue'
 
 export default {
   name: 'verification-file-entry',
-  props: ['file', 'wallet', 'singleFile'],
+  props: ['file', 'wallet', 'singleFile', 'hasPreinitError'],
   components: {
     Spinner
   },
@@ -220,23 +243,30 @@ export default {
       signatures: [],
       contract: undefined,
       errorValidating: false,
+      errorPublicRPC: false,
+      validationException: false,
       showDetails: false
     }
   },
   mounted () {
-    this.verify()
+    if (!this.hasPreinitError) {
+      this.verify()
+    }
   },
   computed: {
     valid () {
-      return this.errorValidating === false && this.loading === false && this.loading === false && this.status === true
+      return this.validationException === false && this.loading === false && this.loading === false && this.status === true
     },
     invalid () {
-      return this.errorValidating === false && this.loading === false && this.status === false &&
+      return this.validationException === false && this.loading === false && this.status === false &&
         this.isFileInvalidated === true
     },
     notFound () {
-      return this.errorValidating === false && this.loading === false && this.status === false &&
-        this.isFileInvalidated !== true
+      return this.validationException === false && this.loading === false && this.status === false &&
+        this.isFileInvalidated !== true && !this.hasPreinitError
+    },
+    isIncorrectNetwork () {
+      return this.wallet().isIncorrectNetwork === true
     }
   },
   filters: {
@@ -252,6 +282,7 @@ export default {
   methods: {
     async verify () {
       this.loading = true
+
       try {
         // use hash if it already comes with the file object
         if (this.file.hash) {
@@ -265,47 +296,51 @@ export default {
         this.isFileInvalidated = false
 
         let result
+
         try {
           result = await this.wallet().verifyHash(this.hash)
         } catch (e) {
-          result = false
+          throw new Error('UNABLE_TO_VERIFY_HASH')
         }
-        if (result) {
-          const transaction = await this.wallet().web3.eth.getTransaction(result)
-          this.creator = transaction.from
-          this.contract = transaction.to
-          const block = await this.wallet().web3.eth.getBlock(transaction.blockNumber)
-          // *1000 is conversion to seconds
-          this.timestamp = (new Date(block.timestamp * 1000)).toUTCString()
 
-          const signersArr = await this.wallet().proxeusFS.contract.methods.getFileSigners(this.hash).call()
-          Promise.all(signersArr.map(async signerAddr => {
-            const registrationTxBlock = await this.wallet().getRegistrationTxBlock(signerAddr)
-            return {
-              address: signerAddr,
-              txHash: registrationTxBlock.txHash,
-              block: block,
-              time: (new Date(registrationTxBlock.block.timestamp * 1000)).toUTCString()
-            }
-          })).then((sn) => {
-            this.signatures = sn
-          })
+        const transaction = await this.wallet().web3.eth.getTransaction(result)
+        this.creator = transaction.from
+        this.contract = transaction.to
+        const block = await this.wallet().web3.eth.getBlock(transaction.blockNumber)
+        // *1000 is conversion to seconds
+        this.timestamp = (new Date(block.timestamp * 1000)).toUTCString()
 
-          this.loading = false
-          this.tx = result
-          this.status = true
-          // emit event to alert parent component of status
-          this.$emit('updateFileState', true)
-        } else {
-          this.status = false
-          this.tx = null
-          this.loading = false
-        }
+        const signersArr = await this.wallet().proxeusFS.contract.methods.getFileSigners(this.hash).call()
+        Promise.all(signersArr.map(async signerAddr => {
+          const registrationTxBlock = await this.wallet().getRegistrationTxBlock(signerAddr)
+          return {
+            address: signerAddr,
+            txHash: registrationTxBlock.txHash,
+            block: block,
+            time: (new Date(registrationTxBlock.block.timestamp * 1000)).toUTCString()
+          }
+        })).then((sn) => {
+          this.signatures = sn
+        })
+
+        this.loading = false
+        this.tx = result
+        this.status = true
+        // emit event to alert parent component of status
+        this.$emit('updateFileState', true)
       } catch (e) {
         this.status = false
         this.loading = false
         this.tx = null
-        this.errorValidating = true
+        this.validationException = true
+
+        if (this.wallet().isPublicRPCUsing) {
+          this.errorPublicRPC = true
+        } else if (e?.message === 'UNABLE_TO_VERIFY_HASH') {
+          this.validationException = false
+        } else {
+          this.errorValidating = true
+        }
       }
     },
     async hashFile (file) {

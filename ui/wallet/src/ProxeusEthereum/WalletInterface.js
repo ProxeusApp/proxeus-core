@@ -1,10 +1,15 @@
 import serviceConfig from './config/service-config'
-import { PROXEUS_FS_ABI, XES_TOKEN_ABI } from './config/ABI'
+import {
+  PROXEUS_FS_ABI,
+  XES_TOKEN_ABI
+} from './config/ABI'
 
 import ProxeusWallet from './ProxeusWallet'
 import ProxeusFS from './services/ProxeusFS'
 import MetamaskWallet from './MetamaskWallet'
-import { keccak256 } from 'js-sha3'
+import {
+  keccak256
+} from 'js-sha3'
 import MetamaskUtil from './MetamaskUtil'
 
 import Web3 from 'web3'
@@ -15,10 +20,11 @@ class WalletInterface {
   // TODO improve checking that current network matches what is expected
   // TODO: network param only for compatibility reasons with blockchain/dapp
   constructor (network = 'sepolia', proxeusFSAddress, forceProxeusWallet = false) {
-    this.useProxeusWallet = forceProxeusWallet || typeof window.ethereum === 'undefined'
-
     // make sure we are using the web3 we want and not the one provided by metamask
     this.web3 = new Web3(Web3.givenProvider || 'ws://localhost:8545')
+    this.systemNetworkId = this.getNetworkIdByName(network)
+
+    this.useProxeusWallet = forceProxeusWallet || typeof window.ethereum === 'undefined'
 
     this.web3.eth.getTransactionReceiptMined = getTransactionReceiptMined
     this.serviceConfig = serviceConfig[network]
@@ -31,7 +37,8 @@ class WalletInterface {
       // connect to the network using what was given in the constructor
       this.web3.setProvider(
         new this.web3.providers.HttpProvider(
-          'https://' + network + '.infura.io/'))
+          this.getPublicRPC(network)))
+      this.isPublicRPCUsing = true
     } else {
       if (window.ethereum) {
         this.web3.setProvider(window.ethereum)
@@ -43,8 +50,9 @@ class WalletInterface {
     // add the XES smart contract to the config
     this.xesTokenContract = new this.web3.eth.Contract(
       XES_TOKEN_ABI,
-      this.serviceConfig.XES_TOKEN_ADDRESS,
-      { gas: this.serviceConfig.DEFAULT_GAS_REGULAR }
+      this.serviceConfig.XES_TOKEN_ADDRESS, {
+        gas: this.serviceConfig.DEFAULT_GAS_REGULAR
+      }
     )
     this.setProxeusFsContract(this.serviceConfig.PROXEUS_FS_ADDRESS)
 
@@ -55,8 +63,35 @@ class WalletInterface {
 
       // set the default from address to use on the proxeusFS smart contract
       this.wallet.setupDefaultAccount().then(() => {
-        if (this.wallet.getCurrentAddress() !== null) { this.proxeusFSContract.options.from = this.wallet.getCurrentAddress() }
+        if (this.wallet.getCurrentAddress() !== null) {
+          this.proxeusFSContract.options.from = this.wallet.getCurrentAddress()
+        }
       })
+    }
+  }
+
+  async validateUserNetwork (blockCb, unblockCb) {
+    if (window.ethereum && this.systemNetworkId.toString() !== window.ethereum.networkVersion) {
+      try {
+        if (blockCb) {
+          blockCb()
+        }
+
+        await window.ethereum.request({
+          method: 'wallet_switchEthereumChain',
+          params: [{
+            chainId: this.web3.utils.toHex(this.systemNetworkId)
+          }]
+        })
+
+        this.isIncorrectNetwork = false
+      } catch {
+        this.isIncorrectNetwork = true
+      } finally {
+        if (unblockCb) {
+          unblockCb()
+        }
+      }
     }
   }
 
@@ -137,7 +172,10 @@ class WalletInterface {
       btoa(JSON.stringify({
         keystore: encryptedKeystore,
         pgpKeys: this.web3.eth.accounts.wallet.PGPKeys
-      }))], { type: 'text/plain' })
+      }))
+    ], {
+      type: 'text/plain'
+    })
   }
 
   importWalletFromBlob (blob, password) {
@@ -157,7 +195,9 @@ class WalletInterface {
             this.proxeusFSContract.options.from = this.getCurrentAddress()
 
             // save the pgp keys, encrypted keystore, and password on local storage
-            localStorage.setItem('mnidmao', btoa(JSON.stringify({ password })))
+            localStorage.setItem('mnidmao', btoa(JSON.stringify({
+              password
+            })))
             localStorage.setItem('mnidmpgp',
               btoa(JSON.stringify(parsed.pgpKeys[this.getCurrentAddress()])))
             localStorage.setItem('mnidmks',
@@ -286,7 +326,10 @@ class WalletInterface {
    */
   importPGPKeyPair (address, publicKey, privateKey) {
     if (!this.web3.eth.accounts.wallet.PGPKeys) this.web3.eth.accounts.wallet.PGPKeys = {}
-    this.web3.eth.accounts.wallet.PGPKeys[address] = { publicKey, privateKey }
+    this.web3.eth.accounts.wallet.PGPKeys[address] = {
+      publicKey,
+      privateKey
+    }
   }
 
   /*
@@ -304,7 +347,7 @@ class WalletInterface {
   }
 
   /*
-   * Everything below this comment needs to be moved outside of the wallet libray
+   * TODO: Everything below this comment needs to be moved outside of the wallet lib
    */
 
   hashFile (arrBuffer) {
@@ -316,7 +359,9 @@ class WalletInterface {
     // this one is based on events and not promises, so can't use async
     return new Promise((resolve, reject) => {
       contract.getPastEvents('UpdatedEvent', {
-        filter: { hash: hash },
+        filter: {
+          hash: hash
+        },
         fromBlock: 0
       }, (error, result) => {
         if (error) {
@@ -335,8 +380,9 @@ class WalletInterface {
     // add the document registry smart contract to the config
     this.proxeusFSContract = new this.web3.eth.Contract(
       PROXEUS_FS_ABI,
-      address,
-      { gas: this.serviceConfig.DEFAULT_GAS_REGULAR }
+      address, {
+        gas: this.serviceConfig.DEFAULT_GAS_REGULAR
+      }
     )
 
     // Attach proxeus FS Service
@@ -353,8 +399,9 @@ class WalletInterface {
     for (const address of this.serviceConfig.PROXEUS_FS_PAST_ADDRESSES) {
       const proxeusFSContract = new this.web3.eth.Contract(
         PROXEUS_FS_ABI,
-        address,
-        { gas: this.serviceConfig.DEFAULT_GAS_REGULAR }
+        address, {
+          gas: this.serviceConfig.DEFAULT_GAS_REGULAR
+        }
       )
       proxeusFSPastContracts.push(new ProxeusFS(this.web3, proxeusFSContract))
     }
@@ -368,6 +415,10 @@ class WalletInterface {
    */
   async getClientProvidedNetwork () {
     const netId = await this.web3.eth.getChainId()
+    return this.getNetworkNameById(netId)
+  }
+
+  getNetworkNameById (netId) {
     switch (netId) {
       case 5:
         return 'goerli'
@@ -382,9 +433,34 @@ class WalletInterface {
     }
   }
 
-  async XESAmountPerFile ({ providers }) {
-    const tokensRaw = await this.proxeusFS.XESAmountPerFile({ providers })
-    return this.metamaskUtil.formatBalance(this.web3.utils.toHex(tokensRaw))
+  getNetworkIdByName (name) {
+    switch (name) {
+      case 'goerli':
+        return 5
+      case 'sepolia':
+        return 11155111
+      case 'polygon':
+        return 137
+      case 'polygon-mumbai':
+        return 80001
+      default:
+        return 1
+    }
+  }
+
+  getPublicRPC (network) {
+    switch (network) {
+      case 'goerli':
+        return 'https://goerli.rpc.thirdweb.com/'
+      case 'sepolia':
+        return 'https://sepolia.rpc.thirdweb.com/'
+      case 'polygon':
+        return 'https://polygon.rpc.thirdweb.com/'
+      case 'polygon-mumbai':
+        return 'https://mumbai.rpc.thirdweb.com/'
+      default:
+        return 'https://ethereum.rpc.thirdweb.com/'
+    }
   }
 
   async verifyHash (hash) {
@@ -458,10 +534,15 @@ class WalletInterface {
   approveXES (spender, value) {
     return this.xesTokenContract.methods.approve(spender,
       this.web3.utils.toWei(value.toString()))
-      .send({ from: this.getCurrentAddress() })
+      .send({
+        from: this.getCurrentAddress()
+      })
   }
 
-  async getAllowance ({ spender, decimalsToKeep }) {
+  async getAllowance ({
+    spender,
+    decimalsToKeep
+  }) {
     const owner = this.getCurrentAddress()
     const tokensRaw = await this.xesTokenContract.methods.allowance(owner,
       spender).call()
@@ -481,7 +562,9 @@ class WalletInterface {
   async getFileSignedEvent (signerAddress) {
     const arrEvents = await this.proxeusFSContract.getPastEvents(
       'FileSignedEvent', {
-        filter: { signer: signerAddress },
+        filter: {
+          signer: signerAddress
+        },
         fromBlock: 0
       })
     return arrEvents[0] || null

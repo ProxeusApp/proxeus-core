@@ -221,14 +221,14 @@
 
 <script>
 // import VueTagsInput from '@johmun/vue-tags-input'
-import bModal from 'bootstrap-vue/es/components/modal/modal'
-import bModalDirective from 'bootstrap-vue/es/directives/modal/modal'
-import SimpleSelect from '@/components/SimpleSelect'
-import ReadWriteSelector from './ReadWriteSelector'
+// import bModal from 'bootstrap-vue/es/components/modal/modal'
+// import bModalDirective from 'bootstrap-vue/es/directives/modal/modal'
+import SimpleSelect from '@/components/SimpleSelect.vue'
+import ReadWriteSelector from './ReadWriteSelector.vue'
 // import UserItem from './UserItem'
 import mafdc from '@/mixinApp'
 import formChangeAlert from '../../../mixins/form-change-alert'
-import UserSelector from './UserSelector'
+import UserSelector from './UserSelector.vue'
 
 export default {
   mixins: [mafdc, formChangeAlert],

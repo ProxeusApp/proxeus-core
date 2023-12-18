@@ -109,14 +109,14 @@
 </template>
 
 <script>
-import TopNav from '@/components/layout/TopNav'
-import Translation from '@/views/appDependentComponents/i18n/Translation'
-import I18nLangCell from '@/views/appDependentComponents/i18n/I18nLangCell'
+import TopNav from '@/components/layout/TopNav.vue'
+import Translation from '@/views/appDependentComponents/i18n/Translation.vue'
+import I18nLangCell from '@/views/appDependentComponents/i18n/I18nLangCell.vue'
 // import I18nTransCell from '@/views/appDependentComponents/i18n/I18nTransCell'
-import LanguageDropDown from '@/views/appDependentComponents/LanguageDropDown'
-import Trigger from '../components/Trigger'
+import LanguageDropDown from '@/views/appDependentComponents/LanguageDropDown.vue'
+import Trigger from '../components/Trigger.vue'
 import mafdc from '@/mixinApp'
-import AnimatedInput from '../components/AnimatedInput'
+import AnimatedInput from '../components/AnimatedInput.vue'
 
 export default {
   mixins: [mafdc],

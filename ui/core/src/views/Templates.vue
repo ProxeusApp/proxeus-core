@@ -20,9 +20,9 @@
 </template>
 
 <script>
-import ListGroup from '@/components/ListGroup'
-import TopNav from '@/components/layout/TopNav'
-import ListItemDialog from './appDependentComponents/ListItemDialog'
+import ListGroup from '@/components/ListGroup.vue'
+import TopNav from '@/components/layout/TopNav.vue'
+import ListItemDialog from './appDependentComponents/ListItemDialog.vue'
 import mafdc from '@/mixinApp'
 
 export default {

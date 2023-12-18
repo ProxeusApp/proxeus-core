@@ -1,17 +1,25 @@
 ---
 version: 2.1
 
+parameters:
+  golang-tag:
+    type: string
+    default: "1.20"
+  nodejs-tag:
+    type: string
+    default: "18.19"
+
 executors:
   docker-image-golang:
     environment:
       PROJECT_ROOT_FOLDER: ~/project
     docker:
-      - image: cimg/go:1.20
+      - image: cimg/go:<< pipeline.parameters.golang-tag >>
   docker-image-golang-dependencies:
     environment:
       PROJECT_ROOT_FOLDER: ~/project
     docker:
-      - image: cimg/go:1.20
+      - image: cimg/go:<< pipeline.parameters.golang-tag >>
       - image: proxeus/node-crypto-forex-rates
       - image: proxeus/document-service
       - image: proxeus/mongo-dev-cluster
@@ -25,7 +33,7 @@ executors:
 jobs:
   build-ui:
     docker:
-      - image: cimg/node:16.20
+      - image: cimg/node:<< pipeline.parameters.nodejs-tag >>
     steps:
       - checkout
       - restore_cache:
@@ -153,7 +161,7 @@ jobs:
             - go-mod-v2-{{ checksum "go.sum" }}
       - run: 
           name: Node.js
-          command: curl -fsSL https://deb.nodesource.com/setup_16.x | sudo -E bash -
+          command: curl -fsSL https://deb.nodesource.com/setup_<< pipeline.parameters.nodejs-tag >>.x | sudo -E bash -
       - run: 
           name: Yarn
           command: curl -sL https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
@@ -219,9 +227,6 @@ jobs:
           command: |
             echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
             docker push $CONTAINER_IMAGE_NAME:latest
-      - run:
-          name: Tag the latest Docker release with current Git version
-          command: docker tag $CONTAINER_IMAGE_NAME:$CIRCLE_TAG $CONTAINER_IMAGE_NAME:latest
 
 workflows:
   version: 2

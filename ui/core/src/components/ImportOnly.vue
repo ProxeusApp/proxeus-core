@@ -40,9 +40,9 @@
 </template>
 
 <script>
-import Checkbox from './Checkbox'
-import ImexResults from './ImexResults'
-import FileDropBox from './template/FileDropBox'
+import Checkbox from './Checkbox.vue'
+import ImexResults from './ImexResults.vue'
+import FileDropBox from './template/FileDropBox.vue'
 import mafdc from '@/mixinApp'
 
 export default {
