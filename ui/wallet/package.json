@@ -71,17 +71,17 @@
     "zxcvbn": "^4.4.2"
   },
   "devDependencies": {
-    "@cypress/webpack-preprocessor": "^4.1.5",
-    "@vue/eslint-config-standard": "^5",
-    "autoprefixer": "^9.0.1",
-    "babel-eslint": "^10.0.1",
-    "check-node-version": "^3.2.0",
-    "eslint": "^6.8.0",
-    "eslint-plugin-vue": "^9.18.1",
-    "less": "^3.8.1",
-    "less-loader": "^4.1.0",
-    "postcss-loader": "^3.0.0",
-    "webpack": "^4.25.1"
+    "@cypress/webpack-preprocessor": "^4",
+    "@vue/eslint-config-standard": "^8",
+    "autoprefixer": "^9",
+    "babel-eslint": "^10",
+    "check-node-version": "^3",
+    "eslint": "^6",
+    "eslint-plugin-vue": "^9",
+    "less": "^3",
+    "less-loader": "^4",
+    "postcss-loader": "^3",
+    "webpack": "^4"
   },
   "engines": {
     "node": ">= 16.16.0",
