@@ -7,7 +7,7 @@ parameters:
     default: "1.20"
   nodejs-tag:
     type: integer
-    default: 18
+    default: "18.19"
 
 executors:
   docker-image-golang:
