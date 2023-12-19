@@ -5,6 +5,9 @@ parameters:
   golang-tag:
     type: string
     default: "1.20"
+  nodejs-ver:
+    type: integer
+    default: 18
   nodejs-tag:
     type: string
     default: "18.19"
@@ -161,7 +164,7 @@ jobs:
             - go-mod-v2-{{ checksum "go.sum" }}
       - run: 
           name: Node.js
-          command: curl -fsSL https://deb.nodesource.com/setup_<< pipeline.parameters.nodejs-tag >>.x | sudo -E bash -
+          command: curl -fsSL https://deb.nodesource.com/setup_<< pipeline.parameters.nodejs-ver >>.x | sudo -E bash -
       - run: 
           name: Yarn
           command: curl -sL https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
