@@ -12,7 +12,7 @@ networks:
     driver: bridge
 
 services:
-  platform:
+  xes-platform:
     image: proxeus/proxeus-core:latest
     container_name: xes-platform
     depends_on:
