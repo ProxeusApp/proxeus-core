@@ -31,7 +31,7 @@ require (
 	github.com/xeipuuv/gojsonschema v1.2.0 // indirect
 	go.etcd.io/bbolt v1.3.8 // indirect
 	golang.org/x/crypto v0.17.0
-	golang.org/x/net v0.18.0
+	golang.org/x/net v0.19.0
 	gopkg.in/gavv/httpexpect.v2 v2.16.0
 )
 
@@ -59,7 +59,7 @@ require (
 	google.golang.org/protobuf v1.31.0 // indirect
 )
 
-require go.mongodb.org/mongo-driver v1.13.0
+require go.mongodb.org/mongo-driver v1.13.1
 
 require (
 	github.com/Microsoft/go-winio v0.6.1 // indirect

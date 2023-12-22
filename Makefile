@@ -1,19 +1,24 @@
 SHELL:= /bin/bash
 DEBUG_FLAG?=false
-GO_VERSION=1.20
+GO_VERSION=1.21
 
 ifeq ($(DEBUG), "true")
 	BINDATA_OPTS="-debug"
 endif
 
 ifdef BUILD_ID
-    GO_OPTS=-ldflags="-X main.ServerVersion=build-$(BUILD_ID)"
+	GO_OPTS=-ldflags="-X main.ServerVersion=build-$(BUILD_ID)"
 endif
 
 # Load dotenv configuration
 ifneq (,$(wildcard ./.env))
 	include .env
 	export
+endif
+ifndef $(PROXEUS_SPARKPOST_API_KEY)
+	PROXEUS_SPARKPOST_API_KEY=0
+	PROXEUS_INFURA_API_KEY=0
+	PROXEUS_BLOCKCHAIN_CONTRACT_ADDRESS=0x
 endif
 
 # Default proxeus environment
