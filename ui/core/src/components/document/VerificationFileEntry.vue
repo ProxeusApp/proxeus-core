@@ -222,7 +222,7 @@
 </template>
 
 <script>
-import Spinner from '../Spinner.vue'
+import Spinner from '../Spinner'
 
 export default {
   name: 'verification-file-entry',
@@ -295,13 +295,7 @@ export default {
 
         this.isFileInvalidated = false
 
-        let result
-
-        try {
-          result = await this.wallet().verifyHash(this.hash)
-        } catch (e) {
-          throw new Error('UNABLE_TO_VERIFY_HASH')
-        }
+        const result = await this.wallet().verifyHash(this.hash)
 
         const transaction = await this.wallet().web3.eth.getTransaction(result)
         this.creator = transaction.from
@@ -336,8 +330,6 @@ export default {
 
         if (this.wallet().isPublicRPCUsing) {
           this.errorPublicRPC = true
-        } else if (e?.message === 'UNABLE_TO_VERIFY_HASH') {
-          this.validationException = false
         } else {
           this.errorValidating = true
         }
