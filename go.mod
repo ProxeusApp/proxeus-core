@@ -40,7 +40,6 @@ require (
 	github.com/dlclark/regexp2 v1.10.0 // indirect
 	github.com/fasthttp/websocket v1.4.3-rc.10 // indirect
 	github.com/gballet/go-libpcsclite v0.0.0-20191108122812-4678299bea08 // indirect
-	github.com/go-stack/stack v1.8.1 // indirect
 	github.com/gorilla/context v1.1.2 // indirect
 	github.com/gorilla/websocket v1.5.1 // indirect
 	github.com/klauspost/compress v1.17.3 // indirect
