@@ -76,7 +76,7 @@
     "autoprefixer": "^9",
     "babel-eslint": "^10",
     "check-node-version": "^3",
-    "eslint": "^6",
+    "eslint": "^8",
     "eslint-plugin-vue": "^9",
     "less": "^3",
     "less-loader": "^4",
