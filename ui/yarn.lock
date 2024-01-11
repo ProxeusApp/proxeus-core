@@ -7166,7 +7166,7 @@ web3-validator@^2.0.3:
     web3-types "^1.3.0"
     zod "^3.21.4"
 
-web3@^4:
+web3@^4.3.0:
   version "4.3.0"
   resolved "https://registry.yarnpkg.com/web3/-/web3-4.3.0.tgz#3f1d5e878295ef8bc7d2195f0f42aa2f7b8224cf"
   integrity sha512-YiLCsb5wmgJlSxRLzt7Z7H+CmlVVIKD8VaUQaZ+xKVG3Q7CpsO5Z6jmeKnlr6M9c6fDDsDnRM6G8g+nchZehbA==
