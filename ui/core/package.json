@@ -41,7 +41,6 @@
     "moment": "^2.29.4",
     "popper.js": "^1.14.4",
     "reconnecting-websocket": "^4.4.0",
-    "sass": "^1.69.5",
     "sortablejs": "^1.7.0",
     "tippy.js": "^6.3.7",
     "underscore": "^1.8.3",
