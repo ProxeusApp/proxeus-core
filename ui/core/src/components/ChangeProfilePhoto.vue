@@ -38,7 +38,7 @@
 
 <script>
 import VueCropper from 'vue-cropperjs'
-import FileDropBox from './template/FileDropBox.vue'
+import FileDropBox from './template/FileDropBox'
 import mafdc from '@/mixinApp'
 
 export default {

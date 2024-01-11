@@ -6,7 +6,7 @@
 </template>
 
 <script>
-import Verification from '@/components/document/Verification.vue'
+import Verification from '@/components/document/Verification'
 
 export default {
   name: 'mercuria-validation',

@@ -23,7 +23,7 @@
 
 <script>
 import pdf from 'vue-pdf'
-import Spinner from '@/components/Spinner.vue'
+import Spinner from '@/components/Spinner'
 
 export default {
   name: 'pdf-modal',

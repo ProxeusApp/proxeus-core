@@ -10,6 +10,7 @@
 </template>
 
 <script>
+// import SidebarUser from '@/views/appDependentComponents/SidebarUser'
 import baseApp from './baseApp'
 import Blocker from './components/Blocker'
 

@@ -13,8 +13,8 @@
 </template>
 
 <script>
-import ListGroup from '@/components/ListGroup.vue'
-import TopNav from '@/components/layout/TopNav.vue'
+import ListGroup from '@/components/ListGroup'
+import TopNav from '@/components/layout/TopNav'
 
 export default {
   name: 'document-create',

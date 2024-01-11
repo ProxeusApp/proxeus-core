@@ -11,7 +11,7 @@
 
 <script>
 import baseApp from './baseApp'
-import Blocker from './components/Blocker.vue'
+import Blocker from './components/Blocker'
 
 export default {
   components: { Blocker },

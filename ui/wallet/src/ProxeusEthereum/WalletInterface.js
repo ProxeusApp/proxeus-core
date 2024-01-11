@@ -347,7 +347,7 @@ class WalletInterface {
   }
 
   /*
-   * TODO: Everything below this comment needs to be moved outside of the wallet lib
+   * Everything below this comment needs to be moved outside of the wallet libray
    */
 
   hashFile (arrBuffer) {

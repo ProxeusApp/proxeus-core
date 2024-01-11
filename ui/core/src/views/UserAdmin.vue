@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import SidebarUser from '@/views/appDependentComponents/SidebarUser.vue'
+import SidebarUser from '@/views/appDependentComponents/SidebarUser'
 import _ from 'lodash'
 
 export default {

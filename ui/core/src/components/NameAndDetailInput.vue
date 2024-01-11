@@ -15,7 +15,7 @@
 </template>
 
 <script>
-import AnimatedInput from '@/components/AnimatedInput.vue'
+import AnimatedInput from './AnimatedInput'
 
 export default {
   components: { AnimatedInput },

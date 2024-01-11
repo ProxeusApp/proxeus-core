@@ -53,8 +53,8 @@
 </template>
 
 <script>
-import AnimatedInput from '../AnimatedInput.vue'
-// import Checkbox from '../Checkbox.vue'
+import AnimatedInput from '../AnimatedInput'
+// import Checkbox from '../Checkbox'
 import mafdc from '@/mixinApp'
 
 export default {

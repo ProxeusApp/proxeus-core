@@ -17,7 +17,6 @@ import VueAppend from 'vue-append'
 import VTooltip from 'v-tooltip'
 import ErrorPage from 'vue-error-page'
 import VueClipboard from 'vue-clipboard2'
-import ModalPlugin from 'bootstrap-vue'
 
 /*
  *
@@ -39,8 +38,7 @@ import './global'
 import './legacy-imports'
 
 import VueScrollTo from 'vue-scrollto'
-import { events } from 'vue-notification/src/events'
-Vue.use(ModalPlugin) // eslint-disable-line no-unused-vars
+import { events } from 'vue-notification/src/events' // eslint-disable-line no-unused-vars
 
 /*
  *

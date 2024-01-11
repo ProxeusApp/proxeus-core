@@ -65,9 +65,9 @@
 
 <script>
 import pdf from 'vue-pdf'
-import PdfModal from '@/components/document/PdfModal.vue'
+import PdfModal from '@/components/document/PdfModal'
 import SigningModal from '@/components/document/SigningModal.vue'
-import Spinner from '@/components/Spinner.vue'
+import Spinner from '@/components/Spinner'
 import mafdc from '@/mixinApp'
 
 export default {

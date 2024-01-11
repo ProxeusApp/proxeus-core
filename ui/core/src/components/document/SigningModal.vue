@@ -25,7 +25,7 @@
 </template>
 
 <script>
-import UserSelector from '../../views/appDependentComponents/permDialog/UserSelector.vue'
+import UserSelector from '../../views/appDependentComponents/permDialog/UserSelector'
 
 export default {
   name: 'sig-modal',

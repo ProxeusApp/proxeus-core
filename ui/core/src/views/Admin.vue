@@ -15,8 +15,8 @@
 </template>
 
 <script>
-import Sidebar from '@/views/appDependentComponents/Sidebar.vue'
-import FirstLoginOverlay from '@/views/FirstLoginOverlay.vue'
+import Sidebar from '@/views/appDependentComponents/Sidebar'
+import FirstLoginOverlay from '@/views/FirstLoginOverlay'
 import _ from 'lodash'
 import mafdc from '@/mixinApp'
 

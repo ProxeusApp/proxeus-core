@@ -16,7 +16,7 @@ import Workflow from '../views/Workflow.vue'
 import Workflows from '../views/Workflows.vue'
 import External from '../views/External.vue'
 import NotFound from '../views/app/Errors/NotFound.vue'
-import AdminImportExport from '../views/AdminImportExport.vue'
+import AdminImportExport from '../views/AdminImportExport'
 
 Vue.use(Router)
 

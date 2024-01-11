@@ -59,12 +59,12 @@
 </template>
 
 <script>
-// import bModal from 'bootstrap-vue/es/components/modal/modal'
-// import bModalDirective from 'bootstrap-vue/es/directives/modal/modal'
-import AnimatedInput from '../AnimatedInput.vue'
-import Checkbox from '../Checkbox.vue'
+import bModal from 'bootstrap-vue/es/components/modal/modal'
+import bModalDirective from 'bootstrap-vue/es/directives/modal/modal'
+import AnimatedInput from '../AnimatedInput'
+import Checkbox from '../Checkbox'
 import mafdc from '@/mixinApp'
-import ApiKey from './ApiKey.vue'
+import ApiKey from './ApiKey'
 
 export default {
   mixins: [mafdc],

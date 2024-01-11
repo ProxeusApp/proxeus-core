@@ -94,7 +94,7 @@
 
 <script>
 import 'bootstrap'
-import ResponsiveSidebar from './ResponsiveSidebar.vue'
+import ResponsiveSidebar from './ResponsiveSidebar'
 import mafdc from '@/mixinApp'
 
 export default {

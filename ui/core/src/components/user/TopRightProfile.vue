@@ -61,9 +61,9 @@
 </template>
 
 <script>
-import ProfileModal from './ProfileModal.vue'
+import ProfileModal from './ProfileModal'
 import mafdc from '@/mixinApp'
-import ChangeProfilePhotoModal from '../ChangeProfilePhotoModal.vue'
+import ChangeProfilePhotoModal from '../ChangeProfilePhotoModal'
 
 export default {
   mixins: [mafdc],

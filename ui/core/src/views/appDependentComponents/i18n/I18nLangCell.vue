@@ -4,7 +4,7 @@
 
 <script>
 import mafdc from '@/mixinApp'
-import Checkbox from '@/components/Checkbox.vue'
+import Checkbox from '../../../components/Checkbox'
 
 export default {
   components: { Checkbox },

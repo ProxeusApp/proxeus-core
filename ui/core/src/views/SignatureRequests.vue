@@ -30,9 +30,9 @@
 </template>
 
 <script>
-import TopNav from '@/components/layout/TopNav.vue'
+import TopNav from '@/components/layout/TopNav'
 import mafdc from '@/mixinApp'
-import SignatureRequest from '@/components/SignatureRequest.vue'
+import SignatureRequest from '@/components/SignatureRequest'
 
 export default {
   mixins: [mafdc],

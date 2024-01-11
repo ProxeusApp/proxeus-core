@@ -130,14 +130,14 @@
 </template>
 
 <script>
-import DocumentTemplateChooser from '@/components/template/DocumentTemplateChooser.vue'
-import TemplateForm from '@/components/template/TemplateForm.vue'
+import DocumentTemplateChooser from '@/components/template/DocumentTemplateChooser'
+import TemplateForm from '@/components/template/TemplateForm'
 import _ from 'lodash'
-import Spinner from '@/components/Spinner.vue'
-import SearchBox from '@/components/SearchBox.vue'
+import Spinner from '@/components/Spinner'
+import SearchBox from '@/components/SearchBox'
 // import bModal from 'bootstrap-vue/es/components/modal/modal'
 // import bBtn from 'bootstrap-vue/es/components/button/button'
-// import bModalDirective from 'bootstrap-vue/es/directives/modal/modal'
+import bModalDirective from 'bootstrap-vue/es/directives/modal/modal'
 import libreHub from '../libs/libreTmplAssistance.min.js'
 
 import Searchable from '../mixins/searchable'
@@ -145,11 +145,11 @@ import FormChangeAlert from '../mixins/form-change-alert'
 import DelayedInputEvent from '../mixins/delayedInputEvent'
 
 import axios from 'axios'
-import TopNav from '@/components/layout/TopNav.vue'
-import NameAndDetailInput from '../components/NameAndDetailInput.vue'
+import TopNav from '@/components/layout/TopNav'
+import NameAndDetailInput from '../components/NameAndDetailInput'
 import mafdc from '@/mixinApp'
-import PermissionDialog from './appDependentComponents/permDialog/PermissionDialog.vue'
-import SaveBtn from './appDependentComponents/SaveBtn.vue'
+import PermissionDialog from './appDependentComponents/permDialog/PermissionDialog'
+import SaveBtn from './appDependentComponents/SaveBtn'
 
 const CancelToken = axios.CancelToken
 
