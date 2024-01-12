@@ -10,7 +10,7 @@ import (
 
 	"github.com/ProxeusApp/proxeus-core/storage"
 
-	"github.com/labstack/echo"
+	"github.com/labstack/echo/v4"
 )
 
 // Gets the absolute url of a path (uri)

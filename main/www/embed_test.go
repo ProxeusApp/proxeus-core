@@ -5,7 +5,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/labstack/echo"
+	"github.com/labstack/echo/v4"
 	"github.com/stretchr/testify/assert"
 
 	_ "github.com/ProxeusApp/proxeus-core/test"

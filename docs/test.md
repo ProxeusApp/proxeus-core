@@ -1,6 +1,5 @@
 # Tests
 
-
 The following command runs all the tests without test coverage:
 
 ```

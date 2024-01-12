@@ -43,7 +43,6 @@ require (
 	github.com/gorilla/context v1.1.2 // indirect
 	github.com/gorilla/websocket v1.5.1 // indirect
 	github.com/klauspost/compress v1.17.3 // indirect
-	github.com/labstack/echo v3.3.10+incompatible
 	github.com/labstack/echo-contrib v0.15.0
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/sergi/go-diff v1.3.1 // indirect
@@ -58,7 +57,10 @@ require (
 	google.golang.org/protobuf v1.31.0 // indirect
 )
 
-require go.mongodb.org/mongo-driver v1.13.1
+require (
+	github.com/labstack/echo/v4 v4.11.2
+	go.mongodb.org/mongo-driver v1.13.1
+)
 
 require (
 	github.com/Microsoft/go-winio v0.6.1 // indirect
@@ -75,6 +77,7 @@ require (
 	github.com/fsnotify/fsnotify v1.7.0 // indirect
 	github.com/go-ole/go-ole v1.3.0 // indirect
 	github.com/go-sourcemap/sourcemap v2.1.3+incompatible // indirect
+	github.com/golang-jwt/jwt v3.2.2+incompatible // indirect
 	github.com/golang/protobuf v1.5.3 // indirect
 	github.com/golang/snappy v0.0.5-0.20220116011046-fa5810519dcb // indirect
 	github.com/google/go-cmp v0.6.0 // indirect
@@ -101,6 +104,7 @@ require (
 	golang.org/x/sync v0.5.0 // indirect
 	golang.org/x/sys v0.15.0 // indirect
 	golang.org/x/text v0.14.0 // indirect
+	golang.org/x/time v0.3.0 // indirect
 	golang.org/x/tools v0.15.0 // indirect
 	gopkg.in/sourcemap.v1 v1.0.5 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
@@ -110,7 +114,6 @@ require (
 
 replace (
 	github.com/ProxeusApp/proxeus-core => ./
-	github.com/labstack/echo-contrib => github.com/labstack/echo-contrib v0.0.0-20180222075343-7d9d9632a4aa // fix https://github.com/ProxeusApp/proxeus-core/issues/216
 	gopkg.in/gavv/httpexpect.v2 => github.com/gavv/httpexpect/v2 v2.2.0 // fix https://github.com/gavv/httpexpect/issues/60
 	gopkg.in/urfave/cli.v1 => github.com/urfave/cli v1.22.5 // fix https://github.com/ProxeusApp/proxeus-core/issues/213
 )
