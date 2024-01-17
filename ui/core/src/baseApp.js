@@ -1,4 +1,7 @@
 import WalletInterface from './libs/WalletAdapter'
+import {
+  get as getLodash
+} from 'lodash'
 
 export default {
   data () {
@@ -12,7 +15,9 @@ export default {
       uiBlocked: false,
       intervalID: null,
       lastExportResults: null,
-      lastImportResults: null
+      lastImportResults: null,
+      dynamicConfig: null,
+      isAppLoaded: false
     }
   },
   methods: {
@@ -405,6 +410,35 @@ export default {
       if (this.userIsCreatorOrHigher()) {
         localStorage.setItem('showFirstLoginMessageOn-admin', new Date())
       }
+    },
+    i18nDynamicConfigText (path) {
+      const lang = this.getSelectedLang()
+      const fullPath = path + '.lang'
+
+      const originalValue = getLodash(this.dynamicConfig, fullPath, undefined)
+
+      if (originalValue === undefined) {
+        throw new Error(`Unable to get DynamicConfig translate for path ${fullPath}`)
+      }
+
+      return originalValue ? originalValue[lang] : null
+    },
+    async loadDynamicConfig () {
+      if (process.env.VUE_APP_USE_DYNAMIC_CONFIG === undefined) {
+        return
+      }
+
+      try {
+        const {
+          default: config
+        } = await import(/* webpackIgnore: true */ '../../dynamic-config/index.js')
+
+        if (config.apply === true) {
+          this.dynamicConfig = config
+        }
+      } catch (error) {
+        console.error('Unable to load dynamic config')
+      }
     }
   },
   computed: {
@@ -415,14 +449,17 @@ export default {
       set (a) {}
     }
   },
-  created () {
+  async created () {
     const tmpLangToPreventFromWarnings = 'en'
     this.$i18n.fallback(tmpLangToPreventFromWarnings)
     this.$i18n.set(tmpLangToPreventFromWarnings)
+    await this.loadDynamicConfig()
     this.validateSessionCookie()
     this.loadMeta()
     this.loadConfig()
     this.loadMe()
+
+    this.isAppLoaded = true
 
     // when accounts loaded register accountsChanged handler and reload page if user changes the account
     window.ethereum.on('accountsChanged', function () {

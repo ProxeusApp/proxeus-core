@@ -4,8 +4,14 @@
   <div class="container">
     <div class="row">
       <div class="col text-center">
-        <h1 class="mb-3">{{$t('Proxeus Platform Title', 'Proxeus Platform')}}</h1>
-        <p class="mb-3">{{$t('Proxeus Platform Description', 'Proxeus is all about document-centered processes that interact with the Blockchain. Our app lets you drag & drop a workflow in the wink of an eye. Proxeus workflows may comprise forms, document templates and conditions. Proxeus enables you to create tamper-proof and easily verifiable documents by registering them on the Ethereum Blockchain.')}}</p>
+        <template v-if="this.app.dynamicConfig">
+          <h1 class="mb-3">{{this.app.i18nDynamicConfigText('homePage.platformTitle')}}</h1>
+          <p class="mb-3" v-html="this.app.i18nDynamicConfigText('homePage.platformDescription')"></p>
+        </template>
+        <template v-else>
+          <h1 class="mb-3">{{$t('Proxeus Platform Title', 'Proxeus Platform')}}</h1>
+          <p class="mb-3">{{$t('Proxeus Platform Description', 'Proxeus is all about document-centered processes that interact with the Blockchain. Our app lets you drag & drop a workflow in the wink of an eye. Proxeus workflows may comprise forms, document templates and conditions. Proxeus enables you to create tamper-proof and easily verifiable documents by registering them on the Ethereum Blockchain.')}}</p>
+        </template>
         <a href="/register" class="btn btn-lg btn-primary" id="signupcontent">{{$t('Sign up', 'Sign up')}}</a>
       </div>
     </div>
@@ -31,9 +37,11 @@
 <script>
 // import FileDropBox from '@/components/template/FileDropBox'
 import Verification from '@/components/document/Verification'
+import mafdc from '@/mixinApp'
 // import FrontendNavbar from '@/components/frontend/FrontendNavbar'
 
 export default {
+  mixins: [mafdc],
   name: 'home',
   components: {
     // FileDropBox,

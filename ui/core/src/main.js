@@ -34,9 +34,7 @@ import store from './store'
  */
 
 import './global'
-
 import './legacy-imports'
-
 import VueScrollTo from 'vue-scrollto'
 import { events } from 'vue-notification/src/events' // eslint-disable-line no-unused-vars
 
@@ -85,6 +83,8 @@ const vm = new Vue({ // eslint-disable-line no-unused-vars
   el: '#app',
   router,
   store,
-  components: { App },
+  components: {
+    App
+  },
   template: '<App/>'
 })
