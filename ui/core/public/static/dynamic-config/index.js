@@ -1,66 +1,80 @@
+/*
+
+*** DYNAMIC CONFIG ***
+
+Use this file to make dynamic configuration for the application.
+
+How to use:
+
+1) Pass VUE_APP_USE_DYNAMIC_CONFIG variable while build pipeline. Like this:
+$ export VUE_APP_USE_DYNAMIC_CONFIG=true
+2) Place this file into ui/core/dist/static/dynamic-config directory. You can mount Docker volume directry into this path. Any extra files can be placed as well.
+
+Example of this configuration file:
+
 export default {
-  "apply": true,
+  "apply": true, // Allow or deny this config (even with VUE_APP_USE_DYNAMIC_CONFIG value)
   "company": {
     "logo": {
       "lightTheme": {
-        "path": "/static/dynamic-config/img/company_logo_light.svg"
+        "path": "/static/dynamic-config/..."
       },
       "darkTheme": {
-        "path": "/static/dynamic-config/img/company_logo_dark.svg"
+        "path": "/static/dynamic-config/..."
       },
       "style": {
         "home": {
-          "height": "41px"
+          ... css styles ...
         },
         "adminDashboard": {
           "full": {
-            "width": "135px",
-            "height": "42px"
+            ... css styles ...
           },
           "small": {
-            "width": "39px",
-            "height": "42px"
+            ... css styles ...
           }
         },
         "userDashboard": {
           "full": {
-            "width": "195px",
-            "height": "60px",
-            "margin": "1rem auto 0.5rem auto"
+            ... css styles ...
           },
           "small": {
-            "width": "39px",
-            "height": "42px",
-            "margin": "1rem auto 0.5rem -0.5rem"
+            ... css styles ...
           }
         }
       }
     },
     "copyrightText": {
       "lang": {
-        "en": "Developed by",
-        "de": "Entwickelt von"
+        "en": "..."
+        ... another languages ...
       },
       "logo": {
         "style": {
-          "height": "20px"
+          ... css styles ...
         }
       },
-      "link": "https://s-pro.io"
+      "link": "..."
     }
   },
   "homePage": {
     "platformTitle": {
       "lang": {
-        "en": "Proxeus Demo Server",
-        "de": "Proxeus Demo"
+        "en": "..."
+        ... another languages ...
       }
     },
     "platformDescription": {
       "lang": {
-        "en": "Welcome to the Proxeus demo server, sponsored by S-PRO. This service is running on the Ethereum Sepolia testnet. Please note that all content added here gets reset once per day. For more information, click the “Handbook” link below, or visit <a href=\"https://proxeus.org/\" target=\"_blank\">proxeus.org</a>",
-        "de": "Willkommen auf dem Proxeus-Demoserver, gesponsert von S-PRO. Dieser Dienst läuft im Ethereum Sepolia-Testnetz. Bitte beachten Sie, dass alle hier hinzugefügten Inhalte einmal täglich zurückgesetzt werden. Für weitere Informationen klicken Sie unten auf den Link \"Handbuch\" oder besuchen Sie <a href=\"https://proxeus.org/\" target=\"_blank\">proxeus.org</a>"
+        "en": "..."
+        ... another languages ...
       }
     }
   }
+}
+
+*/
+
+export default {
+  "apply": false
 }
