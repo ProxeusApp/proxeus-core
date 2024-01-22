@@ -31,7 +31,7 @@ require (
 	github.com/xeipuuv/gojsonschema v1.2.0 // indirect
 	go.etcd.io/bbolt v1.3.8 // indirect
 	golang.org/x/crypto v0.18.0
-	golang.org/x/net v0.19.0
+	golang.org/x/net v0.20.0
 	gopkg.in/gavv/httpexpect.v2 v2.16.0
 )
 
