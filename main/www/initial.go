@@ -41,7 +41,7 @@ func (me *InitialHandler) Handler(next echo.HandlerFunc) echo.HandlerFunc {
 			if !strings.HasPrefix(c.Request().RequestURI, "/api/") &&
 				!strings.HasPrefix(c.Request().RequestURI, "/static/") &&
 				!strings.HasPrefix(c.Request().RequestURI, "/favicon.ico") {
-				bts, err := sys.ReadAllFile("initial.html")
+				bts, err := sys.ReadAllFile("index.html")
 				if err != nil {
 					return c.NoContent(http.StatusNotFound)
 				}

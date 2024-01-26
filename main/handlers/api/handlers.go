@@ -94,7 +94,8 @@ func SharedByLinkHTMLHandler(c echo.Context) error {
 
 // Returns the frontend.html file
 func PublicIndexHTMLHandler(c echo.Context) error {
-	return html(c, "frontend.html")
+	// ui/core/dist/
+	return html(c, "index.html")
 }
 
 // Returns the user.html file

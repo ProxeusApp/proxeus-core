@@ -15,8 +15,8 @@ module.exports = {
   pages: {
     initial: {
       entry: './src/initial.js',
-      template: 'public/initial.html',
-      filename: 'initial.html'
+      template: 'index.html',
+      filename: 'index.html'
     },
     app: {
       entry: './src/main.js',
@@ -40,7 +40,7 @@ module.exports = {
       rewrites: [
         {
           from: /^\/init$/,
-          to: '/initial.html'
+          to: '/index.html'
         },
         {
           from: /^\/$/,
