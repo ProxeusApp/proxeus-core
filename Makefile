@@ -2,6 +2,9 @@ SHELL:= /bin/bash
 DEBUG_FLAG?=false
 GO_VERSION=1.21
 
+ifdef DEBUG
+	BINDATA_OPTS=-debug -verbose
+endif
 ifeq ($(DEBUG), "true")
 	BINDATA_OPTS="-debug"
 endif
@@ -106,6 +109,9 @@ ui-dev:
 
 .PHONY: generate
 generate: $(bindata) $(mocks)
+
+bindata:
+	go-bindata $(BINDATA_OPTS) $(bindata) $(mocks)
 
 .PHONY: server
 server: generate
