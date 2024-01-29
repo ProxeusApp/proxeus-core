@@ -92,7 +92,7 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^5.0.0",
-    "eslint-plugin-vue": "^9.19.2",
+    "eslint-plugin-vue": "^9.20.1",
     "file-loader": "^3.0.1",
     "less": "^3.8.1",
     "less-loader": "^4.1.0",
