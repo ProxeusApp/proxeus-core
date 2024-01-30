@@ -94,7 +94,6 @@ func SharedByLinkHTMLHandler(c echo.Context) error {
 
 // Returns the frontend.html file
 func PublicIndexHTMLHandler(c echo.Context) error {
-	// ui/core/dist/
 	return html(c, "index.html")
 }
 
@@ -181,7 +180,6 @@ func PostImport(e echo.Context) error {
 	}
 	sess.Put("lastImport", &ImportExportResult{Filename: fileName, Timestamp: time.Now(), Results: results})
 	return c.NoContent(http.StatusOK)
-
 }
 
 // Exports user data
