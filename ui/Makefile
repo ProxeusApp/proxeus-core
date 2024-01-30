@@ -16,6 +16,10 @@ check-node-version:
 serve-main-hosted: check-node-version
 	cd core && yarn run serve
 
+.PHONY: dev
+dev: init check-node-version
+	cd core && yarn run dev
+
 .PHONY: main-hosted
 main-hosted: init check-node-version
 	cd core && yarn run build

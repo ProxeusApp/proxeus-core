@@ -99,9 +99,13 @@ update:
 ui:
 	$(MAKE) -C ui
 
+.PHONY: ui-serve
+ui-serve:
+	$(MAKE) -C ui serve-main-hosted
+
 .PHONY: ui-dev
 ui-dev:
-	$(MAKE) -C ui serve-main-hosted
+	$(MAKE) -C ui dev
 
 .PHONY: generate
 generate: $(bindata) $(mocks)
