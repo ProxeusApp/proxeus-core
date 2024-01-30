@@ -31,7 +31,7 @@
     "moment": "^2.30.1",
     "popper.js": "^1.14.4",
     "sass": "^1.70.0",
-    "sortablejs": "^1.15.1",
+    "sortablejs": "^1.15.2",
     "tippy.js": "^6.3.7",
     "truffle-assertions": "^0.9.1",
     "typeahead": "^0.2.2",

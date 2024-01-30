@@ -1,6 +1,6 @@
 {
   "name": "@proxeus/core",
-  "version": "1.0.0",
+  "version": "1.6.0",
   "private": true,
   "description": "Proxeus UI",
   "author": "info@proxeus.com",
@@ -41,7 +41,7 @@
     "moment": "^2.30.1",
     "popper.js": "^1.14.4",
     "reconnecting-websocket": "^4.4.0",
-    "sortablejs": "^1.15.1",
+    "sortablejs": "^1.15.2",
     "tippy.js": "^6.3.7",
     "underscore": "^1.8.3",
     "v-tooltip": "^2.0.0-rc.33",
