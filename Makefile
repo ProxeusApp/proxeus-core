@@ -2,10 +2,9 @@ SHELL:= /bin/bash
 DEBUG_FLAG?=false
 GO_VERSION=1.21
 
-ifeq ($(DEBUG), "true")
-	BINDATA_OPTS="-debug"
+ifdef DEBUG
+	BINDATA_OPTS=-debug -verbose
 endif
-
 ifdef BUILD_ID
 	GO_OPTS=-ldflags="-X main.ServerVersion=build-$(BUILD_ID)"
 endif
@@ -100,9 +99,13 @@ update:
 ui:
 	$(MAKE) -C ui
 
+.PHONY: ui-serve
+ui-serve:
+	$(MAKE) -C ui serve-main-hosted
+
 .PHONY: ui-dev
 ui-dev:
-	$(MAKE) -C ui serve-main-hosted
+	$(MAKE) -C ui dev
 
 .PHONY: generate
 generate: $(bindata) $(mocks)
@@ -229,7 +232,7 @@ run: server
 	artifacts/proxeus -DataDir $(PROXEUS_DATA_DIR)/proxeus-platform/data
 
 main/handlers/assets/bindata.go: $(wildcard ./ui/core/dist/**)
-	go-bindata ${BINDATA_OPTS} -pkg assets -o ./main/handlers/assets/bindata.go -prefix ./ui/core/dist ./ui/core/dist/...
+	go-bindata ${BINDATA_OPTS} -pkg assets -o ./main/handlers/assets/bindata.go -prefix "ui/core/dist/" ./ui/core/dist/...
 	goimports -w $@
 
 test/assets/bindata.go: $(filter-out bindata.go,$(shell find ./test/assets/ ! -name "bindata.go"))

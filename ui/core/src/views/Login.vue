@@ -37,7 +37,7 @@
 </template>
 
 <script>
-import Spinner from '../components/Spinner'
+import Spinner from '../components/Spinner.vue'
 import mafdc from '@/mixinApp'
 
 export default {

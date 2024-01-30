@@ -54,13 +54,13 @@
 </template>
 
 <script>
-import PdfPreview from '@/components/document/PdfPreview'
-// import SearchBox from '@/components/SearchBox'
-// import ListGroup from '@/components/ListGroup'
-import TopNav from '@/components/layout/TopNav'
-import NameAndDetailInput from '@/components/NameAndDetailInput'
+import PdfPreview from '@/components/document/PdfPreview.vue'
+// import SearchBox from '@/components/SearchBox.vue'
+// import ListGroup from '@/components/ListGroup.vue'
+import TopNav from '@/components/layout/TopNav.vue'
+import NameAndDetailInput from '@/components/NameAndDetailInput.vue'
 import mafdc from '@/mixinApp'
-import SignatureRequestList from '@/components/SignatureRequestList'
+import SignatureRequestList from '@/components/SignatureRequestList.vue'
 
 export default {
   mixins: [mafdc],

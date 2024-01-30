@@ -20,7 +20,7 @@
 </template>
 
 <script>
-import TopNav from '../components/layout/TopNav'
+import TopNav from '../components/layout/TopNav.vue'
 
 export default {
   name: 'support',

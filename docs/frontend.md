@@ -45,6 +45,7 @@ the latest production build. Use 3005 if you want to use the latest frontend fea
 - Vuex https://github.com/vuejs/vuex
 - axios https://github.com/axios/axios
 
+- Vite https://vitejs.dev/guide/
 - Webpack https://webpack.js.org/
 
 - Progressive Web Apps https://developers.google.com/web/progressive-web-apps/

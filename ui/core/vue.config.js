@@ -15,8 +15,8 @@ module.exports = {
   pages: {
     initial: {
       entry: './src/initial.js',
-      template: 'public/initial.html',
-      filename: 'initial.html'
+      template: 'index.html',
+      filename: 'index.html'
     },
     app: {
       entry: './src/main.js',
@@ -40,7 +40,7 @@ module.exports = {
       rewrites: [
         {
           from: /^\/init$/,
-          to: '/initial.html'
+          to: '/index.html'
         },
         {
           from: /^\/$/,
@@ -91,10 +91,6 @@ module.exports = {
         options.fix = true
         return options
       })
-    // remove vue-cli-service error output
-    // config.plugins.delete('friendly-errors')
-    // remove vue-cli-service's progress output
-    // config.plugins.delete('progress')
     // optionally replace with another progress output plugin
     // `npm i -D simple-progress-webpack-plugin` to use
     // config.plugin('simple-progress-webpack-plugin').use(require.resolve('simple-progress-webpack-plugin'), [

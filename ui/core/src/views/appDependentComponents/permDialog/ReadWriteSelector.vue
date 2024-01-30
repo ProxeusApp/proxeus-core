@@ -14,7 +14,7 @@
 </template>
 
 <script>
-import SimpleSelect from '@/components/SimpleSelect'
+import SimpleSelect from '@/components/SimpleSelect.vue'
 
 export default {
   name: 'read-write-selector',

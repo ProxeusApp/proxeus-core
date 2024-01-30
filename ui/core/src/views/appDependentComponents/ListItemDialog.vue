@@ -21,10 +21,10 @@
     </b-modal>
 </template>
 <script>
-import bModal from 'bootstrap-vue/es/components/modal/modal'
-import bModalDirective from 'bootstrap-vue/es/directives/modal/modal'
+import { BModal, VBModal } from 'bootstrap-vue'
+// import bModalDirective from 'bootstrap-vue/es/directives/modal/modal'
 // import ListGroup from '@/components/ListGroup'
-import ListItem from '@/components/ListItem'
+import ListItem from '@/components/ListItem.vue'
 
 import mafdc from '@/mixinApp'
 
@@ -34,10 +34,10 @@ export default {
   components: {
     ListItem,
     // ListGroup,
-    'b-modal': bModal
+    BModal
   },
   directives: {
-    'b-modal': bModalDirective
+    'b-modal': VBModal
   },
   props: {
     setup: { type: Function },

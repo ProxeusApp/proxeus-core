@@ -2,18 +2,24 @@
 
 Please read the [Build All](build_all.md) section before continuing.
 
-Building Proxeus's web client requires Node.js 8 & yarn 1.12.
+Building Proxeus's web client requires Node.js & yarn.
 
 #### Building for Production
 ```
 make ui
 ```
+
 #### Building for Development (with hot-reloading)
 ```
 make ui-dev
 ```
 
-You should now be able to access the web page on `http://localhost:3005`
+#### Building for Development (as preview)
+```
+make ui-serve
+```
+
+You should now be able to access the web page on the port shown in the console.
 
 If you want to check the frontend code navigate to the `ui` folder.
 

@@ -127,15 +127,15 @@
 </template>
 
 <script>
-import AnimatedInput from '@/components/AnimatedInput'
+import AnimatedInput from '@/components/AnimatedInput.vue'
 
-import SimpleSelect from '@/components/SimpleSelect'
-import ImportOnly from '../../components/ImportOnly'
+import SimpleSelect from '@/components/SimpleSelect.vue'
+import ImportOnly from '@/components/ImportOnly.vue'
 
 import mafdc from '@/mixinApp'
 
-import NavTabs from '@/components/nav-tabs/NavTabs'
-import Tab from '@/components/nav-tabs/Tab'
+import NavTabs from '@/components/nav-tabs/NavTabs.vue'
+import Tab from '@/components/nav-tabs/Tab.vue'
 
 export default {
   mixins: [mafdc],

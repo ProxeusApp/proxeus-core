@@ -55,15 +55,15 @@
 </template>
 
 <script>
-import TopNav from '@/components/layout/TopNav'
+import TopNav from '@/components/layout/TopNav.vue'
 // import FT_FormBuilderCompiler from '../libs/legacy/formbuilder-compiler'
 
-import SimpleSelect from '../components/SimpleSelect'
-import AnimatedInput from '../components/AnimatedInput'
-import Checkbox from '../components/Checkbox'
+import SimpleSelect from '../components/SimpleSelect.vue'
+import AnimatedInput from '../components/AnimatedInput.vue'
+import Checkbox from '../components/Checkbox.vue'
 import formChangeAlert from '../mixins/form-change-alert'
 import mafdc from '@/mixinApp'
-import ApiKey from '../components/user/ApiKey'
+import ApiKey from '../components/user/ApiKey.vue'
 
 export default {
   mixins: [mafdc, formChangeAlert],

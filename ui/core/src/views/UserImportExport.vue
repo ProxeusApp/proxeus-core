@@ -7,8 +7,8 @@
 </template>
 
 <script>
-import TopNav from '../components/layout/TopNav'
-import importExport from '@/components/ImportExport'
+import TopNav from '../components/layout/TopNav.vue'
+import importExport from '@/components/ImportExport.vue'
 
 export default {
   name: 'UserImportExport',

@@ -134,17 +134,17 @@
 </template>
 
 <script>
-import TopNav from '@/components/layout/TopNav'
-// import PdfModal from '@/components/document/PdfModal'
-import PdfPreview from '@/components/document/PdfPreview'
-// import ButtonSpinner from '@/components/ButtonSpinner'
-import Spinner from '@/components/Spinner'
-import LanguageDropDown from '@/views/appDependentComponents/LanguageDropDown'
+import TopNav from '@/components/layout/TopNav.vue'
+// import PdfModal from '@/components/document/PdfModal.vue'
+import PdfPreview from '@/components/document/PdfPreview.vue'
+// import ButtonSpinner from '@/components/ButtonSpinner.vue'
+import Spinner from '@/components/Spinner.vue'
+import LanguageDropDown from '@/views/appDependentComponents/LanguageDropDown.vue'
 
 import formCompilerAdapter from '../libs/formcompiler-adapter'
-// import TopRightProfile from '../components/user/TopRightProfile'
+// import TopRightProfile from '../components/user/TopRightProfile.vue'
 import mafdc from '@/mixinApp'
-import AnimatedInput from '../components/AnimatedInput'
+import AnimatedInput from '../components/AnimatedInput.vue'
 
 export default {
   mixins: [mafdc, formCompilerAdapter],
