@@ -12,7 +12,7 @@
 </template>
 
 <script>
-// import bModal from 'bootstrap-vue/es/components/modal/modal'
+import { BModal, VBModal } from 'bootstrap-vue'
 // import bModalDirective from 'bootstrap-vue/es/directives/modal/modal'
 import mafdc from '@/mixinApp'
 import ChangeProfilePhoto from './ChangeProfilePhoto.vue'
@@ -22,10 +22,10 @@ export default {
   name: 'change-profile-photo-modal',
   components: {
     ChangeProfilePhoto,
-    'b-modal': bModal
+    BModal
   },
   directives: {
-    'b-modal': bModalDirective
+    'b-modal': VBModal
   },
   props: {
     setup: {

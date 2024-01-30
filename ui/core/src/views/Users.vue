@@ -110,10 +110,10 @@ export default {
     ListGroup,
     // ListItem,
     TopNav,
-    'b-modal': bModal
+    BModal
   },
   directives: {
-    'b-modal': bModalDirective
+    'b-modal': VBModal
   },
   data () {
     return {

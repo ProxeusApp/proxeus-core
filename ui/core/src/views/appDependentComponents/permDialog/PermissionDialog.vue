@@ -221,7 +221,7 @@
 
 <script>
 // import VueTagsInput from '@johmun/vue-tags-input'
-// import bModal from 'bootstrap-vue/es/components/modal/modal'
+import { BModal, VBModal } from 'bootstrap-vue'
 // import bModalDirective from 'bootstrap-vue/es/directives/modal/modal'
 import SimpleSelect from '@/components/SimpleSelect.vue'
 import ReadWriteSelector from './ReadWriteSelector.vue'
@@ -239,10 +239,10 @@ export default {
     ReadWriteSelector,
     SimpleSelect,
     // 'vue-tags-input': VueTagsInput,
-    'b-modal': bModal
+    BModal
   },
   directives: {
-    'b-modal': bModalDirective
+    'b-modal': VBModal
   },
   props: {
     setup: {

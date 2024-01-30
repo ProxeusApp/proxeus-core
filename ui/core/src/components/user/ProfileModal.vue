@@ -59,7 +59,7 @@
 </template>
 
 <script>
-// import bModal from 'bootstrap-vue/es/components/modal/modal'
+import { BModal, VBModal } from 'bootstrap-vue'
 // import bModalDirective from 'bootstrap-vue/es/directives/modal/modal'
 import AnimatedInput from '../AnimatedInput.vue'
 import Checkbox from '../Checkbox.vue'
@@ -73,10 +73,10 @@ export default {
     ApiKey,
     Checkbox,
     AnimatedInput,
-    'b-modal': bModal
+    BModal
   },
   directives: {
-    'b-modal': bModalDirective
+    'b-modal': VBModal
   },
   props: {
     setup: {

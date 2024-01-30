@@ -222,7 +222,7 @@ import vis from 'vis'
 import TopNav from '@/components/layout/TopNav.vue'
 import VisFlowchart from '../libs/vis-flowchart.js'
 import formChangeAlert from '../mixins/form-change-alert'
-// import bModal from 'bootstrap-vue/es/components/modal/modal'
+import { BModal, VBModal } from 'bootstrap-vue'
 // import bModalDirective from 'bootstrap-vue/es/directives/modal/modal'
 import PermissionDialog from './appDependentComponents/permDialog/PermissionDialog.vue'
 import NameAndDetailInput from '../components/NameAndDetailInput.vue'
@@ -239,10 +239,10 @@ export default {
     PermissionDialog,
     TopNav,
     // eslint-disable-next-line vue/no-unused-components
-    'b-modal': bModal
+    BModal
   },
   directives: {
-    'b-modal': bModalDirective
+    'b-modal': VBModal
   },
   computed: {
     id () {

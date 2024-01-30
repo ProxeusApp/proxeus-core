@@ -135,7 +135,7 @@ import TemplateForm from '@/components/template/TemplateForm.vue'
 import _ from 'lodash'
 import Spinner from '@/components/Spinner.vue'
 import SearchBox from '@/components/SearchBox.vue'
-// import bModal from 'bootstrap-vue/es/components/modal/modal'
+import { BModal, VBModal } from 'bootstrap-vue'
 // import bBtn from 'bootstrap-vue/es/components/button/button'
 //import bModalDirective from 'bootstrap-vue/es/directives/modal/modal'
 import libreHub from '../libs/libreTmplAssistance.min.js'
@@ -169,11 +169,11 @@ export default {
     Spinner,
     SearchBox,
     TemplateForm
-    // 'b-modal': bModal,
+    // BModal,
     // 'b-btn': bBtn
   },
   directives: {
-    'b-modal': bModalDirective
+    'b-modal': VBModal
   },
   // watch: {
   //   infoToggled (newValue, oldValue) {
