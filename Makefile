@@ -60,6 +60,7 @@ stopproxeus=pkill proxeus
 startds=curl -s http://localhost:2115 > /dev/null || ( PROXEUS_DATA_DIR=$(1) docker-compose up -d document-service && touch $(1)/ds-started )
 startnodes=curl -s http://localhost:8011 > /dev/null || (PROXEUS_PLATFORM_DOMAIN=http://$(DOCKER_GATEWAY):1323 NODE_CRYPTO_RATES_URL=http://localhost:8011 REGISTER_RETRY_INTERVAL=1 docker-compose -f docker-compose.yml -f docker-compose-extra.override.yml up -d node-crypto-forex-rates && touch $(1)/nodes-started )
 startmongo=nc -z localhost 27017 2> /dev/null || (docker run -d -p 27017:27017 -p 27018:27018 -p 27019:27019 proxeus/mongo-dev-cluster && sleep 10 && touch $(1)/mongo-started)
+waitforproxeus=echo "Waiting for Proxeus to start" ; curl --head -X GET --retry 120 --retry-connrefused --retry-delay 1 --silent -o /dev/null http://localhost:1323 && echo "Proxeus started" || echo "Unable to start Proxeus"
 
 ifeq ($(coverage),true)
 	COVERAGE_OPTS=-coverprofile artifacts/$@.coverage -coverpkg="$(coverpkg)"
@@ -191,6 +192,7 @@ test-ui: server ui
 	$(call startds,$(testdir))
 	$(call startnodes,$(testdir))
 	$(call startproxeus,$(testdir))
+	$(call waitforproxeus,$(testdir))
 	$(MAKE) -C test/e2e test; ret=$$?; \
 		$(stopproxeus); \
 		[ -e  $(testdir)/ds-started ] && docker-compose down; \
