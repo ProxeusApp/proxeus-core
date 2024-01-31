@@ -1,5 +1,5 @@
 <template>
-<div v-if="this.app.isAppLoaded === true" id="initial-app">
+<div id="initial-app">
   <vue-headful :title="$t('Proxeus - Power up')"/>
   <h2 style="padding-top: 20px;position: relative;display: block;text-align: center;">
     <svg width="140" viewBox="0 0 187 55" xmlns="http://www.w3.org/2000/svg"><title color="#fff">logo</title>

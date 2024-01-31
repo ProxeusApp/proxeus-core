@@ -1,5 +1,5 @@
 <template>
-<div v-if="this.app.isAppLoaded === true" id="document-app">
+<div id="document-app">
   <notifications group="app" classes="alert" position="top center" :duration="4000" style="z-index: 500000000;"/>
   <router-view></router-view>
   <blocker :text1="$t('Common blocker text 1','JUST A MOMENT')" :text2="$t('Common blocker text 2','PROCESSING')"

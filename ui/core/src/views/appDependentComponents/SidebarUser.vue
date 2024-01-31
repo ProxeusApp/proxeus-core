@@ -4,13 +4,7 @@
     <tr>
       <td valign="top" style="vertical-align:top">
         <a class="navbar-brand m-0 w-100 p-0 m-0" href="#">
-          <template v-if="this.app.dynamicConfig">
-            <span class="custom-company-logo full-size" v-bind:style="{ 'background-image': 'url(' + this.app.dynamicConfig.company.logo.darkTheme.path + ')', ...this.app.dynamicConfig.company.logo.style.userDashboard.full }"></span>
-            <span class="custom-company-logo small-size" v-bind:style="{ 'background-image': 'url(' + this.app.dynamicConfig.company.logo.darkTheme.path + ')', ...this.app.dynamicConfig.company.logo.style.userDashboard.small }"></span>
-          </template>
-          <template v-else>
-            <img :src="$t('Sidebar User Logo','/static/proxeus-logo.svg')" alt="" class="d-inline-block align-top">
-          </template>
+          <img :src="$t('Sidebar User Logo','/static/proxeus-logo.svg')" alt="" class="d-inline-block align-top">
         </a>
         <nav class="collapse show sidebar-sticky">
           <nav class="nav main-nav flex-column main-nav-frontend">

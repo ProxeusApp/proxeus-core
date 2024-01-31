@@ -7,7 +7,7 @@ destinationDataDir="/data/hosted/"
 
 echo "Removing $destinationDataDir"
 
-rm -R ${destinationDataDir}
+rm -R ${destinationDataDir}*
 
 echo "Resetting to initial status from $originDataDir.."
 cp -R ${originDataDir} ${destinationDataDir}
