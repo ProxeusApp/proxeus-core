@@ -1,5 +1,5 @@
 <template>
-<div v-if="this.app.isAppLoaded === true" id="frontend-app" :class="{'frontend-headless' : showHeader === false}">
+<div id="frontend-app" :class="{'frontend-headless' : showHeader === false}">
   <header class="mb-4" v-if="showHeader === true">
     <frontend-navbar></frontend-navbar>
   </header>
@@ -21,13 +21,9 @@
           <a target="_blank" href="https://github.com/ProxeusApp/proxeus-core" class="footer-link ml-3">Source Code</a>
         </div>
         <div>
-          <a v-if="this.app.dynamicConfig" target="_blank" v-bind:href="this.app.dynamicConfig.company.copyrightText.link" class="footer-link ml-3 small">
-            {{this.i18nDynamicConfigText('company.copyrightText')}}
-            <img v-bind:src="this.app.dynamicConfig.company.logo.lightTheme.path" v-bind:style="this.app.dynamicConfig.company.copyrightText.logo.style.home" alt=""/>
-          </a>
-          <a v-else target="_blank" href="https://proxeus.org/" class="footer-link ml-3 small">
-            {{$t('Powered by')}} <img src="/static/proxeus-logo-white.svg" alt="" />
-          </a>
+            <a target="_blank" href="https://proxeus.org/" class="footer-link ml-3 small">
+              {{$t('Powered by')}} <img src="/static/proxeus-logo-white.svg" alt="" />
+            </a>
         </div>
       </div>
     </div>

@@ -53,8 +53,7 @@ $nav-max-width: 265px;
     padding-left: 1.7rem;
     padding-top: math.div($spacer, 1.5);
     padding-bottom: math.div($spacer, 3);
-    text-align: center;
-
+    text-align:center;
     img {
       height: 3.75rem;
       margin: 1rem auto;
@@ -125,7 +124,6 @@ $nav-max-width: 265px;
   .navbar-brand {
     color: #e5efff;
   }
-
   .secondary-nav {
     bottom: 0;
     max-width: $nav-max-width;
@@ -144,15 +142,12 @@ $nav-max-width: 265px;
     }
 
   }
-
   .main-nav {
     height: 100%;
   }
-
   &.main-nav-backend {
     margin-top: -23px;
   }
-
   &.main-nav-frontend {
     margin-top: -8px;
   }
@@ -209,23 +204,18 @@ $nav-max-width: 265px;
     .navbar-brand {
       max-width: $nav-max-width !important;
     }
-
     .nav-item .nav-link {
       width: 100%;
     }
-
     .nav-link-title {
       display: inline;
     }
-
     .secondary-nav {
       width: 100%;
     }
-
     .secondary-nav .nav-item .nav-link {
       width: 100%;
     }
-
     .secondary-nav .nav-link-title {
       display: inline;
     }
@@ -253,44 +243,4 @@ $nav-max-width: 265px;
 
 .sidebar-close-btn:hover {
   color: $cyan;
-}
-
-.custom-company-logo {
-  background-position: left;
-  background-repeat: no-repeat;
-  background-size: cover;
-
-  &.full-size {
-    display: inline-block;
-  }
-
-  &.small-size {
-    display: none;
-
-  }
-}
-
-nav.toggled {
-  .custom-company-logo {
-    &.full-size {
-      display: none;
-    }
-
-    &.small-size {
-      display: inline-block;
-
-    }
-  }
-}
-
-@media (max-width: 979px) {
-  .custom-company-logo {
-    &.full-size {
-      display: none;
-    }
-
-    &.small-size {
-      display: inline-block;
-    }
-  }
 }

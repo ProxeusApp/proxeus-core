@@ -2,10 +2,7 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light" style="max-height: 60px;">
   <!--<wallet id="wallet-component"></wallet>-->
   <a href="/" class="navbar-brand">
-    <div v-if="this.app.dynamicConfig">
-      <img v-bind:src="this.app.dynamicConfig.company.logo.darkTheme.path" v-bind:style="this.app.dynamicConfig.company.logo.style" alt=""/>
-    </div>
-    <div v-else-if="this.$t('Logo url') === 'Logo url'">
+    <div v-if="this.$t('Logo url') === 'Logo url'">
       <!-- Default logo. Please set the 'Logo url' translation to either 'Proxeus' or an url where your logo is located -->
       {{this.$t('Your logo here')}}
     </div>
@@ -43,11 +40,9 @@
 
 <script>
 // import Wallet from '@/components/wallet/Wallet'
-import mafdc from '@/mixinApp'
 import TopRightProfile from '../user/TopRightProfile'
 
 export default {
-  mixins: [mafdc],
   name: 'frontend-navbar',
   components: {
     TopRightProfile
