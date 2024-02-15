@@ -9,7 +9,7 @@
     "check-node-version": "check-node-version --package"
   },
   "dependencies": {
-    "@mdi/font": "^2.6.95",
+    "@mdi/font": "^7.4.47",
     "ajv": "^6.5.2",
     "async": "^3.2.5",
     "axios": "^1.6.7",
