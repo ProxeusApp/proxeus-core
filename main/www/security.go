@@ -54,7 +54,7 @@ func redirectToLogin(c echo.Context) error {
 	if isAjax {
 		return echo.ErrUnauthorized
 	}
-	return c.Redirect(http.StatusTemporaryRedirect, "/login")
+	return c.Redirect(http.StatusTemporaryRedirect, "/login?redirect=" + req.URL.Path)
 }
 
 func getURI(host, url string) string {
