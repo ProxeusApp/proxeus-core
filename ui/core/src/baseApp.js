@@ -159,11 +159,22 @@ export default {
     checkUserHasSession() {
       return !!localStorage.getItem('userhassession')
     },
-    initUserHasSession() {
+    initUserHasSession(redirectTo) {
       localStorage.setItem('userhassession', true)
+
+      const hasRequestedRedirect = new URLSearchParams(window.location.search).get('redirect')
+
+      if (hasRequestedRedirect && hasRequestedRedirect.startsWith('/')) {
+        window.location.href = hasRequestedRedirect
+      } else if (redirectTo) {
+        window.location.href = redirectTo
+      }
     },
     deleteUserHasSession() {
       localStorage.removeItem('userhassession')
+    },
+    redirectToLogin (backUrl) {
+      window.location.href = `/login?redirect=${backUrl}`
     },
     loadMe(clb) {
       if (!this.checkUserHasSession()) {

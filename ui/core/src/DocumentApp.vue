@@ -24,6 +24,10 @@ export default {
   created () {
     this.$root.$on('service-on', this.onServiceOn)
     this.$root.$on('service-off', this.onServiceOff)
+
+    if (!this.app.checkUserHasSession()) {
+      this.app.redirectToLogin(window.location.pathname)
+    }
   },
   beforeDestroy () {
     this.$root.$off('service-on', this.onServiceOn)
