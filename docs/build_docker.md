@@ -101,7 +101,6 @@ You may also want to include custom nodes. There is a sample configuration which
 
 ```
 docker-compose -f docker-compose.yml -f docker-compose-example.override.yml up
-
 ```
 
 See `docker-compose-extra.override.yml` for examples with several other nodes.

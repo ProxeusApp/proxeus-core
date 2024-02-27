@@ -12,11 +12,10 @@ Here is the list of dependencies:
 + go (1.10+, 64bit for Windows)
 + GOBIN added to your PATH (to check your GOBIN: `echo $(go env GOPATH)/bin`)
 + curl
-+ yarn (1.12+)
-+ node (14)
-+ vue-cli
 + git
-+ docker-compose (18.06.0+)
++ yarn (1.12+)
++ node (16+)
++ docker-compose (18+)
 + wget (for godoc generation)
 + (OSX) Brew Package Manager
 + (OSX) Command Line Tools (Xcode)
@@ -29,12 +28,11 @@ sudo apt-get install make golang curl npm git
 ```
 
 #### OSX
+
 If you currently do not have the OSX `Command Line Tools` installed run
-```
-xcode-select --install
-```
 
 ```
+xcode-select --install
 brew install make golang curl npm git
 ```
 
@@ -44,6 +42,7 @@ PATH=$PATH:$(go env GOPATH)/bin
 ```
 
 ### Clone repository
+
 The project uses go modules.
 
 Clone the repository outside your GOPATH:
@@ -54,21 +53,12 @@ cd proxeus-core
 ```
 
 ### Build
+
 All the build projects are stated in `./Makefile`.
 
-Before building Proxeus, make sure to set all [required environment variables](../README.md#quick-start-with-docker).
-```
-export PROXEUS_DATA_DIR=./data
-export PROXEUS_INFURA_API_KEY=<Your Infura project ID>
-export PROXEUS_SPARKPOST_API_KEY=<Your SparkPost API Key>
-export PROXEUS_ENCRYPTION_SECRET_KEY=<A 32-character random string>
-export PROXEUS_BLOCKCHAIN_CONTRACT_ADDRESS=0x1d3e5c81bf4bc60d41a8fbbb3d1bae6f03a75f71
-export PROXEUS_ALLOW_HTTP=true
-export PROXEUS_PLATFORM_DOMAIN=localhost
-export PROXEUS_EMAIL_FROM=youremail@example.com
+Before building Proxeus, make sure to set all [required environment variables](build_docker.md) (i.e. with an `.env` file).
 
-```
-Make sure that the email domain for `PROXEUS_EMAIL_FROM` is a configured sending domain in sparkpost
+Make sure that the email domain for `PROXEUS_EMAIL_FROM` is a configured sending domain in Sparkpost.
 
 To initialize dependencies run:
 ```
