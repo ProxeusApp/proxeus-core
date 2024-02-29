@@ -6,6 +6,7 @@
 
 Proxeus combines a versatile document automation tool with enterprise<br> blockchain functionalities, enabling users to more easily digitize their IP.
 
-**[Getting Started](quickstart.md)**
-[Community Forum](https://github.com/ProxeusApp/community/discussions)
+**[Quickstart](quickstart.md)**
+[Demo](https://proxeus-demo.s-pro-services.com/)
+[Q&A Forum](https://github.com/ProxeusApp/community/discussions)
 
