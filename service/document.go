@@ -87,7 +87,7 @@ func (me *DefaultDocumentService) Edit(auth model.Auth, userId string, formInput
 	if !ok {
 		return ErrUnableToEdit
 	}
-	if len(fName) >= 80 || !filenameRegex.MatchString(fName) {
+	if len(fName) > 80 || !filenameRegex.MatchString(fName) {
 		return ErrUnableToEdit
 	}
 	usrDataItem, err := userDataDB().Get(auth, userId)

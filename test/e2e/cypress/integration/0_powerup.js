@@ -17,6 +17,10 @@ describe(`Power up on ${url}`, () => {
 
   it('should bring to home page after saving with default values', () => {
     cy.get('button.btn-primary').eq(2).click()
+
+    cy.location('pathname', {
+      timeout: 60000
+    }).should('eq', '/');
   })
 
 })

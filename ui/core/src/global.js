@@ -61,7 +61,7 @@ Vue.use(vuexI18n.plugin, store, {
 
 window.redirectToLogin = function () {
   if (/^\/p\//.test(location.pathname) === false) {
-    window.location.href = '/login'
+    window.location.href = `/login?redirect=${window.location.pathname}`
   }
 }
 

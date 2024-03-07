@@ -94,9 +94,8 @@ export default {
       this.pwlogin = true
       if (this.checkTermsAndConditions()) {
         axios.post('/api/login', { email: this.email, password: this.password }).then(res => {
-          this.app.initUserHasSession()
           this.hasError = false
-          window.location = res.data.location || '/admin/workflow'
+          this.app.initUserHasSession(res.data.location || '/admin/workflow')
         }, (err) => {
           this.app.deleteUserHasSession()
           this.app.handleError(err)
@@ -180,8 +179,7 @@ export default {
                 this.challenge = ''
 
                 if (res.status >= 200 && res.status <= 299) {
-                  this.app.initUserHasSession()
-                  window.location = res.data.location || '/admin/workflow'
+                  this.app.initUserHasSession(res.data.location || '/admin/workflow')
                 } else {
                   this.app.deleteUserHasSession()
                   this.walletErrorMessage = this.$t('Could not verify signature.')

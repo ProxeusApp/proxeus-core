@@ -24,6 +24,10 @@ export default {
   created () {
     this.$root.$on('service-on', this.onServiceOn)
     this.$root.$on('service-off', this.onServiceOff)
+
+    if (!this.app.checkUserHasSession()) {
+      this.app.redirectToLogin(window.location.pathname)
+    }
   },
   beforeDestroy () {
     this.$root.$off('service-on', this.onServiceOn)
@@ -107,13 +111,19 @@ export default {
     color: $primary;
   }
 
+  body {
+    overflow: hidden;
+  }
+
   .navbar h1 {
     margin-bottom: 0;
   }
 
   .app-main {
-    @media (max-width: 767px) {
-      max-width: 100% !important;
+    max-width: calc(100% - 265px);
+
+    @media (max-width: 979px) {
+      max-width: calc(100% - 80px);
     }
   }
 

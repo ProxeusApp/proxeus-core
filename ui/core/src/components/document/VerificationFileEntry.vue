@@ -295,7 +295,13 @@ export default {
 
         this.isFileInvalidated = false
 
-        const result = await this.wallet().verifyHash(this.hash)
+        let result
+
+        try {
+          result = await this.wallet().verifyHash(this.hash)
+        } catch (e) {
+          throw new Error('UNABLE_TO_VERIFY_HASH')
+        }
 
         const transaction = await this.wallet().web3.eth.getTransaction(result)
         this.creator = transaction.from
@@ -330,6 +336,8 @@ export default {
 
         if (this.wallet().isPublicRPCUsing) {
           this.errorPublicRPC = true
+        } else if (e?.message === 'UNABLE_TO_VERIFY_HASH') {
+          this.validationException = false
         } else {
           this.errorValidating = true
         }
