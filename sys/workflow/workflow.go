@@ -73,9 +73,11 @@ func newWorkflow(wf *Workflow, engine *Engine, parent *context) (*context, error
 	if wf == nil {
 		return nil, ErrWorkflowMissing
 	}
+
 	if wf.Flow == nil || wf.Flow.Start == nil || wf.Flow.Start.NodeID == "" {
 		return nil, ErrStartNodeMissing
 	}
+
 	me := context{
 		id:      "root",
 		flow:    wf.Flow,
@@ -84,11 +86,18 @@ func newWorkflow(wf *Workflow, engine *Engine, parent *context) (*context, error
 		engine:  engine,
 	}
 
-	err := engine.setupNodes(&me)
+	err := engine.removeUselessNodes(&me)
 	if err != nil {
 		return nil, err
 	}
+	
+	err = engine.setupNodes(&me)
+	if err != nil {
+		return nil, err
+	}
+
 	me.start()
+
 	return &me, nil
 }
 
@@ -122,7 +131,9 @@ func (me *context) resolve(n *Node) error {
 					return err
 				}
 				return me.resolve(nn)
-			} else if n.isWorkflow() {
+			} else if n.isPlaceholder() {
+				return nil
+			}else if n.isWorkflow() {
 				return me.stepIntoWorkflow(n)
 			}
 		} else {
