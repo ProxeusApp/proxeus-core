@@ -71,6 +71,10 @@ func (n *Node) isWorkflow() bool {
 	return n.Type == "workflow"
 }
 
+func (n *Node) isPlaceholder() bool {
+	return n.Type == "placeholder"
+}
+
 func (me *Node) getImpl() (NodeIF, error) {
 	//instance is still valid for reuse
 	if me.impl != nil {
