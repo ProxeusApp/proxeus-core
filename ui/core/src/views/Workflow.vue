@@ -1723,16 +1723,16 @@ function condition(){
                     {
                       node: {
                         color: {
-                          background: '#56ec00',
-                          highlight: { background: '#56ec00' },
-                          hover: { background: '#56ec00' }
+                          background: '#f5e203',
+                          highlight: { background: '#f5e203' },
+                          hover: { background: '#f5e203' }
                         },
                         borderWidthSelected: 3
                       },
                       edge: {
                         font: { align: 'middle' },
                         arrows: 'to',
-                        color: { color: '#56ec00', highlight: '#56ec00', hover: '#56ec00' }
+                        color: { color: '#f5e203', highlight: '#f5e203', hover: '#f5e203' }
                       }
                     }],
                   to: Infinity,
@@ -1745,7 +1745,7 @@ function condition(){
                 icon: {
                   face: 'Material Design Icons',
                   code: '\u2B22',
-                  color: '#56ec00'
+                  color: '#f5e203'
                 },
                 events: {
                   dblclick: _.placeholderDblClick
