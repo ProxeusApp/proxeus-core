@@ -13,7 +13,7 @@
   </top-nav>
   <div class="col-sm-12 mt-3">
     <div class="row">
-      <name-and-detail-input :input="changed" v-model="document"/>
+      <name-and-detail-input :input="changed" :maxNameLength="80" v-model="document"/>
     </div>
     <hr/>
     <div class="row" v-if="documentPreviews">
