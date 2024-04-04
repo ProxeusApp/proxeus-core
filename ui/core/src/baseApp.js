@@ -1,7 +1,7 @@
 import WalletInterface from './libs/WalletAdapter'
 
 export default {
-  data () {
+  data() {
     return {
       me: null,
       meta: null,
@@ -16,7 +16,7 @@ export default {
     }
   },
   methods: {
-    makeURL (uri) {
+    makeURL(uri) {
       let origin = location.origin
       if (/.*\/$/.test(origin)) {
         origin = origin.substring(0, origin.length - 1)
@@ -26,7 +26,7 @@ export default {
       }
       return origin + uri
     },
-    isLangAvailable (lang) {
+    isLangAvailable(lang) {
       if (this.meta && this.meta.activeLangs) {
         for (let i = 0; i < this.meta.activeLangs.length; i++) {
           if (this.meta.activeLangs[i] &&
@@ -37,37 +37,37 @@ export default {
       }
       return false
     },
-    userIsRoot () {
+    userIsRoot() {
       if (this.me) {
         return this.me.role === 100
       }
       return false
     },
-    userIsSuperAdmin () {
+    userIsSuperAdmin() {
       if (this.me) {
         return this.me.role > 10
       }
       return false
     },
-    userIsAdminOrHigher () {
+    userIsAdminOrHigher() {
       if (this.me) {
         return this.me.role >= 10
       }
       return false
     },
-    userIsCreatorOrHigher () {
+    userIsCreatorOrHigher() {
       if (this.me) {
         return this.me.role >= 7
       }
       return false
     },
-    userIsUserOrHigher () {
+    userIsUserOrHigher() {
       if (this.me) {
         return this.me.role >= 5
       }
       return false
     },
-    amIWriteGrantedFor (item) {
+    amIWriteGrantedFor(item) {
       try {
         // check authority
         if (this.me.role >= 100) {
@@ -110,7 +110,7 @@ export default {
       } catch (e) {}
       return false
     },
-    handleError (o) {
+    handleError(o) {
       if (this.isConToServerLostError(o)) {
         // couldn't reach the server
         if (!this.intervalID) {
@@ -119,7 +119,7 @@ export default {
         }
       }
     },
-    isConToServerLostError (o) {
+    isConToServerLostError(o) {
       let txt = ''
       try {
         txt = o.data || o.request.response || o.request.responseText
@@ -127,7 +127,7 @@ export default {
       return (o.request && !o.response) ||
         (window.webpackHotUpdate && /^.*\(ECONNREFUSED\)\.$/m.test(txt))
     },
-    pingService () {
+    pingService() {
       console.log('pingService')
       axios.get('/api/config').then((r) => {
         if (r.data) {
@@ -142,10 +142,10 @@ export default {
         this.handleError(err)
       })
     },
-    getSelectedLang () {
+    getSelectedLang() {
       return this.$cookie.get('lang') || this.fallbackLang()
     },
-    setSelectedLang (lang) {
+    setSelectedLang(lang) {
       if (lang) {
         this.$cookie.set('lang', lang, {
           expires: '1Y'
@@ -156,16 +156,27 @@ export default {
         this.$i18n.set(this.fallbackLang())
       }
     },
-    checkUserHasSession () {
+    checkUserHasSession() {
       return !!localStorage.getItem('userhassession')
     },
-    initUserHasSession () {
+    initUserHasSession(redirectTo) {
       localStorage.setItem('userhassession', true)
+
+      const hasRequestedRedirect = new URLSearchParams(window.location.search).get('redirect')
+
+      if (hasRequestedRedirect && hasRequestedRedirect.startsWith('/')) {
+        window.location.href = hasRequestedRedirect
+      } else if (redirectTo) {
+        window.location.href = redirectTo
+      }
     },
-    deleteUserHasSession () {
+    deleteUserHasSession() {
       localStorage.removeItem('userhassession')
     },
-    loadMe (clb) {
+    redirectToLogin (backUrl) {
+      window.location.href = `/login?redirect=${backUrl}`
+    },
+    loadMe(clb) {
       if (!this.checkUserHasSession()) {
         return
       }
@@ -185,7 +196,7 @@ export default {
         this.handleError(err)
       })
     },
-    loadLastExportResults (clb, delParams) {
+    loadLastExportResults(clb, delParams) {
       let url = '/api/export/results'
       if (delParams) {
         url += '?' + delParams
@@ -204,7 +215,7 @@ export default {
         this.handleError(err)
       })
     },
-    loadLastImportResults (clb, delParams) {
+    loadLastImportResults(clb, delParams) {
       let url = '/api/import/results'
       if (delParams) {
         url += '?' + delParams
@@ -223,7 +234,7 @@ export default {
         this.handleError(err)
       })
     },
-    exportData (params, cb, url, name) {
+    exportData(params, cb, url, name) {
       if (!url) {
         url = '/api/export?include=' + params
       } else {
@@ -278,7 +289,7 @@ export default {
         })
       })
     },
-    importData (file, skipExisting, cb) {
+    importData(file, skipExisting, cb) {
       if (!file) {
         return
       }
@@ -316,10 +327,10 @@ export default {
         this.handleError(err)
       })
     },
-    async validateSessionCookie () {
+    async validateSessionCookie() {
       return axios.get('/api/session/validate')
     },
-    loadMeta (clb) {
+    loadMeta(clb) {
       axios.get('/api/i18n/meta').then((response) => {
         this.meta = response.data
         if (this.meta && this.meta.langFallback) {
@@ -338,7 +349,7 @@ export default {
         this.handleError(err)
       })
     },
-    updateLangLabel () {
+    updateLangLabel() {
       if (this.meta && this.meta.activeLangs) {
         for (let i = 0; i < this.meta.activeLangs.length; i++) {
           this.meta.activeLangs[i].label = this.$t(
@@ -347,13 +358,13 @@ export default {
         return this.meta.activeLangs
       }
     },
-    fallbackLang () {
+    fallbackLang() {
       if (this.meta) {
         return this.meta.langFallback
       }
       return null
     },
-    getSelectedLangIndex () {
+    getSelectedLangIndex() {
       if (this.meta && this.meta.activeLangs) {
         for (let i = 0; i < this.meta.activeLangs.length; i++) {
           if (this.meta.activeLangs[i].Code === this.getSelectedLang()) {
@@ -363,7 +374,7 @@ export default {
       }
       return null
     },
-    reloadI18n () {
+    reloadI18n() {
       axios.get('/api/i18n/all').then(
         (response) => {
           this.$i18n.add(this.getSelectedLang(), response.data)
@@ -374,7 +385,7 @@ export default {
           this.handleError(err)
         })
     },
-    loadConfig () {
+    loadConfig() {
       axios.get('/api/config').then(r => {
         if (r.data) {
           this.setConfig(r.data)
@@ -383,7 +394,7 @@ export default {
         this.handleError(err)
       })
     },
-    async setConfig (d) {
+    async setConfig(d) {
       if (d.blockchainNet) {
         this.blockchainNet = d.blockchainNet
       }
@@ -399,7 +410,7 @@ export default {
         await this.wallet.validateUserNetwork(() => this.$root.$emit('service-off'), () => this.$root.$emit('service-on'))
       }
     },
-    acknowledgeFirstLogin () {
+    acknowledgeFirstLogin() {
       // Show the following overlays starting now (they can be delayed)
       localStorage.setItem('showFirstLoginMessageOn-documents', new Date())
       if (this.userIsCreatorOrHigher()) {
@@ -409,13 +420,13 @@ export default {
   },
   computed: {
     app: {
-      get () {
+      get() {
         return this.$root.$children[0]
       },
-      set (a) {}
+      set(a) {}
     }
   },
-  created () {
+  created() {
     const tmpLangToPreventFromWarnings = 'en'
     this.$i18n.fallback(tmpLangToPreventFromWarnings)
     this.$i18n.set(tmpLangToPreventFromWarnings)
