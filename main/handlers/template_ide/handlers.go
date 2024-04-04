@@ -18,7 +18,7 @@ import (
 
 	"github.com/ProxeusApp/proxeus-core/storage/portable"
 
-	"github.com/labstack/echo"
+	"github.com/labstack/echo/v4"
 
 	"github.com/ProxeusApp/proxeus-core/main/handlers/api"
 	"github.com/ProxeusApp/proxeus-core/main/handlers/helpers"

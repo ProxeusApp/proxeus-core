@@ -34,7 +34,7 @@ import (
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
-	"github.com/labstack/echo"
+	"github.com/labstack/echo/v4"
 	uuid "github.com/satori/go.uuid"
 )
 

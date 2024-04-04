@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/labstack/echo"
+	"github.com/labstack/echo/v4"
 
 	"github.com/ProxeusApp/proxeus-core/sys"
 	"github.com/ProxeusApp/proxeus-core/sys/model"

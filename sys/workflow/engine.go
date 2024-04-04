@@ -370,7 +370,7 @@ func (me *Engine) removeUselessNodes(ctx *context) error {
 			filteredNodes[name] = item
 		}
 	}
-	
+  
 	ctx.flow.Nodes = filteredNodes
 
 	return nil

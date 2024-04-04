@@ -19,7 +19,7 @@ import (
 	"github.com/ProxeusApp/proxeus-core/main/handlers/api"
 	"github.com/ProxeusApp/proxeus-core/main/handlers/payment"
 
-	"github.com/labstack/echo"
+	"github.com/labstack/echo/v4"
 
 	"strings"
 

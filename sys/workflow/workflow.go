@@ -133,7 +133,7 @@ func (me *context) resolve(n *Node) error {
 				return me.resolve(nn)
 			} else if n.isPlaceholder() {
 				return nil
-			}else if n.isWorkflow() {
+			} else if n.isWorkflow() {
 				return me.stepIntoWorkflow(n)
 			}
 		} else {
