@@ -90,7 +90,7 @@ func newWorkflow(wf *Workflow, engine *Engine, parent *context) (*context, error
 	if err != nil {
 		return nil, err
 	}
-
+	
 	err = engine.setupNodes(&me)
 	if err != nil {
 		return nil, err
