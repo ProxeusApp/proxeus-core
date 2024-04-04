@@ -1,6 +1,8 @@
 module github.com/ProxeusApp/proxeus-core
 
-go 1.20
+go 1.21
+
+toolchain go1.22.0
 
 require (
 	github.com/SparkPost/gosparkpost v0.2.0
