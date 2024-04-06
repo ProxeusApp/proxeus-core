@@ -159,7 +159,8 @@ fmt:
 
 .PHONY: test
 test: generate
-	go test $(COVERAGE_OPTS)  ./main/... ./sys/... ./storage/... ./service/...
+	go test $(COVERAGE_OPTS)  ./main/... ./sys/... ./storage/... ./service/...; ret=$$?; \
+		echo $$ret
 
 .PHONY: test-integration
 test-integration:
