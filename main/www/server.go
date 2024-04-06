@@ -12,8 +12,8 @@ import (
 	"golang.org/x/crypto/acme/autocert"
 
 	"github.com/davecgh/go-spew/spew"
-	"github.com/labstack/echo"
-	"github.com/labstack/echo/middleware"
+	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 )
 
 func debug() echo.MiddlewareFunc {

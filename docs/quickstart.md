@@ -3,8 +3,11 @@
 This document is a brief installation guide, with links to further details to get started with Proxeus. We hope that you, too, will enjoy working with our product! Please remember to  star us on GitHub drop us any questions or feedback in the [Discussion Forum](https://github.com/ProxeusApp/community/discussions).
 
 
-_"Proxeus is a platform for quick and convenient document digitalization, signing, processing, and distribution. It allows users to keep their important documents secure and registered on the blockchain. Proxeus empowers anyone to create blockchain applications and is available for free as an open-source project." --[S-Pro](https://s-pro.io/)_
+_"Proxeus is a platform for quick and convenient document digitalization, signing, processing, and distribution. It allows users to keep their important documents secure and registered on the blockchain. Proxeus empowers anyone to create blockchain applications and is available for free as an open-source project." --[S-PRO](https://s-pro.io/)_
 
+➡️ [Demo server](https://proxeus-demo.s-pro-services.com/)
+
+Kindly hosted by S-PRO, the demo server allows you to try a full-featured Proxeus instance. Please note that all content will be erased every 24 hours.
 
 ## One-Click Installation
 
