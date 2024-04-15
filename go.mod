@@ -45,7 +45,7 @@ require (
 	github.com/gorilla/context v1.1.2 // indirect
 	github.com/gorilla/websocket v1.5.1 // indirect
 	github.com/klauspost/compress v1.17.3 // indirect
-	github.com/labstack/echo-contrib v0.16.0
+	github.com/labstack/echo-contrib v0.17.0
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/sergi/go-diff v1.3.1 // indirect
 	github.com/shirou/gopsutil v3.21.11+incompatible // indirect
