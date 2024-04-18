@@ -612,6 +612,16 @@ export default {
             parent.assignSubmitOnChange(self.changeOptions)
           }
         })
+
+        const inputs = $('.form-compiled > form :input')
+
+        for (const input of inputs) {
+          if (input.getAttribute('checked')) {
+            $(input).prop('checked', false)
+            $(input).click()
+          }
+        }
+
         $('.form-compiled').fadeIn()
       }
     },
