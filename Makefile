@@ -1,6 +1,6 @@
 SHELL:= /bin/bash
 DEBUG_FLAG?=false
-GO_VERSION=1.21
+GO_VERSION=1.22
 
 ifeq ($(DEBUG), "true")
 	BINDATA_OPTS="-debug"
@@ -159,7 +159,8 @@ fmt:
 
 .PHONY: test
 test: generate
-	go test $(COVERAGE_OPTS)  ./main/... ./sys/... ./storage/... ./service/...
+	go test $(COVERAGE_OPTS)  ./main/... ./sys/... ./storage/... ./service/...; ret=$$?; \
+		echo $$ret
 
 .PHONY: test-integration
 test-integration:

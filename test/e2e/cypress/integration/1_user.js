@@ -177,7 +177,7 @@ describe(`User signup & login at ${url}`, () => {
 
       it('should remove account and logout when clicking again', () => {
         cy.get('.btn-danger').click()
-        cy.url().should('eq', `${url}/login`)
+        cy.url().should('eq', `${url}/login?redirect=%2Fadmin%2Fworkflow`)
       })
     })
   })
