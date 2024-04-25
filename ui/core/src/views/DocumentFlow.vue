@@ -44,7 +44,7 @@
               <h2 class="text-white my-0 py-0">{{ getCurrentName()}}</h2>
             </div>
             <div id="docForm" class="card-body card-form-body bg-white border-0">
-              <div class="form form-compiled" v-append="formSrc" @mounted="appended"
+              <div class="form form-compiled" v-append.sync="formSrc" @appended="appended"
                    v-show="isConfirmationStep === false"></div>
             </div>
           </div>
@@ -294,7 +294,6 @@ export default {
       this.loading = true
       axios.get('/api/document/' + this.id).then((response) => {
         this.loading = false
-        $('.form-compiled').hide()
         this.handleDocumentResponse(response)
       }, (error) => {
         this.app.handleError(error)
@@ -354,7 +353,6 @@ export default {
       this.loading = true
       axios.get('/api/document/' + this.id + '/prev').then((response) => {
         this.loading = false
-        $('.form-compiled').hide()
         this.handleDocumentResponse(response)
       }, (err) => {
         this.app.handleError(err)
@@ -371,7 +369,6 @@ export default {
               callback()
               return
             }
-            $('.form-compiled').hide()
             this.handleDocumentResponse(response)
           }
         }, (err) => {
@@ -550,6 +547,8 @@ export default {
       }
     },
     handleDocumentResponse (response) {
+      $('.form-compiled').hide()
+
       if (!response.data) {
         return
       }
@@ -599,21 +598,32 @@ export default {
     initForm () {
       const self = this
       const $form = $('.form-compiled > form')
-      $form.on('dynamicFormScriptExecuted', function () {
-        if ($form.length) {
-          $('.card-body').scrollTop(0)
-          if (self.status.userData) {
-            $form.fillForm(self.status.userData)
-          }
-          $form.assignSubmitOnChange(self.changeOptions)
-          $form.on('formFieldsAdded', function (event, parent) {
-            if (parent && parent.length) {
-              parent.assignSubmitOnChange(self.changeOptions)
-            }
-          })
-          $('.form-compiled').fadeIn()
+
+      if ($form.length) {
+        $('.card-body').scrollTop(0)
+
+        if (self.status.userData) {
+          $form.fillForm(self.status.userData)
         }
-      })
+
+        $form.assignSubmitOnChange(self.changeOptions)
+        $form.on('formFieldsAdded', function (event, parent) {
+          if (parent && parent.length) {
+            parent.assignSubmitOnChange(self.changeOptions)
+          }
+        })
+
+        const inputs = $('.form-compiled > form :input')
+
+        for (const input of inputs) {
+          if (input.getAttribute('checked')) {
+            $(input).prop('checked', false)
+            $(input).click()
+          }
+        }
+
+        $('.form-compiled').fadeIn()
+      }
     },
     getFormData () {
       const excludeFileFormFields = true
