@@ -19,7 +19,7 @@
               <router-link :to="{name:'DocumentVerification'}" class="nav-link" data-toggle="tooltip"
                            data-placement="right"
                            data-boundary="window" :title="$t('Menu Verification','Verification')"><span
-                class="material-icons mdi mdi-verified"></span><span
+                class="material-icons mdi mdi-shield-check"></span><span
                 class="nav-link-title">{{$t('Menu Verification','Verification')}}</span>
               </router-link>
             </li>
