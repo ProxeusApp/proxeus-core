@@ -446,7 +446,7 @@ export default {
                     item.icon = 'view_quilt'
                   }
                   if (item.type === 'template') {
-                    item.iconFa = 'mdi mdi-file-xml'
+                    item.iconFa = 'mdi mdi-code-block-tags'
                   }
                   item.error = response.data[key].Error
                   elements.push(item)
@@ -1133,7 +1133,7 @@ function condition(){
             // enable inertial throwing
             inertia: false,
             onstart: function (event) {
-              if (event.interaction.downEvent.button === 2) {
+              if (event?.interaction?.downEvent?.button === 2) {
                 return false
               }
               _.dragActive = true
@@ -1181,17 +1181,16 @@ function condition(){
               _.dragCompPosition.left = (_.bcr.left) - _.dim.ml
             },
             onmove: function (event, a, b, c, d) {
-              if (event.interaction.downEvent.button === 2) {
+              if (event?.interaction?.downEvent?.button === 2) {
                 return false
               }
               _.mousePos.y = event.pageY
               _.mousePos.x = event.pageX
               _.tl.x += event.dx
               _.tl.y += event.dy
-              _.tl.y = _.mousePos.y - _.dragCompPosition.top - _.dim.handleY
-              _.tl.x = _.mousePos.x - _.dragCompPosition.left - _.dim.handleX
-              _.$dragComp[0].style.webkitTransform = _.$dragComp[0].style.transform = 'translate(' + _.tl.x + 'px, ' +
-                  _.tl.y + 'px)'
+              const translatePos = 'translate(' + _.tl.x + 'px, ' + _.tl.y + 'px)'
+              _.$dragComp[0].style.webkitTransform = translatePos
+              _.$dragComp[0].setAttribute('style', 'transform: ' + translatePos)
             },
             onend: function (e, a, b, c, d) {
               _.wasInside = false
@@ -1292,7 +1291,7 @@ function condition(){
           user: 'fcn-usr node-icon mdi mdi-account',
           form: 'fcn-form node-icon mdi mdi-view-quilt',
           workflow: 'fcn-wflow node-icon mdi mdi-source-branch',
-          template: 'fcn-tmpl node-icon mdi mdi-file-xml'
+          template: 'fcn-tmpl node-icon mdi mdi-code-block-tags'
         },
         // d={name:"name", detail:"detail", kind:"condition|user|form|workflow|template"};
         _createFinderItem: function (d) {
@@ -1569,7 +1568,7 @@ function condition(){
                 },
                 icon: {
                   face: 'Material Design Icons',
-                  code: '\uf48a',
+                  code: '󰒊',
                   color: '#5353c0'
                 },
                 events: {
@@ -1622,7 +1621,7 @@ function condition(){
                 },
                 icon: {
                   face: 'Material Design Icons',
-                  code: '\uf48a',
+                  code: '󰒊',
                   color: '#5150c0'
                 },
                 events: {
@@ -1675,7 +1674,7 @@ function condition(){
                 },
                 icon: {
                   face: 'Material Design Icons',
-                  code: '\uf339',
+                  code: '󰌹',
                   color: '#5150c0'
                 },
                 events: {
@@ -1710,7 +1709,7 @@ function condition(){
                 },
                 icon: {
                   face: 'Material Design Icons',
-                  code: '\uf70B',
+                  code: '󰜌',
                   color: '#f0a30a'
                 },
                 events: {
@@ -1771,7 +1770,7 @@ function condition(){
                 },
                 icon: {
                   face: 'Material Design Icons',
-                  code: '\uf62C',
+                  code: '󰘬',
                   color: '#e40070'
                 },
                 events: {
@@ -1834,7 +1833,7 @@ function condition(){
                 },
                 icon: {
                   face: 'Material Design Icons',
-                  code: '\uf22E',
+                  code: '󱲆',
                   color: '#ff30ec'
                 },
                 events: {
