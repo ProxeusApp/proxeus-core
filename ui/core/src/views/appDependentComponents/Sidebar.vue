@@ -25,7 +25,7 @@
             <li class="nav-item" v-if="app.userIsCreatorOrHigher()">
               <router-link :to="{name:'Templates'}" class="nav-link" data-toggle="tooltip" data-placement="right"
                            data-boundary="window" :title="$t('Menu Templates','Templates')"><span
-                class="material-icons mdi mdi-file-xml"></span><span
+                class="material-icons mdi mdi-code-block-tags"></span><span
                 class="nav-link-title">{{$t('Menu Templates','Templates')}}</span>
               </router-link>
             </li>
