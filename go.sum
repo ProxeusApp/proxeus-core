@@ -80,8 +80,8 @@ github.com/dop251/goja_nodejs v0.0.0-20210225215109-d91c329300e7/go.mod h1:hn7BA
 github.com/dop251/goja_nodejs v0.0.0-20211022123610-8dd9abb0616d/go.mod h1:DngW8aVqWbuLRMHItjPUyqdj+HWPvnQe8V8y1nDpIbM=
 github.com/ethereum/c-kzg-4844 v1.0.0 h1:0X1LBXxaEtYD9xsyj9B9ctQEZIpnvVDeoBx8aHEwTNA=
 github.com/ethereum/c-kzg-4844 v1.0.0/go.mod h1:VewdlzQmpT5QSrVhbBuGoCdFJkpaJlO1aQputP83wc0=
-github.com/ethereum/go-ethereum v1.14.0 h1:xRWC5NlB6g1x7vNy4HDBLuqVNbtLrc7v8S6+Uxim1LU=
-github.com/ethereum/go-ethereum v1.14.0/go.mod h1:1STrq471D0BQbCX9He0hUj4bHxX2k6mt5nOQJhDNOJ8=
+github.com/ethereum/go-ethereum v1.14.3 h1:5zvnAqLtnCZrU9uod1JCvHWJbPMURzYFHfc2eHz4PHA=
+github.com/ethereum/go-ethereum v1.14.3/go.mod h1:1STrq471D0BQbCX9He0hUj4bHxX2k6mt5nOQJhDNOJ8=
 github.com/fasthttp/websocket v1.4.2/go.mod h1:smsv/h4PBEBaU0XDTY5UwJTpZv69fQ0FfcLJr21mA6Y=
 github.com/fasthttp/websocket v1.4.3-rc.10 h1:LlOEMGqRyJAJIZ4DSVyEtKjSLBZ7LCZgWAr78VHEh20=
 github.com/fasthttp/websocket v1.4.3-rc.10/go.mod h1:xU7SHrziVFuFx3IO24nLKcu4tm3QykCFXhwtwRk9Xd0=
