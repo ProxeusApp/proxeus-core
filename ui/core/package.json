@@ -18,7 +18,7 @@
     "@mdi/font": "^7.4.47",
     "@proxeus/wallet": "1.0.0",
     "@vitejs/plugin-vue": "^1",
-    "ajv": "^6.5.2",
+    "ajv": "^8.13.0",
     "async": "^3.2.5",
     "axios": "^1.6.8",
     "babel-runtime": "^6.26.0",
