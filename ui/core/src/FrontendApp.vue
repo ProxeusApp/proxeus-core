@@ -36,10 +36,10 @@
 </template>
 
 <script>
-import FrontendNavbar from '@/components/frontend/FrontendNavbar'
+import FrontendNavbar from '@/components/frontend/FrontendNavbar.vue'
 import _ from 'lodash'
 import baseApp from './baseApp'
-import Blocker from './components/Blocker'
+import Blocker from './components/Blocker.vue'
 
 export default {
   mixins: [baseApp],

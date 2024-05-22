@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import I18nTransCell from '@/views/appDependentComponents/i18n/I18nTransCell'
+import I18nTransCell from '@/views/appDependentComponents/i18n/I18nTransCell.vue'
 import mafdc from '@/mixinApp'
 
 export default {

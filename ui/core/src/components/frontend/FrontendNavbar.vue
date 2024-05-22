@@ -39,8 +39,8 @@
 </template>
 
 <script>
-// import Wallet from '@/components/wallet/Wallet'
-import TopRightProfile from '../user/TopRightProfile'
+// import Wallet from '@/components/wallet/Wallet.vue'
+import TopRightProfile from '../user/TopRightProfile.vue'
 
 export default {
   name: 'frontend-navbar',

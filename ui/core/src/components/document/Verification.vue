@@ -39,10 +39,10 @@
 </template>
 
 <script>
-import FileDropBox from '../template/FileDropBox'
-import VerificationFileEntry from './VerificationFileEntry'
-import Spinner from '../Spinner'
-import ProxeusLogo from '../ProxeusLogo'
+import FileDropBox from '../template/FileDropBox.vue'
+import VerificationFileEntry from './VerificationFileEntry.vue'
+import Spinner from '../Spinner.vue'
+import ProxeusLogo from '../ProxeusLogo.vue'
 import mafdc from '@/mixinApp'
 
 export default {

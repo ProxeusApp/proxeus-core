@@ -15,9 +15,9 @@
 </template>
 
 <script>
-import TopNav from '@/components/layout/TopNav'
-// import LanguageDropDown from '@/views/appDependentComponents/LanguageDropDown'
-import SettingsInner from './appDependentComponents/SettingsInner'
+import TopNav from '@/components/layout/TopNav.vue'
+// import LanguageDropDown from '@/views/appDependentComponents/LanguageDropDown.vue'
+import SettingsInner from './appDependentComponents/SettingsInner.vue'
 
 import mafdc from '@/mixinApp'
 

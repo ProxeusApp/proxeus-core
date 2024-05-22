@@ -42,8 +42,8 @@
   </div>
 </template>
 <script>
-import TopNav from '@/components/layout/TopNav'
-import Spinner from '@/components/Spinner'
+import TopNav from '@/components/layout/TopNav.vue'
+import Spinner from '@/components/Spinner.vue'
 import mafdc from '@/mixinApp'
 import web3 from 'web3'
 

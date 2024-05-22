@@ -50,11 +50,11 @@
 </template>
 
 <script>
-import ListGroup from '@/components/ListGroup'
-import TopNav from '@/components/layout/TopNav'
+import ListGroup from '@/components/ListGroup.vue'
+import TopNav from '@/components/layout/TopNav.vue'
 import axios from 'axios'
 import mafdc from '@/mixinApp'
-import ListItemDialog from './appDependentComponents/ListItemDialog'
+import ListItemDialog from './appDependentComponents/ListItemDialog.vue'
 
 export default {
   mixins: [mafdc],

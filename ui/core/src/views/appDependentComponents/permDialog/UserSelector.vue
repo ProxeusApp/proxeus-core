@@ -30,7 +30,7 @@
 
 <script>
 import VueTagsInput from '@johmun/vue-tags-input'
-import UserItem from './UserItem'
+import UserItem from './UserItem.vue'
 import mafdc from '@/mixinApp'
 
 export default {

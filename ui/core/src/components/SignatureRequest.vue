@@ -63,7 +63,7 @@
 
 <script>
 import mafdc from '@/mixinApp'
-import PdfPreview from '@/components/document/PdfPreview'
+import PdfPreview from '@/components/document/PdfPreview.vue'
 
 export default {
   mixins: [mafdc],

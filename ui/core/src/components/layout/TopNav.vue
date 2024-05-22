@@ -20,7 +20,7 @@
 </template>
 
 <script>
-import TopRightProfile from '../user/TopRightProfile'
+import TopRightProfile from '../user/TopRightProfile.vue'
 
 import mafdc from '@/mixinApp'
 
