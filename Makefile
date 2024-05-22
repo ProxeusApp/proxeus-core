@@ -2,9 +2,10 @@ SHELL:= /bin/bash
 DEBUG_FLAG?=false
 GO_VERSION=1.22
 
-ifdef DEBUG
-	BINDATA_OPTS=-debug -verbose
+ifeq ($(DEBUG), "true")
+	BINDATA_OPTS="-debug"
 endif
+
 ifdef BUILD_ID
 	GO_OPTS=-ldflags="-X main.ServerVersion=build-$(BUILD_ID)"
 endif
@@ -59,12 +60,12 @@ comma:=,
 space:= $() $()
 coverpkg=$(subst $(space),$(comma), $(filter-out %/mock %/assets, $(shell go list ./main/... ./sys/... ./storage/... ./service/...)))
 
-startproxeus=PROXEUS_DATA_DIR=$(1)/data PROXEUS_SETTINGS_FILE=$(1)/settings/main.json PROXEUS_TEST_MODE=true artifacts/proxeus &
+startproxeus=PROXEUS_DATA_DIR=$(1)/data PROXEUS_SETTINGS_FILE=$(1)/settings/main.json PROXEUS_TEST_MODE=true artifacts/proxeus -ServiceAddress 0.0.0.0:1323 &
 stopproxeus=pkill proxeus
 startds=curl -s http://localhost:2115 > /dev/null || ( PROXEUS_DATA_DIR=$(1) docker-compose up -d document-service && touch $(1)/ds-started )
 startnodes=curl -s http://localhost:8011 > /dev/null || (PROXEUS_PLATFORM_DOMAIN=http://$(DOCKER_GATEWAY):1323 NODE_CRYPTO_RATES_URL=http://localhost:8011 REGISTER_RETRY_INTERVAL=1 docker-compose -f docker-compose.yml -f docker-compose-extra.override.yml up -d node-crypto-forex-rates && touch $(1)/nodes-started )
 startmongo=nc -z localhost 27017 2> /dev/null || (docker run -d -p 27017:27017 -p 27018:27018 -p 27019:27019 proxeus/mongo-dev-cluster && sleep 10 && touch $(1)/mongo-started)
-waitforproxeus=echo "Waiting for Proxeus to start" ; curl --head -X GET --retry 120 --retry-connrefused --retry-delay 1 --silent -o /dev/null http://localhost:1323 && echo "Proxeus started" || echo "Unable to start Proxeus"
+waitforproxeus=echo "Waiting for Proxeus to start" ; curl --head -X GET --retry 120 --retry-connrefused --retry-delay 1 --silent -o /dev/null http://0.0.0.0:1323 && echo "Proxeus started" || echo "Unable to start Proxeus"
 
 ifeq ($(coverage),true)
 	COVERAGE_OPTS=-coverprofile artifacts/$@.coverage -coverpkg="$(coverpkg)"
@@ -100,13 +101,9 @@ update:
 ui:
 	$(MAKE) -C ui
 
-.PHONY: ui-serve
-ui-serve:
-	$(MAKE) -C ui serve-main-hosted
-
 .PHONY: ui-dev
 ui-dev:
-	$(MAKE) -C ui dev
+	$(MAKE) -C ui serve-main-hosted
 
 .PHONY: generate
 generate: $(bindata) $(mocks)
@@ -235,7 +232,7 @@ run: server
 	artifacts/proxeus -DataDir $(PROXEUS_DATA_DIR)/proxeus-platform/data
 
 main/handlers/assets/bindata.go: $(wildcard ./ui/core/dist/**)
-	go-bindata ${BINDATA_OPTS} -pkg assets -o ./main/handlers/assets/bindata.go -prefix "ui/core/dist/" ./ui/core/dist/...
+	go-bindata ${BINDATA_OPTS} -pkg assets -o ./main/handlers/assets/bindata.go -prefix ./ui/core/dist ./ui/core/dist/...
 	goimports -w $@
 
 test/assets/bindata.go: $(filter-out bindata.go,$(shell find ./test/assets/ ! -name "bindata.go"))
