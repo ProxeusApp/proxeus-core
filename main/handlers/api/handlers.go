@@ -632,6 +632,25 @@ func LoginHandler(e echo.Context) (err error) {
 	})
 }
 
+// Returns custom css style if exists
+//
+// @returns
+//
+//		200 => string
+//		500 => Server error
+//
+func GetCustomAppearanceStyle(e echo.Context) error {
+	c := e.(*www.Context)
+
+	settings := c.System().GetSettings()
+	if len(settings.PlatformDomain) == 0 {
+		settings.PlatformDomain = e.Request().Host
+	}
+
+	c.Response().Header().Set(echo.HeaderContentType, "text/css")
+	return c.String(http.StatusOK, settings.CustomStyleCSS)
+}
+
 // Validates user session cookie
 func ValidateUserSession(e echo.Context) (err error) {
 	c := e.(*www.Context)
