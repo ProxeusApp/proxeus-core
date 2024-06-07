@@ -636,9 +636,8 @@ func LoginHandler(e echo.Context) (err error) {
 //
 // @returns
 //
-//		200 => string
-//		500 => Server error
-//
+//	200 => string
+//	500 => Server error
 func GetCustomAppearanceStyle(e echo.Context) error {
 	c := e.(*www.Context)
 
