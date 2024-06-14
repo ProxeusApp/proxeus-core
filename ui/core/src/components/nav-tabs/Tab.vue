@@ -1,5 +1,5 @@
 <template>
-    <div class="mod-tab" v-if="this.isActive">
+    <div class="mod-tab" v-show="this.isActive">
         <slot></slot>
     </div>
 </template>
@@ -9,12 +9,15 @@ export default {
   name: 'tab',
   props: {
     title: { required: true },
-    selected: { default: false }
+    selected: { default: false },
+    onSelect: { type: Function }
   },
   computed: {
     href () {
       return '#' + this.name.toLowerCase().replace(/ /g, '-')
     }
+  },
+  updated () {
   },
   data () {
     return {

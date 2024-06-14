@@ -64,6 +64,7 @@ func MainHostedAPI(e *echo.Echo, s *www.Security, version string) {
 	routesNoCache := []r{
 		// config
 		{GET, PUBLIC, "/api/config", api.ConfigHandler(version)},
+		{GET, PUBLIC, "/api/appearance-css", api.GetCustomAppearanceStyle},
 
 		// authentication
 		{GET, PUBLIC, "/api/session/validate", api.ValidateUserSession},
