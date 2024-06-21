@@ -31,6 +31,10 @@ export default {
     selectTab (selectedTab) {
       this.tabs.forEach(tab => {
         tab.isActive = (tab.title === selectedTab.title)
+
+        if (tab.isActive && tab.onSelect) {
+          tab.onSelect(tab)
+        }
       })
     }
   }

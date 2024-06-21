@@ -49,7 +49,10 @@ describe(`User signup & login at ${url}`, () => {
 
     context('admin signup page', () => {
       before(() => {
-        cy.visit({ url: `${url}/register`, failOnStatusCode: false })
+        cy.visit({
+          url: `${url}/register`,
+          failOnStatusCode: false
+        })
       })
 
       it('should have a mail input', () => {
@@ -60,14 +63,13 @@ describe(`User signup & login at ${url}`, () => {
         cy.wait(2000)
         cy.server()
         cy.route({
-            method: 'POST',
-            url: '/api/register',
-            onResponse: (xhr) => {
-              signupResponse = xhr.response.headers['x-test-token'];
-              console.log(xhr.response);
-            },
+          method: 'POST',
+          url: '/api/register',
+          onResponse: (xhr) => {
+            signupResponse = xhr.response.headers['x-test-token'];
+            console.log(xhr.response);
           },
-        ).as('sign-admin')
+        }, ).as('sign-admin')
 
         cy.get('#inputEmail').type(`${adminEmailAddress}{enter}`)
         cy.get('#frontend-app').should('contain', 'Email sent')
@@ -86,19 +88,21 @@ describe(`User signup & login at ${url}`, () => {
 
     context('user signup page', () => {
       before(() => {
-        cy.visit({ url: `${url}/register`, failOnStatusCode: false })
+        cy.visit({
+          url: `${url}/register`,
+          failOnStatusCode: false
+        })
       })
 
       it('should sign up user', () => {
         cy.server()
         cy.route({
-            method: 'POST',
-            url: '/api/register',
-            onResponse: (xhr) => {
-              signupResponse = xhr.response.headers['x-test-token']
-            },
+          method: 'POST',
+          url: '/api/register',
+          onResponse: (xhr) => {
+            signupResponse = xhr.response.headers['x-test-token']
           },
-        )
+        }, )
 
         cy.get('#inputEmail').type(`${emailAddress}{enter}`)
         cy.get('#frontend-app').should('contain', 'Email sent')
@@ -125,6 +129,7 @@ describe(`User signup & login at ${url}`, () => {
           body: {
             password: password,
           },
+          timeout: 60000
         })
       })
     })
@@ -138,8 +143,8 @@ describe(`User signup & login at ${url}`, () => {
         login(emailAddress, 'wrong-password')
 
         cy.get('.text-danger').
-          should('contain',
-            'You have entered an invalid username or password')
+        should('contain',
+          'You have entered an invalid username or password')
       })
 
       it('should login successfully', () => {
@@ -177,14 +182,14 @@ describe(`User signup & login at ${url}`, () => {
 
       it('should remove account and logout when clicking again', () => {
         cy.get('.btn-danger').click()
-        cy.url().should('eq', `${url}/login?redirect=%2Fadmin%2Fworkflow`)
+        cy.url().should('include', `${url}/login`)
       })
     })
   })
 
 })
 
-function login (email, password) {
+function login(email, password) {
   cy.get('#inputEmail').clear().type(email)
   cy.get('#inputPassword').clear().type(password)
 

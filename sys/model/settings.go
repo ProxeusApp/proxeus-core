@@ -9,6 +9,7 @@ type Settings struct {
 	DefaultRole               string `json:"defaultRole" default:"creator" usage:"Default role that is going to be used for new registrations. Value is case insensitive."`
 	SessionExpiry             string `json:"sessionExpiry" validate:"required=true" default:"1h" usage:"Session expiry like 1h as one hour, 1m as one minute or 1s as one second."`
 	CacheExpiry               string `json:"cacheExpiry" validate:"required=true" default:"24h" usage:"Common cache expiry which will be used for email tokens or similar."`
+	CustomStyleCSS            string `json:"customStyleCSS" default:"" usage:"Set custom css styles"`
 	BlockchainNet             string `json:"blockchainNet" validate:"required=true" default:"sepolia" usage:"Ethereum blockchain net like mainnet or goerli, sepolia, polygon, polygon-mumbai."`
 	InfuraApiKey              string `json:"infuraApiKey" validate:"required=true" usage:"API Key to access Infura node."`
 	BlockchainContractAddress string `json:"blockchainContractAddress" validate:"required=true" default:"" usage:"Ethereum contract address which will be used to register files and verify them."`
