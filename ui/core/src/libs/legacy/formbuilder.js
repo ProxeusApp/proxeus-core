@@ -723,7 +723,7 @@ var FT_Workspace = function (fb, jqEl, comps) {
             inertia: false,
             autoScroll: autoScroll,
             onstart: function (e) {
-              if (e.interaction.downEvent.button === 2) {
+              if (e.button === 2) {
                 return false
               }
 
@@ -807,7 +807,7 @@ var FT_Workspace = function (fb, jqEl, comps) {
               return true
             },
             onmove: function (e, a, b, c, d) {
-              if (e.interaction.downEvent.button === 2) {
+              if (e.button === 2) {
                 return false
               }
               _.mousePos.y = e.clientY
