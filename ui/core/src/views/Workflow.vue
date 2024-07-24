@@ -115,6 +115,15 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <div data-id="placeholder" class="flow-chart-node flow-chart-node-placeholder">
+                                            <div class="flow-chart-node-inner">
+                                                <div class="fci-node">
+                                                    <i class="node-icon fcn-placeholder mdi mdi-hexagon"
+                                                       aria-hidden="true"></i>
+                                                    <div class="flow-chart-finder-simple">{{$t('placeholder')}}</div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -186,6 +195,44 @@
                                     </label>
                                     <button type="button" class="btn btn-primary"
                                             @click="wfm.conditionDialogHandler.save(this)">{{$t('Save')}}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="placeholder_dialog" class="modal fade" data-backdrop="true"
+                 tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header bg-light">
+                            <h5 class="modal-title">{{$t('Placeholder')}}</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form novalidate="novalidate">
+                                <input type="hidden" name="id" value="">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="field-parent">
+                                            <label for="placeholder_description" class="ft-label">{{$t('Description')}}</label>
+                                            <textarea :placeholder="$t('Description')"
+                                                      id="placeholder_description"
+                                                      class="form-control before-info-text"
+                                                      name="placeholder.detail"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <button type="button" class="btn btn-primary"
+                                            @click="wfm.placeholderDialogHandler.save(this)">{{$t('Save')}}
                                     </button>
                                 </div>
                             </div>
@@ -399,7 +446,7 @@ export default {
                     item.icon = 'view_quilt'
                   }
                   if (item.type === 'template') {
-                    item.iconFa = 'mdi mdi-file-xml'
+                    item.iconFa = 'mdi mdi-code-block-tags'
                   }
                   item.error = response.data[key].Error
                   elements.push(item)
@@ -500,8 +547,12 @@ export default {
             detail: '',
             type: 'condition',
             name: self.$t('condition')
+          },
+          placeholder: {
+            detail: '',
+            type: 'placeholder',
+            name: self.$t('placeholder')
           }
-
         },
         lastSearchTime: 2,
         lastNodeDeleteTime: 1,
@@ -690,6 +741,66 @@ function condition(){
             }
           }
         },
+        initPlaceholderDialogHandler: function () {
+          this.placeholderDialogHandler = {
+            $dialog: $('#placeholder_dialog'),
+            lineSeparator: '\x02\n\x02',
+            currentNode: null,
+            callback: null,
+            open: function (node, callback, isNewNode) {
+              this.isNewNode = isNewNode
+              this.currentNode = node
+              this.callback = callback
+
+              const formatted = node.label?.replaceAll(this.lineSeparator, ' ')
+
+              this.$dialog.find('[name=\'placeholder.detail\']').val(formatted)
+              this.$dialog.modal({ show: true, backdrop: true })
+            },
+            save: function () {
+              try {
+                const detail = this.$dialog.find('[name=\'placeholder.detail\']').val()
+
+                const symbolsPerLine = 20
+
+                let formatted = ''
+                let pointer = 0
+                let split = false
+
+                for (const symbol of detail) {
+                  if (symbol === '\n') {
+                    pointer = 0
+                  }
+
+                  if (pointer >= symbolsPerLine) {
+                    split = true
+                  } else {
+                    split = false
+                  }
+
+                  if (split && symbol === ' ') {
+                    formatted = `${formatted}${this.lineSeparator}`
+                    pointer = 0
+                  } else {
+                    formatted = `${formatted}${symbol}`
+                  }
+
+                  pointer++
+                }
+
+                this.currentNode.label = formatted
+                this.currentNode.name = formatted
+
+                if ($.isFunction(this.callback)) {
+                  this.callback(this.currentNode)
+                }
+                this.$dialog.modal('hide')
+              } catch (e) {
+                console.log(e)
+              }
+            }
+          }
+        },
         readOnly: false,
         main: function () {
           this.readOnly = !writeRights
@@ -777,6 +888,7 @@ function condition(){
             _.attachDragAndDrop($(this))
           })
           this.initConditionDialogHandler()
+          this.initPlaceholderDialogHandler()
         },
         searchNow: function (v) {
           var _ = this
@@ -960,6 +1072,12 @@ function condition(){
                         n.data = n._data
                         _.onNodeInsert(n, { x: e.offsetX, y: e.offsetY })
                       }, true)
+                  } else if (_.$newTarget.attr('data-id') === 'placeholder') {
+                    _.placeholderDialogHandler.open($.extend({}, _.leftMenuNodes[_.$newTarget.attr('data-id')]),
+                      function (n) {
+                        n.data = n._data
+                        _.onNodeInsert(n, { x: e.offsetX, y: e.offsetY })
+                      }, true)
                   } else {
                     _.onNodeInsert(_.leftMenuNodes[_.$newTarget.attr('data-id')], {
                       x: e.offsetX,
@@ -1015,7 +1133,7 @@ function condition(){
             // enable inertial throwing
             inertia: false,
             onstart: function (event) {
-              if (event.interaction.downEvent.button === 2) {
+              if (event?.interaction?.downEvent?.button === 2) {
                 return false
               }
               _.dragActive = true
@@ -1063,17 +1181,16 @@ function condition(){
               _.dragCompPosition.left = (_.bcr.left) - _.dim.ml
             },
             onmove: function (event, a, b, c, d) {
-              if (event.interaction.downEvent.button === 2) {
+              if (event?.interaction?.downEvent?.button === 2) {
                 return false
               }
               _.mousePos.y = event.pageY
               _.mousePos.x = event.pageX
               _.tl.x += event.dx
               _.tl.y += event.dy
-              _.tl.y = _.mousePos.y - _.dragCompPosition.top - _.dim.handleY
-              _.tl.x = _.mousePos.x - _.dragCompPosition.left - _.dim.handleX
-              _.$dragComp[0].style.webkitTransform = _.$dragComp[0].style.transform = 'translate(' + _.tl.x + 'px, ' +
-                  _.tl.y + 'px)'
+              const translatePos = 'translate(' + _.tl.x + 'px, ' + _.tl.y + 'px)'
+              _.$dragComp[0].style.webkitTransform = translatePos
+              _.$dragComp[0].setAttribute('style', 'transform: ' + translatePos)
             },
             onend: function (e, a, b, c, d) {
               _.wasInside = false
@@ -1170,10 +1287,11 @@ function condition(){
           priceretriever: 'fcn-externalnode node-icon mdi mdi-send',
           externalNode: 'fcn-externalnode node-icon mdi mdi-link-variant',
           condition: 'fcn-condition node-icon mdi mdi-circle-outline',
+          placeholder: 'fcn-placeholder node-icon mdi mdi-hexagon',
           user: 'fcn-usr node-icon mdi mdi-account',
           form: 'fcn-form node-icon mdi mdi-view-quilt',
           workflow: 'fcn-wflow node-icon mdi mdi-source-branch',
-          template: 'fcn-tmpl node-icon mdi mdi-file-xml'
+          template: 'fcn-tmpl node-icon mdi mdi-code-block-tags'
         },
         // d={name:"name", detail:"detail", kind:"condition|user|form|workflow|template"};
         _createFinderItem: function (d) {
@@ -1224,6 +1342,12 @@ function condition(){
           console.log(this)
           var _ = this
           this.wfm.conditionDialogHandler.open(node, function (n) {
+            _.updateNode(n)
+          })
+        },
+        placeholderDblClick: function (node) {
+          var _ = this
+          this.wfm.placeholderDialogHandler.open(node, function (n) {
             _.updateNode(n)
           })
         },
@@ -1444,7 +1568,7 @@ function condition(){
                 },
                 icon: {
                   face: 'Material Design Icons',
-                  code: '\uf48a',
+                  code: '󰒊',
                   color: '#5353c0'
                 },
                 events: {
@@ -1497,7 +1621,7 @@ function condition(){
                 },
                 icon: {
                   face: 'Material Design Icons',
-                  code: '\uf48a',
+                  code: '󰒊',
                   color: '#5150c0'
                 },
                 events: {
@@ -1550,7 +1674,7 @@ function condition(){
                 },
                 icon: {
                   face: 'Material Design Icons',
-                  code: '\uf339',
+                  code: '󰌹',
                   color: '#5150c0'
                 },
                 events: {
@@ -1585,11 +1709,45 @@ function condition(){
                 },
                 icon: {
                   face: 'Material Design Icons',
-                  code: '\uf70B',
+                  code: '󰜌',
                   color: '#f0a30a'
                 },
                 events: {
                   dblclick: _.conditionDblClick
+                }
+              },
+              placeholder: {
+                connections: {
+                  from: [
+                    {
+                      node: {
+                        color: {
+                          background: '#f5e203',
+                          highlight: { background: '#f5e203' },
+                          hover: { background: '#f5e203' }
+                        },
+                        borderWidthSelected: 3
+                      },
+                      edge: {
+                        font: { align: 'middle' },
+                        arrows: 'to',
+                        color: { color: '#f5e203', highlight: '#f5e203', hover: '#f5e203' }
+                      }
+                    }],
+                  to: Infinity,
+                  space: 0.6
+                },
+                font: {
+                  color: '#343434',
+                  size: 15
+                },
+                icon: {
+                  face: 'Material Design Icons',
+                  code: '\u2B22',
+                  color: '#f5e203'
+                },
+                events: {
+                  dblclick: _.placeholderDblClick
                 }
               },
               workflow: {
@@ -1612,7 +1770,7 @@ function condition(){
                 },
                 icon: {
                   face: 'Material Design Icons',
-                  code: '\uf62C',
+                  code: '󰘬',
                   color: '#e40070'
                 },
                 events: {
@@ -1675,7 +1833,7 @@ function condition(){
                 },
                 icon: {
                   face: 'Material Design Icons',
-                  code: '\uf22E',
+                  code: '󱲆',
                   color: '#ff30ec'
                 },
                 events: {

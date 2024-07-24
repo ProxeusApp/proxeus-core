@@ -1,6 +1,6 @@
 SHELL:= /bin/bash
 DEBUG_FLAG?=false
-GO_VERSION=1.21
+GO_VERSION=1.22
 
 ifeq ($(DEBUG), "true")
 	BINDATA_OPTS="-debug"
@@ -60,11 +60,12 @@ comma:=,
 space:= $() $()
 coverpkg=$(subst $(space),$(comma), $(filter-out %/mock %/assets, $(shell go list ./main/... ./sys/... ./storage/... ./service/...)))
 
-startproxeus=PROXEUS_DATA_DIR=$(1)/data PROXEUS_SETTINGS_FILE=$(1)/settings/main.json PROXEUS_TEST_MODE=true artifacts/proxeus &
+startproxeus=PROXEUS_DATA_DIR=$(1)/data PROXEUS_SETTINGS_FILE=$(1)/settings/main.json PROXEUS_TEST_MODE=true artifacts/proxeus -ServiceAddress 0.0.0.0:1323 &
 stopproxeus=pkill proxeus
 startds=curl -s http://localhost:2115 > /dev/null || ( PROXEUS_DATA_DIR=$(1) docker-compose up -d document-service && touch $(1)/ds-started )
 startnodes=curl -s http://localhost:8011 > /dev/null || (PROXEUS_PLATFORM_DOMAIN=http://$(DOCKER_GATEWAY):1323 NODE_CRYPTO_RATES_URL=http://localhost:8011 REGISTER_RETRY_INTERVAL=1 docker-compose -f docker-compose.yml -f docker-compose-extra.override.yml up -d node-crypto-forex-rates && touch $(1)/nodes-started )
 startmongo=nc -z localhost 27017 2> /dev/null || (docker run -d -p 27017:27017 -p 27018:27018 -p 27019:27019 proxeus/mongo-dev-cluster && sleep 10 && touch $(1)/mongo-started)
+waitforproxeus=echo "Waiting for Proxeus to start" ; curl --head -X GET --retry 120 --retry-connrefused --retry-delay 1 --silent -o /dev/null http://0.0.0.0:1323 && echo "Proxeus started" || echo "Unable to start Proxeus"
 
 ifeq ($(coverage),true)
 	COVERAGE_OPTS=-coverprofile artifacts/$@.coverage -coverpkg="$(coverpkg)"
@@ -159,7 +160,8 @@ fmt:
 
 .PHONY: test
 test: generate
-	go test $(COVERAGE_OPTS)  ./main/... ./sys/... ./storage/... ./service/...
+	go test $(COVERAGE_OPTS)  ./main/... ./sys/... ./storage/... ./service/...; ret=$$?; \
+		echo $$ret
 
 .PHONY: test-integration
 test-integration:
@@ -196,6 +198,7 @@ test-ui: server ui
 	$(call startds,$(testdir))
 	$(call startnodes,$(testdir))
 	$(call startproxeus,$(testdir))
+	$(call waitforproxeus,$(testdir))
 	$(MAKE) -C test/e2e test; ret=$$?; \
 		$(stopproxeus); \
 		[ -e  $(testdir)/ds-started ] && docker-compose down; \
