@@ -41,7 +41,7 @@
     "sass": "^1.77.6",
     "sortablejs": "^1.15.2",
     "tippy.js": "^6.3.7",
-    "underscore": "^1.8.3",
+    "underscore": "^1.13.7",
     "v-tooltip": "^2.0.0-rc.33",
     "velocity-animate": "^1.5.1",
     "vis": "^4.21.0",
