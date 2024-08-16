@@ -33,7 +33,7 @@ require (
 	github.com/xeipuuv/gojsonschema v1.2.0 // indirect
 	go.etcd.io/bbolt v1.3.10 // indirect
 	golang.org/x/crypto v0.26.0
-	golang.org/x/net v0.27.0
+	golang.org/x/net v0.28.0
 	gopkg.in/gavv/httpexpect.v2 v2.16.0
 )
 
