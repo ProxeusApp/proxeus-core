@@ -13,6 +13,10 @@ set -eo pipefail
 # It checks out the proxeus source code from Github into ~/proxeus and then runs 'make install'.
 
 
+yapt-get() {
+    DEBIAN_FRONTEND=noninteractive DEBIAN_PRIORITY=critical apt-get --no-install-recommends --yes --option Dpkg::Options::="--force-confold" --option Dpkg::Options::="--force-confdef" "$@"
+}
+
 log-fail() {
   declare desc="log fail formatter"
   echo "$@" 1>&2
@@ -51,22 +55,22 @@ install-requirements() {
   case "$SRV_DISTRO" in
     debian)
       if ! dpkg -l | grep -q software-properties-common; then
-        apt-get update -qq >/dev/null
-        apt-get -qq -y --no-install-recommends install software-properties-common
+        yapt-get update
+        yapt-get install software-properties-common
       fi
       ;;
     ubuntu)
       if ! dpkg -l | grep -q software-properties-common; then
-        apt-get update -qq >/dev/null
-        apt-get -qq -y --no-install-recommends install software-properties-common
+        yapt-get update
+        yapt-get install software-properties-common
       fi
 
-      add-apt-repository universe >/dev/null
-      apt-get update -qq >/dev/null
+      add-apt-repository -y universe
+      yapt-get update
       ;;
   esac
 
-  apt-get -qq -y --no-install-recommends install sudo git make software-properties-common
+  yapt-get install sudo git make software-properties-common
 }
 
 install-proxeus() {
