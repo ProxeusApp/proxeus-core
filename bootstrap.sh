@@ -39,10 +39,6 @@ ensure-environment() {
     log-fail "Docker needs to be installed."
   fi
 
-  if ! command -v docker-compose &> /dev/null; then
-    log-fail "Docker Compose needs to be installed."
-  fi
-
   FREE_MEMORY=$(grep MemTotal /proc/meminfo | awk '{print $2}')
   if [[ "$FREE_MEMORY" -lt 1003600 ]]; then
     echo "To build containers, it is strongly suggested that you have 1024 megabytes or more of free memory"
