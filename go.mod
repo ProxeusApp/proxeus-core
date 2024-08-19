@@ -10,7 +10,6 @@ require (
 	github.com/c2h5oh/datasize v0.0.0-20231215233829-aa82cc1e6500
 	github.com/cespare/cp v1.1.1 // indirect
 	github.com/davecgh/go-spew v1.1.1
-	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/disintegration/imaging v1.6.2
 	github.com/dop251/goja v0.0.0-20240627195025-eb1f15ee67d2
 	github.com/ethereum/go-ethereum v1.14.8
@@ -60,6 +59,7 @@ require (
 )
 
 require (
+	github.com/golang-jwt/jwt/v5 v5.2.1
 	github.com/labstack/echo/v4 v4.12.0
 	go.mongodb.org/mongo-driver v1.16.1
 )
