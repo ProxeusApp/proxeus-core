@@ -1,7 +1,7 @@
 Proxeus Script for fast DigitalOcean deployment
 ---
 
-Creates a compact all-in-one instance of the Proxeus application (no code environment for smart contracts) using a bootstrapped release image for Docker. This is a good starting point for development or small installations. For more information visit https://github.com/ProxeusApp
+Creates a compact all-in-one instance of the Proxeus application using a bootstrapped release image for Docker. This is a good starting point for development or small installations. For more information visit https://github.com/ProxeusApp
 
 Here you can find a script which run within a DigitalOcean droplet during startup. Using a simple form, you can configure the basic details needed to quickly get a Proxeus instance up and running.
 
