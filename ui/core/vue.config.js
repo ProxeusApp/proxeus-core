@@ -1,5 +1,7 @@
 const webpack = require('webpack')
 const path = require('path')
+const pluginVue = require('eslint-plugin-vue')
+const NodePolyfillPlugin = require('node-polyfill-webpack-plugin');
 
 module.exports = {
   assetsDir: 'static/assets/',
@@ -37,8 +39,7 @@ module.exports = {
   devServer: {
     port: 3005,
     historyApiFallback: {
-      rewrites: [
-        {
+      rewrites: [{
           from: /^\/init$/,
           to: '/initial.html'
         },
@@ -82,15 +83,15 @@ module.exports = {
     }
   },
   chainWebpack: config => {
-    config.module
-      .rule('eslint')
-      .use('eslint-loader')
-      .loader('eslint-loader')
-      .tap(options => {
-        options.configFile = path.resolve(__dirname, '.eslintrc.js')
-        options.fix = true
-        return options
-      })
+    // config.module
+    //   .rule('eslint')
+    //   .use('eslint-loader')
+    //   .loader('eslint-loader')
+    //   .tap(options => {
+    //     options.configFile = path.resolve(__dirname, '.eslintrc.js')
+    //     options.fix = true
+    //     return options
+    //   })
     // remove vue-cli-service error output
     // config.plugins.delete('friendly-errors')
     // remove vue-cli-service's progress output
@@ -110,6 +111,14 @@ module.exports = {
     }
 
     config.plugins.push(
-      new webpack.ProvidePlugin({ jQuery: 'jquery', $: 'jquery', 'window.jQuery': 'jquery' }))
+      new webpack.ProvidePlugin({
+        jQuery: 'jquery',
+        $: 'jquery',
+        'window.jQuery': 'jquery'
+      }))
+
+    config.plugins.push([
+      new NodePolyfillPlugin()
+    ])
   }
 }
