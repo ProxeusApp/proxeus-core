@@ -1,6 +1,7 @@
 module github.com/ProxeusApp/proxeus-core
 
-go 1.22
+go 1.23
+
 toolchain go1.23.0
 
 require (
