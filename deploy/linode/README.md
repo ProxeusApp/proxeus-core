@@ -1,7 +1,7 @@
 Proxeus StackScript for fast Linode deployment
 ---
 
-Creates a compact all-in-one instance of the Proxeus application (no code environment for smart contracts) using a bootstrapped release image for Docker. This is a good starting point for development or small installations. For more information visit https://github.com/ProxeusApp
+Creates a compact all-in-one instance of the Proxeus application using a bootstrapped release image for Docker. This is a good starting point for development or small installations. For more information visit https://github.com/ProxeusApp
 
 StackScripts are private or public managed scripts which run within a Linode instance during startup. Using a simple form, you can configure the basic details needed to quickly get a Proxeus instance up and running.
 

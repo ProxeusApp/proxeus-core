@@ -2,8 +2,6 @@
 # Basic version of the Docker Compose deployment -
 # Which can be extended with the .override.yml files
 
-version: '3.7'
-
 networks:
   xes-platform-network:
     name: xes-platform-network

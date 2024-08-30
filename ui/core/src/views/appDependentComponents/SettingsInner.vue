@@ -267,8 +267,11 @@ export default {
       this.customStyleEditor = customStyleEditor
     },
     reloadCustomStyle () {
+      // Apply custom stylesheets upon saving editor
       const linkElement = document.getElementById('customstylelink')
-      linkElement.setAttribute('href', `/api/appearance-css?t=${Date.now()}`)
+      if (linkElement) {
+        linkElement.setAttribute('href', `/api/appearance-css?t=${Date.now()}`)
+      }
     },
     newFormReady () {
       return this.app.roles && this.app.roles.length > 0 && this.settings !== null
@@ -279,7 +282,6 @@ export default {
     powerUp () {
       axios.post('/api/init', { settings: this.settings, user: this.user }).then(res => {
         this.reloadCustomStyle()
-
         this.cleanErr()
         this.user = res.data
         this.$notify({
