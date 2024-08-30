@@ -104,11 +104,9 @@ module.exports = {
     //   },
     // ])
   },
-  configureWebpack: function (config) {
+  configureWebpack: config => {
     config.output.globalObject = 'this'
-    this.optimization = {
-      splitChunks: false
-    }
+    config.optimization.splitChunks = false
 
     config.plugins.push(
       new webpack.ProvidePlugin({
@@ -117,8 +115,8 @@ module.exports = {
         'window.jQuery': 'jquery'
       }))
 
-    config.plugins.push([
+    config.plugins.push(
       new NodePolyfillPlugin()
-    ])
+    )
   }
 }

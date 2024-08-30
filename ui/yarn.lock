@@ -199,6 +199,13 @@
     "@babel/template" "^7.22.5"
     "@babel/types" "^7.22.5"
 
+"@babel/helper-hoist-variables@^7.24.7":
+  version "7.24.7"
+  resolved "https://registry.yarnpkg.com/@babel/helper-hoist-variables/-/helper-hoist-variables-7.24.7.tgz#b4ede1cde2fd89436397f30dc9376ee06b0f25ee"
+  integrity sha512-MJJwhkoGy5c4ehfoRyrJ/owKeMl19U54h27YYftT0o2teQ3FJ3nQUf/I3LlJsX4l3qlw7WRXUmiyajvHXoTubQ==
+  dependencies:
+    "@babel/types" "^7.24.7"
+
 "@babel/helper-member-expression-to-functions@^7.22.15":
   version "7.22.15"
   resolved "https://registry.npmjs.org/@babel/helper-member-expression-to-functions/-/helper-member-expression-to-functions-7.22.15.tgz"
@@ -1656,14 +1663,14 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
-"@nuxt/opencollective@^0.2.1":
-  version "0.2.2"
-  resolved "https://registry.npmjs.org/@nuxt/opencollective/-/opencollective-0.2.2.tgz"
-  integrity sha512-ie50SpS47L+0gLsW4yP23zI/PtjsDRglyozX2G09jeiUazC1AJlGPZo0JUs9iuCDUoIgsDEf66y7/bSfig0BpA==
+"@nuxt/opencollective@^0.3.2":
+  version "0.3.3"
+  resolved "https://registry.yarnpkg.com/@nuxt/opencollective/-/opencollective-0.3.3.tgz#80ff0eb8f6fca1d0ed5a089b9688f41bff2dd8ab"
+  integrity sha512-6IKCd+gP0HliixqZT/p8nW3tucD6Sv/u/eR2A9X4rxT/6hXlMzA4GZQzq4d2qnBAwSwGpmKyzkyTjNjrhaA25A==
   dependencies:
-    chalk "^2.4.1"
-    consola "^2.3.0"
-    node-fetch "^2.3.0"
+    chalk "^4.1.0"
+    consola "^2.15.0"
+    node-fetch "^2.6.7"
 
 "@polka/url@^1.0.0-next.24":
   version "1.0.0-next.25"
@@ -2177,7 +2184,7 @@
   resolved "https://registry.npmmirror.com/@vue/cli-overlay/-/cli-overlay-5.0.8.tgz"
   integrity sha512-KmtievE/B4kcXp6SuM2gzsnSd8WebkQpg3XaB6GmFh1BJGRqa1UiW9up7L/Q67uOdTigHxr5Ar2lZms4RcDjwQ==
 
-"@vue/cli-plugin-babel@^5", "@vue/cli-plugin-babel@~5.0.8":
+"@vue/cli-plugin-babel@^5":
   version "5.0.8"
   resolved "https://registry.npmmirror.com/@vue/cli-plugin-babel/-/cli-plugin-babel-5.0.8.tgz#54f9a07900f29baff54803dcfa916c602894feb7"
   integrity sha512-a4qqkml3FAJ3auqB2kN2EMPocb/iu0ykeELwed+9B1c1nQ1HKgslKMHMPavYx3Cd/QAx2mBD4hwKBqZXEI/CsQ==
@@ -2189,7 +2196,7 @@
     thread-loader "^3.0.0"
     webpack "^5.54.0"
 
-"@vue/cli-plugin-e2e-cypress@^5", "@vue/cli-plugin-e2e-cypress@~5.0.8":
+"@vue/cli-plugin-e2e-cypress@^5":
   version "5.0.8"
   resolved "https://registry.npmmirror.com/@vue/cli-plugin-e2e-cypress/-/cli-plugin-e2e-cypress-5.0.8.tgz#8cd53928abecb77a2a69895e92a4b79c2530ac44"
   integrity sha512-BasFHQSqDAmFvueaqk/d+s1hJnW0OtWEIgmHZRXg8hYkZJF4pu7kz66DmEAZl6DypfyoSxqwN7WHILYDuKAaEw==
@@ -2197,7 +2204,7 @@
     "@vue/cli-shared-utils" "^5.0.8"
     eslint-plugin-cypress "^2.11.2"
 
-"@vue/cli-plugin-eslint@^5", "@vue/cli-plugin-eslint@~5.0.8":
+"@vue/cli-plugin-eslint@^5", "@vue/cli-plugin-eslint@~5.0.0":
   version "5.0.8"
   resolved "https://registry.npmmirror.com/@vue/cli-plugin-eslint/-/cli-plugin-eslint-5.0.8.tgz#754939265c2c5b746fa36c7d7705a89138e193bf"
   integrity sha512-d11+I5ONYaAPW1KyZj9GlrV/E6HZePq5L5eAF5GgoVdu6sxr6bDgEoxzhcS1Pk2eh8rn1MxG/FyyR+eCBj/CNg==
@@ -2220,7 +2227,7 @@
   resolved "https://registry.npmmirror.com/@vue/cli-plugin-vuex/-/cli-plugin-vuex-5.0.8.tgz"
   integrity sha512-HSYWPqrunRE5ZZs8kVwiY6oWcn95qf/OQabwLfprhdpFWAGtLStShjsGED2aDpSSeGAskQETrtR/5h7VqgIlBA==
 
-"@vue/cli-service@^5", "@vue/cli-service@~5.0.8":
+"@vue/cli-service@^5":
   version "5.0.8"
   resolved "https://registry.npmmirror.com/@vue/cli-service/-/cli-service-5.0.8.tgz#cf3f6f1b7bf0fba9cdab86b6bec4f9897f982dac"
   integrity sha512-nV7tYQLe7YsTtzFrfOMIHc5N2hp5lHG2rpYr0aNja9rNljdgcPZLyQRb2YRivTHqTv7lI962UXFURcpStHgyFw==
@@ -3367,17 +3374,18 @@ boolbase@^1.0.0:
   resolved "https://registry.npmjs.org/boolbase/-/boolbase-1.0.0.tgz"
   integrity sha512-JZOSA7Mo9sNGB8+UjSgzdLtokWAky1zbztM3WRLCbZ70/3cTANmQmOdR7y2g+J0e2WXywy1yS468tY+IruqEww==
 
-bootstrap-vue@2.0.0-rc.12:
-  version "2.0.0-rc.12"
-  resolved "https://registry.npmjs.org/bootstrap-vue/-/bootstrap-vue-2.0.0-rc.12.tgz"
-  integrity sha512-GJ3xel2ciIyh1AUZ2XC+90JRb7TZX/zAFuvb4cDrgwcS1gYg0YrE/Wyq1fSNy7TknCMDQWMdtgvq3C5eK9USpw==
+bootstrap-vue@^2.0.0:
+  version "2.23.1"
+  resolved "https://registry.yarnpkg.com/bootstrap-vue/-/bootstrap-vue-2.23.1.tgz#8f866f7cda27eb0e7e13a0bea8d55d8fc7a82199"
+  integrity sha512-SEWkG4LzmMuWjQdSYmAQk1G/oOKm37dtNfjB5kxq0YafnL2W6qUAmeDTcIZVbPiQd2OQlIkWOMPBRGySk/zGsg==
   dependencies:
-    "@nuxt/opencollective" "^0.2.1"
-    bootstrap "^4.3.1"
-    popper.js "^1.14.7"
-    vue-functional-data-merge "^2.0.7"
+    "@nuxt/opencollective" "^0.3.2"
+    bootstrap "^4.6.1"
+    popper.js "^1.16.1"
+    portal-vue "^2.1.7"
+    vue-functional-data-merge "^3.1.0"
 
-bootstrap@^4.1.2, bootstrap@^4.3.1:
+bootstrap@^4.1.2, bootstrap@^4.6.1:
   version "4.6.2"
   resolved "https://registry.npmjs.org/bootstrap/-/bootstrap-4.6.2.tgz"
   integrity sha512-51Bbp/Uxr9aTuy6ca/8FbFloBUJZLHwnhTcnjIeRn2suQWsWzcuJhGjKDB5eppVte/8oCdOL3VuwxvZDUggwGQ==
@@ -3749,7 +3757,7 @@ caseless@~0.12.0:
   resolved "https://registry.npmjs.org/caseless/-/caseless-0.12.0.tgz"
   integrity sha512-4tYFyifaFfGacoiObjJegolkwSU4xQNGbVgUiNYVUxbQ2x2lUsFvY4hVgVzGiIe6WLOPqycWXA40l+PWsxthUw==
 
-chalk@^2.1.0, chalk@^2.3.0, chalk@^2.4.1, chalk@^2.4.2:
+chalk@^2.1.0, chalk@^2.3.0, chalk@^2.4.2:
   version "2.4.2"
   resolved "https://registry.npmjs.org/chalk/-/chalk-2.4.2.tgz"
   integrity sha512-Mti+f9lpJNcwF4tWV8/OrTTtF1gZi+f8FqlyAdouralcFWFQWF2+NgCHShjkCb+IFBLq9buZwE1xckQU4peSuQ==
@@ -4152,9 +4160,9 @@ connect-history-api-fallback@^2.0.0:
   resolved "https://registry.npmmirror.com/connect-history-api-fallback/-/connect-history-api-fallback-2.0.0.tgz"
   integrity sha512-U73+6lQFmfiNPrYbXqr6kZ1i1wiRqXnp2nhMsINseWXO8lDau0LGEffJ8kQi4EjLZympVgRdvqjAgiZ1tgzDDA==
 
-consola@^2.3.0:
+consola@^2.15.0:
   version "2.15.3"
-  resolved "https://registry.npmjs.org/consola/-/consola-2.15.3.tgz"
+  resolved "https://registry.yarnpkg.com/consola/-/consola-2.15.3.tgz#2e11f98d6a4be71ff72e0bdf07bd23e12cb61550"
   integrity sha512-9vAdYbHj6x2fLKC4+oPH0kFzY/orMZyG2Aj+kNylHxKGJ/Ed4dpNyAQYwJOdqO4zdM7XpVHmyejQDcQHrnuXbw==
 
 console-browserify@^1.1.0, console-browserify@^1.2.0:
@@ -8657,7 +8665,7 @@ node-addon-api@^2.0.0:
   resolved "https://registry.npmjs.org/node-addon-api/-/node-addon-api-2.0.2.tgz"
   integrity sha512-Ntyt4AIXyaLIuMHF6IOoTakB3K+RWxwtsHNRxllEoA6vPwP9o4866g6YWDLUdnucilZhmkxiHwHr11gAENw+QA==
 
-node-fetch@^2.3.0, node-fetch@^2.6.12, node-fetch@^2.6.7:
+node-fetch@^2.6.12, node-fetch@^2.6.7:
   version "2.7.0"
   resolved "https://registry.npmjs.org/node-fetch/-/node-fetch-2.7.0.tgz"
   integrity sha512-c4FRfUm/dbcWZ7U+1Wq0AwCyFL+3nt2bEw05wfxSz+DWpWsitgmSgYmy2dQdWyKC1694ELPqMs/YzUSNozLt8A==
@@ -9342,10 +9350,15 @@ pkg-dir@^4.1.0:
   dependencies:
     find-up "^4.0.0"
 
-popper.js@^1.14.4, popper.js@^1.14.7, popper.js@^1.16.1:
+popper.js@^1.14.4, popper.js@^1.16.1:
   version "1.16.1"
   resolved "https://registry.npmjs.org/popper.js/-/popper.js-1.16.1.tgz"
   integrity sha512-Wb4p1J4zyFTbM+u6WuO4XstYx4Ky9Cewe4DWrel7B0w6VVICvPwdOpotjzcf6eD8TsckVnIMNONQyPIUFOUbCQ==
+
+portal-vue@^2.1.7:
+  version "2.1.7"
+  resolved "https://registry.yarnpkg.com/portal-vue/-/portal-vue-2.1.7.tgz#ea08069b25b640ca08a5b86f67c612f15f4e4ad4"
+  integrity sha512-+yCno2oB3xA7irTt0EU5Ezw22L2J51uKAacE/6hMPMoO/mx3h4rXFkkBkT4GFsMDv/vEe8TNKC3ujJJ0PTwb6g==
 
 portfinder@^1.0.26:
   version "1.0.32"
@@ -12114,10 +12127,10 @@ vue-flatpickr-component@^11.0.5:
   dependencies:
     flatpickr "^4.6.13"
 
-vue-functional-data-merge@^2.0.7:
-  version "2.0.7"
-  resolved "https://registry.npmjs.org/vue-functional-data-merge/-/vue-functional-data-merge-2.0.7.tgz"
-  integrity sha512-pvLc+H+x2prwBj/uSEIITyxjz/7ZUVVK8uYbrYMmhDvMXnzh9OvQvVEwcOSBQjsubd4Eq41/CSJaWzy4hemMNQ==
+vue-functional-data-merge@^3.1.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/vue-functional-data-merge/-/vue-functional-data-merge-3.1.0.tgz#08a7797583b7f35680587f8a1d51d729aa1dc657"
+  integrity sha512-leT4kdJVQyeZNY1kmnS1xiUlQ9z1B/kdBFCILIjYYQDqZgLqCLa0UhjSSeRX6c3mUe6U5qYeM8LrEqkHJ1B4LA==
 
 vue-headful@^2.0.1:
   version "2.1.0"
