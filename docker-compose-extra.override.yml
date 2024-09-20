@@ -4,8 +4,6 @@
 #
 #  docker-compose -f docker-compose.yml -f docker-compose-extra.override.yml up
 
-version: '3.7'
-
 services:
   node-mail-sender:
     image: proxeus/node-mail-sender:latest
