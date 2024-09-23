@@ -51,7 +51,7 @@ require (
 	github.com/tklauser/go-sysconf v0.3.14 // indirect
 	github.com/valyala/fasthttp v1.55.0 // indirect
 	github.com/xdg-go/scram v1.1.2 // indirect
-	github.com/youmark/pkcs8 v0.0.0-20240424034433-3c2c7870ae76 // indirect
+	github.com/youmark/pkcs8 v0.0.0-20240726163527-a2c0da244d78 // indirect
 	github.com/yusufpapurcu/wmi v1.2.4 // indirect
 	golang.org/x/image v0.18.0 // indirect
 	google.golang.org/appengine v1.6.8 // indirect
@@ -61,7 +61,7 @@ require (
 require (
 	github.com/golang-jwt/jwt/v5 v5.2.1
 	github.com/labstack/echo/v4 v4.12.0
-	go.mongodb.org/mongo-driver v1.16.1
+	go.mongodb.org/mongo-driver v1.17.0
 )
 
 require (
