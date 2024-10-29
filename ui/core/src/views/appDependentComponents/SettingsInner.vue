@@ -268,7 +268,9 @@ export default {
     },
     reloadCustomStyle () {
       const linkElement = document.getElementById('customstylelink')
-      linkElement.setAttribute('href', `/api/appearance-css?t=${Date.now()}`)
+      if (linkElement) {
+        linkElement.setAttribute('href', `/api/appearance-css?t=${Date.now()}`)
+      }
     },
     newFormReady () {
       return this.app.roles && this.app.roles.length > 0 && this.settings !== null
