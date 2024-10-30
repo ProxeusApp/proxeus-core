@@ -13,7 +13,7 @@ Kindly hosted by S-PRO, the demo server allows you to try a full-featured Proxeu
 
 Proxeus is primarily a Web application, intended for access with a web browser. The [Proxeus Association](https://proxeus.org) maintains a demo instances you can use to test the product, and can recommend a service provider to help you or your business get set up. There is also a prototype [desktop application](https://github.com/ProxeusApp/storage-app/blob/master/docs/overview.md).
 
-In addition to the developer guidelines below, several "one-click" deployment configurations are available for select cloud platforms:
+In addition to the developer guidelines below, several "one-click" deployment configurations are available for select cloud platforms. Join the [Discussions](https://github.com/ProxeusApp/community/discussions/3) on GitHub if you are interested in seeing additional providers on this list:
 
 - [Docker Compose](docs/docker.md)
 - [Linode StackScript](deploy/linode/README.md)
@@ -21,15 +21,13 @@ In addition to the developer guidelines below, several "one-click" deployment co
 
 You will still need API keys for Infura and Sparkpost, as [detailed below](#get-keys).
 
-Join the [Discussions](https://github.com/ProxeusApp/community/discussions/3) if you are interested in seeing additional providers on this list.
-
 Please read the [Developer Manual](https://doc.proxeus.com) to learn more about developing for the Proxeus platform.
 
-**By installing and using the Proxeus software you agree with the terms of the [Proxeus License Agreement](https://github.com/ProxeusApp/proxeus-core/blob/main/LICENSE).**
+**By installing and using the Proxeus software you agree with the terms of the [Proxeus License Agreement](https://github.com/ProxeusApp/proxeus-core/blob/main/LICENSE)** (GPL-3.0)
 
 ## Installing from Source
 
-You can access the source code of this application on the [Proxeus repository](https://github.com/ProxeusApp) on GitHub (a mirror is available on [Codeberg/Proxeus](https://codeberg.org/proxeus/).
+You can access the source code of this application on the [ProxeusApp](https://github.com/ProxeusApp) repository on GitHub, or the [Proxeus mirror](https://codeberg.org/proxeus/) on Codeberg.
 
 If you wish to build the project from source, follow the instructions in [Build all](build_all.md).
 

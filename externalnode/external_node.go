@@ -4,15 +4,14 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
-	"github.com/dgrijalva/jwt-go"
-	"github.com/labstack/echo/v4"
-	"log"
-
-	"io/ioutil"
-	"net/http"
-
 	"fmt"
+	"io/ioutil"
+	"log"
+	"net/http"
 	"time"
+
+	"github.com/golang-jwt/jwt/v5"
+	"github.com/labstack/echo/v4"
 )
 
 type (
@@ -25,8 +24,8 @@ type (
 	}
 
 	ExternalNodeInstance struct {
-		ID       string      `json:"id" storm:"id"`
-		NodeName string      `json:"nodeName"`
+		ID       string                 `json:"id" storm:"id"`
+		NodeName string                 `json:"nodeName"`
 		Config   map[string]interface{} `json:"nodeConfig"`
 	}
 
@@ -130,9 +129,10 @@ func (e *ExternalNode) HealthUrl() string {
 }
 
 func (e ExternalQuery) jwtToken() string {
-	claims := jwt.StandardClaims{
-		Id:        e.ExternalNodeInstance.ID,
-		ExpiresAt: time.Now().Add(time.Hour * 24).Unix(),
+	exp := time.Now().Add(time.Hour * 24)
+	claims := jwt.RegisteredClaims{
+		Subject:   e.ExternalNodeInstance.ID,
+		ExpiresAt: jwt.NewNumericDate(exp),
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	t, err := token.SignedString([]byte(e.Secret))
