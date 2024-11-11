@@ -21,7 +21,7 @@ require (
 	github.com/h2non/filetype v1.1.3
 	github.com/imkira/go-interpol v1.1.0 // indirect
 	github.com/labstack/gommon v0.4.2
-	github.com/onsi/gomega v1.34.2
+	github.com/onsi/gomega v1.35.1
 	github.com/patrickmn/go-cache v2.1.0+incompatible
 	github.com/pkg/errors v0.9.1
 	github.com/robertkrimen/otto v0.5.1
@@ -55,7 +55,7 @@ require (
 	github.com/yusufpapurcu/wmi v1.2.4 // indirect
 	golang.org/x/image v0.18.0 // indirect
 	google.golang.org/appengine v1.6.8 // indirect
-	google.golang.org/protobuf v1.34.2 // indirect
+	google.golang.org/protobuf v1.35.1 // indirect
 )
 
 require (
