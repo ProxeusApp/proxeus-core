@@ -39,7 +39,7 @@
     "moment": "^2.30.1",
     "popper.js": "^1.14.4",
     "sass": "^1.81.0",
-    "sortablejs": "^1.15.4",
+    "sortablejs": "^1.15.6",
     "tippy.js": "^6.3.7",
     "underscore": "^1.13.7",
     "v-tooltip": "^2.0.0-rc.33",
