@@ -71,7 +71,7 @@ class WalletInterface {
   }
 
   async validateUserNetwork (blockCb, unblockCb) {
-    if (window.ethereum && this.systemNetworkId.toString() !== window.ethereum.request({method: 'net_version'})) {
+    if (window.ethereum && this.systemNetworkId.toString() !== window.ethereum.request({ method: 'net_version' })) {
       try {
         if (blockCb) {
           blockCb()
