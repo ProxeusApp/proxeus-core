@@ -1,8 +1,7 @@
 module github.com/ProxeusApp/proxeus-core
 
 go 1.22
-
-toolchain go1.22.0
+toolchain go1.23.5
 
 require (
 	github.com/SparkPost/gosparkpost v0.2.0
@@ -17,7 +16,7 @@ require (
 	github.com/golang/mock v1.6.0
 	github.com/google/go-querystring v1.1.0 // indirect
 	github.com/google/renameio v1.0.1
-	github.com/gorilla/sessions v1.3.0
+	github.com/gorilla/sessions v1.4.0
 	github.com/h2non/filetype v1.1.3
 	github.com/imkira/go-interpol v1.1.0 // indirect
 	github.com/labstack/gommon v0.4.2
@@ -42,8 +41,8 @@ require (
 	github.com/fasthttp/websocket v1.4.3-rc.10 // indirect
 	github.com/gorilla/context v1.1.2 // indirect
 	github.com/gorilla/websocket v1.5.3 // indirect
-	github.com/klauspost/compress v1.17.9 // indirect
-	github.com/labstack/echo-contrib v0.17.1
+	github.com/klauspost/compress v1.17.11 // indirect
+	github.com/labstack/echo-contrib v0.17.2
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/sergi/go-diff v1.3.1 // indirect
 	github.com/shirou/gopsutil v3.21.11+incompatible // indirect
@@ -54,7 +53,7 @@ require (
 	github.com/yusufpapurcu/wmi v1.2.4 // indirect
 	golang.org/x/image v0.18.0 // indirect
 	google.golang.org/appengine v1.6.8 // indirect
-	google.golang.org/protobuf v1.35.1 // indirect
+	google.golang.org/protobuf v1.36.1 // indirect
 )
 
 require (
