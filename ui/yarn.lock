@@ -12458,10 +12458,10 @@ vue-moment@^4.0.0:
   dependencies:
     moment "^2.19.2"
 
-vue-multiselect@^3.1.0:
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/vue-multiselect/-/vue-multiselect-3.1.0.tgz#4c7b5d66577fda1b04eef9db1cf8ef1966606604"
-  integrity sha512-+i/fjTqFBpaay9NP+lU7obBeNaw2DdFDFs4mqhsM0aEtKRdvIf7CfREAx2o2B4XDmPrBt1r7x1YCM3BOMLaUgQ==
+vue-multiselect@^3.2.0:
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/vue-multiselect/-/vue-multiselect-3.2.0.tgz#810077710ee7bf98e86534c31eebf22a0ab054d7"
+  integrity sha512-ExI+IPvSbILbtaHrU0CgbBmfbD6yBpIWJKsGLPmuQMC7VWK8Nj1XSAI9eIt3n9/e+LSFYdt8VgfHxeS1O1OeVA==
 
 vue-notification@^1.3.12:
   version "1.3.20"
