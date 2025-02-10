@@ -4,13 +4,13 @@ version: 2.1
 parameters:
   golang-tag:
     type: string
-    default: "1.22"
+    default: "1.23"
   nodejs-ver:
     type: integer
-    default: 16
+    default: 18
   nodejs-tag:
     type: string
-    default: "16.20"
+    default: "18.20"
 
 executors:
   docker-image-golang:
