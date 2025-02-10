@@ -12,7 +12,7 @@
       <div class="footer p-3 col-sm-12 d-flex justify-content-between">
         <div></div>
         <div>
-            <a target="_blank" href="https://github.com/ProxeusApp/community/blob/master/handbook/handbook.md"
+            <a target="_blank" href="https://doc.proxeus.org/#/handbook"
                class="footer-link">Handbook
             </a>
             <a target="_blank" :href="$t('Privacy Policy url','')" class="footer-link ml-3">Privacy Policy</a>

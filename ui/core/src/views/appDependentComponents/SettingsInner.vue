@@ -102,6 +102,9 @@
               <span class="text-muted">{{$t('Sparkpost API Key explanation','Set the Sparkpost API key which will be used to send out emails.')}}</span>
             </animated-input>
           </tab>
+          <tab title="Appearance customization" :onSelect="onSelectAppearenceTab">
+            <div id="customStyle_cssCode"></div>
+          </tab>
         </nav-tabs>
       </div>
       <div v-else>
@@ -234,6 +237,42 @@ export default {
     redirectToHome () {
       window.location.href = '/'
     },
+    onSelectAppearenceTab () {
+      if (this.customStyleEditor) {
+        return
+      }
+
+      const customStyleEditorElement = document.getElementById('customStyle_cssCode')
+      const customStyleEditor = ace.edit(customStyleEditorElement)
+
+      customStyleEditor.session.setMode('ace/mode/css')
+      customStyleEditor.setOptions({
+        minLines: 50,
+        maxLines: 100,
+        enableLiveAutocompletion: true
+      })
+
+      if (this.settings?.customStyleCSS) {
+        customStyleEditor.getSession().setValue(this.settings.customStyleCSS)
+      }
+
+      customStyleEditor.getSession().on('change', () => {
+        const cssCode = customStyleEditor.getSession().getValue()
+
+        if (this.settings) {
+          this.settings.customStyleCSS = cssCode
+        }
+      })
+
+      this.customStyleEditor = customStyleEditor
+    },
+    reloadCustomStyle () {
+      // Apply custom stylesheets upon saving editor
+      const linkElement = document.getElementById('customstylelink')
+      if (linkElement) {
+        linkElement.setAttribute('href', `/api/appearance-css?t=${Date.now()}`)
+      }
+    },
     newFormReady () {
       return this.app.roles && this.app.roles.length > 0 && this.settings !== null
     },
@@ -242,6 +281,7 @@ export default {
     },
     powerUp () {
       axios.post('/api/init', { settings: this.settings, user: this.user }).then(res => {
+        this.reloadCustomStyle()
         this.cleanErr()
         this.user = res.data
         this.$notify({

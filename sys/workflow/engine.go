@@ -304,8 +304,9 @@ func (me *Engine) setupNodes(ctx *context) error {
 	if len(me.nodeImpls) == 0 {
 		return ErrNodeImplementationNotProvided
 	}
+
 	for _, item := range ctx.flow.Nodes {
-		item.internalNode = item.isCondition() || item.isWorkflow()
+		item.internalNode = item.isCondition() || item.isWorkflow() || item.isPlaceholder()
 		if !item.internalNode {
 			if s, ok := me.nodeImpls[item.Type]; ok && s.InitImplFunc != nil {
 				item.new = s.InitImplFunc
@@ -316,6 +317,62 @@ func (me *Engine) setupNodes(ctx *context) error {
 		}
 		item.context = ctx
 	}
+	return nil
+}
+
+func (me *Engine) removeUselessNodes(ctx *context) error {
+	uselessConnections := make(map[string]*Connection, 0)
+
+	for name, item := range ctx.flow.Nodes {
+		if !item.isPlaceholder() {
+			continue
+		}
+
+		for _, conn := range item.Connections {
+			correctConnection := conn
+			currentNode := ctx.flow.Nodes[correctConnection.NodeID]
+
+			for currentNode.isPlaceholder() {
+				if len(currentNode.Connections) > 0 {
+					correctConnection = currentNode.Connections[0]
+					currentNode = ctx.flow.Nodes[correctConnection.NodeID]
+				} else {
+					break
+				}
+			}
+
+			uselessConnections[name] = correctConnection
+		}
+	}
+
+	for _, item := range ctx.flow.Nodes {
+		if item.isPlaceholder() {
+			continue
+		}
+
+		for i := 0; i < len(item.Connections); i++ {
+			conn := item.Connections[i]
+
+			if val, ok := uselessConnections[conn.NodeID]; ok {
+				item.Connections[i] = val
+			}
+		}
+	}
+
+	if val, ok := uselessConnections[ctx.flow.Start.NodeID]; ok {
+		ctx.flow.Start.NodeID = val.NodeID
+	}
+
+	filteredNodes := make(map[string]*Node, 0)
+
+	for name, item := range ctx.flow.Nodes {
+		if !item.isPlaceholder() {
+			filteredNodes[name] = item
+		}
+	}
+
+	ctx.flow.Nodes = filteredNodes
+
 	return nil
 }
 

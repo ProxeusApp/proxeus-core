@@ -6,7 +6,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/labstack/echo"
+	"github.com/labstack/echo/v4"
 
 	"github.com/ProxeusApp/proxeus-core/sys/model"
 )
@@ -54,7 +54,7 @@ func redirectToLogin(c echo.Context) error {
 	if isAjax {
 		return echo.ErrUnauthorized
 	}
-	return c.Redirect(http.StatusTemporaryRedirect, "/login")
+	return c.Redirect(http.StatusTemporaryRedirect, "/login?redirect="+req.URL.Path)
 }
 
 func getURI(host, url string) string {

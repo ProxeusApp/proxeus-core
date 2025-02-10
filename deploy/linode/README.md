@@ -1,7 +1,7 @@
 Proxeus StackScript for fast Linode deployment
 ---
 
-Creates a compact all-in-one instance of the Proxeus application (no code environment for smart contracts) using a bootstrapped release image for Docker. This is a good starting point for development or small installations. For more information visit https://github.com/ProxeusApp
+Creates a compact all-in-one instance of the Proxeus application using a bootstrapped release image for Docker. This is a good starting point for development or small installations. For more information visit https://github.com/ProxeusApp
 
 StackScripts are private or public managed scripts which run within a Linode instance during startup. Using a simple form, you can configure the basic details needed to quickly get a Proxeus instance up and running.
 
@@ -14,8 +14,6 @@ This script is maintained for the community by Proxeus Association
 1. You will need to have your API keys for Infura and Sparkpost handy - see the root README for further details.
 1. It takes a few minutes for the server to boot and install, then you should be able to open `http://<your Linode's IP address or domain>:1323/init`
 1. A configuration screen will be shown where you can set up an admin account and check settings.
-
-Once your server is running, visit the [User Handbook](https://github.com/ProxeusApp/community/blob/master/handbook/handbook.md) to get started.
 
 To view the logs, log in with the Linode's built-in shell client ("Launch LISH console"), or connect to your instance using an SSH client program. Then paste this into the console to see the logs being updated in real time:
 

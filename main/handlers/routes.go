@@ -12,7 +12,7 @@ import (
 	"github.com/ProxeusApp/proxeus-core/main/www"
 	"github.com/ProxeusApp/proxeus-core/sys/model"
 
-	"github.com/labstack/echo"
+	"github.com/labstack/echo/v4"
 )
 
 func MainHostedAPI(e *echo.Echo, s *www.Security, version string) {
@@ -64,6 +64,7 @@ func MainHostedAPI(e *echo.Echo, s *www.Security, version string) {
 	routesNoCache := []r{
 		// config
 		{GET, PUBLIC, "/api/config", api.ConfigHandler(version)},
+		{GET, PUBLIC, "/api/appearance-css", api.GetCustomAppearanceStyle},
 
 		// authentication
 		{GET, PUBLIC, "/api/session/validate", api.ValidateUserSession},

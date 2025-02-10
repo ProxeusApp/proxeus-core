@@ -15,7 +15,7 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/gorilla/sessions"
-	"github.com/labstack/echo"
+	"github.com/labstack/echo/v4"
 	"github.com/stretchr/testify/assert"
 
 	"github.com/ProxeusApp/proxeus-core/main/www"

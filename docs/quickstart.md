@@ -3,14 +3,17 @@
 This document is a brief installation guide, with links to further details to get started with Proxeus. We hope that you, too, will enjoy working with our product! Please remember to  star us on GitHub drop us any questions or feedback in the [Discussion Forum](https://github.com/ProxeusApp/community/discussions).
 
 
-_"Proxeus is a platform for quick and convenient document digitalization, signing, processing, and distribution. It allows users to keep their important documents secure and registered on the blockchain. Proxeus empowers anyone to create blockchain applications and is available for free as an open-source project." --[S-Pro](https://s-pro.io/)_
+_"Proxeus is a platform for quick and convenient document digitalization, signing, processing, and distribution. It allows users to keep their important documents secure and registered on the blockchain. Proxeus empowers anyone to create blockchain applications and is available for free as an open-source project." --[S-PRO](https://s-pro.io/)_
 
+➡️ [Demo server](https://proxeus-demo.s-pro-services.com/)
+
+Kindly hosted by S-PRO, the demo server allows you to try a full-featured Proxeus instance. Please note that all content will be erased every 24 hours.
 
 ## One-Click Installation
 
 Proxeus is primarily a Web application, intended for access with a web browser. The [Proxeus Association](https://proxeus.org) maintains a demo instances you can use to test the product, and can recommend a service provider to help you or your business get set up. There is also a prototype [desktop application](https://github.com/ProxeusApp/storage-app/blob/master/docs/overview.md).
 
-In addition to the developer guidelines below, several "one-click" deployment configurations are available for select cloud platforms:
+In addition to the developer guidelines below, several "one-click" deployment configurations are available for select cloud platforms. Join the [Discussions](https://github.com/ProxeusApp/community/discussions/3) on GitHub if you are interested in seeing additional providers on this list:
 
 - [Docker Compose](docs/docker.md)
 - [Linode StackScript](deploy/linode/README.md)
@@ -18,15 +21,13 @@ In addition to the developer guidelines below, several "one-click" deployment co
 
 You will still need API keys for Infura and Sparkpost, as [detailed below](#get-keys).
 
-Join the [Discussions](https://github.com/ProxeusApp/community/discussions/3) if you are interested in seeing additional providers on this list.
-
 Please read the [Developer Manual](https://doc.proxeus.com) to learn more about developing for the Proxeus platform.
 
-**By installing and using the Proxeus software you agree with the terms of the [Proxeus License Agreement](https://github.com/ProxeusApp/proxeus-core/blob/main/LICENSE).**
+**By installing and using the Proxeus software you agree with the terms of the [Proxeus License Agreement](https://github.com/ProxeusApp/proxeus-core/blob/main/LICENSE)** (GPL-3.0)
 
 ## Installing from Source
 
-You can access the source code of this application on the [Proxeus repository](https://github.com/ProxeusApp) on GitHub (a mirror is available on [Codeberg/Proxeus](https://codeberg.org/proxeus/).
+You can access the source code of this application on the [ProxeusApp](https://github.com/ProxeusApp) repository on GitHub, or the [Proxeus mirror](https://codeberg.org/proxeus/) on Codeberg.
 
 If you wish to build the project from source, follow the instructions in [Build all](build_all.md).
 

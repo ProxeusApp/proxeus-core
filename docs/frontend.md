@@ -1,9 +1,9 @@
 # Frontend Development
 
 ### Prerequisites
+
 + yarn (1.12+)
-+ node (14+)
-+ vue-cli
++ node (16+)
 
 > **Important**
 >
@@ -14,8 +14,10 @@
 > /core/central/ui/node_modules instead of the package subfolders (./core, etc.).
 
 #### Typescript
+
 Use typescript wherever you find it appropriate. Use it especially for critical
 modules and components where static type checking is helpful.
+
 Check https://vuejs.org/v2/guide/typescript.html for more information in regards to TypeScript in a Vue context.
 
 #### Frontend Dev Server

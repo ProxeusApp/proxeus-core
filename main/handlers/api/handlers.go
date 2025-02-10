@@ -34,7 +34,7 @@ import (
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
-	"github.com/labstack/echo"
+	"github.com/labstack/echo/v4"
 	uuid "github.com/satori/go.uuid"
 )
 
@@ -630,6 +630,24 @@ func LoginHandler(e echo.Context) (err error) {
 		"location": redirectAfterLogin(user.Role, string(referer)),
 		"created":  created,
 	})
+}
+
+// Returns custom css style if exists
+//
+// @returns
+//
+//	200 => string
+//	500 => Server error
+func GetCustomAppearanceStyle(e echo.Context) error {
+	c := e.(*www.Context)
+
+	settings := c.System().GetSettings()
+	if len(settings.PlatformDomain) == 0 {
+		settings.PlatformDomain = e.Request().Host
+	}
+
+	c.Response().Header().Set(echo.HeaderContentType, "text/css")
+	return c.String(http.StatusOK, settings.CustomStyleCSS)
 }
 
 // Validates user session cookie
