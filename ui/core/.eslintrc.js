@@ -9,13 +9,15 @@ module.exports = {
     "jquery": true
   },
   'extends': [
-    'plugin:vue/essential',
-    '@vue/standard'
+    'eslint:recommended',
+    'plugin:vue/essential'
   ],
   rules: {
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
     'no-console': 'off',
     'no-undef': 'off',
+    'no-empty': 'off',
+    'no-unused-vars': 'off',
     'no-useless-escape': 'off',
     'vue/require-v-for-key': 'off',
     'vue/valid-template-root': 'off',
@@ -26,6 +28,6 @@ module.exports = {
     'standard/no-callback-literal': 'off'
   },
   parserOptions: {
-    parser: 'babel-eslint'
+    parser: '@babel/eslint-parser'
   }
 }

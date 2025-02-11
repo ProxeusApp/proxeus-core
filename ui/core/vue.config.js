@@ -1,5 +1,7 @@
 const webpack = require('webpack')
 const path = require('path')
+const ESLintPlugin = require('eslint-webpack-plugin')
+const { VueLoaderPlugin } = require('vue-loader')
 
 module.exports = {
   assetsDir: 'static/assets/',
@@ -81,28 +83,6 @@ module.exports = {
       }
     }
   },
-  chainWebpack: config => {
-    config.module
-      .rule('eslint')
-      .use('eslint-loader')
-      .loader('eslint-loader')
-      .tap(options => {
-        options.configFile = path.resolve(__dirname, '.eslintrc.js')
-        options.fix = true
-        return options
-      })
-    // remove vue-cli-service error output
-    // config.plugins.delete('friendly-errors')
-    // remove vue-cli-service's progress output
-    // config.plugins.delete('progress')
-    // optionally replace with another progress output plugin
-    // `npm i -D simple-progress-webpack-plugin` to use
-    // config.plugin('simple-progress-webpack-plugin').use(require.resolve('simple-progress-webpack-plugin'), [
-    //   {
-    //     format: 'compact', // options are minimal, compact, expanded, verbose
-    //   },
-    // ])
-  },
   configureWebpack: function (config) {
     config.output.globalObject = 'this'
     this.optimization = {
@@ -111,5 +91,35 @@ module.exports = {
 
     config.plugins.push(
       new webpack.ProvidePlugin({ jQuery: 'jquery', $: 'jquery', 'window.jQuery': 'jquery' }))
+
+    config.plugins.push(
+      new ESLintPlugin({
+        extensions: ['js'],
+        exclude: '/node_modules/',
+        options: {
+            fix: true,
+            configFile: path.resolve(__dirname, '.eslintrc.js')
+          }
+      }))
+
+    config.plugins.push(
+      new VueLoaderPlugin())
+
+    // Is this a good way to configure webpack?
+    config.module.rules = [
+        {
+          test: /\.vue$/,
+          loader: 'vue-loader',
+          exclude: '/node_modules/'
+        },
+        {
+          test: /\.js$/,
+          exclude: /node_modules/,
+          use: [{
+            loader: "babel-loader",
+            options: { presets: ['@babel/preset-env'] }
+          }]
+        }
+    ]
   }
 }
