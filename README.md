@@ -42,7 +42,7 @@ See the **[Contributing Guide](docs/contributing.md)** for further directions.
 
 ### Security Issues
 
-If you find a vulnerability that may affect live or testnet deployments please DO NOT file a public issue - send your report privately to info@proxeus.org
+If you find a vulnerability that may affect live or testnet deployments, please DO NOT file a public issue - send your report privately to info@proxeus.org
 
 ## License
 
