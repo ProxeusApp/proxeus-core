@@ -1,11 +1,12 @@
 [![CircleCI](https://dl.circleci.com/status-badge/img/gh/ProxeusApp/proxeus-core/tree/main.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/ProxeusApp/proxeus-core/tree/main)
 
+**⚠️ Notice ⚠️** This project is not actively supported and we are looking for new maintainers! Please contact us via [Issues](https://github.com/ProxeusApp/proxeus-core/issues) or by [e-mail](mailto:info@proxeus.org) if you are interested.
+
+
 # Proxeus Core
 --------------
 
 Proxeus combines a powerful automation tool with a form builder, document generator and blockchain connection - enabling you to digitize, secure, and tap into the value of data flows. Access the full source code of available modules and extensions [@ProxeusApp](https://github.com/ProxeusApp).
-
-**🎷 Notice:** This project is looking for new maintainers. Please contact us via [Issues](https://github.com/ProxeusApp/proxeus-core/issues) or by [e-mail](mailto:info@proxeus.org) if you are interested.
 
 ![Screenshot of Proxeus workflow from the handbook](docs/handbook/Proxeus%20-%20The%20Complete%20Handbook_html_10299e76126cc024.png)
 
