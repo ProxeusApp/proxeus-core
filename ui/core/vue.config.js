@@ -1,38 +1,38 @@
-const webpack = require('webpack')
-const path = require('path')
+const webpack = require("webpack");
+const path = require("path");
 
 module.exports = {
-  assetsDir: 'static/assets/',
-  outputDir: path.resolve(__dirname, 'dist'),
+  assetsDir: "static/assets/",
+  outputDir: path.resolve(__dirname, "dist"),
   runtimeCompiler: true,
   productionSourceMap: false,
 
   css: {
     // extract CSS in components into a single CSS file (only in production)
     // can also be an object of options to pass to extract-text-webpack-plugin
-    extract: true
+    extract: true,
   },
   pages: {
     initial: {
-      entry: './src/initial.js',
-      template: 'public/initial.html',
-      filename: 'initial.html'
+      entry: "./src/initial.js",
+      template: "public/initial.html",
+      filename: "initial.html",
     },
     app: {
-      entry: './src/main.js',
-      template: 'public/app.html',
-      filename: 'app.html'
+      entry: "./src/main.js",
+      template: "public/app.html",
+      filename: "app.html",
     },
     user: {
-      entry: './src/user.js',
-      template: 'public/user.html',
-      filename: 'user.html'
+      entry: "./src/user.js",
+      template: "public/user.html",
+      filename: "user.html",
     },
     frontend: {
-      entry: './src/frontend.js',
-      template: 'public/frontend.html',
-      filename: 'frontend.html'
-    }
+      entry: "./src/frontend.js",
+      template: "public/frontend.html",
+      filename: "frontend.html",
+    },
   },
   devServer: {
     port: 3005,
@@ -40,57 +40,50 @@ module.exports = {
       rewrites: [
         {
           from: /^\/init$/,
-          to: '/initial.html'
+          to: "/initial.html",
         },
         {
           from: /^\/$/,
-          to: '/frontend.html'
+          to: "/frontend.html",
         },
         {
           from: /^\/p\//,
-          to: '/app.html'
+          to: "/app.html",
         },
         {
           from: /^\/admin/,
-          to: '/app.html'
+          to: "/app.html",
         },
         {
           from: /^\/document/,
-          to: '/user.html'
+          to: "/user.html",
         },
         {
           from: /^\/user/,
-          to: '/user.html'
+          to: "/user.html",
         },
         {
           from: /.*/,
-          to: '/frontend.html'
-        }
-      ]
+          to: "/frontend.html",
+        },
+      ],
     },
     proxy: {
-      '/api': {
-        target: 'http://localhost:1323',
+      "/api": {
+        target: "http://localhost:1323",
         ws: false,
-        changeOrigin: false
+        changeOrigin: false,
       },
-      '/static': {
-        target: 'http://localhost:1323',
+      "/static": {
+        target: "http://localhost:1323",
         ws: false,
-        changeOrigin: false
-      }
-    }
+        changeOrigin: false,
+      },
+    },
   },
-  chainWebpack: config => {
-    config.module
-      .rule('eslint')
-      .use('eslint-loader')
-      .loader('eslint-loader')
-      .tap(options => {
-        options.configFile = path.resolve(__dirname, '.eslintrc.js')
-        options.fix = true
-        return options
-      })
+  chainWebpack: (config) => {
+    // Remove manual ESLint configuration - let Vue CLI handle it
+    // ESLint will use .eslintrc.js automatically
     // remove vue-cli-service error output
     // config.plugins.delete('friendly-errors')
     // remove vue-cli-service's progress output
@@ -104,12 +97,17 @@ module.exports = {
     // ])
   },
   configureWebpack: function (config) {
-    config.output.globalObject = 'this'
+    config.output.globalObject = "this";
     this.optimization = {
-      splitChunks: false
-    }
+      splitChunks: false,
+    };
 
     config.plugins.push(
-      new webpack.ProvidePlugin({ jQuery: 'jquery', $: 'jquery', 'window.jQuery': 'jquery' }))
-  }
-}
+      new webpack.ProvidePlugin({
+        jQuery: "jquery",
+        $: "jquery",
+        "window.jQuery": "jquery",
+      })
+    );
+  },
+};
