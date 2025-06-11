@@ -24,4 +24,7 @@ module.exports = {
     "vue/multi-word-component-names": "off",
     "standard/no-callback-literal": "off",
   },
+  parserOptions: {
+    parser: "babel-eslint",
+  },
 };
