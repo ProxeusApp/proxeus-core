@@ -99,7 +99,6 @@
     "postcss-loader": "^3.0.0",
     "sass-loader": "^10.1.1",
     "vue-template-compiler": "^2.7.16",
-    "webpack": "^4",
     "worker-loader": "^3"
   },
   "browserslist": [

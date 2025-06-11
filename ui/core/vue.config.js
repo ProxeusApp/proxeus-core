@@ -81,32 +81,72 @@ module.exports = {
       },
     },
   },
+  transpileDependencies: [
+    // Force transpilation of problematic dependencies
+    "pdfjs-dist",
+  ],
   chainWebpack: (config) => {
-    // Remove manual ESLint configuration - let Vue CLI handle it
-    // ESLint will use .eslintrc.js automatically
-    // remove vue-cli-service error output
-    // config.plugins.delete('friendly-errors')
-    // remove vue-cli-service's progress output
-    // config.plugins.delete('progress')
-    // optionally replace with another progress output plugin
-    // `npm i -D simple-progress-webpack-plugin` to use
-    // config.plugin('simple-progress-webpack-plugin').use(require.resolve('simple-progress-webpack-plugin'), [
-    //   {
-    //     format: 'compact', // options are minimal, compact, expanded, verbose
-    //   },
-    // ])
+    // Exclude worker files from normal JavaScript processing
+    config.module
+      .rule("js")
+      .exclude.add(/\.worker\.js$/)
+      .end();
+
+    // Add specific rule for PDF.js worker files
+    config.module
+      .rule("worker")
+      .test(/\.worker\.js$/)
+      .use("worker-loader")
+      .loader("worker-loader")
+      .options({
+        inline: "fallback",
+      })
+      .end();
   },
   configureWebpack: function (config) {
     config.output.globalObject = "this";
-    this.optimization = {
+
+    // Disable splitChunks
+    config.optimization = {
       splitChunks: false,
     };
 
+    // Configure module resolution aliases for Node.js polyfills
+    config.resolve = config.resolve || {};
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      stream: "stream-browserify",
+      crypto: "crypto-browserify",
+      buffer: "buffer",
+      process: "process/browser",
+      util: "util",
+      assert: "assert",
+      url: "url",
+      fs: false,
+      net: false,
+      tls: false,
+      child_process: false,
+      "pdfjs-dist/build/pdf.worker.js": "pdfjs-dist/build/pdf.worker.min.js",
+    };
+
+    // Provide global variables
     config.plugins.push(
       new webpack.ProvidePlugin({
         jQuery: "jquery",
         $: "jquery",
         "window.jQuery": "jquery",
+        Buffer: ["buffer", "Buffer"],
+        process: "process/browser",
+      })
+    );
+
+    // Define environment variables
+    config.plugins.push(
+      new webpack.DefinePlugin({
+        "process.env.NODE_ENV": JSON.stringify(
+          process.env.NODE_ENV || "development"
+        ),
+        global: "globalThis",
       })
     );
   },
