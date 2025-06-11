@@ -1,5 +1,5 @@
 version: 2
-updates:
+disabled:
   
   # Maintain dependencies for Go
   - package-ecosystem: "gomod"
