@@ -74,11 +74,14 @@
                   </button>
                   <spinner background="transparent" style="position:relative;" :margin="60" v-if="submitting"></spinner>
                   <div class="text-center">
-                    <transition name="fade" mode="out-in">
-                      <p class="text-primary px-5"
-                         v-if="approvingXES">Please confirm the release of XES from your wallet in MetaMask.</p>
-                      <p class="text-primary px-5"
-                         v-if="confirmingDocs">Please confirm the registration of your document on the blockchain in MetaMask.</p>
+                    <transition name="fade" mode="out-in" v-if="approvingXES">
+                      <p class="text-primary px-5">
+                        Please confirm the release of XES from your wallet in MetaMask.</p>
+                    </transition>
+                    <transition name="fade" mode="out-in" v-if="confirmingDocs">
+                      <p class="text-primary px-5">
+                        Please confirm the registration of your document on the blockchain in MetaMask.
+                      </p>
                     </transition>
                     <p class="light-text"
                        v-show="submitting">If MetaMask doesn't pop up automatically, click on the MetaMask icon in the top right corner of your browser.</p>
