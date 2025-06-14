@@ -380,7 +380,7 @@ export default {
     },
     canHide (n) {
       if (n) {
-        while (true) {
+        //while (true) {
           if (n === this.$refs.myroot) {
             return false
           }
@@ -388,7 +388,7 @@ export default {
             return true
           }
           n = n.parentNode
-        }
+        //}
       }
       return false
     },
