@@ -82,13 +82,25 @@ module.exports = {
     },
   },
   lintOnSave: false, // Disable ESLint temporarily to fix build issues
-  transpileDependencies: [
+  //transpileDependencies: [
     // Force transpilation of problematic dependencies
-    "pdfjs-dist",
-  ],
+    //"pdfjs-dist",
+  //],
   chainWebpack: (config) => {
     // Disable ESLint plugin to avoid version conflicts
     config.plugins.delete("eslint");
+
+    // Exclude babel loaders
+    config.module
+      .rule("js")
+      .test(/\.js$/)
+      .use("babel-loader")
+      .loader("babel-loader")
+      .options({
+        exclude: /node_modules/,
+        compact: false
+      })
+      .end();
 
     // Exclude worker files from normal JavaScript processing
     config.module
