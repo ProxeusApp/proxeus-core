@@ -1,5 +1,8 @@
 [![CircleCI](https://dl.circleci.com/status-badge/img/gh/ProxeusApp/proxeus-core/tree/main.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/ProxeusApp/proxeus-core/tree/main)
 
+**⚠️ Notice ⚠️** This project is not actively supported and we are looking for new maintainers! Please contact us via [Issues](https://github.com/ProxeusApp/proxeus-core/issues) or by [e-mail](mailto:info@proxeus.org) if you are interested.
+
+
 # Proxeus Core
 --------------
 
