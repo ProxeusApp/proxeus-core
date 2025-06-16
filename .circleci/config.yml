@@ -35,6 +35,8 @@ executors:
 
 jobs:
   build-ui:
+    environment:
+      NODE_OPTIONS=--max-old-space-size=1536
     docker:
       - image: cimg/node:<< pipeline.parameters.nodejs-tag >>
     steps:
