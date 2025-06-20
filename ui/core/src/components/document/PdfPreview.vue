@@ -53,7 +53,7 @@
     <spinner v-show="loaded !== true && error !== true" :margin="0" background="transparent" color="#333"
              cls="position-relative no-padding-top mt-0"/>
     <button v-show="loaded && error === false" class="btn btn-link p-0 border-0" @click.prevent="mainAction">
-      <pdf :src="getSrc" @loaded="pdfLoaded" @error="pdfError"/>
+      <VuePdfEmbed :source="getSrc" @loaded="pdfLoaded" @loading-failed="pdfError"/>
       <span class="filename d-inline-block t-ellipsis" v-if="filename"><small :title="filename">{{ filename }}</small></span>
     </button>
     <pdf-modal class="pdfwkaround" :src="getSrc" :mid="'modal' + _uid" ref="pdfMod" :filename="filename"
@@ -64,7 +64,7 @@
 </template>
 
 <script>
-import pdf from 'vue-pdf'
+import VuePdfEmbed from 'vue-pdf-embed'
 import PdfModal from '@/components/document/PdfModal'
 import SigningModal from '@/components/document/SigningModal.vue'
 import Spinner from '@/components/Spinner'
@@ -75,7 +75,7 @@ export default {
   name: 'pdf-preview',
   props: ['item', 'src', 'filename', 'name', 'languages', 'doc', 'wfId', 'locale', 'langSelectorVisible', 'showSig'],
   components: {
-    pdf,
+    VuePdfEmbed,
     PdfModal,
     SigningModal,
     Spinner
