@@ -83,8 +83,8 @@ module.exports = {
   },
   lintOnSave: false, // Disable ESLint temporarily to fix build issues
   //transpileDependencies: [
-    // Force transpilation of problematic dependencies
-    //"pdfjs-dist",
+  // Force transpilation of problematic dependencies
+  //"pdfjs-dist",
   //],
   chainWebpack: (config) => {
     // Disable ESLint plugin to avoid version conflicts
@@ -98,7 +98,7 @@ module.exports = {
       .loader("babel-loader")
       .options({
         exclude: /node_modules/,
-        compact: false
+        compact: false,
       })
       .end();
 
@@ -144,6 +144,7 @@ module.exports = {
       child_process: false,
       "pdfjs-dist/build/pdf.worker.js": "pdfjs-dist/build/pdf.worker.min.js",
     };
+    config.resolve.fallback = { vm: false };
 
     // Provide global variables
     config.plugins.push(
