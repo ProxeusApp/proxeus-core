@@ -6,6 +6,8 @@
 import Vue from "vue";
 import Web3 from "web3"; // eslint-disable-line no-unused-vars
 
+import "./legacy-jquery.js"; // eslint-disable-line no-unused-vars
+
 import FTG from "./libs/legacy/global.js"; // eslint-disable-line no-unused-vars
 import ErrorPage from "vue-error-page";
 
@@ -26,11 +28,9 @@ import router from "./router/frontend";
 
 /*
  *
- * i18n
+ * Global libs
  *
  */
-window.$ = window.jQuery = require("jquery");
-import $ from "jquery";
 import "./global";
 
 /*

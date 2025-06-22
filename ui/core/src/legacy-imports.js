@@ -3,14 +3,12 @@
  * Legacy imports
  *
  */
+import "./legacy-jquery.js";
 
 import interact from "interactjs";
 
 import flatpickr from "flatpickr";
 window.flatpickr = flatpickr;
-
-import $ from "jquery";
-window.jQuery = window.$ = $;
 
 window.Handlebars = require("handlebars");
 
