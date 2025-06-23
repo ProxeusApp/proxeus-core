@@ -12,7 +12,7 @@
     "@mdi/font": "^7.4.47",
     "ajv": "^8.17.1",
     "async": "^3.2.6",
-    "axios": "^1.7.9",
+    "axios": "^1.10.0",
     "bootstrap": "^4.1.2",
     "bootstrap-vue": "2.0.0-rc.12",
     "brace": "^0.11.1",
