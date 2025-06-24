@@ -3,7 +3,7 @@
  * Legacy imports
  *
  */
-import "./legacy-jquery.js";
+import "./libs/legacy/jquery.js";
 
 import interact from "interactjs";
 
