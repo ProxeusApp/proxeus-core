@@ -529,7 +529,7 @@ dt, kbd kbd, label {
 }
 
 a.text-primary:focus, a.text-primary:hover {
-  color: darken(@color-primary, 18%)
+  color: color.adjust(@color-primary, $lightness: -18%)
 }
 
 .text-success {
@@ -570,7 +570,7 @@ a.text-danger:focus, a.text-danger:hover {
 }
 
 a.bg-primary:focus, a.bg-primary:hover {
-  background-color: darken(@color-primary, 18%)
+  background-color: color.adjust(@color-primary, $lightness: -18%)
 }
 
 .bg-success {
@@ -806,25 +806,25 @@ a.btn.disabled, fieldset[disabled] a.btn {
 
 .btn-primary.focus, .btn-primary:focus {
   color: #ffffff;
-  background-color: darken(@color-primary, @darken-percent);
+  background-color: color.adjust(@color-primary, $lightness: -@darken-percent);
   border-color: #122b40;
 }
 
 .btn-primary.active, .btn-primary:active, .btn-primary:hover, .open > .dropdown-toggle.btn-primary {
   color: #ffffff;
-  background-color: darken(@color-primary, @darken-percent);
-  border-color: darken(@color-primary, @darken-percent)
+  background-color: color.adjust(@color-primary, $lightness: -@darken-percent);
+  border-color: color.adjust(@color-primary, $lightness: -@darken-percent)
 }
 
 .btn-primary.active.focus, .btn-primary.active:focus, .btn-primary.active:hover, .btn-primary:active.focus, .btn-primary:active:focus, .btn-primary:active:hover, .open > .dropdown-toggle.btn-primary.focus, .open > .dropdown-toggle.btn-primary:focus, .open > .dropdown-toggle.btn-primary:hover {
   color: #ffffff;
-  background-color: darken(@color-primary, @darken-percent);
+  background-color: color.adjust(@color-primary, $lightness: -@darken-percent);
   border-color: #122b40
 }
 
 .btn-primary.disabled.focus, .btn-primary.disabled:focus, .btn-primary.disabled:hover, .btn-primary[disabled].focus, .btn-primary[disabled]:focus, .btn-primary[disabled]:hover, fieldset[disabled] .btn-primary.focus, fieldset[disabled] .btn-primary:focus, fieldset[disabled] .btn-primary:hover {
-  background-color: darken(@color-primary, 60%);
-  border-color: darken(@color-primary, 60%);
+  background-color: color.adjust(@color-primary, $lightness: -60%);
+  border-color: color.adjust(@color-primary, $lightness: -60%);
 }
 
 .btn-primary .badge {
@@ -840,20 +840,20 @@ a.btn.disabled, fieldset[disabled] a.btn {
 
 .btn-success.focus, .btn-success:focus {
   color: #ffffff;
-  background-color: darken(@color-secondary, 20%);
-  border-color: darken(@color-secondary, 20%);
+  background-color: color.adjust(@color-secondary, $lightness: -20%);
+  border-color: color.adjust(@color-secondary, $lightness: -20%);
 }
 
 .btn-success.active, .btn-success:active, .btn-success:hover, .open > .dropdown-toggle.btn-success {
   color: #ffffff;
-  background-color: darken(@color-secondary, 20%);
-  border-color: darken(@color-secondary, 20%);
+  background-color: color.adjust(@color-secondary, $lightness: -20%);
+  border-color: color.adjust(@color-secondary, $lightness: -20%);
 }
 
 .btn-success.active.focus, .btn-success.active:focus, .btn-success.active:hover, .btn-success:active.focus, .btn-success:active:focus, .btn-success:active:hover, .open > .dropdown-toggle.btn-success.focus, .open > .dropdown-toggle.btn-success:focus, .open > .dropdown-toggle.btn-success:hover {
   color: #ffffff;
-  background-color: darken(@color-secondary, 40%);
-  border-color: darken(@color-secondary, 40%);
+  background-color: color.adjust(@color-secondary, $lightness: -40%);
+  border-color: color.adjust(@color-secondary, $lightness: -40%);
 }
 
 .btn-success.active, .btn-success:active, .open > .dropdown-toggle.btn-success {
@@ -861,8 +861,8 @@ a.btn.disabled, fieldset[disabled] a.btn {
 }
 
 .btn-success.disabled.focus, .btn-success.disabled:focus, .btn-success.disabled:hover, .btn-success[disabled].focus, .btn-success[disabled]:focus, .btn-success[disabled]:hover, fieldset[disabled] .btn-success.focus, fieldset[disabled] .btn-success:focus, fieldset[disabled] .btn-success:hover {
-  background-color: darken(@color-secondary, 60%);
-  border-color: darken(@color-secondary, 60%);
+  background-color: color.adjust(@color-secondary, $lightness: -60%);
+  border-color: color.adjust(@color-secondary, $lightness: -60%);
 }
 
 .btn-success .badge {
@@ -2404,7 +2404,7 @@ a.label:focus, a.label:hover {
 }
 
 .label-primary[href]:focus, .label-primary[href]:hover {
-  background-color: darken(@color-primary, 18%)
+  background-color: color.adjust(@color-primary, $lightness: -18%)
 }
 
 .label-success {
@@ -2601,8 +2601,8 @@ a.thumbnail.active, a.thumbnail:focus, a.thumbnail:hover {
 
 .alert-success {
   background-color: @color-secondary;
-  border-color: darken(@color-secondary, 20%);
-  color: darken(@color-secondary, 90%);
+  border-color: color.adjust(@color-secondary, $lightness: -20%);
+  color: color.adjust(@color-secondary, $lightness: -90%);
 }
 
 .alert-success hr {

@@ -66,7 +66,7 @@ $colors: map-merge((
 ), $colors);
 
 $primary: $blue !default;
-$primary-dark: darken($blue, 10%) !default;
+$primary-dark: color.adjust($blue, $lightness: -10%) !default;
 $secondary: $gray-600 !default;
 $success: $green !default;
 $info: $cyan !default;
@@ -153,7 +153,7 @@ $body-color: $blue !default;
 
 $link-color: theme-color("primary") !default;
 $link-decoration: none !default;
-$link-hover-color: darken($link-color, 15%) !default;
+$link-hover-color: color.adjust($link-color, $lightness: -15%) !default;
 $link-hover-decoration: underline !default;
 
 // Paragraphs
@@ -535,7 +535,7 @@ $dropdown-divider-bg: $gray-200 !default;
 $dropdown-box-shadow: 0 40px 100px rgba($black, .35) !default;
 
 $dropdown-link-color: $gray-900 !default;
-$dropdown-link-hover-color: darken($gray-900, 5%) !default;
+$dropdown-link-hover-color: color.adjust($gray-900, $lightness: -5%) !default;
 $dropdown-link-hover-bg: $gray-100 !default;
 
 $dropdown-link-active-color: $component-active-color !default;
@@ -691,7 +691,7 @@ $popover-border-color: rgba($black, .2) !default;
 $popover-border-radius: $border-radius-lg !default;
 $popover-box-shadow: 0 .25rem .5rem rgba($black, .2) !default;
 
-$popover-header-bg: darken($popover-bg, 3%) !default;
+$popover-header-bg: color.adjust($popover-bg, $lightness: -3%) !default;
 $popover-header-color: $headings-color !default;
 $popover-header-padding-y: .5rem !default;
 $popover-header-padding-x: .75rem !default;
