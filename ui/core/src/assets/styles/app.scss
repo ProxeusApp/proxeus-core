@@ -1,22 +1,22 @@
-@import "~bootstrap/scss/functions";
-@import "variables.scss";
-@import "~bootstrap/scss/bootstrap";
-@import "fonts.scss";
-@import "buttons.scss";
-@import "nav-tabs";
+@use "~bootstrap/scss/functions";
+@use "variables.scss";
+@use "~bootstrap/scss/bootstrap";
+@use "fonts.scss";
+@use "buttons.scss";
+@use "nav-tabs";
 
 $mdi-font-path: "~@mdi/font/fonts";
-@import "~@mdi/font/scss/materialdesignicons.scss";
+@use "~@mdi/font/scss/materialdesignicons.scss";
 
-@import "modals.scss";
-@import "fancy-radio-checkbox.scss";
+@use "modals.scss";
+@use "fancy-radio-checkbox.scss";
 
-@import "forms.scss";
-@import "alerts.scss";
-@import "global.scss";
-@import "topnav";
+@use "forms.scss";
+@use "alerts.scss";
+@use "global.scss";
+@use "topnav";
 
-@import "flatpickr.scss";
+@use "flatpickr.scss";
 
 .navbar h1 {
   margin-bottom: 0;

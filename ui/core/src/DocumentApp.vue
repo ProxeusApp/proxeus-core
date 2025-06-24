@@ -82,24 +82,24 @@ export default {
 </script>
 
 <style lang="scss">
-  @import "~bootstrap/scss/functions";
-  @import "assets/styles/variables.scss";
-  @import "~bootstrap/scss/bootstrap";
-  @import "assets/styles/fonts.scss";
-  @import "assets/styles/buttons.scss";
+  @use "~bootstrap/scss/functions";
+  @use "assets/styles/variables.scss";
+  @use "~bootstrap/scss/bootstrap";
+  @use "assets/styles/fonts.scss";
+  @use "assets/styles/buttons.scss";
 
   $mdi-font-path: "~@mdi/font/fonts";
-  @import "~@mdi/font/scss/materialdesignicons.scss";
+  @use "~@mdi/font/scss/materialdesignicons.scss";
 
-  @import "assets/styles/modals.scss";
-  @import "assets/styles/fancy-radio-checkbox.scss";
+  @use "assets/styles/modals.scss";
+  @use "assets/styles/fancy-radio-checkbox.scss";
 
-  @import "assets/styles/forms.scss";
-  @import "assets/styles/alerts.scss";
-  @import "assets/styles/global.scss";
+  @use "assets/styles/forms.scss";
+  @use "assets/styles/alerts.scss";
+  @use "assets/styles/global.scss";
 
-  @import "assets/styles/flatpickr.scss";
-  @import "assets/styles/nav-tabs.scss";
+  @use "assets/styles/flatpickr.scss";
+  @use "assets/styles/nav-tabs.scss";
 
   ::-moz-selection {
     background: $info;

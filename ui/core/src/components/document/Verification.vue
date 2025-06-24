@@ -93,7 +93,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  @import "../../assets/styles/variables";
+  @use "../../assets/styles/variables";
 
   ::v-deep .file_drop_box {
     border: 2px dashed #dddddd;

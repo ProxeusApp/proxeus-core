@@ -271,8 +271,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  @import "~bootstrap/scss/functions";
-  @import "../../assets/styles/variables.scss";
+  @use "~bootstrap/scss/functions";
+  @use "../../assets/styles/variables.scss";
 
   .icon-unpersisted {
     position: absolute;

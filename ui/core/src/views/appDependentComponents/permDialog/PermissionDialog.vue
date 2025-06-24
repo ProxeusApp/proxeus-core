@@ -548,7 +548,7 @@ export default {
 </script>
 
 <style lang="scss">
-  @import "../../../assets/styles/variables";
+  @use "../../../assets/styles/variables";
 
   input.share-link {
     width: 100%;

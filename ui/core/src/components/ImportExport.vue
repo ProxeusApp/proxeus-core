@@ -179,7 +179,7 @@ export default {
 </script>
 
 <style lang="scss">
-  @import "@/assets/styles/variables.scss";
+  @use "@/assets/styles/variables.scss";
 
   .imexclose {
     position: absolute;

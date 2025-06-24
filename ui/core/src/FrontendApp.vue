@@ -96,14 +96,14 @@ export default {
 </script>
 
 <style lang="scss">
-  @import "assets/styles/variables.scss";
-  @import "~bootstrap/scss/bootstrap";
-  @import "assets/styles/fonts.scss";
-  @import "assets/styles/buttons.scss";
+  @use "assets/styles/variables.scss";
+  @use "~bootstrap/scss/bootstrap";
+  @use "assets/styles/fonts.scss";
+  @use "assets/styles/buttons.scss";
 
   $mdi-font-path: "~@mdi/font/fonts";
-  @import "~@mdi/font/scss/materialdesignicons.scss";
-  @import "assets/styles/global.scss";
+  @use "~@mdi/font/scss/materialdesignicons.scss";
+  @use "assets/styles/global.scss";
 
   html {
     position: relative;

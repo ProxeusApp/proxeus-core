@@ -514,7 +514,7 @@ export default {
 </script>
 
 <style lang="scss">
-  @import "@/assets/styles/variables.scss";
+  @use "@/assets/styles/variables.scss";
 
   .ss-list > ul > li {
     white-space: nowrap;

@@ -616,7 +616,7 @@ export default {
 </script>
 
 <style lang="scss">
-  @import "../assets/styles/librehub.scss";
+  @use "../assets/styles/librehub.scss";
 </style>
 
 <style lang="scss" scoped>

@@ -201,7 +201,7 @@ export default {
 </script>
 
 <style lang="scss">
-  @import "../assets/styles/variables.scss";
+  @use "../assets/styles/variables.scss";
 
   .modal-body {
     h1 {

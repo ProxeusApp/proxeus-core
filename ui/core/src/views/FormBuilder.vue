@@ -508,10 +508,10 @@ export default {
 <style lang="less">
 
     .app-formbuilder {
-        @import "../assets/styles/legacy/backend.less";
-        @import "../libs/legacy/formbuilder/contextMenu/contextmenu.css";
-        @import "../libs/legacy/formbuilder/splitpane/split-pane.css";
-        @import "../assets/styles/legacy/formbuilder.less";
+        @use "../assets/styles/legacy/backend.less";
+        @use "../libs/legacy/formbuilder/contextMenu/contextmenu.css";
+        @use "../libs/legacy/formbuilder/splitpane/split-pane.css";
+        @use "../assets/styles/legacy/formbuilder.less";
 
     }
 

@@ -76,7 +76,7 @@ export default {
 </script>
 
 <style lang="scss">
-  @import "../assets/styles/variables.scss";
+  @use "../assets/styles/variables.scss";
 
   .login-form {
     overflow: auto;

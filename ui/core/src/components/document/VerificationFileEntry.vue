@@ -364,7 +364,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  @import "../../assets/styles/variables";
+  @use "../../assets/styles/variables";
 
   .break-word {
     word-wrap: break-word;

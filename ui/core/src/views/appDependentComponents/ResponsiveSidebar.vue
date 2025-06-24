@@ -111,9 +111,9 @@ export default {
 }
 </script>
 <style lang="scss">
-  @import "../../assets/styles/variables";
-  @import "~bootstrap/scss/mixins";
-  @import "../../assets/styles/sidebar.scss";
+  @use "../../assets/styles/variables";
+  @use "~bootstrap/scss/mixins";
+  @use "../../assets/styles/sidebar.scss";
 
   .brand-name {
     letter-spacing: 2px;
