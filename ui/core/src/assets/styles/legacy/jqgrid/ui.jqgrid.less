@@ -1022,7 +1022,7 @@ input.ui-pg-input {
 
 .ui-state-highlight, .ui-widget-content .ui-state-highlight, .ui-widget-header .ui-state-highlight {
   color: @base-bg-color;
-  background-color: lighten(@color-primary, 40%) !important;
+  background-color: color.adjust(@color-primary, $lightness: 40%) !important;
   border: 1px solid @color-inactive !important;
 }
 
