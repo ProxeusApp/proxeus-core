@@ -1,7 +1,8 @@
+@use "sass:math";
+
 /*.vis-network {*/
 /*box-shadow: inset 1px 1px 10px rgba(0,0,0,.1);*/
 /*}*/
-@use "sass:math";
 
 .vis-network:focus {
   outline: none;
@@ -56,30 +57,30 @@ footer {
   margin: 0;
 }
 
-.flow-chart-main aside .table>tbody>tr>td,
-.flow-chart-main aside .table>thead>tr>th {
+.flow-chart-main aside .table > tbody > tr > td,
+.flow-chart-main aside .table > thead > tr > th {
   border-color: #cccccc;
 }
 
-.flow-chart-main aside .table>thead>tr>th {
+.flow-chart-main aside .table > thead > tr > th {
   text-align: right;
 }
 
-.flow-chart-main aside .table>tbody>tr>td {
+.flow-chart-main aside .table > tbody > tr > td {
   padding: 0;
 }
 
-.flow-chart-main aside .table>tbody>tr>td.action {
+.flow-chart-main aside .table > tbody > tr > td.action {
   width: 30px;
 }
 
-.flow-chart-main aside .table>tbody>tr>td input {
+.flow-chart-main aside .table > tbody > tr > td input {
   width: 100%;
   height: 30px;
 }
 
-.flow-chart-main aside .table>tbody>tr>td a,
-aside .table>tbody>tr>td span {
+.flow-chart-main aside .table > tbody > tr > td a,
+aside .table > tbody > tr > td span {
   display: block;
   height: 30px;
   width: 188px;
@@ -90,34 +91,34 @@ aside .table>tbody>tr>td span {
   padding: 0 5px;
 }
 
-.flow-chart-main aside .table>tbody>tr>td span {
+.flow-chart-main aside .table > tbody > tr > td span {
   background: #428bca;
   color: #ffffff;
 }
 
-.flow-chart-main aside .table>tbody>tr>td.action a {
+.flow-chart-main aside .table > tbody > tr > td.action a {
   text-align: center;
   padding: 0;
   width: auto;
 }
 
-.flow-chart-main aside .table>tbody>tr>td.delete a {
+.flow-chart-main aside .table > tbody > tr > td.delete a {
   width: auto;
   font-size: 21px;
   font-weight: bold;
   color: #000000;
   text-shadow: 0 1px 0 #ffffff;
   filter: alpha(opacity=20);
-  opacity: .2;
+  opacity: 0.2;
   padding: 0;
 }
 
-.flow-chart-main aside .table>tbody>tr>td.delete a:hover {
+.flow-chart-main aside .table > tbody > tr > td.delete a:hover {
   color: #000000;
   text-decoration: none;
   cursor: pointer;
   filter: alpha(opacity=50);
-  opacity: .5;
+  opacity: 0.5;
 }
 
 .flow-chart-main article {
@@ -267,7 +268,7 @@ aside .table>tbody>tr>td span {
 .step-inner .delete:active,
 .result-inner .delete:hover,
 .result-inner .delete:active {
-  opacity: 1.0;
+  opacity: 1;
   outline: none;
 }
 
@@ -332,16 +333,16 @@ aside .table>tbody>tr>td span {
   top: -100px;
 }
 
-.flow-chart-main .contact>span,
-.name>span,
-.desc>span {
+.flow-chart-main .contact > span,
+.name > span,
+.desc > span {
   display: block;
   color: #333333;
 }
 
-.flow-chart-main .contact>span:hover,
-.name>span:hover,
-.desc>span:hover {
+.flow-chart-main .contact > span:hover,
+.name > span:hover,
+.desc > span:hover {
   text-decoration: none;
 }
 
@@ -355,7 +356,7 @@ aside .table>tbody>tr>td span {
   border-right: solid 1px rgba(0, 0, 0, 0.13);
 }
 
-.flow-chart-main .contact>span {
+.flow-chart-main .contact > span {
   font-size: 24px;
   text-align: center;
   line-height: 42px;
@@ -370,7 +371,7 @@ aside .table>tbody>tr>td span {
   max-width: 70px;
 }
 
-.flow-chart-main .name>span {
+.flow-chart-main .name > span {
   font-size: 11px;
   line-height: 37px;
   text-indent: 5px;
@@ -380,7 +381,7 @@ aside .table>tbody>tr>td span {
   text-overflow: ellipsis;
 }
 
-.flow-chart-main .name>span:hover {
+.flow-chart-main .name > span:hover {
   cursor: text;
 }
 
@@ -408,7 +409,7 @@ aside .table>tbody>tr>td span {
   margin: 4px 0;
 }
 
-.flow-chart-main .desc>a {
+.flow-chart-main .desc > a {
   position: absolute;
   top: 0px;
   left: 0px;
@@ -532,12 +533,12 @@ aside .table>tbody>tr>td span {
   overflow: auto;
 }
 
-.flow-chart-main .poppanel .poppanel-content .table>tbody>tr>td {
+.flow-chart-main .poppanel .poppanel-content .table > tbody > tr > td {
   padding: 0;
   line-height: normal;
 }
 
-.flow-chart-main .poppanel .poppanel-content .table>tbody>tr>td label {
+.flow-chart-main .poppanel .poppanel-content .table > tbody > tr > td label {
   width: 150px;
   margin: 0;
   position: relative;
@@ -549,16 +550,39 @@ aside .table>tbody>tr>td span {
   text-overflow: ellipsis;
 }
 
-.flow-chart-main .poppanel .poppanel-content .table>tbody>tr>td label:hover {
+.flow-chart-main
+  .poppanel
+  .poppanel-content
+  .table
+  > tbody
+  > tr
+  > td
+  label:hover {
   cursor: pointer;
 }
 
-.flow-chart-main .poppanel .poppanel-content .table>tbody>tr>td label input {
+.flow-chart-main
+  .poppanel
+  .poppanel-content
+  .table
+  > tbody
+  > tr
+  > td
+  label
+  input {
   position: absolute;
   left: -100px;
 }
 
-.flow-chart-main .poppanel .poppanel-content .table>tbody>tr>td label .glyphicon {
+.flow-chart-main
+  .poppanel
+  .poppanel-content
+  .table
+  > tbody
+  > tr
+  > td
+  label
+  .glyphicon {
   min-width: 16px;
 }
 
@@ -662,7 +686,7 @@ aside .table>tbody>tr>td span {
 }
 
 .flow-chart-main .condition:after {
-  content: '';
+  content: "";
   position: absolute;
   left: -50px;
   top: 50px;
@@ -748,7 +772,7 @@ input.flow-chart-finder-input {
   top: 0;
   left: 0;
   padding: 0;
-  box-shadow: 0 0 50px rgba(0, 0, 0, .1);
+  box-shadow: 0 0 50px rgba(0, 0, 0, 0.1);
   background: white;
 }
 
@@ -775,13 +799,13 @@ input.flow-chart-finder-input {
   min-height: 54px;
 }
 
-.fci-node>table {
+.fci-node > table {
   width: 100%;
   max-width: 100%;
   table-layout: fixed;
 }
 
-.flow-chart-node-inner>.fci-node {
+.flow-chart-node-inner > .fci-node {
   width: 100%;
 }
 
@@ -945,7 +969,7 @@ input.flow-chart-finder-input {
 .flow-chart-main .wfchart-snavi .wfc-snn {
   position: relative;
   background: rgba(0, 0, 0, 0.07);
-  box-shadow: 1px 1px 20px rgba(0, 0, 0, .07);
+  box-shadow: 1px 1px 20px rgba(0, 0, 0, 0.07);
   border-top-right-radius: 10%;
   border-bottom-right-radius: 10%;
   padding-right: 5px;
@@ -992,9 +1016,9 @@ input.flow-chart-finder-input {
   color: red;
 }
 
-.wfvis-ui-delete>table,
-.wfvis-ui-delete>table td,
-.wfvis-ui-delete>table tr {
+.wfvis-ui-delete > table,
+.wfvis-ui-delete > table td,
+.wfvis-ui-delete > table tr {
   border: none;
 }
 
@@ -1002,7 +1026,7 @@ input.flow-chart-finder-input {
   color: red;
   cursor: pointer;
   font-weight: bold;
-  background: rgba(0, 0, 0, 0.30);
+  background: rgba(0, 0, 0, 0.3);
 }
 
 .vis-network {
@@ -1034,7 +1058,7 @@ input.flow-chart-finder-input {
   text-transform: none;
   word-wrap: normal;
   direction: ltr;
-  -webkit-font-feature-settings: 'liga';
+  -webkit-font-feature-settings: "liga";
   -webkit-font-smoothing: antialiased;
 }
 

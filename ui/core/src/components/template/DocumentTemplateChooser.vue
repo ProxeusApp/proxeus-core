@@ -271,7 +271,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  @use "~bootstrap/scss/functions";
   @use "../../assets/styles/variables.scss";
 
   .icon-unpersisted {

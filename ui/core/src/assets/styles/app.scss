@@ -1,11 +1,8 @@
-@use "~bootstrap/scss/functions";
 @use "variables.scss";
-@use "~bootstrap/scss/bootstrap";
 @use "fonts.scss";
 @use "buttons.scss";
 @use "nav-tabs";
 
-$mdi-font-path: "~@mdi/font/fonts";
 @use "~@mdi/font/scss/materialdesignicons.scss";
 
 @use "modals.scss";
@@ -18,12 +15,15 @@ $mdi-font-path: "~@mdi/font/fonts";
 
 @use "flatpickr.scss";
 
+$mdi-font-path: "~@mdi/font/fonts";
+
 .navbar h1 {
   margin-bottom: 0;
 }
 
 .app-main {
-  > div > .container-fluid, > div > .main-container {
+  > div > .container-fluid,
+  > div > .main-container {
     height: calc(100vh - 60px);
     overflow-y: scroll;
   }
@@ -74,12 +74,12 @@ $mdi-font-path: "~@mdi/font/fonts";
   width: 100%;
   background: white;
   border: 1px solid #gray-200;
-  box-shadow: 0 45px 100px rgba(0, 0, 0, .35);
+  box-shadow: 0 45px 100px rgba(0, 0, 0, 0.35);
   position: relative;
 }
 
 .toggle-row-backdrop {
-  background: rgba(0, 0, 0, .2);
+  background: rgba(0, 0, 0, 0.2);
   position: fixed;
   z-index: 98;
   width: 100%;
