@@ -600,13 +600,11 @@ export default {
 
 <style></style>
 
-<style lang="less">
-.app-formbuilder {
-  @import "../assets/styles/legacy/backend.less";
-  @import "../libs/legacy/formbuilder/contextMenu/contextmenu.css";
-  @import "../libs/legacy/formbuilder/splitpane/split-pane.css";
-  @import "../assets/styles/legacy/formbuilder.less";
-}
+<style lang="scss">
+@use "../assets/styles/legacy/backend.scss";
+@use "../assets/styles/legacy/formbuilder.scss";
+@use "../libs/legacy/formbuilder/contextMenu/contextmenu.css";
+@use "../libs/legacy/formbuilder/splitpane/split-pane.css";
 
 /* Hide Autoswitch for now */
 .switch-main {

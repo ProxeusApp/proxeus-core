@@ -1,4 +1,4 @@
-@import "../theme-vars.less";
+@import "../theme-vars.scss";
 
 .ui-jqgrid {
   position: relative;
@@ -10,7 +10,7 @@
 }
 
 .ui-jqgrid * {
-  color: @color-primary;
+  color: $color-primary;
 }
 
 .ui-jqgrid-bdiv table tr:nth-child(odd) {
@@ -45,8 +45,8 @@
 
 .ui-jqgrid .ui-jqgrid-title {
   margin: .1em 0 .2em;
-  color: @base-bg-color;
-  font-family: @labelAndRest-font-family;
+  color: $base-bg-color;
+  font-family: $labelAndRest-font-family;
 }
 
 .ui-jqgrid .ui-jqgrid-titlebar-close {
@@ -265,7 +265,7 @@ tr.ui-search-toolbar select {
 }
 
 .ui-jqgrid tr.ui-row-ltr[editable="1"] {
-  color: @color-primary;
+  color: $color-primary;
   background-color: #d9edf7;
   border: 1px solid #aaaaaa;
 }
@@ -393,8 +393,8 @@ tr.ui-search-toolbar select {
   display: block;
   height: 19px;
   margin: 0;
-  background: @base-bg-color;
-  border: 1px solid @color-primary;
+  background: $base-bg-color;
+  border: 1px solid $color-primary;
 }
 
 .ui-jqgrid .ui-separator {
@@ -512,9 +512,9 @@ tr.ui-search-toolbar select {
   text-align: center;
   font-weight: bold;
   display: none;
-  border: 1px solid @color-primary !important;
+  border: 1px solid $color-primary !important;
   font-size: 14px;
-  color: @color-primary !important;
+  color: $color-primary !important;
 }
 
 .ui-jqgrid .jqgrid-overlay {
@@ -864,9 +864,9 @@ a.g-menu-item, a.soptclass, a.clearsearchclass {
 
 .ui-jqgrid .ui-jqgrid-titlebar,
 .ui-widget-header {
-  border: 1px solid @color-primary !important;
-  border-bottom: 1px solid @base-bg-color !important;
-  background: @color-primary;
+  border: 1px solid $color-primary !important;
+  border-bottom: 1px solid $base-bg-color !important;
+  background: $color-primary;
   margin-top: 0;
   margin-bottom: 0;
   font-size: 16px;
@@ -885,7 +885,7 @@ a.g-menu-item, a.soptclass, a.clearsearchclass {
 .ui-menu > .ui-menu-item > a.g-menu-item {
   min-width: 116px;
   min-height: 18px;
-  color: @color-primary;
+  color: $color-primary;
   border: 0 none !important;
 }
 
@@ -913,7 +913,7 @@ a.g-menu-item, a.soptclass, a.clearsearchclass {
   border: 1px solid rgba(70, 165, 251, 0.27);
   background-color: #dff0d8;
   font-weight: normal;
-  color: @color-primary;
+  color: $color-primary;
   border-radius: 0;
 }
 
@@ -926,7 +926,7 @@ a.g-menu-item, a.soptclass, a.clearsearchclass {
   border: 1px solid rgba(70, 165, 251, 0.27);
   background-color: #dff0d8;
   font-weight: normal;
-  color: @color-primary;
+  color: $color-primary;
   border-radius: 0;
 }
 
@@ -940,7 +940,7 @@ table .ui-sortable-helper {
 }
 
 .ui-jqgrid {
-  border: 1px solid @color-primary !important;
+  border: 1px solid $color-primary !important;
 }
 
 .ui-jqgrid-htable,
@@ -980,13 +980,13 @@ input.ui-pg-input {
 
 .ui-widget-content {
   border: 1px solid #f0f4ff;
-  background-color: @base-bg-color;
+  background-color: $base-bg-color;
 }
 
 .ui-state-hover, .ui-widget-content .ui-state-hover, .ui-widget-header .ui-state-hover, .ui-state-focus, .ui-widget-content .ui-state-focus, .ui-widget-header .ui-state-focus {
-  color: @base-bg-color;
-  background-color: @color-primary !important;
-  border-color: @color-inactive !important;
+  color: $base-bg-color;
+  background-color: $color-primary !important;
+  border-color: $color-inactive !important;
   text-decoration: none !important;
 }
 
@@ -996,7 +996,7 @@ input.ui-pg-input {
 .ui-state-focus td,
 .ui-widget-content .ui-state-focus td,
 .ui-widget-header .ui-state-focus td {
-  color: @base-bg-color;
+  color: $base-bg-color;
   text-decoration: none;
 }
 
@@ -1006,7 +1006,7 @@ input.ui-pg-input {
 .ui-state-focus span,
 .ui-widget-content .ui-state-focus span,
 .ui-widget-header .ui-state-focus span {
-  color: @base-bg-color;
+  color: $base-bg-color;
   text-decoration: none;
 }
 
@@ -1016,25 +1016,25 @@ input.ui-pg-input {
 .ui-state-focus div,
 .ui-widget-content .ui-state-focus div,
 .ui-widget-header .ui-state-focus div {
-  color: @base-bg-color;
+  color: $base-bg-color;
   text-decoration: none;
 }
 
 .ui-state-highlight, .ui-widget-content .ui-state-highlight, .ui-widget-header .ui-state-highlight {
-  color: @base-bg-color;
-  background-color: color.adjust(@color-primary, $lightness: 40%) !important;
-  border: 1px solid @color-inactive !important;
+  color: $base-bg-color;
+  background-color: color.adjust($color-primary, $lightness: 40%) !important;
+  border: 1px solid $color-inactive !important;
 }
 
 .ui-state-highlight td, .ui-widget-content .ui-state-highlight td, .ui-widget-header .ui-state-highlight td {
-  color: @base-bg-color;
+  color: $base-bg-color;
 }
 
 .ui-state-hover a, .ui-state-hover a:hover, .ui-state-hover a:link, .ui-state-hover a:visited {
-  color: @base-bg-color;
+  color: $base-bg-color;
   text-decoration: none;
 }
 
 .ui-widget {
-  font-family: @labelAndRest-font-family;
+  font-family: $labelAndRest-font-family;
 }

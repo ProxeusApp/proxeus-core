@@ -1,8 +1,8 @@
-@import 'general.less';
+@import 'general.scss';
 
 /* frontend */
 #wrapper {
-  background-color: @base-bg-color;
+  background-color: $base-bg-color;
 }
 
 .body-gears-loader {
@@ -29,12 +29,12 @@
 }
 
 .special-link {
-  color: @nav-top-bg-color;
+  color: $nav-top-bg-color;
   font-style: normal;
 }
 
 .special-link:hover, .special-link:focus {
-  color: @nav-top-b-color;
+  color: $nav-top-b-color;
   font-style: normal;
   text-decoration: none;
 }

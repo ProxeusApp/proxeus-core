@@ -3,7 +3,7 @@
 * Includes: draggable.css, core.css, resizable.css, selectable.css, sortable.css, accordion.css, autocomplete.css, menu.css, button.css, controlgroup.css, checkboxradio.css, datepicker.css, dialog.css, progressbar.css, selectmenu.css, slider.css, spinner.css, tabs.css, tooltip.css, theme.css
 * To view and modify this theme, visit http://jqueryui.com/themeroller/?scope=&folderName=base&cornerRadiusShadow=8px&offsetLeftShadow=0px&offsetTopShadow=0px&thicknessShadow=5px&opacityShadow=30&bgImgOpacityShadow=0&bgTextureShadow=flat&bgColorShadow=666666&opacityOverlay=30&bgImgOpacityOverlay=0&bgTextureOverlay=flat&bgColorOverlay=aaaaaa&iconColorError=cc0000&fcError=5f3f3f&borderColorError=f1a899&bgTextureError=flat&bgColorError=fddfdf&iconColorHighlight=777620&fcHighlight=777620&borderColorHighlight=dad55e&bgTextureHighlight=flat&bgColorHighlight=fffa90&iconColorActive=ffffff&fcActive=ffffff&borderColorActive=003eff&bgTextureActive=flat&bgColorActive=007fff&iconColorHover=555555&fcHover=2b2b2b&borderColorHover=bec4ca&bgTextureHover=flat&bgColorHover=ededed&iconColorDefault=777777&fcDefault=454545&borderColorDefault=c5c5c5&bgTextureDefault=flat&bgColorDefault=f6f6f6&iconColorContent=444444&fcContent=333333&borderColorContent=dee2e6&bgTextureContent=flat&bgColorContent=ffffff&iconColorHeader=444444&fcHeader=333333&borderColorHeader=dee2e6&bgTextureHeader=flat&bgColorHeader=e9e9e9&cornerRadius=3px&fwDefault=normal&fsDefault=1em&ffDefault=Arial%2CHelvetica%2Csans-serif
 * Copyright jQuery Foundation and other contributors; Licensed MIT */
-@import "../theme-vars.less";
+@import "../theme-vars.scss";
 
 .ui-datepicker {
   width: 17em;
@@ -104,17 +104,17 @@
   padding: .2em .6em .3em .6em;
   width: auto;
   overflow: visible;
-  color: @base-bg-color;
+  color: $base-bg-color;
 }
 
 .ui-datepicker .ui-datepicker-buttonpane button.ui-datepicker-current {
   float: left;
-  background: @color-primary;
+  background: $color-primary;
   opacity: 1;
 }
 
 .ui-datepicker .ui-datepicker-buttonpane button {
-  background: @color-primary;
+  background: $color-primary;
   opacity: 1;
 }
 
@@ -218,7 +218,7 @@
 
 .ui-datepicker .ui-datepicker-week-col {
   font-weight: bold;
-  color: @color-inactive;
+  color: $color-inactive;
 }
 
 .ui-slider {
@@ -256,7 +256,7 @@
 .ui-slider-horizontal .ui-slider-handle {
   top: -.3em;
   margin-left: -.6em;
-  background: @color-primary;
+  background: $color-primary;
 }
 
 .ui-slider-horizontal .ui-slider-range {
@@ -297,7 +297,7 @@
 }
 
 .ui-widget {
-  font-family: @labelAndRest-font-family;
+  font-family: $labelAndRest-font-family;
   font-size: 1em
 }
 
@@ -306,36 +306,36 @@
 }
 
 .ui-widget input, .ui-widget select, .ui-widget textarea, .ui-widget button {
-  font-family: @labelAndRest-font-family;
+  font-family: $labelAndRest-font-family;
   font-size: 1em
 }
 
 .ui-widget-content {
   border: 1px solid #dee2e6;
   background: #ffffff;
-  color: @color-primary;
+  color: $color-primary;
 }
 
 .ui-widget-content a {
-  color: @color-primary;
+  color: $color-primary;
 }
 
 .ui-widget-header {
-  color: @color-primary;
+  color: $color-primary;
   font-weight: bold
 }
 
 .ui-widget-header a {
-  color: @color-primary;
+  color: $color-primary;
 }
 
 .ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default, .ui-button, html .ui-button.ui-state-disabled:hover, html .ui-button.ui-state-disabled:active {
   font-weight: normal;
-  color: @color-primary;
+  color: $color-primary;
 }
 
 .ui-datepicker-buttonpane button {
-  color: @base-bg-color;
+  color: $base-bg-color;
 }
 
 .ui-state-default a, .ui-state-default a:link, .ui-state-default a:visited, a.ui-button, a:link.ui-button, a:visited.ui-button, .ui-button {
@@ -345,7 +345,7 @@
 
 .ui-state-hover, .ui-widget-content .ui-state-hover, .ui-widget-header .ui-state-hover, .ui-state-focus, .ui-widget-content .ui-state-focus, .ui-widget-header .ui-state-focus, .ui-button:hover, .ui-button:focus {
   font-weight: normal;
-  color: @base-bg-color;
+  color: $base-bg-color;
 }
 
 .ui-state-hover a, .ui-state-hover a:hover, .ui-state-hover a:link, .ui-state-hover a:visited, .ui-state-focus a, .ui-state-focus a:hover, .ui-state-focus a:link, .ui-state-focus a:visited, a.ui-button:hover, a.ui-button:focus {
@@ -373,7 +373,7 @@
 }
 
 .ui-datepicker-calendar .ui-datepicker-today > a {
-  color: @color-primary;
+  color: $color-primary;
   font-weight: bold;
 }
 
@@ -544,7 +544,7 @@
 
 .ui-datepicker {
   background-color: #ffffff;
-  border: 1px solid @color-primary;
+  border: 1px solid $color-primary;
   border-radius: 4px;
   box-shadow: 0 0 8px rgba(102, 175, 233, .6);
   display: none;
@@ -594,13 +594,13 @@
 .ui-datepicker .ui-datepicker-prev {
   float: left;
   text-align: left;
-  color: @color-primary;
+  color: $color-primary;
 }
 
 .ui-datepicker .ui-datepicker-next {
   float: right;
   text-align: right;
-  color: @color-primary;
+  color: $color-primary;
 }
 
 .ui-datepicker .ui-datepicker-prev:before {
@@ -648,7 +648,7 @@
 }
 
 .ui-datepicker .ui-datepicker-current-day {
-  background-color: @color-secondary;
+  background-color: $color-secondary;
 }
 
 .ui-datepicker .ui-datepicker-current-day a.ui-state-active {
@@ -656,7 +656,7 @@
 }
 
 .ui-datepicker .ui-datepicker-current-day a {
-  color: @color-primary;
+  color: $color-primary;
 }
 
 .ui-datepicker .ui-datepicker-calendar .ui-datepicker-unselectable:hover {
@@ -666,12 +666,12 @@
 
 .ui-datepicker-buttonpane {
   margin-top: 4px;
-  border-top: 1px solid @color-primary;
+  border-top: 1px solid $color-primary;
   padding-top: 2px;
 }
 
 .ui-datepicker-buttonpane button {
-  background-color: @color-primary;
+  background-color: $color-primary;
   border: none;
   padding: 6px 12px;
   margin: 2px;
@@ -691,8 +691,8 @@
   border: none;
   padding: 4px 6px;
   margin: 2px;
-  color: @color-primary;
-  border: 1px solid @color-primary;
+  color: $color-primary;
+  border: 1px solid $color-primary;
   border-radius: 4px;
 }
 

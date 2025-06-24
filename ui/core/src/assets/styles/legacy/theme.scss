@@ -1,11 +1,11 @@
-@import "theme-vars.less";
+@import "theme-vars.scss";
 
 .font-size-default {
-  font-size: @label-font-size;
+  font-size: $label-font-size;
 }
 
 .font-size-small {
-  font-size: @formfields-font-size;
+  font-size: $formfields-font-size;
 }
 
 .font-size-big {
@@ -27,7 +27,7 @@ html, body, figure {
 }
 
 html {
-  font-family: @labelAndRest-font-family;
+  font-family: $labelAndRest-font-family;
   -ms-text-size-adjust: 100%;
   -webkit-text-size-adjust: 100%;
   font-size: 10px;
@@ -35,7 +35,7 @@ html {
 }
 
 .form-title {
-  font-family: @title-font-family;
+  font-family: $title-font-family;
   font-size: 20px;
 }
 
@@ -45,7 +45,7 @@ textarea.tlabel:hover,
 textarea.tlabel:active {
   border: none;
   resize: none;
-  color: @color-primary;
+  color: $color-primary;
   outline: 0;
   padding: 8px;
   margin: 0;
@@ -69,7 +69,7 @@ textarea.tlabel[readonly].default-cursor {
   -moz-box-sizing: border-box;
   -ms-box-sizing: border-box;
   -webkit-box-sizing: border-box;
-  font-family: @title-font-family;
+  font-family: $title-font-family;
   height: 100%;
   overflow: hidden;
   position: absolute;
@@ -81,7 +81,7 @@ textarea.tlabel[readonly].default-cursor {
   -moz-box-sizing: border-box;
   -ms-box-sizing: border-box;
   -webkit-box-sizing: border-box;
-  font-family: @title-font-family;
+  font-family: $title-font-family;
   padding: 8px;
   margin: 0;
   visibility: hidden;
@@ -303,25 +303,25 @@ td, th {
 button, input, select, textarea, a, span {
   font-size: inherit;
   line-height: inherit;
-  color: @color-primary;
+  color: $color-primary;
 }
 
 .btn-primary > span {
-  color: @base-bg-color;
+  color: $base-bg-color;
 }
 
 a {
-  color: @color-primary;
+  color: $color-primary;
   text-decoration: none
 }
 
 a:focus {
-  color: @color-primary;
+  color: $color-primary;
   text-decoration: none;
 }
 
 a:hover {
-  color: @color-primary;
+  color: $color-primary;
   text-decoration: none;
   font-weight: bold;
 }
@@ -525,11 +525,11 @@ dt, kbd kbd, label {
 }
 
 .text-primary {
-  color: @color-primary
+  color: $color-primary
 }
 
 a.text-primary:focus, a.text-primary:hover {
-  color: color.adjust(@color-primary, $lightness: -18%)
+  color: color.adjust($color-primary, $lightness: -18%)
 }
 
 .text-success {
@@ -566,11 +566,11 @@ a.text-danger:focus, a.text-danger:hover {
 
 .bg-primary {
   color: #ffffff;
-  background-color: @color-primary
+  background-color: $color-primary
 }
 
 a.bg-primary:focus, a.bg-primary:hover {
-  background-color: color.adjust(@color-primary, $lightness: -18%)
+  background-color: color.adjust($color-primary, $lightness: -18%)
 }
 
 .bg-success {
@@ -710,9 +710,9 @@ caption, th {
 
 .form-control, output {
   display: block;
-  font-size: @formfields-font-size;
+  font-size: $formfields-font-size;
   line-height: 1.42857143;
-  color: @color-primary;
+  color: $color-primary;
   font-weight: normal;
 }
 
@@ -796,64 +796,64 @@ a.btn.disabled, fieldset[disabled] a.btn {
   background-color: #333333
 }
 
-@darken-percent: 12%;
+$darken-percent: 12%;
 
 .btn-primary {
   color: #ffffff;
-  background-color: @color-primary;
-  border-color: @color-primary;
+  background-color: $color-primary;
+  border-color: $color-primary;
 }
 
 .btn-primary.focus, .btn-primary:focus {
   color: #ffffff;
-  background-color: color.adjust(@color-primary, $lightness: -@darken-percent);
+  background-color: color.adjust($color-primary, $lightness: -$darken-percent);
   border-color: #122b40;
 }
 
 .btn-primary.active, .btn-primary:active, .btn-primary:hover, .open > .dropdown-toggle.btn-primary {
   color: #ffffff;
-  background-color: color.adjust(@color-primary, $lightness: -@darken-percent);
-  border-color: color.adjust(@color-primary, $lightness: -@darken-percent)
+  background-color: color.adjust($color-primary, $lightness: -$darken-percent);
+  border-color: color.adjust($color-primary, $lightness: -$darken-percent)
 }
 
 .btn-primary.active.focus, .btn-primary.active:focus, .btn-primary.active:hover, .btn-primary:active.focus, .btn-primary:active:focus, .btn-primary:active:hover, .open > .dropdown-toggle.btn-primary.focus, .open > .dropdown-toggle.btn-primary:focus, .open > .dropdown-toggle.btn-primary:hover {
   color: #ffffff;
-  background-color: color.adjust(@color-primary, $lightness: -@darken-percent);
+  background-color: color.adjust($color-primary, $lightness: -$darken-percent);
   border-color: #122b40
 }
 
 .btn-primary.disabled.focus, .btn-primary.disabled:focus, .btn-primary.disabled:hover, .btn-primary[disabled].focus, .btn-primary[disabled]:focus, .btn-primary[disabled]:hover, fieldset[disabled] .btn-primary.focus, fieldset[disabled] .btn-primary:focus, fieldset[disabled] .btn-primary:hover {
-  background-color: color.adjust(@color-primary, $lightness: -60%);
-  border-color: color.adjust(@color-primary, $lightness: -60%);
+  background-color: color.adjust($color-primary, $lightness: -60%);
+  border-color: color.adjust($color-primary, $lightness: -60%);
 }
 
 .btn-primary .badge {
-  color: @color-primary;
+  color: $color-primary;
   background-color: #ffffff
 }
 
 .btn-success {
   color: #ffffff;
-  background-color: @color-secondary;
-  border-color: @color-secondary
+  background-color: $color-secondary;
+  border-color: $color-secondary
 }
 
 .btn-success.focus, .btn-success:focus {
   color: #ffffff;
-  background-color: color.adjust(@color-secondary, $lightness: -20%);
-  border-color: color.adjust(@color-secondary, $lightness: -20%);
+  background-color: color.adjust($color-secondary, $lightness: -20%);
+  border-color: color.adjust($color-secondary, $lightness: -20%);
 }
 
 .btn-success.active, .btn-success:active, .btn-success:hover, .open > .dropdown-toggle.btn-success {
   color: #ffffff;
-  background-color: color.adjust(@color-secondary, $lightness: -20%);
-  border-color: color.adjust(@color-secondary, $lightness: -20%);
+  background-color: color.adjust($color-secondary, $lightness: -20%);
+  border-color: color.adjust($color-secondary, $lightness: -20%);
 }
 
 .btn-success.active.focus, .btn-success.active:focus, .btn-success.active:hover, .btn-success:active.focus, .btn-success:active:focus, .btn-success:active:hover, .open > .dropdown-toggle.btn-success.focus, .open > .dropdown-toggle.btn-success:focus, .open > .dropdown-toggle.btn-success:hover {
   color: #ffffff;
-  background-color: color.adjust(@color-secondary, $lightness: -40%);
-  border-color: color.adjust(@color-secondary, $lightness: -40%);
+  background-color: color.adjust($color-secondary, $lightness: -40%);
+  border-color: color.adjust($color-secondary, $lightness: -40%);
 }
 
 .btn-success.active, .btn-success:active, .open > .dropdown-toggle.btn-success {
@@ -861,8 +861,8 @@ a.btn.disabled, fieldset[disabled] a.btn {
 }
 
 .btn-success.disabled.focus, .btn-success.disabled:focus, .btn-success.disabled:hover, .btn-success[disabled].focus, .btn-success[disabled]:focus, .btn-success[disabled]:hover, fieldset[disabled] .btn-success.focus, fieldset[disabled] .btn-success:focus, fieldset[disabled] .btn-success:hover {
-  background-color: color.adjust(@color-secondary, $lightness: -60%);
-  border-color: color.adjust(@color-secondary, $lightness: -60%);
+  background-color: color.adjust($color-secondary, $lightness: -60%);
+  border-color: color.adjust($color-secondary, $lightness: -60%);
 }
 
 .btn-success .badge {
@@ -973,7 +973,7 @@ a.btn.disabled, fieldset[disabled] a.btn {
 }
 
 .btn-link {
-  color: @color-primary;
+  color: $color-primary;
   font-weight: 400;
   border-radius: 0
 }
@@ -1135,7 +1135,7 @@ tbody.collapse.in {
   display: block;
   clear: both;
   font-weight: 400;
-  color: @color-primary;
+  color: $color-primary;
   font-size: 20px;
 }
 
@@ -1149,7 +1149,7 @@ tbody.collapse.in {
   color: #ffffff;
   text-decoration: none;
   outline: 0;
-  background-color: @color-primary
+  background-color: $color-primary
 }
 
 .dropdown-menu > .disabled > a, .dropdown-menu > .disabled > a:focus, .dropdown-menu > .disabled > a:hover {
@@ -1474,14 +1474,14 @@ select[multiple].input-group-sm > .form-control, select[multiple].input-group-sm
 
 .input-group-addon:last-child {
   border-left: 0;
-  border-color: @color-primary;
+  border-color: $color-primary;
   border-bottom-right-radius: 4px;
   border-top-right-radius: 4px;
 }
 
 .date-field > .input-group-addon {
   border-left: 0;
-  border-color: @color-primary;
+  border-color: $color-primary;
   border-bottom-right-radius: 4px !important;
   border-top-right-radius: 4px !important;
 }
@@ -1545,7 +1545,7 @@ select[multiple].input-group-sm > .form-control, select[multiple].input-group-sm
 
 .nav .open > a, .nav .open > a:focus, .nav .open > a:hover {
   background-color: #eeeeee;
-  border-color: @color-primary;
+  border-color: $color-primary;
 }
 
 .nav .nav-divider {
@@ -1642,7 +1642,7 @@ select[multiple].input-group-sm > .form-control, select[multiple].input-group-sm
 
 .nav-pills > li.active > a, .nav-pills > li.active > a:focus, .nav-pills > li.active > a:hover {
   color: #ffffff;
-  background-color: @nav-top-bg-color
+  background-color: $nav-top-bg-color
 }
 
 .nav-stacked > li + li {
@@ -1840,11 +1840,11 @@ a.dropdown-toggle:hover img {
 
 .top-left-brand span {
   font-size: 26px;
-  font-family: @title-font-family;
+  font-family: $title-font-family;
 }
 
 .top-left-inside-nav > table.center-tbl-v {
-  margin-left: @leftSideSpacingFromBrowserFrame;
+  margin-left: $leftSideSpacingFromBrowserFrame;
 }
 
 img.top-left-logo {
@@ -2079,13 +2079,13 @@ img.top-left-logo {
 }
 
 .navbar-default {
-  background-color: @nav-top-bg-color;
-  border-color: @nav-top-b-color;
+  background-color: $nav-top-bg-color;
+  border-color: $nav-top-b-color;
   font-size: 20px;
 }
 
 .navbar-default .navbar-brand {
-  color: @color-primary;
+  color: $color-primary;
   font-size: 30px;
 }
 
@@ -2095,7 +2095,7 @@ img.top-left-logo {
 }
 
 .navbar-default .navbar-nav > li > a, .navbar-default .navbar-text {
-  color: @color-primary
+  color: $color-primary
 }
 
 .navbar-default .navbar-nav > li > a:focus, .navbar-default .navbar-nav > li > a:hover {
@@ -2104,7 +2104,7 @@ img.top-left-logo {
 }
 
 .navbar-default .navbar-nav > .active > a, .navbar-default .navbar-nav > .active > a:focus, .navbar-default .navbar-nav > .active > a:hover {
-  color: @color-primary;
+  color: $color-primary;
   background-color: #578a50
 }
 
@@ -2127,12 +2127,12 @@ img.top-left-logo {
 
 .navbar-default .navbar-nav > .open > a, .navbar-default .navbar-nav > .open > a:focus, .navbar-default .navbar-nav > .open > a:hover {
   background-color: #578a50;
-  color: @color-primary
+  color: $color-primary
 }
 
 @media (max-width: 767px) {
   .navbar-default .navbar-nav .open .dropdown-menu > li > a {
-    color: @color-primary
+    color: $color-primary
   }
 
   .navbar-default .navbar-nav .open .dropdown-menu > li > a:focus, .navbar-default .navbar-nav .open .dropdown-menu > li > a:hover {
@@ -2141,7 +2141,7 @@ img.top-left-logo {
   }
 
   .navbar-default .navbar-nav .open .dropdown-menu > .active > a, .navbar-default .navbar-nav .open .dropdown-menu > .active > a:focus, .navbar-default .navbar-nav .open .dropdown-menu > .active > a:hover {
-    color: @color-primary;
+    color: $color-primary;
     background-color: #578a50
   }
 
@@ -2152,7 +2152,7 @@ img.top-left-logo {
 }
 
 .navbar-default .navbar-link {
-  color: @color-primary
+  color: $color-primary
 }
 
 .navbar-default .navbar-link:hover {
@@ -2160,7 +2160,7 @@ img.top-left-logo {
 }
 
 .navbar-default .btn-link {
-  color: @color-primary
+  color: $color-primary
 }
 
 .navbar-default .btn-link:focus, .navbar-default .btn-link:hover {
@@ -2181,7 +2181,7 @@ img.top-left-logo {
 }
 
 .navbar-inverse .navbar-brand:focus, .navbar-inverse .navbar-brand:hover {
-  color: @color-primary;
+  color: $color-primary;
   background-color: transparent
 }
 
@@ -2190,12 +2190,12 @@ img.top-left-logo {
 }
 
 .navbar-inverse .navbar-nav > li > a:focus, .navbar-inverse .navbar-nav > li > a:hover {
-  color: @color-primary;
+  color: $color-primary;
   background-color: transparent
 }
 
 .navbar-inverse .navbar-nav > .active > a, .navbar-inverse .navbar-nav > .active > a:focus, .navbar-inverse .navbar-nav > .active > a:hover {
-  color: @color-primary;
+  color: $color-primary;
   background-color: #080808
 }
 
@@ -2213,7 +2213,7 @@ img.top-left-logo {
 }
 
 .navbar-inverse .navbar-toggle .icon-bar {
-  background-color: @color-primary
+  background-color: $color-primary
 }
 
 .navbar-inverse .navbar-collapse, .navbar-inverse .navbar-form {
@@ -2222,7 +2222,7 @@ img.top-left-logo {
 
 .navbar-inverse .navbar-nav > .open > a, .navbar-inverse .navbar-nav > .open > a:focus, .navbar-inverse .navbar-nav > .open > a:hover {
   background-color: #080808;
-  color: @color-primary
+  color: $color-primary
 }
 
 @media (max-width: 767px) {
@@ -2239,12 +2239,12 @@ img.top-left-logo {
   }
 
   .navbar-inverse .navbar-nav .open .dropdown-menu > li > a:focus, .navbar-inverse .navbar-nav .open .dropdown-menu > li > a:hover {
-    color: @color-primary;
+    color: $color-primary;
     background-color: transparent
   }
 
   .navbar-inverse .navbar-nav .open .dropdown-menu > .active > a, .navbar-inverse .navbar-nav .open .dropdown-menu > .active > a:focus, .navbar-inverse .navbar-nav .open .dropdown-menu > .active > a:hover {
-    color: @color-primary;
+    color: $color-primary;
     background-color: #080808
   }
 
@@ -2259,7 +2259,7 @@ img.top-left-logo {
 }
 
 .navbar-inverse .navbar-link:hover {
-  color: @color-primary
+  color: $color-primary
 }
 
 .navbar-inverse .btn-link {
@@ -2267,7 +2267,7 @@ img.top-left-logo {
 }
 
 .navbar-inverse .btn-link:focus, .navbar-inverse .btn-link:hover {
-  color: @color-primary
+  color: $color-primary
 }
 
 .pagination > li > a, .pagination > li > span {
@@ -2276,7 +2276,7 @@ img.top-left-logo {
   padding: 6px 12px;
   line-height: 1.42857143;
   text-decoration: none;
-  color: @color-primary;
+  color: $color-primary;
   background-color: #ffffff;
   border: 1px solid #dee2e6;
   margin-left: -1px
@@ -2300,7 +2300,7 @@ img.top-left-logo {
 
 .pagination > li > a:focus, .pagination > li > a:hover, .pagination > li > span:focus, .pagination > li > span:hover {
   z-index: 2;
-  color: @color-primary;
+  color: $color-primary;
   background-color: #eeeeee;
   border-color: #dee2e6
 }
@@ -2308,8 +2308,8 @@ img.top-left-logo {
 .pagination > .active > a, .pagination > .active > a:focus, .pagination > .active > a:hover, .pagination > .active > span, .pagination > .active > span:focus, .pagination > .active > span:hover {
   z-index: 3;
   color: #ffffff;
-  background-color: @color-primary;
-  border-color: @color-primary;
+  background-color: $color-primary;
+  border-color: $color-primary;
   cursor: default
 }
 
@@ -2400,11 +2400,11 @@ a.label:focus, a.label:hover {
 }
 
 .label-primary {
-  background-color: @color-primary
+  background-color: $color-primary
 }
 
 .label-primary[href]:focus, .label-primary[href]:hover {
-  background-color: color.adjust(@color-primary, $lightness: -18%)
+  background-color: color.adjust($color-primary, $lightness: -18%)
 }
 
 .label-success {
@@ -2470,7 +2470,7 @@ a.badge:focus, a.badge:hover {
 }
 
 .list-group-item.active > .badge, .nav-pills > .active > a > .badge {
-  color: @color-primary;
+  color: $color-primary;
   background-color: #ffffff
 }
 
@@ -2558,7 +2558,7 @@ a.badge:focus, a.badge:hover {
 }
 
 a.thumbnail.active, a.thumbnail:focus, a.thumbnail:hover {
-  border-color: @color-primary;
+  border-color: $color-primary;
 }
 
 .thumbnail .caption {
@@ -2569,7 +2569,7 @@ a.thumbnail.active, a.thumbnail:focus, a.thumbnail:hover {
 .alert {
   padding: 15px;
   border: 1px solid transparent;
-  border-radius: @border-radius
+  border-radius: $border-radius
 }
 
 .alert h4 {
@@ -2600,9 +2600,9 @@ a.thumbnail.active, a.thumbnail:focus, a.thumbnail:hover {
 }
 
 .alert-success {
-  background-color: @color-secondary;
-  border-color: color.adjust(@color-secondary, $lightness: -20%);
-  color: color.adjust(@color-secondary, $lightness: -90%);
+  background-color: $color-secondary;
+  border-color: color.adjust($color-secondary, $lightness: -20%);
+  color: color.adjust($color-secondary, $lightness: -90%);
 }
 
 .alert-success hr {
@@ -2655,7 +2655,7 @@ a.thumbnail.active, a.thumbnail:focus, a.thumbnail:hover {
   color: #843534
 }
 
-@-webkit-keyframes progress-bar-stripes {
+$-webkit-keyframes progress-bar-stripes {
   from {
     background-position: 40px 0
   }
@@ -2690,7 +2690,7 @@ a.thumbnail.active, a.thumbnail:focus, a.thumbnail:hover {
   line-height: 20px;
   color: #ffffff;
   text-align: center;
-  background-color: @color-primary;
+  background-color: $color-primary;
   -webkit-box-shadow: inset 0 -1px 0 rgba(0, 0, 0, .15);
   box-shadow: inset 0 -1px 0 rgba(0, 0, 0, .15);
   -webkit-transition: width .6s ease;
@@ -2859,8 +2859,8 @@ button.list-group-item {
 .list-group-item.active, .list-group-item.active:focus, .list-group-item.active:hover {
   z-index: 2;
   color: #ffffff;
-  background-color: @color-primary;
-  border-color: @color-primary
+  background-color: $color-primary;
+  border-color: $color-primary
 }
 
 .list-group-item.active .list-group-item-heading, .list-group-item.active .list-group-item-heading > .small, .list-group-item.active .list-group-item-heading > small, .list-group-item.active:focus .list-group-item-heading, .list-group-item.active:focus .list-group-item-heading > .small, .list-group-item.active:focus .list-group-item-heading > small, .list-group-item.active:hover .list-group-item-heading, .list-group-item.active:hover .list-group-item-heading > .small, .list-group-item.active:hover .list-group-item-heading > small {
@@ -3151,26 +3151,26 @@ a.list-group-item-danger.active, a.list-group-item-danger.active:focus, a.list-g
 }
 
 .panel-primary {
-  border-color: @color-primary
+  border-color: $color-primary
 }
 
 .panel-primary > .panel-heading {
   color: #ffffff;
-  background-color: @color-primary;
-  border-color: @color-primary
+  background-color: $color-primary;
+  border-color: $color-primary
 }
 
 .panel-primary > .panel-heading + .panel-collapse > .panel-body {
-  border-top-color: @color-primary
+  border-top-color: $color-primary
 }
 
 .panel-primary > .panel-heading .badge {
-  color: @color-primary;
+  color: $color-primary;
   background-color: #ffffff
 }
 
 .panel-primary > .panel-footer + .panel-collapse > .panel-body {
-  border-bottom-color: @color-primary
+  border-bottom-color: $color-primary
 }
 
 .panel-success {
@@ -3437,7 +3437,7 @@ button.close {
 .tooltip.bottom .tooltip-arrow, .tooltip.bottom-left .tooltip-arrow, .tooltip.bottom-right .tooltip-arrow {
   top: 0;
   border-width: 0 5px 5px;
-  border-bottom-color: @color-primary;
+  border-bottom-color: $color-primary;
 }
 
 .modal-header .close {
@@ -3505,7 +3505,7 @@ button.close {
   bottom: 0;
   margin-bottom: -5px;
   border-width: 5px 5px 0;
-  border-top-color: @color-primary;
+  border-top-color: $color-primary;
 }
 
 @media (min-width: 992px) {
@@ -3555,7 +3555,7 @@ button.close {
   padding: 3px 8px;
   color: #ffffff;
   text-align: center;
-  background-color: @color-primary;;
+  background-color: $color-primary;;
   border-radius: 0
 }
 
@@ -3577,7 +3577,7 @@ button.close {
   left: 50%;
   margin-left: -5px;
   border-width: 5px 5px 0;
-  border-top-color: @color-primary;
+  border-top-color: $color-primary;
 }
 
 .tooltip.top-left .tooltip-arrow {
@@ -3593,7 +3593,7 @@ button.close {
   left: 0;
   margin-top: -5px;
   border-width: 5px 5px 5px 0;
-  border-right-color: @color-primary;
+  border-right-color: $color-primary;
 }
 
 .tooltip.left .tooltip-arrow {
@@ -3601,7 +3601,7 @@ button.close {
   right: 0;
   margin-top: -5px;
   border-width: 5px 0 5px 5px;
-  border-left-color: @color-primary;
+  border-left-color: $color-primary;
 }
 
 .tooltip.bottom .tooltip-arrow {
@@ -3782,18 +3782,18 @@ span.tag {
 }
 
 .navbar-fixed-top a {
-  color: @nav-top-color;
+  color: $nav-top-color;
   font-size: 20px;
 }
 
 .navbar-fixed-top .dropdown.open > a, .navbar-fixed-top .dropdown > a:hover, .navbar-fixed-top .dropdown > a:focus {
-  color: @nav-top-color;
-  background-color: @nav-top-bg-color;
-  border-color: @nav-top-b-color;
+  color: $nav-top-color;
+  background-color: $nav-top-bg-color;
+  border-color: $nav-top-b-color;
 }
 
 .navbar-fixed-top {
-  height: @nav-top-height;
+  height: $nav-top-height;
 }
 
 .icon-spin {
@@ -3855,7 +3855,7 @@ span.tag {
   min-height: 100%;
   background-color: transparent;
   position: relative;
-  margin-top: @nav-top-height;
+  margin-top: $nav-top-height;
 }
 
 .top-right-inside-nav ul.top-menu {
@@ -3912,7 +3912,7 @@ input.top-bar-title {
 }
 
 input.top-bar-title:hover, input.top-bar-title:focus {
-  border-bottom: 1px solid @color-inactive;
+  border-bottom: 1px solid $color-inactive;
 }
 
 .top-right-inside-nav .top-bar-title[disabled] {
@@ -3922,11 +3922,11 @@ input.top-bar-title:hover, input.top-bar-title:focus {
 }
 
 .border-bottom-primary {
-  border-bottom: 1px solid @color-inactive;
+  border-bottom: 1px solid $color-inactive;
 }
 
 .border-bottom-secondary {
-  border-bottom: 1px solid @color-inactive;
+  border-bottom: 1px solid $color-inactive;
 }
 
 .zero-margin-padding {
@@ -4001,7 +4001,7 @@ input.top-bar-title:hover, input.top-bar-title:focus {
 }
 
 .panel-default > .panel-heading {
-  color: @color-primary;
+  color: $color-primary;
   background: none;
 }
 
@@ -4010,12 +4010,12 @@ input.top-bar-title:hover, input.top-bar-title:focus {
 }
 
 .btn .glyphicon {
-  color: @base-bg-color;
+  color: $base-bg-color;
   font-size: 16px;
 }
 
 .btn-default .glyphicon {
-  color: @color-primary;
+  color: $color-primary;
   font-size: 16px;
 }
 
@@ -4028,7 +4028,7 @@ input.top-bar-title:hover, input.top-bar-title:focus {
 }
 
 .modal-header .close span {
-  color: @color-primary;
+  color: $color-primary;
   font-size: 50px;
 }
 
@@ -4045,7 +4045,7 @@ div.pdf-viewer-btn .ppage-thumb {
 }
 
 div.pdf-viewer-btn .ppage-thumb {
-  border: 1px solid @color-inactive;
+  border: 1px solid $color-inactive;
   margin: 0;
   width: 100%;
   max-width: 100%;
@@ -4054,25 +4054,25 @@ div.pdf-viewer-btn .ppage-thumb {
 
 .tooltip-inner {
   max-width: 400px;
-  color: @color-primary;
+  color: $color-primary;
   text-align: center;
-  background-color: @base-bg-color;
-  border-radius: @border-radius;
-  border: 1px solid @color-primary;
+  background-color: $base-bg-color;
+  border-radius: $border-radius;
+  border: 1px solid $color-primary;
   padding: 15px;
   font-size: 16px;
   display: block;
 }
 
 .text-ellipsis {
-  .text-ellipsis();
+  @include text-ellipsis();
 }
 
 .panel .panel-heading {
   font-size: 24px;
 }
 
-@import "radio-checkbox.less";
+@import "radio-checkbox.scss";
 
 .global-block {
   position: fixed;
@@ -4082,12 +4082,12 @@ div.pdf-viewer-btn .ppage-thumb {
   right: 0;
   height: 100%;
   width: 100%;
-  background: @color-primary;
+  background: $color-primary;
   z-index: 10000;
   overflow: hidden;
   opacity: 0.8;
   display: none;
-  color: @base-bg-color;
+  color: $base-bg-color;
 }
 
 .global-block .msg-holder {
@@ -4101,7 +4101,7 @@ div.pdf-viewer-btn .ppage-thumb {
 }
 
 .global-block .msg-holder a {
-  color: @base-bg-color;
+  color: $base-bg-color;
   cursor: pointer;
 }
 
@@ -4110,9 +4110,9 @@ div.pdf-viewer-btn .ppage-thumb {
   font-size: 33px;
   right: 0;
   top: 0;
-  color: @base-bg-color;
+  color: $base-bg-color;
   border-radius: 50%;
-  border: 2px solid @base-bg-color;
+  border: 2px solid $base-bg-color;
   height: 50px;
   width: 50px;
   margin: 20px 20px 0 0;

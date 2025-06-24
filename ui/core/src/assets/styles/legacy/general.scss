@@ -1,13 +1,13 @@
-@import 'theme.less';
+@import 'theme.scss';
 
 input[type="text"], input[type="email"],
 input[vtype="text"], input[type="tel"],
 input[type="search"], input[type="url"],
 input[type="file"], input[type="password"],
 .ui-autocomplete-input, textarea, .uneditable-input {
-  border-radius: @border-radius;
+  border-radius: $border-radius;
   padding: 6px 0 6px 12px;
-  height: @input-height;
+  height: $input-height;
   padding-left: 14px;
   width: 100%;
   display: block;
@@ -19,8 +19,8 @@ input[type="file"], input[type="password"],
 }
 
 textarea[disabled], input[disabled] {
-  border: 1px solid @color-inactive2;
-  background-color: @color-inactive4;
+  border: 1px solid $color-inactive2;
+  background-color: $color-inactive4;
   cursor: no-drop;
 }
 
@@ -41,7 +41,7 @@ input.lhdoc-fn[type="text"], input.lhdoc-fn {
   border-radius: 0;
   font-size: 16px;
   display: inline-block;
-  font-family: @formfields-font-family;
+  font-family: $formfields-font-family;
   font-weight: normal;
   border-bottom: 1px solid transparent;
   padding: 0;
@@ -51,7 +51,7 @@ input.lhdoc-fn[type="text"], input.lhdoc-fn {
 
 input.lhdoc-fn:focus, input.lhdoc-fn:hover {
   outline: none;
-  border-bottom: 1px solid @color-primary;
+  border-bottom: 1px solid $color-primary;
 }
 
 span.frequired {
@@ -62,39 +62,39 @@ span.frequired {
   font-family: monospace;
 }
 
-@-webkit-keyframes SavingInput {
+$-webkit-keyframes SavingInput {
   0% {
-    border-bottom: 1px solid @color-primary;
+    border-bottom: 1px solid $color-primary;
   }
   50% {
-    border-bottom: 1px solid @color-secondary;
+    border-bottom: 1px solid $color-secondary;
   }
   100% {
-    border-bottom: 1px solid @color-primary;
+    border-bottom: 1px solid $color-primary;
   }
 }
 
-@-moz-keyframes SavingInput {
+$-moz-keyframes SavingInput {
   0% {
-    border-bottom: 1px solid @color-primary;
+    border-bottom: 1px solid $color-primary;
   }
   50% {
-    border-bottom: 1px solid @color-secondary;
+    border-bottom: 1px solid $color-secondary;
   }
   100% {
-    border-bottom: 1px solid @color-primary;
+    border-bottom: 1px solid $color-primary;
   }
 }
 
 @keyframes SavingInput {
   0% {
-    border-bottom: 1px solid @color-primary;
+    border-bottom: 1px solid $color-primary;
   }
   50% {
-    border-bottom: 1px solid @color-secondary;
+    border-bottom: 1px solid $color-secondary;
   }
   100% {
-    border-bottom: 1px solid @color-primary;
+    border-bottom: 1px solid $color-primary;
   }
 }
 
@@ -171,7 +171,7 @@ span.frequired {
   background: white;
   position: relative;
   width: 100%;
-  height: @input-height;
+  height: $input-height;
   overflow: hidden;
   pointer-events: none;
   border: transparent !important;
@@ -190,20 +190,20 @@ span.frequired {
   font-weight: 300;
   border-style: solid;
   border-width: 1px;
-  border-color: @color-primary;
+  border-color: $color-primary;
   pointer-events: all;
-  color: @color-primary;
+  color: $color-primary;
   padding: 0 12px;
   outline: 0;
   vertical-align: middle;
   line-height: normal;
-  min-height: @input-height;
-  border-radius: @border-radius;
+  min-height: $input-height;
+  border-radius: $border-radius;
 }
 
 .styled-select div {
   position: absolute;
-  width: @input-height;
+  width: $input-height;
   height: 100%;
   right: 0;
   top: 0;
@@ -211,11 +211,11 @@ span.frequired {
   padding: 0;
   border-style: solid;
   border-width: 1px;
-  border-color: @color-primary;
+  border-color: $color-primary;
   pointer-events: none;
   background: #ffffff;
-  border-bottom-right-radius: @border-radius;
-  border-top-right-radius: @border-radius;
+  border-bottom-right-radius: $border-radius;
+  border-top-right-radius: $border-radius;
 }
 
 .error .styled-select div span,
@@ -244,7 +244,7 @@ span.frequired {
   border: none;
   pointer-events: none;
   font-size: 22px;
-  color: @color-primary;
+  color: $color-primary;
 }
 
 .upload-button {
@@ -274,7 +274,7 @@ span.frequired {
 }
 
 .upload-button .ub-icon {
-  background-color: @color-primary;
+  background-color: $color-primary;
   color: white;
   text-align: center;
   padding: 0;
@@ -373,7 +373,7 @@ span.frequired {
   position: absolute;
   width: 34px;
   height: 34px;
-  background-color: @color-primary;
+  background-color: $color-primary;
   border: solid 1px #000000;
   top: 0;
   right: 0;
@@ -384,7 +384,7 @@ span.frequired {
 .upload-button .imgc-edit {
   width: 34px;
   height: 34px;
-  background-color: @color-primary;
+  background-color: $color-primary;
   border: solid 1px #000000;
   top: 0;
   cursor: pointer;
@@ -440,7 +440,7 @@ input.error {
 }
 
 .portrait-photo-cropper .editor-cam-activate {
-  background-color: @color-primary;
+  background-color: $color-primary;
   border: solid 1px #000000;
   width: 30%;
   display: block;
@@ -492,7 +492,7 @@ input.error {
 .upload-button .download-btn {
   position: absolute;
   right: 35px;
-  background: @color-primary;
+  background: $color-primary;
   width: 34px;
   height: 34px;
   z-index: 1000;
@@ -501,7 +501,7 @@ input.error {
 .upload-button .view-btn {
   position: absolute;
   right: 70px;
-  background: @color-primary;
+  background: $color-primary;
   width: 34px;
   height: 34px;
   z-index: 1000;
@@ -881,7 +881,7 @@ input.error {
   border-color: red;
 }
 
-.field-parent.less-height.field-couple span.error {
+.field-parent.scss-height.field-couple span.error {
   padding-left: 7.5px;
 }
 
@@ -1272,7 +1272,7 @@ div#settingsContentId {
   overflow: auto;
   background-color: #ffffff;
   padding: 15px;
-  border: 1px solid @color-primary;
+  border: 1px solid $color-primary;
 }
 
 .pdf-viewer-content .ppage-container {
@@ -1310,7 +1310,7 @@ div#settingsContentId {
   -webkit-box-shadow: 4px 4px 5px 0px rgba(0, 0, 0, 0.75);
   -moz-box-shadow: 4px 4px 5px 0px rgba(0, 0, 0, 0.75);
   box-shadow: 4px 4px 5px 0px rgba(0, 0, 0, 0.75);
-  border: 1px solid @color-primary;
+  border: 1px solid $color-primary;
   position: relative;
   display: block;
 }
@@ -1376,7 +1376,7 @@ div#settingsContentId {
 .modal .modal-header span.glyphicon.glyphicon-lock {
   position: absolute;
   font-size: 46px;
-  color: @color-inactive;
+  color: $color-inactive;
   top: 4px;
   left: 10px;
 }
@@ -1430,7 +1430,7 @@ span.error-container.error {
   max-height: 100%;
   overflow: auto;
   padding: 0 20px;
-  border: 1px solid @color-primary;
+  border: 1px solid $color-primary;
   font-size: 22px;
 }
 
@@ -1447,7 +1447,7 @@ span.error-container.error {
   border: none;
   background: none;
   box-shadow: none;
-  border-bottom: 1px solid @color-primary;
+  border-bottom: 1px solid $color-primary;
 }
 
 .settings-accordion .panel-default > .accordion-a + .panel-collapse > .panel-body {
@@ -1469,8 +1469,8 @@ span.error-container.error {
 }
 
 .panel-group .accordion-a span {
-  background: @color-primary;
-  color: @base-bg-color;
+  background: $color-primary;
+  color: $base-bg-color;
   padding: 3px 4px;
   display: inline-block;
   font-size: 16px;
@@ -1548,7 +1548,7 @@ div#contentHeader {
 }
 
 .modal-body {
-  max-height: calc(~"100vh - 210px");
+  max-height: calc("100vh - 210px");
   overflow-y: auto;
 }
 
@@ -1690,11 +1690,11 @@ footer {
   margin-bottom: 60px;
   padding: 0 15px 0;
   width: 100%;
-  max-height: calc(~"100vh - 112px");
+  max-height: calc("100vh - 112px");
 }
 
 .modal-fullscreen .modal-body.no-footer {
-  max-height: calc(~"100vh - 52px") !important;
+  max-height: calc("100vh - 52px") !important;
   margin-bottom: 0;
 }
 
@@ -1813,25 +1813,25 @@ div.tag-cloud-content .tag-addition-btn > .btn {
 }
 
 form label {
-  font-family: @labelAndRest-font-family;
-  font-size: @label-font-size;
+  font-family: $labelAndRest-font-family;
+  font-size: $label-font-size;
   font-weight: normal;
 }
 
 form input, form textarea, form select {
-  font-family: @formfields-font-family;
-  font-size: @formfields-font-size;
+  font-family: $formfields-font-family;
+  font-size: $formfields-font-size;
   font-weight: normal;
 }
 
-//@import "menu.less";
+//@import "menu.scss";
 
 .ace_editor span, .ace_editor a {
   color: #d6c9de;
 }
 
 .lh-border {
-  border: 3px solid @color-secondary;
+  border: 3px solid $color-secondary;
   margin-bottom: 15px;
 }
 
@@ -1866,7 +1866,7 @@ ul.lh-dots > li:before {
   display: block;
   width: 9px;
   height: 9px;
-  background-color: @color-secondary;
+  background-color: $color-secondary;
   border-radius: 48%;
 }
 
@@ -1885,7 +1885,7 @@ ul.lh-dots > li:before {
   height: 26%;
   top: 32%;
   width: 100%;
-  background-color: @color-secondary;
+  background-color: $color-secondary;
   left: 0;
   display: block;
   z-index: -1;
@@ -1899,7 +1899,7 @@ ul.lh-dots > li:before {
   padding: 0 12px;
   width: 100%;
   display: block;
-  color: @base-bg-color;
+  color: $base-bg-color;
   font-size: 22px;
   font-family: 'WorkSans-Regular', "Helvetica Neue", Helvetica, Arial, sans-serif;
   text-align: left;
@@ -1908,7 +1908,7 @@ ul.lh-dots > li:before {
 .highlight-box {
   position: relative;
   padding: 0;
-  border: 3px solid @color-primary;
+  border: 3px solid $color-primary;
   width: 260px;
   height: auto;
   overflow: hidden;
@@ -1917,7 +1917,7 @@ ul.lh-dots > li:before {
 }
 
 .highlight-box:hover {
-  border: 3px solid @color-secondary;
+  border: 3px solid $color-secondary;
 }
 
 .highlight-box-wrap a {
@@ -1929,14 +1929,14 @@ ul.lh-dots > li:before {
   bottom: -1px;
   left: -1px;
   right: -1px;
-  background-color: @color-primary;
+  background-color: $color-primary;
   font-size: 16px;
   padding: 16px;
-  color: @base-bg-color;
+  color: $base-bg-color;
 }
 
 .highlight-box:hover .highlight-box-label {
-  background-color: @color-secondary;
+  background-color: $color-secondary;
 }
 
 .highlight-box:hover .ppage-thumb .pmark {
@@ -1944,7 +1944,7 @@ ul.lh-dots > li:before {
 }
 
 .documents-dir .doc-category .doc {
-  background: @color-inactive4;
+  background: $color-inactive4;
   padding: 12px;
   height: 100%;
   margin-bottom: 26px;
@@ -2039,7 +2039,7 @@ ul.list-unstyled > li > ul {
 }
 
 .description-row div.back > span {
-  font-family: @labelAndRest-font-family;
+  font-family: $labelAndRest-font-family;
   margin-left: 4px;
 }
 
@@ -2108,43 +2108,43 @@ ul.list-unstyled > li > ul {
 }
 
 .innerbtn .btn {
-  .text-ellipsis();
-  max-width: 100%;
+  @mixin text-ellipsis(),
+  max-width: 100%,
 }
 
 .fcloader-wrapper {
-  display: none;
+  display: none,
 }
 
 [data-status=pending] .fcloader-wrapper {
-  display: block;
-  position: absolute;
-  width: 100%;
-  height: 3px;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  margin: auto;
+  display: block,
+  position: absolute,
+  width: 100%,
+  height: 3px,
+  left: 0,
+  right: 0,
+  bottom: 0,
+  margin: auto,
 }
 
 .fcloader {
-  height: 100%;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-transform: translateZ(0);
-  transform: translateZ(0);
+  height: 100%,
+  display: -webkit-box,
+  display: -ms-flexbox,
+  display: flex,
+  -webkit-transform: translateZ(0),
+  transform: translateZ(0),
 }
 
 .fcloader div {
-  -webkit-box-flex: 1;
-  -ms-flex: 1;
-  flex: 1;
-  background: #40e1d1;
-  -webkit-animation: go 0.8s infinite alternate ease;
-  animation: go 0.8s infinite alternate ease;
-  -webkit-box-shadow: 0 0 20px #062985;
-  box-shadow: 0 0 20px #062985;
+  -webkit-box-flex: 1,
+  -ms-flex: 1,
+  flex: 1,
+  background: #40e1d1,
+  -webkit-animation: go 0.8s infinite alternate ease,
+  animation: go 0.8s infinite alternate ease,
+  -webkit-box-shadow: 0 0 20px #062985,
+  box-shadow: 0 0 20px #062985,
 }
 
 .fcloader div:nth-child(1) {
@@ -2197,7 +2197,7 @@ ul.list-unstyled > li > ul {
   animation-delay: 0s;
 }
 
-@-webkit-keyframes go {
+$-webkit-keyframes go {
   100% {
     background: transparent;
     -webkit-box-flex: 10;
