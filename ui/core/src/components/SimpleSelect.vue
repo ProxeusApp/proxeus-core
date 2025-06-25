@@ -642,7 +642,6 @@ export default {
   border: 2px solid #dee2e6;
   min-width: 100%;
   background: white;
-  border-radius: $border-radius;
 }
 
 .ss-sel-main:focus .ss-select {

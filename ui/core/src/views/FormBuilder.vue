@@ -601,8 +601,8 @@ export default {
 <style lang="scss">
 @use "../assets/styles/legacy/backend.scss" as *;
 @use "../assets/styles/legacy/formbuilder.scss" as *;
-@use "../libs/legacy/formbuilder/contextMenu/contextmenu.css";
-@use "../libs/legacy/formbuilder/splitpane/split-pane.css";
+@import "../libs/legacy/formbuilder/contextMenu/contextmenu.css";
+@import "../libs/legacy/formbuilder/splitpane/split-pane.css";
 
 /* Hide Autoswitch for now */
 .switch-main {

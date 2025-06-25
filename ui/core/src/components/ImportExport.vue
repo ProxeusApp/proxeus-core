@@ -253,7 +253,7 @@ export default {
 </script>
 
 <style lang="scss">
-@use "@/assets/styles/variables.scss" as *;
+@use "@/assets/styles/variables" as *;
 
 .imexclose {
   position: absolute;

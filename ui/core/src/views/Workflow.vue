@@ -2344,8 +2344,8 @@ function condition(){
 @use "@/assets/styles/variables" as *;
 @use "~@mdi/font/scss/_variables.scss";
 @use "~@mdi/font/scss/_functions.scss";
-@use "../assets/styles/vis.min.scss";
-@use "../assets/styles/vis-styles.scss";
+@use "@/assets/styles/vis.min.scss";
+@use "@/assets/styles/vis-styles.scss";
 
 .fcl-legend i.node-icon.mdi {
   font-size: 30px;

@@ -102,7 +102,7 @@ export default {
 </script>
 
 <style lang="scss">
-@use "assets/styles/variables.scss" as *;
+@use "assets/styles/variables" as *;
 @use "assets/styles/fonts.scss" as *;
 @use "assets/styles/buttons.scss" as *;
 

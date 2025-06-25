@@ -1,9 +1,9 @@
 @use "sass:color";
 @use "sass:map";
 
-@use "~bootstrap/scss/functions" as *;
-@use "~bootstrap/scss/variables" as *;
-@use "~bootstrap/scss/mixins" as *;
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/mixins";
 
 // Variables
 //
@@ -85,8 +85,8 @@ $danger: $red !default;
 $light: $gray-100 !default;
 $dark: $gray-800 !default;
 
-$theme-color: () !default;
-$theme-color: map.merge(
+$theme-colors: () !default;
+$theme-colors: map.merge(
   (
     "primary": $primary,
     "primary-dark": $primary-dark,
@@ -98,7 +98,7 @@ $theme-color: map.merge(
     "light": $light,
     "dark": $dark,
   ),
-  $theme-color
+  $theme-colors
 );
 // stylelint-enable
 

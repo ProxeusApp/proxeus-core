@@ -51,7 +51,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@use "@/assets/styles/variables.scss";
+@use "@/assets/styles/variables" as *;
 
 .icon-unpersisted {
   position: absolute;

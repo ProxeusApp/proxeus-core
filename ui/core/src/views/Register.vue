@@ -136,7 +136,7 @@ export default {
 </script>
 
 <style lang="scss">
-@use "@/assets/styles/variables.scss";
+@use "@/assets/styles/variables" as *;
 
 .login-form {
   overflow: auto;

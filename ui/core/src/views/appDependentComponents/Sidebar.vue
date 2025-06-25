@@ -210,7 +210,7 @@ export default {
 
 <style lang="scss">
 @use "@/assets/styles/variables" as *;
-@use "@/assets/styles/sidebar.scss";
+@use "@/assets/styles/sidebar.scss" as *;
 
 .brand-name {
   letter-spacing: 2px;

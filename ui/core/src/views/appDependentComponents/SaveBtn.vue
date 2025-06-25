@@ -44,8 +44,7 @@ export default {
 
 <style lang="scss">
 @use "@/assets/styles/variables" as *;
-@use "~bootstrap/scss/mixins";
-@use "../../assets/styles/sidebar.scss";
+@use "@/assets/styles/sidebar.scss";
 
 .brand-name {
   letter-spacing: 2px;

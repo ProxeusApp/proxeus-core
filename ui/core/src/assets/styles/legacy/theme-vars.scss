@@ -13,13 +13,33 @@ $input-height: 45px;
 $border-radius: 0;
 $formfields-font-size: 14px;
 $label-font-size: 18px;
-$formfields-font-family: "WorkSans-Regular", "Helvetica Neue", Helvetica, Arial, sans-serif;
+$formfields-font-family: "WorkSans-Regular", "Helvetica Neue", Helvetica, Arial,
+  sans-serif;
 $labelAndRest-font-family: $formfields-font-family;
-$title-font-family: "WorkSans-Regular", "Helvetica Neue", Helvetica, Arial, sans-serif;
+$title-font-family: "WorkSans-Regular", "Helvetica Neue", Helvetica, Arial,
+  sans-serif;
 $leftSideSpacingFromBrowserFrame: 20px;
 
-@mixin text-ellipsis() {
+@mixin text-ellipsis {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+@mixin keyframes($animation-name) {
+  @-webkit-keyframes #{$animation-name} {
+    @content;
+  }
+  @-moz-keyframes #{$animation-name} {
+    @content;
+  }
+  @keyframes #{$animation-name} {
+    @content;
+  }
+}
+
+@mixin animation($str) {
+  -webkit-animation: #{$str};
+  -moz-animation: #{$str};
+  animation: #{$str};
 }
