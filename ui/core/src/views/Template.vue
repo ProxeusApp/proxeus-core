@@ -779,7 +779,7 @@ export default {
 </script>
 
 <style lang="scss">
-@use "../assets/styles/librehub.scss" as *;
+@import "../assets/styles/librehub.scss";
 </style>
 
 <style lang="scss" scoped>

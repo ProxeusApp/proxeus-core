@@ -599,8 +599,8 @@ export default {
 </script>
 
 <style lang="scss">
-@use "../assets/styles/legacy/backend.scss" as *;
-@use "../assets/styles/legacy/formbuilder.scss" as *;
+@import "../assets/styles/legacy/backend.scss";
+@import "../assets/styles/legacy/formbuilder.scss";
 @import "../libs/legacy/formbuilder/contextMenu/contextmenu.css";
 @import "../libs/legacy/formbuilder/splitpane/split-pane.css";
 

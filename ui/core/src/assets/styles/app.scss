@@ -1,21 +1,20 @@
-@use "variables.scss" as *;
-@use "fonts.scss" as *;
-@use "buttons.scss" as *;
-@use "nav-tabs" as *;
+@import "variables.scss";
+@import "fonts.scss";
+@import "buttons.scss";
+@import "nav-tabs";
 
-@use "~@mdi/font/scss/materialdesignicons.scss" as *;
+@import "modals.scss";
+@import "fancy-radio-checkbox.scss";
 
-@use "modals.scss" as *;
-@use "fancy-radio-checkbox.scss" as *;
+@import "forms.scss";
+@import "alerts.scss";
+@import "global.scss";
+@import "topnav";
 
-@use "forms.scss" as *;
-@use "alerts.scss" as *;
-@use "global.scss" as *;
-@use "topnav" as *;
-
-@use "flatpickr.scss" as *;
+@import "flatpickr.scss";
 
 $mdi-font-path: "~@mdi/font/fonts";
+@import "~@mdi/font/scss/materialdesignicons.scss";
 
 .navbar h1 {
   margin-bottom: 0;
