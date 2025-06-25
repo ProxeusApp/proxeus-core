@@ -729,11 +729,9 @@ export default {
 };
 </script>
 
-<style lang="scss">
-@use "@/assets/styles/variables";
-</style>
-
 <style lang="scss" scoped>
+@use "@/assets/styles/variables" as *;
+
 input.share-link {
   width: 100%;
   height: 40px;

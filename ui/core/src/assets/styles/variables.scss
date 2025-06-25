@@ -1,12 +1,9 @@
-@forward "~bootstrap/scss/functions";
-@forward "~bootstrap/scss/variables";
-@forward "~bootstrap/scss/mixins";
-@forward "~bootstrap-vue/src/index.scss";
+@use "sass:color";
+@use "sass:map";
 
-@use "~bootstrap/scss/functions";
-@use "~bootstrap/scss/variables";
-@use "~bootstrap/scss/mixins";
-@use "~bootstrap-vue/src/index.scss";
+@use "~bootstrap/scss/functions" as *;
+@use "~bootstrap/scss/variables" as *;
+@use "~bootstrap/scss/mixins" as *;
 
 // Variables
 //

@@ -1,19 +1,19 @@
-@use "variables.scss";
-@use "fonts.scss";
-@use "buttons.scss";
-@use "nav-tabs";
+@use "variables.scss" as *;
+@use "fonts.scss" as *;
+@use "buttons.scss" as *;
+@use "nav-tabs" as *;
 
-@use "~@mdi/font/scss/materialdesignicons.scss";
+@use "~@mdi/font/scss/materialdesignicons.scss" as *;
 
-@use "modals.scss";
-@use "fancy-radio-checkbox.scss";
+@use "modals.scss" as *;
+@use "fancy-radio-checkbox.scss" as *;
 
-@use "forms.scss";
-@use "alerts.scss";
-@use "global.scss";
-@use "topnav";
+@use "forms.scss" as *;
+@use "alerts.scss" as *;
+@use "global.scss" as *;
+@use "topnav" as *;
 
-@use "flatpickr.scss";
+@use "flatpickr.scss" as *;
 
 $mdi-font-path: "~@mdi/font/fonts";
 

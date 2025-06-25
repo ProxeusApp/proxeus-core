@@ -143,12 +143,12 @@ export default {
 </script>
 
 <style lang="scss">
-@use "assets/styles/variables.scss";
-@use "assets/styles/fonts.scss";
-@use "assets/styles/buttons.scss";
+@use "assets/styles/variables.scss" as *;
+@use "assets/styles/fonts.scss" as *;
+@use "assets/styles/buttons.scss" as *;
 
-@use "~@mdi/font/scss/materialdesignicons.scss";
-@use "assets/styles/global.scss";
+@use "~@mdi/font/scss/materialdesignicons.scss" as *;
+@use "assets/styles/global.scss" as *;
 
 $mdi-font-path: "~@mdi/font/fonts";
 

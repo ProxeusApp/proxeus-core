@@ -209,7 +209,7 @@ export default {
 </script>
 
 <style lang="scss">
-@use "@/assets/styles/variables";
+@use "@/assets/styles/variables" as *;
 @use "@/assets/styles/sidebar.scss";
 
 .brand-name {

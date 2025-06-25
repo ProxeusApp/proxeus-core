@@ -779,11 +779,11 @@ export default {
 </script>
 
 <style lang="scss">
-@use "../assets/styles/librehub.scss";
+@use "../assets/styles/librehub.scss" as *;
 </style>
 
 <style lang="scss" scoped>
-@use "@/assets/styles/variables";
+@use "@/assets/styles/variables" as *;
 
 .pdf {
   width: 100%;

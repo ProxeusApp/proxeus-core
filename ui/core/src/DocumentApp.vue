@@ -102,21 +102,21 @@ export default {
 </script>
 
 <style lang="scss">
-@use "assets/styles/variables.scss";
-@use "assets/styles/fonts.scss";
-@use "assets/styles/buttons.scss";
+@use "assets/styles/variables.scss" as *;
+@use "assets/styles/fonts.scss" as *;
+@use "assets/styles/buttons.scss" as *;
 
-@use "~@mdi/font/scss/materialdesignicons.scss";
+@use "~@mdi/font/scss/materialdesignicons.scss" as *;
 
-@use "assets/styles/modals.scss";
-@use "assets/styles/fancy-radio-checkbox.scss";
+@use "assets/styles/modals.scss" as *;
+@use "assets/styles/fancy-radio-checkbox.scss" as *;
 
-@use "assets/styles/forms.scss";
-@use "assets/styles/alerts.scss";
-@use "assets/styles/global.scss";
+@use "assets/styles/forms.scss" as *;
+@use "assets/styles/alerts.scss" as *;
+@use "assets/styles/global.scss" as *;
 
-@use "assets/styles/flatpickr.scss";
-@use "assets/styles/nav-tabs.scss";
+@use "assets/styles/flatpickr.scss" as *;
+@use "assets/styles/nav-tabs.scss" as *;
 
 $mdi-font-path: "~@mdi/font/fonts";
 

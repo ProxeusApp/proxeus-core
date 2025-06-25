@@ -11,7 +11,20 @@ module.exports = {
     // extract CSS in components into a single CSS file (only in production)
     // can also be an object of options to pass to extract-text-webpack-plugin
     extract: true,
+    loaderOptions: {
+      css: {},
+      postcss: {
+        postcssOptions: {
+          plugins: function () {
+            // post css plugins, can be exported to postcss.config.js
+            return [require("precss"), require("autoprefixer")];
+          },
+        },
+      },
+      sass: {},
+    },
   },
+
   pages: {
     initial: {
       entry: "./src/initial.js",

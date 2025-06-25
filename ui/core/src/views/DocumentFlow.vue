@@ -873,7 +873,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@use "../assets/styles/variables";
+@use "@/assets/styles/variables" as *;
 
 hr {
   border-top: 1px solid rgb(6, 42, 133) !important;
