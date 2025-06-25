@@ -181,7 +181,7 @@ export default {
     ListGroup,
     // ListItem,
     TopNav,
-    "b-modal": bModal,
+    "b-modal": BModal,
   },
   directives: {
     "b-modal": bModalDirective,

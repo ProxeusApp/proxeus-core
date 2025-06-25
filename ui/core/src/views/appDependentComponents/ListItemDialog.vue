@@ -49,7 +49,7 @@ export default {
   components: {
     ListItem,
     // ListGroup,
-    "b-modal": bModal,
+    "b-modal": BModal,
   },
   directives: {
     "b-modal": bModalDirective,

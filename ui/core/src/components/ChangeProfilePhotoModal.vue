@@ -28,7 +28,7 @@ export default {
   name: "change-profile-photo-modal",
   components: {
     ChangeProfilePhoto,
-    "b-modal": bModal,
+    "b-modal": BModal,
   },
   directives: {
     "b-modal": bModalDirective,

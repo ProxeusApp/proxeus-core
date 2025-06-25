@@ -388,7 +388,7 @@ export default {
     ReadWriteSelector,
     SimpleSelect,
     // 'vue-tags-input': VueTagsInput,
-    "b-modal": bModal,
+    "b-modal": BModal,
   },
   directives: {
     "b-modal": bModalDirective,

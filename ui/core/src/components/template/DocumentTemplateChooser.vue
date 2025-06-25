@@ -131,7 +131,7 @@ export default {
   mixins: [mafdc],
   name: "document-template-chooser",
   components: {
-    "b-modal": bModal,
+    "b-modal": BModal,
     // 'b-btn': bBtn
   },
   directives: {

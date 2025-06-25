@@ -491,7 +491,7 @@ export default {
     PermissionDialog,
     TopNav,
     // eslint-disable-next-line vue/no-unused-components
-    "b-modal": bModal,
+    "b-modal": BModal,
   },
   directives: {
     "b-modal": bModalDirective,

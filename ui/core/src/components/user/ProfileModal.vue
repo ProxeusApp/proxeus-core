@@ -139,7 +139,7 @@ export default {
     ApiKey,
     Checkbox,
     AnimatedInput,
-    "b-modal": bModal,
+    "b-modal": BModal,
   },
   directives: {
     "b-modal": bModalDirective,
