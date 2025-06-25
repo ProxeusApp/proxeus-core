@@ -598,8 +598,6 @@ export default {
 };
 </script>
 
-<style></style>
-
 <style lang="scss">
 @use "../assets/styles/legacy/backend.scss";
 @use "../assets/styles/legacy/formbuilder.scss";

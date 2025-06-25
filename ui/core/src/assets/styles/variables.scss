@@ -1,3 +1,8 @@
+@forward "~bootstrap/scss/functions";
+@forward "~bootstrap/scss/variables";
+@forward "~bootstrap/scss/mixins";
+@forward "~bootstrap-vue/src/index.scss";
+
 @use "~bootstrap/scss/functions";
 @use "~bootstrap/scss/variables";
 @use "~bootstrap/scss/mixins";

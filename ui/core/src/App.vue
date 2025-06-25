@@ -80,7 +80,4 @@ export default {
 
 <style lang="scss">
 @use "@/assets/styles/app.scss";
-@use "~bootstrap/scss/functions";
-@use "~bootstrap/scss/variables";
-@use "~bootstrap/scss/mixins";
 </style>
