@@ -53,6 +53,7 @@ Vue.use(VTooltip);
 Vue.use(VueAppend);
 Vue.use(VueClipboard);
 Vue.use(BootstrapVue);
+Vue.use(IconsPlugin);
 
 // @ts-ignore
 Vue.config.productionTip = false;
