@@ -877,6 +877,8 @@ var FT_Workspace = function (fb, jqEl, comps) {
                 if (e.button === 2) {
                   return false;
                 }
+                // Prevent text selection
+                e.preventDefault();
 
                 _.$dz = _.ws.body.find(".fws-main");
                 if (_.$dz && _.$dz.length) {
