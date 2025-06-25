@@ -221,9 +221,7 @@ import TemplateForm from "@/components/template/TemplateForm";
 import _ from "lodash";
 import Spinner from "@/components/Spinner";
 import SearchBox from "@/components/SearchBox";
-// import bModal from 'bootstrap-vue/es/components/modal/modal'
-// import bBtn from 'bootstrap-vue/es/components/button/button'
-import bModalDirective from "bootstrap-vue/es/directives/modal/modal";
+
 import libreHub from "../libs/libreTmplAssistance.min.js";
 
 import Searchable from "../mixins/searchable";
