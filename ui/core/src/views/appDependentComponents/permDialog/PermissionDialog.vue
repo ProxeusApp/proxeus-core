@@ -391,7 +391,7 @@ export default {
     "b-modal": BModal,
   },
   directives: {
-    "b-modal": bModalDirective,
+    "b-modal": VBModal,
   },
   props: {
     setup: {

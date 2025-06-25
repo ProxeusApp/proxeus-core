@@ -116,7 +116,7 @@
 </template>
 
 <script>
-import { BModal, bModalDirective } from "bootstrap-vue";
+import { BModal, VBModal } from "bootstrap-vue";
 // import bBtn from 'bootstrap-vue/es/components/button/button'
 
 import mafdc from "@/mixinApp";
@@ -135,7 +135,7 @@ export default {
     // 'b-btn': bBtn
   },
   directives: {
-    "b-modal": bModalDirective,
+    "b-modal": VBModal,
   },
   props: {
     multiDivider: {

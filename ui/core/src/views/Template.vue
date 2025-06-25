@@ -257,7 +257,7 @@ export default {
     // 'b-btn': bBtn
   },
   directives: {
-    "b-modal": bModalDirective,
+    "b-modal": VBModal,
   },
   // watch: {
   //   infoToggled (newValue, oldValue) {
