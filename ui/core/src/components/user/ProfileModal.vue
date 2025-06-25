@@ -126,7 +126,7 @@
 </template>
 
 <script>
-import { BModal, VBModal } from "bootstrap-vue";
+import { BModal } from "bootstrap-vue";
 import AnimatedInput from "../AnimatedInput";
 import Checkbox from "../Checkbox";
 import mafdc from "@/mixinApp";
@@ -140,9 +140,6 @@ export default {
     Checkbox,
     AnimatedInput,
     "b-modal": BModal,
-  },
-  directives: {
-    "b-modal": VBModal,
   },
   props: {
     setup: {

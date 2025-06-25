@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import { BModal, VBModal } from "bootstrap-vue";
+import { BModal } from "bootstrap-vue";
 import mafdc from "@/mixinApp";
 import ChangeProfilePhoto from "./ChangeProfilePhoto";
 
@@ -29,9 +29,6 @@ export default {
   components: {
     ChangeProfilePhoto,
     "b-modal": BModal,
-  },
-  directives: {
-    "b-modal": VBModal,
   },
   props: {
     setup: {

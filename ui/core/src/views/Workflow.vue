@@ -475,7 +475,7 @@ import vis from "vis";
 import TopNav from "@/components/layout/TopNav";
 import VisFlowchart from "../libs/vis-flowchart.js";
 import formChangeAlert from "../mixins/form-change-alert";
-import { BModal, VBModal } from "bootstrap-vue";
+import { BModal } from "bootstrap-vue";
 import PermissionDialog from "./appDependentComponents/permDialog/PermissionDialog";
 import NameAndDetailInput from "../components/NameAndDetailInput";
 import mafdc from "@/mixinApp";
@@ -492,9 +492,6 @@ export default {
     TopNav,
     // eslint-disable-next-line vue/no-unused-components
     "b-modal": BModal,
-  },
-  directives: {
-    "b-modal": VBModal,
   },
   computed: {
     id() {

@@ -164,7 +164,7 @@
 </template>
 
 <script>
-import { BModal, VBModal } from "bootstrap-vue";
+import { BModal } from "bootstrap-vue";
 import TopNav from "@/components/layout/TopNav";
 import ListGroup from "../components/ListGroup";
 // import ListItem from '../components/ListItem'
@@ -182,9 +182,6 @@ export default {
     // ListItem,
     TopNav,
     "b-modal": BModal,
-  },
-  directives: {
-    "b-modal": VBModal,
   },
   data() {
     return {

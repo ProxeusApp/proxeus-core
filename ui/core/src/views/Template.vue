@@ -256,9 +256,6 @@ export default {
     // 'b-modal': bModal,
     // 'b-btn': bBtn
   },
-  directives: {
-    "b-modal": VBModal,
-  },
   // watch: {
   //   infoToggled (newValue, oldValue) {
   //     if (newValue === true) {
