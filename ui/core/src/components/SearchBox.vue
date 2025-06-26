@@ -1,42 +1,47 @@
 <template>
-<div class="search-box" :class="[cls ? cls: '']">
-  <input type="text" class="form-control" :placeholder="placeholder || 'Search for...'" ref="searchbox" v-bind="$attrs"
-         v-model="searchTerm">
-</div>
+  <div class="search-box" :class="[cls ? cls : '']">
+    <input
+      type="text"
+      class="form-control"
+      :placeholder="placeholder || 'Search for...'"
+      ref="searchbox"
+      v-bind="$attrs"
+      v-model="searchTerm"
+    />
+  </div>
 </template>
 <script>
 export default {
-  name: 'search-box',
-  props: ['cls', 'placeholder'],
+  name: "search-box",
+  props: ["cls", "placeholder"],
   watch: {
     searchTerm: function (term) {
-      this.$emit('search', term)
-    }
+      this.$emit("search", term);
+    },
   },
-  mounted () {
-    this.$refs.searchbox && this.$refs.searchbox.focus()
+  mounted() {
+    this.$refs.searchbox && this.$refs.searchbox.focus();
   },
-  data () {
+  data() {
     return {
-      searchTerm: ''
-    }
+      searchTerm: "",
+    };
   },
   methods: {
-    focus () {
-      this.$refs.searchbox.focus()
-    }
-  }
-}
+    focus() {
+      this.$refs.searchbox.focus();
+    },
+  },
+};
 </script>
 <style lang="scss" scoped>
-  @import "../assets/styles/variables";
+@use "@/assets/styles/variables" as *;
 
-  .search-box .form-control {
-    height: 60px;
-  }
+.search-box .form-control {
+  height: 60px;
+}
 
-  .search-box .form-control:focus {
-    border-color: $gray-300 !important;
-  }
-
+.search-box .form-control:focus {
+  border-color: $gray-300 !important;
+}
 </style>

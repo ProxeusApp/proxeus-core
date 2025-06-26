@@ -1,12 +1,7 @@
-@import "~bootstrap/scss/functions";
 @import "variables.scss";
-@import "~bootstrap/scss/bootstrap";
 @import "fonts.scss";
 @import "buttons.scss";
 @import "nav-tabs";
-
-$mdi-font-path: "~@mdi/font/fonts";
-@import "~@mdi/font/scss/materialdesignicons.scss";
 
 @import "modals.scss";
 @import "fancy-radio-checkbox.scss";
@@ -18,12 +13,16 @@ $mdi-font-path: "~@mdi/font/fonts";
 
 @import "flatpickr.scss";
 
+$mdi-font-path: "~@mdi/font/fonts";
+@import "~@mdi/font/scss/materialdesignicons.scss";
+
 .navbar h1 {
   margin-bottom: 0;
 }
 
 .app-main {
-  > div > .container-fluid, > div > .main-container {
+  > div > .container-fluid,
+  > div > .main-container {
     height: calc(100vh - 60px);
     overflow-y: scroll;
   }
@@ -74,12 +73,12 @@ $mdi-font-path: "~@mdi/font/fonts";
   width: 100%;
   background: white;
   border: 1px solid #gray-200;
-  box-shadow: 0 45px 100px rgba(0, 0, 0, .35);
+  box-shadow: 0 45px 100px rgba(0, 0, 0, 0.35);
   position: relative;
 }
 
 .toggle-row-backdrop {
-  background: rgba(0, 0, 0, .2);
+  background: rgba(0, 0, 0, 0.2);
   position: fixed;
   z-index: 98;
   width: 100%;

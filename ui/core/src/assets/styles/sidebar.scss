@@ -1,5 +1,8 @@
 @use "sass:math";
 
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+
 $nav-max-width: 265px;
 
 @mixin toggle {
@@ -32,19 +35,18 @@ $nav-max-width: 265px;
   .nav-link.dropdown-toggle::after {
     display: none;
   }
-
 }
 
 .sidebar {
   background: #062a85;
   top: 0;
-  padding-top: .5rem;
+  padding-top: 0.5rem;
   overflow-x: hidden;
   overflow-y: auto;
   max-width: $nav-max-width;
-  -webkit-transition: max-width .2s ease;
-  transition: max-width .2s ease;
-  transition: left .4s ease;
+  -webkit-transition: max-width 0.2s ease;
+  transition: max-width 0.2s ease;
+  transition: left 0.4s ease;
   will-change: max-width;
   height: calc(100vh);
 
@@ -53,7 +55,7 @@ $nav-max-width: 265px;
     padding-left: 1.7rem;
     padding-top: math.div($spacer, 1.5);
     padding-bottom: math.div($spacer, 3);
-    text-align:center;
+    text-align: center;
     img {
       height: 3.75rem;
       margin: 1rem auto;
@@ -66,8 +68,8 @@ $nav-max-width: 265px;
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
-    font-size: .9rem;
-    letter-spacing: .1px;
+    font-size: 0.9rem;
+    letter-spacing: 0.1px;
 
     &.dropdown-toggle::after {
       margin-left: 1rem;
@@ -106,7 +108,6 @@ $nav-max-width: 265px;
     margin-right: $spacer;
     vertical-align: middle;
     color: #a9bce0;
-
   }
 
   .nav-item {
@@ -128,9 +129,9 @@ $nav-max-width: 265px;
     bottom: 0;
     max-width: $nav-max-width;
     background: #062a85;
-    box-shadow: -5px 0px 6px rgba(0, 0, 0, .2);
-    -webkit-transition: max-width .2s ease;
-    transition: max-width .2s ease;
+    box-shadow: -5px 0px 6px rgba(0, 0, 0, 0.2);
+    -webkit-transition: max-width 0.2s ease;
+    transition: max-width 0.2s ease;
     will-change: max-width;
 
     .nav-item {
@@ -140,7 +141,6 @@ $nav-max-width: 265px;
     &.toggled {
       @include toggle;
     }
-
   }
   .main-nav {
     height: 100%;
@@ -154,10 +154,10 @@ $nav-max-width: 265px;
 }
 
 .sidebar.sidebar-light {
-  background-color: theme-color("light");
+  background-color: $light;
 
   .secondary-nav {
-    background: theme-color("light");
+    background: $light;
     box-shadow: -5px 0px 6px rgba(0, 0, 0, 0.1);
   }
 
@@ -185,14 +185,11 @@ $nav-max-width: 265px;
     &:hover {
       background: #e1e5e8;
     }
-
   }
 
   .nav-link .material-icons {
     color: #062a85;
-
   }
-
 }
 
 .sidebar.menutoggled {

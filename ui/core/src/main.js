@@ -5,27 +5,28 @@
  * Vue
  *
  */
-import Vue from 'vue'
-import Web3 from 'web3' // eslint-disable-line no-unused-vars
+import Vue from "vue";
+import Web3 from "web3"; // eslint-disable-line no-unused-vars
 
 /*
  *
  * Vendor native Vue Libs
  *
  */
-import VueAppend from 'vue-append'
-import VTooltip from 'v-tooltip'
-import ErrorPage from 'vue-error-page'
-import VueClipboard from 'vue-clipboard2'
+import VueAppend from "vue-append";
+import VTooltip from "v-tooltip";
+import ErrorPage from "vue-error-page";
+import VueClipboard from "vue-clipboard2";
+import { BootstrapVue, IconsPlugin } from "bootstrap-vue";
 
 /*
  *
  * My components
  *
  */
-import App from './App.vue'
-import router from './router/app'
-import store from './store'
+import App from "./App.vue";
+import router from "./router/app";
+import store from "./store";
 
 /*
  *
@@ -33,12 +34,12 @@ import store from './store'
  *
  */
 
-import './global'
+import "./global";
 
-import './legacy-imports'
+import "./legacy-imports";
 
-import VueScrollTo from 'vue-scrollto'
-import { events } from 'vue-notification/src/events' // eslint-disable-line no-unused-vars
+import VueScrollTo from "vue-scrollto";
+import { events } from "vue-notification/src/events"; // eslint-disable-line no-unused-vars
 
 /*
  *
@@ -46,15 +47,16 @@ import { events } from 'vue-notification/src/events' // eslint-disable-line no-u
  * Normally it's better to import them in local components.
  *
  */
-Vue.use(require('vue-moment'))
-Vue.use(VueScrollTo)
-Vue.use(VTooltip)
-Vue.use(VueAppend)
-
-Vue.use(VueClipboard)
+Vue.use(require("vue-moment"));
+Vue.use(VueScrollTo);
+Vue.use(VTooltip);
+Vue.use(VueAppend);
+Vue.use(VueClipboard);
+Vue.use(BootstrapVue);
+Vue.use(IconsPlugin);
 
 // @ts-ignore
-Vue.config.productionTip = false
+Vue.config.productionTip = false;
 
 /*
  *
@@ -62,7 +64,7 @@ Vue.config.productionTip = false
  * without redirecting
  *
  */
-window.eventBus = new Vue()
+window.eventBus = new Vue();
 
 // Vue.prototype.$notify = (params) => {
 //   duration: 10000
@@ -77,14 +79,15 @@ window.eventBus = new Vue()
 
 Vue.use(ErrorPage, {
   resolver: (component) => {
-    return require('./views/app/Errors/' + component).default
-  }
-})
+    return require("./views/app/Errors/" + component).default;
+  },
+});
 
-const vm = new Vue({ // eslint-disable-line no-unused-vars
-  el: '#app',
+const vm = new Vue({
+  // eslint-disable-line no-unused-vars
+  el: "#app",
   router,
   store,
   components: { App },
-  template: '<App/>'
-})
+  template: "<App/>",
+});

@@ -6,7 +6,7 @@ import (
 	"regexp"
 	"testing"
 
-	"gopkg.in/gavv/httpexpect.v2"
+	"github.com/gavv/httpexpect/v2"
 )
 
 func toMap(i interface{}) map[string]interface{} {
