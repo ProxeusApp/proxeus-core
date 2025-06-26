@@ -10,8 +10,8 @@ import (
 	"testing"
 	"time"
 
+	"github.com/gavv/httpexpect/v2"
 	uuid "github.com/satori/go.uuid"
-	"gopkg.in/gavv/httpexpect.v2"
 
 	"github.com/ProxeusApp/proxeus-core/sys/model"
 )

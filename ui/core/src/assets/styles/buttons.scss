@@ -3,7 +3,7 @@
 }
 
 .btn-light {
-  color: theme-color("primary") !important;
+  color: $primary !important;
 }
 
 .btn-link:hover {
@@ -28,7 +28,7 @@
 }
 
 .btn-link-light {
-  color: theme-color("light");
+  color: $light;
   background: transparent;
   &:hover {
     color: white;

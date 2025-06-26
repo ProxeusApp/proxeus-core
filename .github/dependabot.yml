@@ -1,16 +1,15 @@
 version: 2
 updates:
-  
   # Maintain dependencies for Go
   - package-ecosystem: "gomod"
     directory: "/"
     target-branch: "preprod"
     schedule:
-      interval: "weekly"
+      interval: "monthly"
 
   # Maintain dependencies for JS
   - package-ecosystem: "npm"
     directory: "/ui/"
     target-branch: "preprod"
     schedule:
-      interval: "weekly"
+      interval: "monthly"

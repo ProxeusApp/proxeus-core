@@ -35,6 +35,7 @@ executors:
 
 jobs:
   build-ui:
+    resource_class: large
     docker:
       - image: cimg/node:<< pipeline.parameters.nodejs-tag >>
     steps:
