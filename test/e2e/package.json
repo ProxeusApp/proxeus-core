@@ -9,6 +9,6 @@
   "author": "Silvio Rainoldi",
   "license": "ISC",
   "dependencies": {
-    "cypress": "^4.0.2"
+    "cypress": "^4"
   }
 }

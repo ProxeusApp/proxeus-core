@@ -1,21 +1,45 @@
+@mixin keyframes($animation-name) {
+  @-webkit-keyframes #{$animation-name} {
+    @content;
+  }
+  @-moz-keyframes #{$animation-name} {
+    @content;
+  }
+  @keyframes #{$animation-name} {
+    @content;
+  }
+}
+
+@mixin animation($str) {
+  -webkit-animation: #{$str};
+  -moz-animation: #{$str};
+  animation: #{$str};
+}
+
 .hcbuild-main {
   position: relative;
   overflow: hidden;
 
   .form-group {
-    margin-bottom: .5rem;
+    margin-bottom: 0.5rem;
     label {
-      margin-bottom: .25rem;
+      margin-bottom: 0.25rem;
     }
   }
 }
 
-.hcbuild-main .hcbuild-workspace-body .fb-component input, .hcbuild-main .hcbuild-comp-body .fb-component input,
-.hcbuild-main .hcbuild-workspace-body .fb-component a, .hcbuild-main .hcbuild-comp-body .fb-component a,
-.hcbuild-main .hcbuild-workspace-body .fb-component button, .hcbuild-main .hcbuild-comp-body .fb-component button,
-.hcbuild-main .hcbuild-workspace-body .fb-component select, .hcbuild-main .hcbuild-comp-body .fb-component select,
-.hcbuild-main .hcbuild-workspace-body .fb-component textarea, .hcbuild-main .hcbuild-comp-body .fb-component textarea,
-.hcbuild-main .hcbuild-workspace-body .fb-component label, .hcbuild-main .hcbuild-comp-body .fb-component label {
+.hcbuild-main .hcbuild-workspace-body .fb-component input,
+.hcbuild-main .hcbuild-comp-body .fb-component input,
+.hcbuild-main .hcbuild-workspace-body .fb-component a,
+.hcbuild-main .hcbuild-comp-body .fb-component a,
+.hcbuild-main .hcbuild-workspace-body .fb-component button,
+.hcbuild-main .hcbuild-comp-body .fb-component button,
+.hcbuild-main .hcbuild-workspace-body .fb-component select,
+.hcbuild-main .hcbuild-comp-body .fb-component select,
+.hcbuild-main .hcbuild-workspace-body .fb-component textarea,
+.hcbuild-main .hcbuild-comp-body .fb-component textarea,
+.hcbuild-main .hcbuild-workspace-body .fb-component label,
+.hcbuild-main .hcbuild-comp-body .fb-component label {
   pointer-events: none !important;
 }
 
@@ -73,7 +97,8 @@
   left: 0;
 }
 
-.hcbuild-main .ace_editor .ace_scrollbar-h, .hcbuild-main .ace_editor .ace_scrollbar-v {
+.hcbuild-main .ace_editor .ace_scrollbar-h,
+.hcbuild-main .ace_editor .ace_scrollbar-v {
   display: none !important;
 }
 
@@ -102,7 +127,10 @@
   min-height: 500px;
 }
 
-.hcbuild-main .pretty-split-pane-frame .split-pane > .split-pane-divider.dragged.touch {
+.hcbuild-main
+  .pretty-split-pane-frame
+  .split-pane
+  > .split-pane-divider.dragged.touch {
   background: blue;
   opacity: 0.25;
 }
@@ -124,21 +152,43 @@
 }
 
 .hcbuild-main .test-succeeded {
-  background: linear-gradient(270deg, #6fffda, #a3f1e4, #3cfff8, #c9faff, #f2fdff, #ffffff);
+  background: linear-gradient(
+    270deg,
+    #6fffda,
+    #a3f1e4,
+    #3cfff8,
+    #c9faff,
+    #f2fdff,
+    #ffffff
+  );
   background-size: 1200% 1200%;
-  animation: bgFrames 2s ease infinite;
+  @include animation("bgFrames 2s ease infinite");
 }
 
 .hcbuild-main .test-failed {
-  background: linear-gradient(270deg, #ffac9c, #f18587, #ffb7ad, #ffffff, #f2fdff, #ffffff);
+  background: linear-gradient(
+    270deg,
+    #ffac9c,
+    #f18587,
+    #ffb7ad,
+    #ffffff,
+    #f2fdff,
+    #ffffff
+  );
   background-size: 1200% 1200%;
-  animation: bgFrames 2s ease infinite;
+  @include animation("bgFrames 2s ease infinite");
 }
 
-@keyframes bgFrames {
-  0%{background-position:0% 50%}
-  50%{background-position:100% 50%}
-  100%{background-position:0% 50%}
+@include keyframes(bgFrames) {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
 .hcbuild-main .hcbuild-workspace-test-main .workspace-test-body {
@@ -157,28 +207,110 @@
 .hcbuild-main .htmlComponentBuilder.new-entry-plus {
   /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#ffda75+0,fff9ea+47,fff9ea+47,fefdf8+100,fcfcfc+100 */
   background: #ffda75; /* Old browsers */
-  background: -moz-linear-gradient(top, #ffda75 0%, #fff9ea 47%, #fff9ea 47%, #fefdf8 100%, #fcfcfc 100%); /* FF3.6+ */
-  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #ffda75), color-stop(47%, #fff9ea), color-stop(47%, #fff9ea), color-stop(100%, #fefdf8), color-stop(100%, #fcfcfc)); /* Chrome,Safari4+ */
-  background: -webkit-linear-gradient(top, #ffda75 0%, #fff9ea 47%, #fff9ea 47%, #fefdf8 100%, #fcfcfc 100%); /* Chrome10+,Safari5.1+ */
-  background: -o-linear-gradient(top, #ffda75 0%, #fff9ea 47%, #fff9ea 47%, #fefdf8 100%, #fcfcfc 100%); /* Opera 11.10+ */
-  background: -ms-linear-gradient(top, #ffda75 0%, #fff9ea 47%, #fff9ea 47%, #fefdf8 100%, #fcfcfc 100%); /* IE10+ */
-  background: linear-gradient(to bottom, #ffda75 0%, #fff9ea 47%, #fff9ea 47%, #fefdf8 100%, #fcfcfc 100%); /* W3C */
+  background: -moz-linear-gradient(
+    top,
+    #ffda75 0%,
+    #fff9ea 47%,
+    #fff9ea 47%,
+    #fefdf8 100%,
+    #fcfcfc 100%
+  ); /* FF3.6+ */
+  background: -webkit-gradient(
+    linear,
+    left top,
+    left bottom,
+    color-stop(0%, #ffda75),
+    color-stop(47%, #fff9ea),
+    color-stop(47%, #fff9ea),
+    color-stop(100%, #fefdf8),
+    color-stop(100%, #fcfcfc)
+  ); /* Chrome,Safari4+ */
+  background: -webkit-linear-gradient(
+    top,
+    #ffda75 0%,
+    #fff9ea 47%,
+    #fff9ea 47%,
+    #fefdf8 100%,
+    #fcfcfc 100%
+  ); /* Chrome10+,Safari5.1+ */
+  background: -o-linear-gradient(
+    top,
+    #ffda75 0%,
+    #fff9ea 47%,
+    #fff9ea 47%,
+    #fefdf8 100%,
+    #fcfcfc 100%
+  ); /* Opera 11.10+ */
+  background: -ms-linear-gradient(
+    top,
+    #ffda75 0%,
+    #fff9ea 47%,
+    #fff9ea 47%,
+    #fefdf8 100%,
+    #fcfcfc 100%
+  ); /* IE10+ */
+  background: linear-gradient(
+    to bottom,
+    #ffda75 0%,
+    #fff9ea 47%,
+    #fff9ea 47%,
+    #fefdf8 100%,
+    #fcfcfc 100%
+  ); /* W3C */
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffda75', endColorstr='#fcfcfc', GradientType=0); /* IE6-9 */
 }
 
 .hcbuild-main .htmlComponentBuilder.new-entry {
   /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#21b4e2+2,71ceef+25,b7deed+48,ffffff+100 */
   background: #21b4e2; /* Old browsers */
-  background: -moz-linear-gradient(top, #21b4e2 2%, #71ceef 25%, #b7deed 48%, #ffffff 100%); /* FF3.6+ */
-  background: -webkit-gradient(linear, left top, left bottom, color-stop(2%, #21b4e2), color-stop(25%, #71ceef), color-stop(48%, #b7deed), color-stop(100%, #ffffff)); /* Chrome,Safari4+ */
-  background: -webkit-linear-gradient(top, #21b4e2 2%, #71ceef 25%, #b7deed 48%, #ffffff 100%); /* Chrome10+,Safari5.1+ */
-  background: -o-linear-gradient(top, #21b4e2 2%, #71ceef 25%, #b7deed 48%, #ffffff 100%); /* Opera 11.10+ */
-  background: -ms-linear-gradient(top, #21b4e2 2%, #71ceef 25%, #b7deed 48%, #ffffff 100%); /* IE10+ */
-  background: linear-gradient(to bottom, #21b4e2 2%, #71ceef 25%, #b7deed 48%, #ffffff 100%); /* W3C */
+  background: -moz-linear-gradient(
+    top,
+    #21b4e2 2%,
+    #71ceef 25%,
+    #b7deed 48%,
+    #ffffff 100%
+  ); /* FF3.6+ */
+  background: -webkit-gradient(
+    linear,
+    left top,
+    left bottom,
+    color-stop(2%, #21b4e2),
+    color-stop(25%, #71ceef),
+    color-stop(48%, #b7deed),
+    color-stop(100%, #ffffff)
+  ); /* Chrome,Safari4+ */
+  background: -webkit-linear-gradient(
+    top,
+    #21b4e2 2%,
+    #71ceef 25%,
+    #b7deed 48%,
+    #ffffff 100%
+  ); /* Chrome10+,Safari5.1+ */
+  background: -o-linear-gradient(
+    top,
+    #21b4e2 2%,
+    #71ceef 25%,
+    #b7deed 48%,
+    #ffffff 100%
+  ); /* Opera 11.10+ */
+  background: -ms-linear-gradient(
+    top,
+    #21b4e2 2%,
+    #71ceef 25%,
+    #b7deed 48%,
+    #ffffff 100%
+  ); /* IE10+ */
+  background: linear-gradient(
+    to bottom,
+    #21b4e2 2%,
+    #71ceef 25%,
+    #b7deed 48%,
+    #ffffff 100%
+  ); /* W3C */
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#21b4e2', endColorstr='#ffffff', GradientType=0); /* IE6-9 */
 }
 
-@keyframes draggableAnim {
+@include keyframes(draggableAnim) {
   from {
     border-left: dotted 1px rgba(4, 255, 15, 0.32);
     border-top: dotted 1px rgba(4, 255, 15, 0.32);
@@ -193,7 +325,7 @@
   }
 }
 
-@keyframes hcbSettingsChanged {
+@include keyframes(hcbSettingsChanged) {
   from {
     display: inline-block;
     vertical-align: middle;
@@ -212,25 +344,7 @@
   }
 }
 
-@-webkit-keyframes hcbSettingsReAssignedComp {
-  from {
-    background: #65ff47;
-  }
-  to {
-    background: #e5fae7;
-  }
-}
-
-@-moz-keyframes hcbSettingsReAssignedComp {
-  from {
-    background: #65ff47;
-  }
-  to {
-    background: #e5fae7;
-  }
-}
-
-@keyframes hcbSettingsReAssignedComp {
+@include keyframes(hcbSettingsReAssignedComp) {
   from {
     background: #65ff47;
   }
@@ -243,7 +357,8 @@
   background: rgba(226, 96, 0, 0.11); /* Old browsers */
 }
 
-.hcbuild-main .htmlComponents .fb-component, .hcbuild-main .fb-component.fbc-new {
+.hcbuild-main .htmlComponents .fb-component,
+.hcbuild-main .fb-component.fbc-new {
   border: 1px dashed #bec4ca;
 }
 
@@ -278,26 +393,44 @@
 }
 
 .hcbuild-main .fb-workspace .fbc-grp > .fb-component > .am-endpoint-main > i {
-  margin:4px;
+  margin: 4px;
 }
 
-.hcbuild-main .fb-workspace .fbc-grp .fbc-grp > .fb-component > .am-endpoint-main > i {
-  margin:6px;
+.hcbuild-main
+  .fb-workspace
+  .fbc-grp
+  .fbc-grp
+  > .fb-component
+  > .am-endpoint-main
+  > i {
+  margin: 6px;
 }
 
-.hcbuild-main .fb-workspace .fbc-grp > .fb-component .am-endpoint-main .am-endpoint {
-  margin-left:0;
-  left:8px;
-  top:8px;
+.hcbuild-main
+  .fb-workspace
+  .fbc-grp
+  > .fb-component
+  .am-endpoint-main
+  .am-endpoint {
+  margin-left: 0;
+  left: 8px;
+  top: 8px;
 }
 
-.hcbuild-main .fb-workspace .fbc-grp .fbc-grp > .fb-component .am-endpoint-main .am-endpoint {
-  margin-left:0;
-  left:10px;
-  top:10px;
+.hcbuild-main
+  .fb-workspace
+  .fbc-grp
+  .fbc-grp
+  > .fb-component
+  .am-endpoint-main
+  .am-endpoint {
+  margin-left: 0;
+  left: 10px;
+  top: 10px;
 }
 
-.hcbuild-main .fb-workspace .connectionLayer, .hcbuild-main .fb-workspace .connectionLayer .dragline {
+.hcbuild-main .fb-workspace .connectionLayer,
+.hcbuild-main .fb-workspace .connectionLayer .dragline {
   opacity: 0;
   pointer-events: none;
   overflow: visible;
@@ -316,23 +449,24 @@
   left: 0;
 }
 
-.hcbuild-main.am-active .fb-workspace .connectionLayer, .hcbuild-main.am-active .fb-workspace .connectionLayer .dragline {
+.hcbuild-main.am-active .fb-workspace .connectionLayer,
+.hcbuild-main.am-active .fb-workspace .connectionLayer .dragline {
   z-index: 8;
   opacity: 1;
 }
 
-.hcbuild-main .fb-workspace .am-point-main.am-point-layer{
+.hcbuild-main .fb-workspace .am-point-main.am-point-layer {
   opacity: 0;
   overflow: visible;
   pointer-events: none;
 }
 
-.hcbuild-main.am-active .fb-workspace .am-point-main.am-point-layer{
+.hcbuild-main.am-active .fb-workspace .am-point-main.am-point-layer {
   opacity: 1;
   pointer-events: all;
 }
 
-.hcbuild-main.am-active .fb-workspace .am-point-main.am-point-layer > *{
+.hcbuild-main.am-active .fb-workspace .am-point-main.am-point-layer > * {
   z-index: 101;
 }
 
@@ -350,7 +484,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  margin:2px;
+  margin: 2px;
   border-radius: 10px;
   z-index: 10;
   pointer-events: none;
@@ -388,7 +522,7 @@
   overflow: hidden;
 }
 
-.hcbuild-main .fb-workspace .am-point-main > *{
+.hcbuild-main .fb-workspace .am-point-main > * {
   z-index: 10;
 }
 
@@ -403,7 +537,7 @@
   background-color: rgba(30, 0, 255, 0.4);
   /* opacity: 0.4; */
   border: 2px solid rgba(30, 0, 255, 0.8);
-  cursor:pointer;
+  cursor: pointer;
 }
 
 .hcbuild-main .fb-workspace .am-point-main .am-pointer.connected {
@@ -447,7 +581,8 @@ svg.dragline > line {
   pointer-events: all;
 }
 
-svg.dragline > line:hover, svg.dragline > line.hover {
+svg.dragline > line:hover,
+svg.dragline > line.hover {
   stroke-width: 3;
   stroke-opacity: 0.6;
 }
@@ -457,21 +592,15 @@ svg.dragline > line:hover, svg.dragline > line.hover {
 }
 
 .hcbuild-main .hcb-changed {
-  -webkit-animation: hcbSettingsChanged 0.5s infinite ease-in-out;
-  -moz-animation: hcbSettingsChanged 0.5s infinite ease-in-out;
-  animation: hcbSettingsChanged 0.5s infinite ease-in-out;
+  @include animation("hcbSettingsChanged 0.5s infinite ease-in-out");
 }
 
 .hcbuild-main .hcb-changed2 {
-  -webkit-animation: hcbSettingsChanged 1s infinite ease-in-out;
-  -moz-animation: hcbSettingsChanged 1s infinite ease-in-out;
-  animation: hcbSettingsChanged 1s infinite ease-in-out;
+  @include animation("hcbSettingsChanged 1s infinite ease-in-out");
 }
 
 .hcbuild-main .hcb-changed3 {
-  -webkit-animation: hcbSettingsChanged 0.4s infinite ease-in-out;
-  -moz-animation: hcbSettingsChanged 0.4s infinite ease-in-out;
-  animation: hcbSettingsChanged 0.4s infinite ease-in-out;
+  @include animation("hcbSettingsChanged 0.4s infinite ease-in-out");
 }
 
 .hcbuild-main .hcbuild-workspace-body .fb-component > *,
@@ -482,15 +611,15 @@ svg.dragline > line:hover, svg.dragline > line.hover {
 .hcbuild-main .hcbuild-workspace-body,
 .hcbuild-main .hcbuild-workspace-body .fb-drop-here,
 .hcbuild-main .hcbuild-comp-body .fb-drop-here,
-.hcbuild-main .hcbuild-viewer .fb-drop-here{
+.hcbuild-main .hcbuild-viewer .fb-drop-here {
   position: relative;
   background-color: #f4f5f6;
-  background-image:
-          linear-gradient(#fafbfc 1px, transparent 1px),
-          linear-gradient(#fafbfc 1px, transparent 1px),
-          linear-gradient(90deg, #fafbfc 1px, transparent 1px),
-          linear-gradient(90deg, #fafbfc 1px, transparent 1px);
-  background-size: 15px 15px, 60px 60px, 15px 15px, 60px 60px, 60px 60px, 60px 60px;
+  background-image: linear-gradient(#fafbfc 1px, transparent 1px),
+    linear-gradient(#fafbfc 1px, transparent 1px),
+    linear-gradient(90deg, #fafbfc 1px, transparent 1px),
+    linear-gradient(90deg, #fafbfc 1px, transparent 1px);
+  background-size: 15px 15px, 60px 60px, 15px 15px, 60px 60px, 60px 60px,
+    60px 60px;
   border: 1px solid #dee2e6;
 }
 
@@ -517,7 +646,8 @@ svg.dragline > line:hover, svg.dragline > line.hover {
   pointer-events: none !important;
 }
 
-.hcbuild-main.read-only .hcbuilder-settings-body > *, .hcbuild-main.read-only .hcbuild-workspace-body .fb-component > * {
+.hcbuild-main.read-only .hcbuilder-settings-body > *,
+.hcbuild-main.read-only .hcbuild-workspace-body .fb-component > * {
   pointer-events: none !important;
 }
 
@@ -535,7 +665,8 @@ svg.dragline > line:hover, svg.dragline > line.hover {
   overflow: visible !important;
 }
 
-.hcbuild-main .fb-workspace form.fbc-dz,.hcbuild-main .fb-workspace form.fbc-dz .fbc-dz.fbc-grp {
+.hcbuild-main .fb-workspace form.fbc-dz,
+.hcbuild-main .fb-workspace form.fbc-dz .fbc-dz.fbc-grp {
   pointer-events: all !important;
 }
 
@@ -552,11 +683,16 @@ svg.dragline > line:hover, svg.dragline > line.hover {
   background-color: rgba(0, 216, 221, 0.08);
 }
 
-.hcbuild-main .fbc-dz > .fb-component:not(.fbc-grp-parent):not(.dragging) > i.fbdbg {
+.hcbuild-main
+  .fbc-dz
+  > .fb-component:not(.fbc-grp-parent):not(.dragging)
+  > i.fbdbg {
   background: rgba(255, 255, 255, 0.8);
 }
 
-.hcbuild-main .drag-mirror > .fb-component, .hcbuild-main .fb-component.dragging, .hcbuild-main .fb-component.fbc-new {
+.hcbuild-main .drag-mirror > .fb-component,
+.hcbuild-main .fb-component.dragging,
+.hcbuild-main .fb-component.fbc-new {
   z-index: 100;
   opacity: 0.8;
 }
@@ -634,7 +770,8 @@ svg.dragline > line:hover, svg.dragline > line.hover {
   float: left;
 }
 
-i.fb-ws-only.fbdh.dhtop > *, i.fb-ws-only.fbdh.dhbottom > * {
+i.fb-ws-only.fbdh.dhtop > *,
+i.fb-ws-only.fbdh.dhbottom > * {
   margin: 2px 4px;
 }
 
@@ -679,17 +816,30 @@ i.fb-ws-only.fbdh.dhtop > *, i.fb-ws-only.fbdh.dhbottom > * {
   cursor: pointer;
 }
 
-.hcbuild-main .fb-workspace .fbc-dz:not(.drag-active):not(.dz-drag-active) .fb-component:hover > i.fbdh,
+.hcbuild-main
+  .fb-workspace
+  .fbc-dz:not(.drag-active):not(.dz-drag-active)
+  .fb-component:hover
+  > i.fbdh,
 .hcbuild-main .hcbuilder-components-body .fb-component:hover > i.fbdh {
   visibility: visible;
 }
 
-.hcbuild-main .fb-workspace form.fws-main:not(.drag-started) .fb-component:not(.selected):not(.dragging):hover > i.fbdfg {
+.hcbuild-main
+  .fb-workspace
+  form.fws-main:not(.drag-started)
+  .fb-component:not(.selected):not(.dragging):hover
+  > i.fbdfg {
   border-top: 1px solid rgba(33, 150, 243, 0.3);
   border-bottom: 1px solid rgba(33, 150, 243, 0.3);
 }
 
-.hcbuild-main .fb-workspace form.fws-main:not(.drag-started) .fb-component:not(.selected):not(.dragging):hover > i.fbdfg > i.right {
+.hcbuild-main
+  .fb-workspace
+  form.fws-main:not(.drag-started)
+  .fb-component:not(.selected):not(.dragging):hover
+  > i.fbdfg
+  > i.right {
   background: rgba(33, 150, 243, 0.4);
 }
 
@@ -708,8 +858,8 @@ i.fb-ws-only.fbdh.dhtop > *, i.fb-ws-only.fbdh.dhbottom > * {
   max-height: 0 !important;
   width: 100%;
   position: absolute;
-  top:0;
-  left:0;
+  top: 0;
+  left: 0;
   display: block;
 }
 
@@ -721,7 +871,6 @@ i.fb-ws-only.fbdh.dhtop > *, i.fb-ws-only.fbdh.dhbottom > * {
   pointer-events: none;
   border: 1px solid rgba(255, 163, 152, 0.61);
   background: rgba(255, 235, 240, 0.81);
-
 }
 
 .hcbuild-main .fbc-copy-holder .fb-component.selected > i.fbdfg,
@@ -730,12 +879,12 @@ i.fb-ws-only.fbdh.dhtop > *, i.fb-ws-only.fbdh.dhbottom > * {
 }
 
 .hcbuild-main .drag-mirror {
-  position:relative;
+  position: relative;
 }
-.hcbuild-main .fws-main .drag-mirror>.drag-mirror-bg {
-  position:absolute;
-  left:0;
-  top:0;
+.hcbuild-main .fws-main .drag-mirror > .drag-mirror-bg {
+  position: absolute;
+  left: 0;
+  top: 0;
   background: rgba(55, 255, 255, 0.4);
   width: 100%;
   height: 100%;
@@ -754,7 +903,8 @@ i.fb-ws-only.fbdh.dhtop > *, i.fb-ws-only.fbdh.dhbottom > * {
   padding: 2px 5px 2px 5px;
 }
 
-.hcbuild-main .hcbuilder-settings-body, .hcbuild-main .hcbuilder-components-body {
+.hcbuild-main .hcbuilder-settings-body,
+.hcbuild-main .hcbuilder-components-body {
   overflow: auto;
   /*max-height: calc(100vh - 352px);*/
 }
@@ -778,23 +928,44 @@ i.fb-ws-only.fbdh.dhtop > *, i.fb-ws-only.fbdh.dhbottom > * {
   color: #002179;
 }
 
-.hcbuild-main .hcbuilder-settings-body .relative-parent.action label.fbs-lbl[name$="action"] {
+.hcbuild-main
+  .hcbuilder-settings-body
+  .relative-parent.action
+  label.fbs-lbl[name$="action"] {
   padding: 7px 14px;
   color: #ffffff;
   background: rgb(88, 66, 255);
-  background: -moz-linear-gradient(left, rgba(88, 66, 255, 1) 0%, rgba(180, 85, 209, 1) 100%);
-  background: -webkit-linear-gradient(left, rgba(88, 66, 255, 1) 0%, rgba(180, 85, 209, 1) 100%);
-  background: linear-gradient(to right, rgba(88, 66, 255, 1) 0%, rgba(180, 85, 209, 1) 100%);
+  background: -moz-linear-gradient(
+    left,
+    rgba(88, 66, 255, 1) 0%,
+    rgba(180, 85, 209, 1) 100%
+  );
+  background: -webkit-linear-gradient(
+    left,
+    rgba(88, 66, 255, 1) 0%,
+    rgba(180, 85, 209, 1) 100%
+  );
+  background: linear-gradient(
+    to right,
+    rgba(88, 66, 255, 1) 0%,
+    rgba(180, 85, 209, 1) 100%
+  );
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#5842ff', endColorstr='#b455d1', GradientType=1);
 }
 
-.hcbuild-main .hcbuilder-settings-body .relative-parent.action label.fbs-lbl[name$="action.destination"] {
+.hcbuild-main
+  .hcbuilder-settings-body
+  .relative-parent.action
+  label.fbs-lbl[name$="action.destination"] {
   padding: 7px 14px;
   color: #ffffff;
   background: rgba(180, 85, 209, 1);
 }
 
-.hcbuild-main .hcbuilder-settings-body .relative-parent.action label.fbs-lbl[name$="action.source"] {
+.hcbuild-main
+  .hcbuilder-settings-body
+  .relative-parent.action
+  label.fbs-lbl[name$="action.source"] {
   padding: 7px 14px;
   color: #ffffff;
   background: rgba(88, 66, 255, 1);
@@ -808,11 +979,16 @@ i.fb-ws-only.fbdh.dhtop > *, i.fb-ws-only.fbdh.dhbottom > * {
   background: rgba(88, 66, 255, 0.2);
 }
 
-.hcbuilder .hcbuilder-settings-body .actionsource .array-item > .fb-field-group {
+.hcbuilder
+  .hcbuilder-settings-body
+  .actionsource
+  .array-item
+  > .fb-field-group {
   background: #ffffff;
 }
 
-.hcbuild-main .hcbuilder-settings-body .fb-validation-menu, .hcbuild-main .hcbuilder-settings-body .fb-validation-menu li a {
+.hcbuild-main .hcbuilder-settings-body .fb-validation-menu,
+.hcbuild-main .hcbuilder-settings-body .fb-validation-menu li a {
   text-transform: capitalize;
 }
 
@@ -823,7 +999,7 @@ i.fb-ws-only.fbdh.dhtop > *, i.fb-ws-only.fbdh.dhbottom > * {
 }
 
 .panel-default {
-    margin-bottom: 0;
+  margin-bottom: 0;
 }
 
 .hcbuild-main .fb-sticky-right {
@@ -863,8 +1039,8 @@ i.fb-ws-only.fbdh.dhtop > *, i.fb-ws-only.fbdh.dhbottom > * {
   right: 0;
   bottom: 0;
   background-color: #bec4ca;
-  -webkit-transition: .4s;
-  transition: .4s;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
 }
 
 .hcbuild-main .hcbuilder-settings-body .i18n-toggle .slider:before {
@@ -875,8 +1051,8 @@ i.fb-ws-only.fbdh.dhtop > *, i.fb-ws-only.fbdh.dhbottom > * {
   left: 2px;
   bottom: 2px;
   background-color: white;
-  -webkit-transition: .4s;
-  transition: .4s;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
 }
 
 .hcbuild-main .hcbuilder-settings-body .i18n-toggle input:checked + .slider {
@@ -887,7 +1063,11 @@ i.fb-ws-only.fbdh.dhtop > *, i.fb-ws-only.fbdh.dhbottom > * {
   box-shadow: 0 0 1px #062a85;
 }
 
-.hcbuild-main .hcbuilder-settings-body .i18n-toggle input:checked + .slider:before {
+.hcbuild-main
+  .hcbuilder-settings-body
+  .i18n-toggle
+  input:checked
+  + .slider:before {
   -webkit-transform: translateX(16px);
   -ms-transform: translateX(16px);
   transform: translateX(16px);
@@ -1002,26 +1182,47 @@ i.fb-ws-only.fbdh.dhtop > *, i.fb-ws-only.fbdh.dhbottom > * {
   background: transparent;
 }
 
-.hcbuild-main .hcbuilder-settings-body .validation-parent .hcbuilder-settings-tbl > tbody > tr > td:first-child:not(.td-min):not(.vdf-ext-main) {
+.hcbuild-main
+  .hcbuilder-settings-body
+  .validation-parent
+  .hcbuilder-settings-tbl
+  > tbody
+  > tr
+  > td:first-child:not(.td-min):not(.vdf-ext-main) {
   width: 100%;
   padding-left: 20px;
 }
 
-.hcbuild-main .hcbuilder-settings-body .validation-parent .hcbuilder-settings-tbl > tbody > tr > td:last-child {
+.hcbuild-main
+  .hcbuilder-settings-body
+  .validation-parent
+  .hcbuilder-settings-tbl
+  > tbody
+  > tr
+  > td:last-child {
   width: 40px;
   max-width: 40px;
   padding: 0;
   margin: 0;
 }
 
-.hcbuild-main .hcbuilder-settings-body .validation-parent .hcbuilder-settings-tbl > tbody > tr > td:last-child {
+.hcbuild-main
+  .hcbuilder-settings-body
+  .validation-parent
+  .hcbuilder-settings-tbl
+  > tbody
+  > tr
+  > td:last-child {
   width: 40px;
   max-width: 40px;
   padding: 0;
   margin: 0;
 }
 
-.hcbuild-main .hcbuilder-settings-body .validation-parent .hcbuilder-settings-tbl {
+.hcbuild-main
+  .hcbuilder-settings-body
+  .validation-parent
+  .hcbuilder-settings-tbl {
   border-bottom: 1px solid #bec4ca;
   border-top: 1px solid #d4f4f4;
   margin-bottom: 2px;
@@ -1034,7 +1235,11 @@ i.fb-ws-only.fbdh.dhtop > *, i.fb-ws-only.fbdh.dhbottom > * {
   width: 34px;
 }
 
-.hcbuild-main .hcbuilder-settings-body .validation-parent .fb-field-group .fbs-lbl {
+.hcbuild-main
+  .hcbuilder-settings-body
+  .validation-parent
+  .fb-field-group
+  .fbs-lbl {
   left: 15px;
   position: relative;
   padding-left: 8px;
@@ -1132,19 +1337,36 @@ i.fb-ws-only.fbdh.dhtop > *, i.fb-ws-only.fbdh.dhbottom > * {
   -moz-transform-origin: 0 37px;
 }
 
-.hcbuild-main .hcbuilder-settings-body .dropdown-menu > .active > a, .dropdown-menu > .active > a:focus, .dropdown-menu > .active > a:hover {
+.hcbuild-main .hcbuilder-settings-body .dropdown-menu > .active > a,
+.dropdown-menu > .active > a:focus,
+.dropdown-menu > .active > a:hover {
   color: #ffffff;
   text-decoration: none;
   outline: 0;
   background-color: #007cf8;
 }
 
-.hcbuild-main .hcbuilder-settings-body .dropdown-menu > .active > a .fb-i18n-lang, .dropdown-menu > .active > a:focus .fb-i18n-lang, .dropdown-menu > .active > a:hover .fb-i18n-lang,
-.hcbuild-main .hcbuilder-settings-body .dropdown-menu > .active > a .fb-i18n-key, .dropdown-menu > .active > a:focus .fb-i18n-key, .dropdown-menu > .active > a:hover .fb-i18n-key {
+.hcbuild-main
+  .hcbuilder-settings-body
+  .dropdown-menu
+  > .active
+  > a
+  .fb-i18n-lang,
+.dropdown-menu > .active > a:focus .fb-i18n-lang,
+.dropdown-menu > .active > a:hover .fb-i18n-lang,
+.hcbuild-main
+  .hcbuilder-settings-body
+  .dropdown-menu
+  > .active
+  > a
+  .fb-i18n-key,
+.dropdown-menu > .active > a:focus .fb-i18n-key,
+.dropdown-menu > .active > a:hover .fb-i18n-key {
   color: #ffffff;
 }
 
-.hcbuild-main .hcbuilder-settings-body .fb-i18n-lang, .hcbuild-main .hcbuilder-settings-body .fb-i18n-key {
+.hcbuild-main .hcbuilder-settings-body .fb-i18n-lang,
+.hcbuild-main .hcbuilder-settings-body .fb-i18n-key {
   color: #333333;
 }
 
@@ -1168,9 +1390,24 @@ i.fb-ws-only.fbdh.dhtop > *, i.fb-ws-only.fbdh.dhbottom > * {
 
 .hcbuild-main .hcbuilder-settings-body .form-control.i18n-active {
   background: rgb(255, 255, 255); /* Old browsers */
-  background: -moz-linear-gradient(top, rgba(255, 255, 255, 1) 88%, rgba(33, 150, 243, 1) 88%, rgba(33, 150, 243, 1) 100%); /* FF3.6-15 */
-  background: -webkit-linear-gradient(top, rgba(255, 255, 255, 1) 88%, rgba(33, 150, 243, 1) 88%, rgba(33, 150, 243, 1) 100%); /* Chrome10-25,Safari5.1-6 */
-  background: linear-gradient(to bottom, rgba(255, 255, 255, 1) 88%, rgba(33, 150, 243, 1) 88%, rgba(33, 150, 243, 1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+  background: -moz-linear-gradient(
+    top,
+    rgba(255, 255, 255, 1) 88%,
+    rgba(33, 150, 243, 1) 88%,
+    rgba(33, 150, 243, 1) 100%
+  ); /* FF3.6-15 */
+  background: -webkit-linear-gradient(
+    top,
+    rgba(255, 255, 255, 1) 88%,
+    rgba(33, 150, 243, 1) 88%,
+    rgba(33, 150, 243, 1) 100%
+  ); /* Chrome10-25,Safari5.1-6 */
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 1) 88%,
+    rgba(33, 150, 243, 1) 88%,
+    rgba(33, 150, 243, 1) 100%
+  ); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#40e1d1', GradientType=0); /* IE6-9 */
 }
 
@@ -1202,15 +1439,11 @@ i.fb-ws-only.fbdh.dhtop > *, i.fb-ws-only.fbdh.dhbottom > * {
 }
 
 .hcbuild-main .reassigned {
-  -webkit-animation: hcbSettingsReAssignedComp 150ms infinite ease !important;
-  -moz-animation: hcbSettingsReAssignedComp 150ms infinite ease !important;
-  animation: hcbSettingsReAssignedComp 150ms infinite ease !important;
+  @include animation("hcbSettingsReAssignedComp 150ms infinite ease");
 }
 
 .hcbuild-main .assign-to-comp {
-  -webkit-animation: hcbSettingsReAssignedComp 0.6s infinite ease !important;
-  -moz-animation: hcbSettingsReAssignedComp 0.6s infinite ease !important;
-  animation: hcbSettingsReAssignedComp 0.6s infinite ease !important;
+  @include animation("hcbSettingsReAssignedComp 0.6s infinite ease");
 }
 
 /* The switch - the box around the slider */
@@ -1235,7 +1468,7 @@ i.fb-ws-only.fbdh.dhtop > *, i.fb-ws-only.fbdh.dhbottom > * {
   text-align: center;
 }
 
-.hcbuild-main .nav-item>.nav-link:focus {
+.hcbuild-main .nav-item > .nav-link:focus {
   outline: none;
   background-color: #062a85;
 }
@@ -1248,8 +1481,8 @@ i.fb-ws-only.fbdh.dhtop > *, i.fb-ws-only.fbdh.dhbottom > * {
   right: 0;
   bottom: 0;
   background-color: #062a85;
-  -webkit-transition: .4s;
-  transition: .4s;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
   height: 20px;
   width: 160px;
 }
@@ -1262,8 +1495,8 @@ i.fb-ws-only.fbdh.dhtop > *, i.fb-ws-only.fbdh.dhbottom > * {
   left: 2px;
   bottom: 2px;
   background-color: white;
-  -webkit-transition: .4s;
-  transition: .4s;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
   top: 2px;
 }
 
@@ -1428,8 +1661,8 @@ i.fb-ws-only.fbdh.dhtop > *, i.fb-ws-only.fbdh.dhbottom > * {
   right: 0;
   bottom: 0;
   background-color: #bec4ca;
-  -webkit-transition: .4s;
-  transition: .4s;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
 }
 
 .hcbuild-main .slider:before {
@@ -1440,8 +1673,8 @@ i.fb-ws-only.fbdh.dhtop > *, i.fb-ws-only.fbdh.dhbottom > * {
   left: 4px;
   bottom: 4px;
   background-color: white;
-  -webkit-transition: .4s;
-  transition: .4s;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
 }
 
 .hcbuild-main input:checked + .slider {
@@ -1544,7 +1777,12 @@ i.fb-ws-only.fbdh.dhtop > *, i.fb-ws-only.fbdh.dhbottom > * {
   display: none;
 }
 
-.hcbuild-main .hcbuilder-settings-body .fancy-checkbox input[type="checkbox"] + label span {
+.hcbuild-main
+  .hcbuilder-settings-body
+  .fancy-checkbox
+  input[type="checkbox"]
+  + label
+  span {
   display: inline-block;
   width: 24px;
   height: 24px;
@@ -1563,12 +1801,30 @@ i.fb-ws-only.fbdh.dhtop > *, i.fb-ws-only.fbdh.dhbottom > * {
   margin: 4px;
 }
 
-.hcbuild-main .hcbuilder-settings-body .fancy-checkbox input[type="checkbox"]:checked + label > span > i {
+.hcbuild-main
+  .hcbuilder-settings-body
+  .fancy-checkbox
+  input[type="checkbox"]:checked
+  + label
+  > span
+  > i {
   background: #007cf8;
 }
 
-.hcbuild-main .hcbuilder-settings-body .fancy-checkbox input[type="checkbox"]:not(:checked) + label:hover > span > i,
-.hcbuild-main .hcbuilder-settings-body .fancy-checkbox input[type="checkbox"]:not(:checked) + label > span:hover > i {
+.hcbuild-main
+  .hcbuilder-settings-body
+  .fancy-checkbox
+  input[type="checkbox"]:not(:checked)
+  + label:hover
+  > span
+  > i,
+.hcbuild-main
+  .hcbuilder-settings-body
+  .fancy-checkbox
+  input[type="checkbox"]:not(:checked)
+  + label
+  > span:hover
+  > i {
   background: #007cf8;
   -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=30)";
   filter: alpha(opacity=30);
@@ -1579,7 +1835,12 @@ i.fb-ws-only.fbdh.dhtop > *, i.fb-ws-only.fbdh.dhbottom > * {
   display: none;
 }
 
-.hcbuild-main .hcbuilder-settings-body .fancy-radio input[type="radio"] + label span {
+.hcbuild-main
+  .hcbuilder-settings-body
+  .fancy-radio
+  input[type="radio"]
+  + label
+  span {
   display: inline-block;
   margin: 0 10px 0 0;
   vertical-align: middle;
@@ -1604,16 +1865,39 @@ i.fb-ws-only.fbdh.dhtop > *, i.fb-ws-only.fbdh.dhbottom > * {
   border: 4px solid #ffffff;
 }
 
-.hcbuild-main .hcbuilder-settings-body .fancy-radio input[type="radio"]:checked + label > span > i {
+.hcbuild-main
+  .hcbuilder-settings-body
+  .fancy-radio
+  input[type="radio"]:checked
+  + label
+  > span
+  > i {
   background: #007cf8;
 }
 
-.hcbuild-main .hcbuilder-settings-body .fancy-radio input[type="radio"]:checked + label > p {
+.hcbuild-main
+  .hcbuilder-settings-body
+  .fancy-radio
+  input[type="radio"]:checked
+  + label
+  > p {
   color: #ffffff;
 }
 
-.hcbuild-main .hcbuilder-settings-body .fancy-radio input[type="radio"]:not(:checked) + label:hover > span > i,
-.hcbuild-main .hcbuilder-settings-body .fancy-radio input[type="radio"]:not(:checked) + label > span:hover > i {
+.hcbuild-main
+  .hcbuilder-settings-body
+  .fancy-radio
+  input[type="radio"]:not(:checked)
+  + label:hover
+  > span
+  > i,
+.hcbuild-main
+  .hcbuilder-settings-body
+  .fancy-radio
+  input[type="radio"]:not(:checked)
+  + label
+  > span:hover
+  > i {
   background: #007cf8;
   -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=30)";
   filter: alpha(opacity=30);

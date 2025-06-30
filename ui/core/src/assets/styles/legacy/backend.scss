@@ -1,5 +1,5 @@
 //.app-formbuilder {
-@import 'general.less';
+@import 'general.scss';
 
 /* backend stuff to insert only: */
 
@@ -15,8 +15,8 @@ h1 {
 }
 
 .export {
-  background-color: @base-bg-color;
-  border: 1px solid @color-primary;
+  background-color: $base-bg-color;
+  border: 1px solid $color-primary;
   margin-top: 5px;
   width: 100%;
   height: 40px;
@@ -30,13 +30,13 @@ h1 {
 
 .action-ft-btns {
   position: relative;
-  border: 1px solid @color-primary;
+  border: 1px solid $color-primary;
   border-style: solid;
   margin-top: 5px;
   padding: 0;
   overflow: hidden;
   height: 40px;
-  background-color: @base-bg-color;
+  background-color: $base-bg-color;
 }
 
 .action-ft-btns > button,
@@ -61,11 +61,11 @@ input[type="password"],
 .ui-autocomplete-input,
 textarea,
 .uneditable-input, select > option, select {
-  color: @color-primary;
+  color: $color-primary;
 }
 
 .i18n-wrapper {
-  border: 1px solid @color-inactive;
+  border: 1px solid $color-inactive;
   padding: 4px;
 }
 
@@ -117,11 +117,11 @@ textarea,
 }
 
 .i18n-main th.active-col:not(:last-child), .i18n-main td.active-col {
-  border-left: 1px solid @color-primary;
+  border-left: 1px solid $color-primary;
 }
 
 .i18n-main .hidden-col {
-  border-left: 1px solid @color-secondary;
+  border-left: 1px solid $color-secondary;
 }
 
 .i18n-main td:last-child, .i18n-main th:last-child {
@@ -142,7 +142,7 @@ textarea,
 
 .i18n-main > thead > tr:first-child > th span {
   border-radius: 6px;
-  color: @base-bg-color;
+  color: $base-bg-color;
   min-width: 24px;
   display: inline-block;
   text-align: center;
@@ -154,11 +154,11 @@ textarea,
 }
 
 .i18n-main th.hidden-col:not(:last-child) span {
-  background: @color-secondary;
+  background: $color-secondary;
 }
 
 .i18n-main th.active-col:not(:last-child) span {
-  background: @color-primary;
+  background: $color-primary;
 }
 
 .i18n-main tr:first-child th:first-child {
@@ -174,8 +174,8 @@ textarea,
 }
 
 .i18n-main th.filter textarea {
-  border: 1px solid @color-primary !important;
-  border-radius: @border-radius !important;
+  border: 1px solid $color-primary !important;
+  border-radius: $border-radius !important;
   padding: 2px 6px;
   font-weight: normal;
 }
@@ -436,17 +436,17 @@ div.vis-network div.vis-navigation div.vis-button:hover {
 
 .user-admin .doc-search-main {
   .input-group-addon {
-    background: @base-bg-color;
-    border: 1px solid @color-primary;
+    background: $base-bg-color;
+    border: 1px solid $color-primary;
     border-right: none;
   }
   .glyphicon-search {
-    color: @color-primary;
+    color: $color-primary;
   }
 }
 
 .user-admin .doc-icon-main span {
-  color: @color-inactive3;
+  color: $color-inactive3;
   font-weight: bold;
 }
 
@@ -479,7 +479,7 @@ div.vis-network div.vis-navigation div.vis-button:hover {
 }
 
 .page-content .typeahead.dropdown-menu > .active > a, .page-content .typeahead.dropdown-menu > .active > a:focus, .page-content .typeahead.dropdown-menu > .active > a:hover {
-  background-color: @color-primary;
+  background-color: $color-primary;
 }
 
 .doc-first-wrap-sug {
@@ -501,20 +501,20 @@ div.vis-network div.vis-navigation div.vis-button:hover {
 
 .doc-wrap-suggestion:hover {
   margin-top: 6px;
-  border: 1px solid @nav-top-b-color;
+  border: 1px solid $nav-top-b-color;
 }
 
 .doc-wrap-suggestion:hover * {
-  color: @nav-top-b-color
+  color: $nav-top-b-color
 }
 
 .doc-wrap-suggestion.active {
   margin-top: 6px;
-  border: 1px solid @nav-top-b-color;
+  border: 1px solid $nav-top-b-color;
 }
 
 .doc-wrap-suggestion.active * {
-  color: @nav-top-bg-color
+  color: $nav-top-bg-color
 }
 
 a.doc-suggestion {
@@ -565,12 +565,12 @@ a.doc-suggestion span {
 }
 
 .special-link {
-  color: @nav-top-bg-color;
+  color: $nav-top-bg-color;
   font-style: normal;
 }
 
 .special-link:hover, .special-link:focus {
-  color: @nav-top-b-color;
+  color: $nav-top-b-color;
   font-style: normal;
   text-decoration: none;
 }
@@ -607,18 +607,18 @@ a.doc-suggestion span {
 }
 
 .doc-suggestion-sections table tr:hover td {
-  border-top-color: @color-primary;
-  border-bottom: 1px solid @color-primary;
+  border-top-color: $color-primary;
+  border-bottom: 1px solid $color-primary;
 }
 
 .doc-suggestion-sections table tr:hover td:first-child {
-  border-left-color: @color-primary;
+  border-left-color: $color-primary;
   border-right-color: transparent;
 }
 
 .doc-suggestion-sections table tr:hover td:last-child {
   border-left-color: transparent;
-  border-right-color: @color-primary;
+  border-right-color: $color-primary;
 }
 
 .content-nav {
@@ -645,7 +645,7 @@ div#lazyLoadMain {
 
 .activity-row {
   position: relative;
-  background-color: @base-bg-color;
+  background-color: $base-bg-color;
   -webkit-transition: background-color 0.2s;
   transition: background-color 0.2s;
   overflow: hidden;
@@ -715,7 +715,7 @@ div#lazyLoadMain {
 
 .activity-row i, .activities-grid i {
   font-size: 18px;
-  color: @color-primary;
+  color: $color-primary;
 }
 
 .activity-row-right {
@@ -736,8 +736,8 @@ div#lazyLoadMain {
 }
 
 .activity-row-right-centered:hover {
-  color: @color-primary;
-  border: 1px solid @color-primary;
+  color: $color-primary;
+  border: 1px solid $color-primary;
 }
 
 .activity-row-right-centered {
@@ -751,17 +751,17 @@ div#lazyLoadMain {
   bottom: 0;
   right: 0;
   border-radius: 25px;
-  border: 1px solid @color-primary;
+  border: 1px solid $color-primary;
   text-align: center;
   visibility: hidden;
 }
 
 /* activity grid layout */
 .activity-grid {
-  border-left: 1px solid @color-inactive;
-  border-right: 1px solid @color-inactive;
-  border-top: 4px solid @color-primary;
-  border-bottom: 1px solid @color-inactive;
+  border-left: 1px solid $color-inactive;
+  border-right: 1px solid $color-inactive;
+  border-top: 4px solid $color-primary;
+  border-bottom: 1px solid $color-inactive;
   margin-bottom: 0;
 }
 
@@ -786,8 +786,8 @@ div#lazyLoadMain {
 
 .user-admin .new-item {
   border-radius: 50%;
-  border: 2px solid @color-secondary;
-  background: @color-secondary;
+  border: 2px solid $color-secondary;
+  background: $color-secondary;
   width: 60px;
   height: 60px;
   display: inline-block !important;
@@ -801,21 +801,21 @@ div#lazyLoadMain {
   position: absolute;
   right: -13px;
   top: -13px;
-  color: @color-primary !important;
+  color: $color-primary !important;
 }
 
 .activity-card span:not(.glyphicon) {
   font-size: 16px;
   padding: 10px 0 0 10px;
   display: inline-block;
-  font-family: @formfields-font-family;
+  font-family: $formfields-font-family;
   font-weight: normal;
 }
 
 .activity-card .panel-header table {
   width: 100%;
   font-size: 16px;
-  font-family: @formfields-font-family;
+  font-family: $formfields-font-family;
   font-weight: normal;
 }
 
@@ -837,7 +837,7 @@ div#lazyLoadMain {
 }
 
 .activity-card i.doc-finished {
-  color: @color-primary;
+  color: $color-primary;
 }
 
 .activity-card:hover .activities-doc-content {
@@ -861,12 +861,12 @@ div#lazyLoadMain {
   bottom: 0;
   left: 0;
   width: 100%;
-  background-color: @base-bg-color;
+  background-color: $base-bg-color;
   opacity: 0.7;
   height: 80px;
-  border-left: 1px solid @color-inactive;
-  border-right: 1px solid @color-inactive;
-  border-bottom: 1px solid @color-inactive;
+  border-left: 1px solid $color-inactive;
+  border-right: 1px solid $color-inactive;
+  border-bottom: 1px solid $color-inactive;
   box-shadow: 0 -5px 5px -5px #333333;
   display: none;
   padding-top: 20px;
@@ -907,7 +907,7 @@ button.filedownload-btn span.glyphicon {
 }
 
 button.filedownload-btn:hover span.glyphicon {
-  color: @color-secondary;
+  color: $color-secondary;
 }
 
 button.filedownload-btn span.btn-txt {
@@ -936,11 +936,11 @@ button.filedownload-btn span.btn-txt {
 }
 
 .activity-row-header {
-  background: @color-primary;
+  background: $color-primary;
 }
 
 .activity-row-th span {
-  color: @base-bg-color;
+  color: $base-bg-color;
   font-size: 18px;
 }
 
@@ -960,7 +960,7 @@ button.filedownload-btn span.btn-txt {
 .activity-row-th > span:not(.glyphicon),
 .activity-row-td > span:not(.glyphicon) {
   padding: 0 0 0 10px;
-  font-family: @formfields-font-family;
+  font-family: $formfields-font-family;
   display: inline-block;
   vertical-align: middle;
   line-height: normal;
@@ -971,7 +971,7 @@ button.filedownload-btn span.btn-txt {
 }
 
 .activities .more-data-loader {
-  border-bottom: 1px solid @color-inactive;
+  border-bottom: 1px solid $color-inactive;
   min-height: 38px;
   width: 100%;
 }

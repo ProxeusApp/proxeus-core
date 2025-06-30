@@ -9,27 +9,27 @@
         class="text-truncate file-name text-white" v-if="filename">{{ filename }}</small></span>
         <i class="mdi mdi-download ml-2"></i>
       </a>
-      <pdf
+      <VuePdfEmbed
         v-for="i in numPages"
         :key="i"
-        :src="pdfSrc"
-        @error="errorHandler"
+        :source="pdfSrc"
+        @loading-failed="errorHandler"
         :page="i"
-      ></pdf>
+      ></VuePdfEmbed>
     </div>
   </div>
 </div>
 </template>
 
 <script>
-import pdf from 'vue-pdf'
+import VuePdfEmbed from 'vue-pdf-embed'
 import Spinner from '@/components/Spinner'
 
 export default {
   name: 'pdf-modal',
   props: ['src', 'mid', 'filename', 'download'],
   components: {
-    pdf,
+    VuePdfEmbed,
     Spinner
   },
   data () {

@@ -2,10 +2,10 @@
 
 # Comand line tool to generate the ACKNOWLEDGEMENT file
 #
-# hub api user 
+# hub api user
 # ./create_acknowledgment.sh <path to dependency_decisions.yml file> ACKNOWLEDGEMENT
 
-set -o nounset -o errexit -o pipefail 
+set -o nounset -o errexit -o pipefail
 
 which hub > /dev/null || echo Please install the hub command line tool from https://hub.github.com
 which yq > /dev/null || echo Please install the yq YAML command line tool from https://github.com/kislyuk/yq
@@ -41,7 +41,7 @@ map go.etcd.io/bbolt github.com/etcd-io/bbolt
 map golang.org/x/crypto github.com/golang/crypto
 map golang.org/x/image github.com/golang/image
 map google.golang.org/appengine github.com/golang/appengine
-map gopkg.in/gavv/httpexpect.v2 github.com/gavv/httpexpect
+map github.com/gavv/httpexpect/v2 github.com/gavv/httpexpect
 map go.mongodb.org/mongo-driver github.com/mongodb/mongo-go-driver
 map go.starlark.net github.com/google/starlark-go
 map golang.org/x/arch github.com/golang/arch
@@ -68,11 +68,11 @@ license() {
     local license_url=$(hub api repos/{owner}/{repo}/license | jq .download_url | xargs echo)
 
     echo "############################################"
-    echo Project name : ${project_name} 
+    echo Project name : ${project_name}
     echo Project repository: ${url}
 
     if [[ "x${license_url}" != "xnull" ]]; then
-        echo License file URL: ${license_url} 
+        echo License file URL: ${license_url}
         echo License:
         echo
         curl ${license_url}
