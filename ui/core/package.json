@@ -86,7 +86,7 @@
     "@vue/eslint-config-standard": "^5",
     "autoprefixer": "^9",
     "check-node-version": "^3",
-    "cypress": "^4",
+    "cypress": "^14",
     "eslint": "^7.5",
     "eslint-plugin-import": "^2",
     "eslint-plugin-node": "^11",
