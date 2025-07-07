@@ -1,9 +1,5 @@
 # Proxeus Handbook
 
-
-<iframe style="border:none; width:100%" height="360" frameborder="0" src="https://player.vimeo.com/video/837487333" allowfullscreen="" title="Screencast of document validation workflow (5 min), June 2023"></iframe>
-
-  
 ## Table of Contents
 
 
@@ -21,39 +17,21 @@
 1 Introduction
 ==============
 
-
-
 The Proxeus software makes blockchain accessible by simplifying the creation of document-centered blockchain applications, allowing users to digitize and run their processes in a decentralized environment.
 
+Proxeus provides you with a toolbox that already contains everything you need: workflow engine, document generator, connection to the Ethereum blockchain and more. In this short video introduction, the main features are briefly demonstrated:
 
-
-Proxeus provides you with a toolbox that already contains everything you need: workflow engine, document generator, connection to the Ethereum blockchain and more.
-
-
-
-![](handbook/Proxeus%20-%20The%20Complete%20Handbook_html_63e1e3204a60f7f8.png)
-
-
+<iframe style="border:none; width:100%" height="360" frameborder="0" src="https://player.vimeo.com/video/837487333" allowfullscreen="" title="Screencast of document validation workflow (5 min), June 2023"></iframe>
 
 Reading this handbook and following our tips & tricks will improve your experience with your Proxeus platform.
 
-
-
 This handbook is structured along the different user roles, going from novice to advanced. Proxeus has three groups of user roles: Consumers, Creators and Operators. The platform is also split into two areas: the User View and the Admin Panel.
-
 
 *   Consumers can browse, purchase and use workflows made available by Creators. They can only access the front area (“User View”) of the platform.
 *   Creators build, sell and maintain workflows. They can access the “User View” as well as parts of the “Admin Panel”.
 *   Operators are Platform administrators setting up and operating a Proxeus platform for their own purposes or in order to make it available to a set of users. They have access to additional Admin Panel areas to manage users, languages and data.
 
-
-
-
 This handbook provides a guide across the activities available to each of the three user levels. The focus lies on the process of creating workflows, forms and templates, as well as the generation of documents.
-
-
-
-
 2 Requirements
 ==============
 
@@ -76,13 +54,7 @@ Template files must be uploaded in the ODT document format and can be created wi
 
 
 
-
-
-
 A free download of LibreOffice can be found at [libreoffice.org](https://www.libreoffice.org/download/download/).
-
-
-
 
 3 Your Account
 ==============
@@ -104,37 +76,22 @@ You can log in with MetaMask or sign up via email. Adding both your email and yo
 3.  Click the link in the email you received
 4.  Set your password
 5.  Sign in
-6.  Click on the icon in the top right corner to connect your Ethereum wallet with your account and complete your profile  
-
-
-
-**Important:** For the best user experience it is recommended that you fill out your user profile completely.  
+6.  Click on the icon in the top right corner to connect your Ethereum wallet with your account and complete your profile
+**Important:** For the best user experience it is recommended that you fill out your user profile completely.
 
 *   Name
 *   E-Mail
 *   Ethereum Address
 
-
-
-
 You can decide to add a profile picture and fill out the “About me” to make it easier for others to find you.
-
-
-
 3.4 Getting Ethers and XES
 --------------------------
 
 In order to fully use your Proxeus platform, you will need Ether to pay transaction fees and XES tokens to pay for services offered by Creators.
-
-
-
 3.5 Account Settings
 --------------------
 
 You can access your user account settings via the round icon on the top right corner of the page.
-
-
-
 In the account settings, you can:
 *   Upload a profile picture
 *   Set an account name
@@ -147,92 +104,53 @@ In the account settings, you can:
 *   Create API keys - if you intend to use the API, authentication keys can be created in the user profile.
 
 
-
-
-
 4 User View
 ===========
-
-
-
 4.1 Documents
 -------------
 
 In the “Documents” view, you can start new workflows aiming to generate one or several documents. The “Create document” button in the top left corner takes you to the list of available workflows. If a price has been set by the corresponding Creator, the workflow will be charged for in XES.
-
-
-
 **Important:** Before you start a workflow, it is strongly recommended that you connect an Ethereum wallet with your account. You can do this by opening your profile via the icon in the top right corner.
-
-
-
-Once started, you can pause or leave a workflow at any time. All progress will be saved. The paused workflow can be found in your “Documents” tab, marked as “Draft”.  
+Once started, you can pause or leave a workflow at any time. All progress will be saved. The paused workflow can be found in your “Documents” tab, marked as “Draft”.
 
 
 Drafts can be deleted. Workflows purchased will be accessible until you have fully completed them, so deleting a draft will not void your purchase.
-
-
-
 Once you have completed a workflow, the “Draft” label will disappear. You can now view and download your finished document(s).
 
 ### 4.1.1 Downloads
 
 You can download your finalized documents as PDFs or Microsoft Word files (only PDFs can be verified on the blockchain for authenticity). Simply click on the file to display the available actions.
-
-
-
 ![](handbook/Proxeus%20-%20The%20Complete%20Handbook_html_c6dbc4f60fe085d4.png)
 
 ### 4.1.2 Requesting signatures
 
 Once you have completed a workflow and generated a document, you can ask others to sign it. Examples of use cases involving signatures for confirming documents, voting or certification are available on the website. Signatures are created by a user’s Ethereum identity and will be publicly visible on the blockchain. You can view signatures on a Proxeus document using the verification interface.
-
-
-
 ![](handbook/Proxeus%20-%20The%20Complete%20Handbook_html_b0d27088acfc9ea1.png)
 
 _Your document, opened via “Documents” tab_
-
-
-
 Click on the document to see all available actions and find the signature requests on the right:
 
 ![](handbook/Proxeus%20-%20The%20Complete%20Handbook_html_f29c3f30ee6d87a2.png)
 
 _The available actions for your documents: view in browser, download as a PDF or Word file, request signatures_
-
-
-
 The signature request will appear in the interface of the corresponding user. If they provided an email address, an email notification will be sent. Once they have signed, you will also be notified_._
 
 4.2 Verification
 ----------------
 
 The authenticity of documents which were created through the platform can be verified through a drag & drop interface. The interface compares the hash value of your document with the list of registered documents on the smart contract and displays a result, showing whether a document has been previously registered or signed.
-
-
-
 ![](handbook/Proxeus%20-%20The%20Complete%20Handbook_html_ad8c3d09bed27d94.png)
 
 _A successful verification - this file has been registered via Proxeus_
-
-
-
 The same verification tool can also be accessed on the public landing page of your platform and via the path /validation - i.e. xyz.com/validation
 
 4.3 Signature Requests
 ----------------------
 
 If another user requests your signature, you will find their request in the “Signature Requests” tab. If you provided an email address, you will also receive an email notification. You can view the document online or download it as a PDF or Word file for further inspection. You can then sign the document or reject the request.
-
-
-
 ![](handbook/Proxeus%20-%20The%20Complete%20Handbook_html_d007d01a1f3c3208.png)
 
 _An open signature request_
-
-
-
 For signatures, you are required to have an Ethereum account linked to your profile and to be logged into this account. As the signature has to be added to a smart contract on the Ethereum blockchain, you will have to pay a small transaction fee. A MetaMask transaction request will pop up as you click “Sign”.
 
 4.4 Data
@@ -242,19 +160,10 @@ User data, Templates, Forms, Workflows, Users, Translations and Settings can be 
 
 Data is imported with a “best effort” approach, meaning that errors will not block the rest of the import. Imported entries will be marked in the application.
 
-
-
-
-
-
-
 5 Admin Panel
 =============
 
 The Admin Panel is the backstage area of the platform. It can only be accessed by Operators and Creators, not by Consumers. It consists of three parts: “Workflows”, “Templates” and “Forms”. The “Share” and “Export” features will also be explained in this section.
-
-
-
 5.1 Quick Start Guide
 ---------------------
 
@@ -428,9 +337,6 @@ Hello World
 {{upper('jtwig')}}
 JTWIG
 ```
-
-
-
 ------
 
 5.4 Workflows
@@ -450,7 +356,7 @@ Enter a “Name” for your new workflow. Optionally, you can add further inform
 
 When building a workflow, the templates have to be inserted as the first steps, followed by the forms (as shown in the example below). It is also possible to create conditions that split workflows into different paths.
 
-![](handbook/Proxeus%20-%20The%20Complete%20Handbook_html_64aa240a167179fa.png)  
+![](handbook/Proxeus%20-%20The%20Complete%20Handbook_html_64aa240a167179fa.png)
 _A simple workflow with one template (pink) and one form (green)_
 
 ### 5.4.2 Price
@@ -485,21 +391,21 @@ Proxeus allows you to develop custom nodes and to make them available to all use
 
 You can add custom nodes at any position in the workflow.
 
-![](handbook/Proxeus%20-%20The%20Complete%20Handbook_html_951d02a5e7f5dc31.png)  
+![](handbook/Proxeus%20-%20The%20Complete%20Handbook_html_951d02a5e7f5dc31.png)
 _A custom node at the end of our example workflow_
 
 ### 5.4.6 Sub-workflows
 
 In Proxeus, you can also build workflows that call other workflows. The main workflow will start normally and then guide the user through the sub-workflow. After the user has completed this sub-workflow or “workflow in a workflow”, they will be brought back to the main workflow.
 
-![](handbook/Proxeus%20-%20The%20Complete%20Handbook_html_d7693cee8e9aac78.png)  
+![](handbook/Proxeus%20-%20The%20Complete%20Handbook_html_d7693cee8e9aac78.png)
 _A workflow with a sub-workflow. The user will see form 1A first, then the forms of the sub-workflow and finally form 2A._
 
 ### 5.4.7 Deleting connections & elements
 
 You can remove connections between workflow elements by clicking on the connection itself and then using the “delete selected” button that appears on top. Removing elements works the same. You can always re-add them afterwards.
 
-![](handbook/Proxeus%20-%20The%20Complete%20Handbook_html_e1ea58a054e536e0.png)  
+![](handbook/Proxeus%20-%20The%20Complete%20Handbook_html_e1ea58a054e536e0.png)
 _Deleting the connection between the template and the form_
 
 ---
@@ -547,7 +453,7 @@ Translations can be exported language by language. You can prepare a new languag
 
 Once the platform has two activated languages, workflows can be made multilingual. There are two possible ways to do so:
 
-1. Duplicate the workflow completely, translate all the labels and upload the template(s) in the new language. Add the language to the workflow name. The users will see two entries and start the workflow in the prefered language.  
+1. Duplicate the workflow completely, translate all the labels and upload the template(s) in the new language. Add the language to the workflow name. The users will see two entries and start the workflow in the prefered language.
 2. Add translation codes for all texts of your forms in the “Internationalization” editor. Activate the “i18n” in the forms and select the translation codes. Open the template entry and upload a second document template in the new language.
 
 
@@ -715,9 +621,6 @@ In the following UI guides, we’re explaining the different screens you might e
 3.  List of signature requests
 
 
-
-
-
 7 Roles
 =======
 
@@ -770,12 +673,6 @@ Configuration of the platform, such as database directory path, session expiry o
 
 Operators with “Superadmin” or “Root” roles can see other users’ content in the “User View” and the “Admin Panel”.
 
-
-
-
-
-
-
 8 Platform Installation
 =======================
 
@@ -814,19 +711,19 @@ _A successful data import_
 8.3 Customization
 -----------------
 
-After setting up your own platform powered by Proxeus, you will be able to customize certain aspects of it. Texts can be customized using Proxeus’ internationalisation feature. Please consult the respective chapters in this manual for more information.  
+After setting up your own platform powered by Proxeus, you will be able to customize certain aspects of it. Texts can be customized using Proxeus’ internationalisation feature. Please consult the respective chapters in this manual for more information.
 
-*   Add your logo to the front-end by navigating to the “Internationalization” menu and setting the "Logo url" translation to the URL of the logo you want to show.  
-    The logo should roughly measure 175x55 pixels, although there are no hard restrictions.  
+*   Add your logo to the front-end by navigating to the “Internationalization” menu and setting the "Logo url" translation to the URL of the logo you want to show.
+    The logo should roughly measure 175x55 pixels, although there are no hard restrictions.
 
 *   Replace the “first visit” messages for your users. These messages will be shown when a user visits the User View and the Admin Panel for the first time. You can use the same or different messages. Navigate to the Internationalization menu and set these two codes:
 
     *   First login documents
-    *   First login admin  
+    *   First login admin
 
-*   Link to your platform’s privacy policy. Simply search for the code “Privacy Policy url” in the Internationalization area.  
+*   Link to your platform’s privacy policy. Simply search for the code “Privacy Policy url” in the Internationalization area.
 
-*   Change the titles, texts, navigation labels etc. This can all be done in the “Internationalization” menu.  
+*   Change the titles, texts, navigation labels etc. This can all be done in the “Internationalization” menu.
 
 *   Replace the help documentation of Proxeus with your own. By default it point to the Proxeus handbook. Change the link to your own document by navigating to “Internationalization” and changing the “Support Button Link” code.
 
@@ -844,9 +741,8 @@ _Name the API key you are generating_
 _A successful key generation - use this key for API authentication_
 
 
-
-
-
 Last updated
 
 October 2023
+
+![](handbook/Proxeus%20-%20The%20Complete%20Handbook_html_63e1e3204a60f7f8.png)

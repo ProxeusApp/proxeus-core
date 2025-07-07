@@ -11,8 +11,8 @@ $color-inactive4: #f1f1f1;
 $nav-top-b-color: $color-inactive;
 $input-height: 45px;
 $border-radius: 0;
-$formfields-font-size: 14px;
-$label-font-size: 18px;
+$formfields-font-size: 1.6rem;
+$label-font-size: 1.6rem;
 $formfields-font-family: "WorkSans-Regular", "Helvetica Neue", Helvetica, Arial, sans-serif;
 $labelAndRest-font-family: $formfields-font-family;
 $title-font-family: "WorkSans-Regular", "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -114,7 +114,6 @@ $leftSideSpacingFromBrowserFrame: 20px;
 
 .topnav {
   padding: 0 $spacer * 1.5;
-  z-index: 22232732;
   position: relative;
   line-height: 1;
   background: $gray-100;
@@ -169,7 +168,7 @@ html {
   height: 100%
 }
 
-body {
+html body {
   font-family: "WorkSans-Regular", "Helvetica Neue", Helvetica, Arial, sans-serif;
   height: 100%;
 }
@@ -203,7 +202,6 @@ body {
 
 .title {
   font-family: "WorkSans-Regular", "Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-size: 24px;
   display: inline-block;
   vertical-align: middle;
   white-space: nowrap;

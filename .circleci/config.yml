@@ -4,13 +4,13 @@ version: 2.1
 parameters:
   golang-tag:
     type: string
-    default: "1.22"
+    default: "1.24"
   nodejs-ver:
     type: integer
-    default: 16
+    default: 20
   nodejs-tag:
     type: string
-    default: "16.20"
+    default: "20.19"
 
 executors:
   docker-image-golang:
@@ -35,6 +35,7 @@ executors:
 
 jobs:
   build-ui:
+    resource_class: large
     docker:
       - image: cimg/node:<< pipeline.parameters.nodejs-tag >>
     steps:
@@ -162,15 +163,15 @@ jobs:
       - restore_cache:
           keys:
             - go-mod-v2-{{ checksum "go.sum" }}
-      - run: 
+      - run:
           name: Node.js
           command: curl -fsSL https://deb.nodesource.com/setup_<< pipeline.parameters.nodejs-ver >>.x | sudo -E bash -
-      - run: 
+      - run:
           name: Yarn
           command: curl -sL https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
       - run: echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
       - run: sudo apt-get update && sudo apt-get install yarn
-      - run: 
+      - run:
           name: Cypress dependencies
           command: sudo apt-get install libgtk2.0-0 libgtk-3-0 libgbm-dev libnotify-dev libgconf-2-4 libnss3 libxss1 libasound2 libxtst6 xauth xvfb
       - run:
