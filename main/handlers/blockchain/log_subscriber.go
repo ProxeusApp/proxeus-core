@@ -35,8 +35,13 @@ func NewWebSocketLogSubscriber(ethDialler ethglue.ETHDiallerIF, webSocketURL, co
 }
 
 func (c *webSocketLogSubscriber) Subscribe(ctx context.Context, logs chan<- types.Log, sub chan<- ethereum.Subscription) {
-
+	// check if contract is empty
+	if len(c.contract) < 3 {
+		log.Printf("no eth address provided\n")
+		return
+	}
 	filterAddresses := []common.Address{common.HexToAddress(c.contract)}
+	maxRetries := 5
 
 	for {
 		select {
@@ -47,7 +52,12 @@ func (c *webSocketLogSubscriber) Subscribe(ctx context.Context, logs chan<- type
 			ethClient, err := c.ethDialler.DialContext(ctx, c.webSocketURL)
 			if err != nil {
 				log.Printf("failed to dial for eth events, will retry (%s)\n", err)
-				time.Sleep(time.Second * 1)
+				time.Sleep(time.Second * 10)
+				maxRetries--
+				if maxRetries == 0 {
+					log.Printf("max retries reached")
+					return
+				}
 				continue
 			}
 			query := ethereum.FilterQuery{
