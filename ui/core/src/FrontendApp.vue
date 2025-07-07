@@ -1,5 +1,11 @@
 <template>
-  <div id="frontend-app" :class="{ 'frontend-headless': showHeader === false }">
+  <div
+    id="frontend-app"
+    :class="
+      'd-flex flex-column h-100 ' +
+      { 'frontend-headless': showHeader === false }
+    "
+  >
     <header class="mb-4" v-if="showHeader === true">
       <frontend-navbar></frontend-navbar>
     </header>
@@ -13,68 +19,66 @@
       />
       <frontend-view></frontend-view>
     </main>
-    <div class="container-fluid" v-if="showFooter === true">
-      <div class="row">
-        <div class="footer p-3 col-sm-12 d-flex justify-content-between">
-          <div></div>
-          <div>
-            <a
-              target="_blank"
-              href="https://doc.proxeus.org/#/handbook"
-              class="footer-link"
-              >Handbook
-            </a>
-            <a
-              target="_blank"
-              :href="$t('Privacy Policy url', '')"
-              class="footer-link ml-3"
-              >Privacy Policy</a
-            >
-            <a
-              target="_blank"
-              v-bind:href="$t('Terms & Conditions link')"
-              class="footer-link ml-3"
-              >Terms &amp; Conditions</a
-            >
-            <a
-              target="_blank"
-              href="https://github.com/ProxeusApp/proxeus-core/blob/master/LICENSE"
-              class="footer-link ml-3"
-              >License</a
-            >
-            <a
-              target="_blank"
-              href="https://github.com/ProxeusApp/proxeus-core"
-              class="footer-link ml-3"
-              >Source Code</a
-            >
-          </div>
-          <div>
-            <a
-              target="_blank"
-              href="https://proxeus.org/"
-              class="footer-link ml-3 small"
-            >
-              {{ $t("Powered by") }}
-              <img src="/static/proxeus-logo-white.svg" alt="" />
-            </a>
-          </div>
+    <div v-if="showFooter === true" class="footer mt-auto w-100">
+      <div class="p-3 col-sm-12 d-flex justify-content-between">
+        <div></div>
+        <div>
+          <a
+            target="_blank"
+            href="https://doc.proxeus.org/#/handbook"
+            class="footer-link"
+            >Handbook
+          </a>
+          <a
+            target="_blank"
+            :href="$t('Privacy Policy url', '')"
+            class="footer-link ml-3"
+            >Privacy Policy</a
+          >
+          <a
+            target="_blank"
+            v-bind:href="$t('Terms & Conditions link')"
+            class="footer-link ml-3"
+            >Terms &amp; Conditions</a
+          >
+          <a
+            target="_blank"
+            href="https://github.com/ProxeusApp/proxeus-core/blob/master/LICENSE"
+            class="footer-link ml-3"
+            >License</a
+          >
+          <a
+            target="_blank"
+            href="https://github.com/ProxeusApp/proxeus-core"
+            class="footer-link ml-3"
+            >Source Code</a
+          >
+        </div>
+        <div>
+          <a
+            target="_blank"
+            href="https://proxeus.org/"
+            class="footer-link ml-3 small"
+          >
+            {{ $t("Powered by") }}
+            <img src="/static/proxeus-logo-white.svg" alt="" />
+          </a>
         </div>
       </div>
+      <blocker
+        :text1="$t('Common blocker text 1', 'JUST A MOMENT')"
+        :text2="$t('Common blocker text 2', 'PROCESSING')"
+        :text3="$t('Common blocker text 3', 'PROCESSING')"
+        :setup="commonUIBlocker"
+      />
+      <blocker
+        :text1="$t('Reconnecting blocker text 1', 'SORRY')"
+        :text2="$t('Reconnecting blocker text 2', 'JUST A MOMENT')"
+        :text3="$t('Reconnecting blocker text 3', 'CONNECTING')"
+        :showAnimation="true"
+        :setup="setupUIBlocker"
+      />
     </div>
-    <blocker
-      :text1="$t('Common blocker text 1', 'JUST A MOMENT')"
-      :text2="$t('Common blocker text 2', 'PROCESSING')"
-      :text3="$t('Common blocker text 3', 'PROCESSING')"
-      :setup="commonUIBlocker"
-    />
-    <blocker
-      :text1="$t('Reconnecting blocker text 1', 'SORRY')"
-      :text2="$t('Reconnecting blocker text 2', 'JUST A MOMENT')"
-      :text3="$t('Reconnecting blocker text 3', 'CONNECTING')"
-      :showAnimation="true"
-      :setup="setupUIBlocker"
-    />
   </div>
 </template>
 

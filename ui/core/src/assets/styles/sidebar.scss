@@ -49,6 +49,7 @@ $nav-max-width: 265px;
   transition: left 0.4s ease;
   will-change: max-width;
   height: calc(100vh);
+  font-family: "WorkSans-Regular", "Helvetica Neue", Helvetica, Arial, sans-serif;
 
   .navbar-brand {
     overflow: hidden;
@@ -68,7 +69,6 @@ $nav-max-width: 265px;
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
-    font-size: 0.9rem;
     letter-spacing: 0.1px;
 
     &.dropdown-toggle::after {
@@ -77,24 +77,20 @@ $nav-max-width: 265px;
     }
 
     &.router-link-active {
-      background: #1a3d96;
       color: white;
-
-      .material-icons {
-        color: white;
-      }
     }
 
     &.router-link-exact-active {
-      background: #1a3d96;
-      color: white;
-
-      .material-icons {
+      .nav-link-title, .material-icons {
         color: white;
       }
     }
 
-    &:hover {
+    .nav-link-title, .material-icons {
+      color: #a9bce0;
+    }
+
+    &:hover, &:focus, &:active {
       background: #254394;
     }
 
@@ -111,6 +107,7 @@ $nav-max-width: 265px;
   }
 
   .nav-item {
+    padding-bottom: 0.5rem;
     width: 100%;
   }
 
@@ -128,8 +125,6 @@ $nav-max-width: 265px;
   .secondary-nav {
     bottom: 0;
     max-width: $nav-max-width;
-    background: #062a85;
-    box-shadow: -5px 0px 6px rgba(0, 0, 0, 0.2);
     -webkit-transition: max-width 0.2s ease;
     transition: max-width 0.2s ease;
     will-change: max-width;

@@ -37,7 +37,6 @@ html {
   font-family: $labelAndRest-font-family;
   -ms-text-size-adjust: 100%;
   -webkit-text-size-adjust: 100%;
-  font-size: 10px;
   -webkit-tap-highlight-color: transparent;
 }
 
@@ -1383,7 +1382,7 @@ fieldset[disabled] .btn-link:hover {
   transition: opacity 0.15s linear;
 }
 
-.fade.in {
+.fade.show,.fade.in {
   opacity: 1;
 }
 
