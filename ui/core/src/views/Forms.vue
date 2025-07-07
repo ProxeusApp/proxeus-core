@@ -4,7 +4,7 @@
   <top-nav :title="$t('Forms')"></top-nav>
   <div class="main-container">
     <list-group :deleteElementFunc="provideDeleteFunc" :prependFunc="prependFunc" :icon="icon" nodeType="form" path="form">
-      <template scope="element">
+      <template slot-scope="element">
         <button :title="$t('copy this form')" @click="areYouSureDialog($event, element)" type="button"
                 class="btn btn-primary btn-sm">
           Duplicate
