@@ -129,7 +129,7 @@
         </router-link>
       </li>
     </nav>
-    <div class="bottom-section mt-auto p-4">
+    <div class="bottom-section mt-auto">
       <ul class="nav secondary-nav flex-column">
         <li class="nav-item">
           <router-link

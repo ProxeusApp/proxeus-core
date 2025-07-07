@@ -832,7 +832,7 @@ export default {
                 // ace.require("ace/ext/language_tools");
                 this.jsEditor = ace.edit("condition_jsCode");
                 this.jsEditor.session.setMode("ace/mode/javascript");
-                this.jsEditor.setTheme("ace/theme/chrome");
+                //this.jsEditor.setTheme("ace/theme/chrome");
                 // jsEditor.setAutoScrollEditorIntoView(true);
                 // enable autocompletion and snippets
                 this.jsEditor.setOptions({
@@ -863,7 +863,7 @@ export default {
 
                 this.casesEditor = ace.edit("condition_cases");
                 this.casesEditor.session.setMode("ace/mode/javascript");
-                this.casesEditor.setTheme("ace/theme/chrome");
+                //this.casesEditor.setTheme("ace/theme/chrome");
                 // casesEditor.setAutoScrollEditorIntoView(true);
                 // enable autocompletion and snippets
                 this.casesEditor.setOptions({
@@ -2343,6 +2343,9 @@ function condition(){
 @use "@/assets/styles/vis.min.scss";
 @use "@/assets/styles/vis-styles.scss";
 
+$mdi-font-path: "~@mdi/font/fonts";
+@import "~@mdi/font/scss/materialdesignicons.scss";
+
 .fcl-legend i.node-icon.mdi {
   font-size: 30px;
 }
@@ -2450,12 +2453,12 @@ $sublineAlpha: 0.4;
 
 .vis-zoomIn:before {
   font-family: "Material Design Icons";
-  content: mdi("magnify-plus-outline");
+  content: mdi("magnify-plus");
 }
 
 .vis-zoomOut:before {
   font-family: "Material Design Icons";
-  content: mdi("magnify-minus-outline");
+  content: mdi("magnify-minus");
 }
 
 .vis-down:before {

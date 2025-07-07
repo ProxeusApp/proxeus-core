@@ -59,7 +59,7 @@
       </li>
     </nav>
 
-    <div class="bottom-section mt-auto p-4">
+    <div class="bottom-section mt-auto">
       <ul class="nav secondary-nav">
         <li class="nav-item" v-if="userCanAccessBackend">
           <router-link
