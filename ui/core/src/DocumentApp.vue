@@ -157,11 +157,6 @@ body {
   }
 }
 
-#document-app .sidebar {
-  position: relative;
-  z-index: 999999999 !important;
-}
-
 .btn.btn-sm.topnav-back {
   border: 0;
   border-right: 1px solid $gray-300;

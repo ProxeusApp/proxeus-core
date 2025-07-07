@@ -153,17 +153,16 @@ $nav-max-width: 265px;
 
   .secondary-nav {
     background: $light;
-    box-shadow: -5px 0px 6px rgba(0, 0, 0, 0.1);
   }
 
   .nav-link {
     color: #062a85;
 
-    &.router-link-active {
+    &.router-link-exact-active {
       background: #ebeced;
       color: #062a85;
 
-      .material-icons {
+      .nav-link-title, .material-icons {
         color: #062a85;
       }
     }
@@ -172,7 +171,7 @@ $nav-max-width: 265px;
       background: #ebeced;
       color: #062a85;
 
-      .material-icons {
+      .nav-link-title, .material-icons {
         color: #062a85;
       }
     }

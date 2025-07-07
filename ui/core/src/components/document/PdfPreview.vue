@@ -128,7 +128,7 @@
 </template>
 
 <script>
-import VuePdfEmbed from "vue-pdf-embed";
+import VuePdfEmbed from "vue-pdf-embed/dist/vue2-pdf-embed";
 import PdfModal from "@/components/document/PdfModal";
 import SigningModal from "@/components/document/SigningModal.vue";
 import Spinner from "@/components/Spinner";

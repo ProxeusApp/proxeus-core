@@ -1,102 +1,102 @@
 <template>
-  <responsive-sidebar class="sidebar-light">
-    <nav class="sidebar d-flex flex-column flex-shrink-0 position-fixed">
-      <div class="p-4">
-        <a class="navbar-brand m-0 w-100 p-0 m-0" href="#">
-          <img
-            :src="$t('Sidebar User Logo', '/static/proxeus-logo.svg')"
-            alt=""
-            class="d-inline-block align-top"
-          />
-        </a>
-      </div>
+  <responsive-sidebar
+    class="sidebar-light w-100 sidebar d-flex flex-column flex-shrink-0"
+  >
+    <div class="pb-4">
+      <a class="navbar-brand m-0 w-100 p-0 m-0" href="#">
+        <img
+          :src="$t('Sidebar User Logo', '/static/proxeus-logo.svg')"
+          alt=""
+          class="d-inline-block align-top"
+        />
+      </a>
+    </div>
 
-      <nav class="nav main-nav flex-column main-nav-frontend">
-        <li class="nav-item">
-          <router-link
-            :to="{ name: 'Documents' }"
-            class="nav-link"
-            data-toggle="tooltip"
-            data-placement="right"
-            data-boundary="window"
-            :title="$t('Menu Documents', 'Documents')"
-            ><span class="material-icons mdi mdi-view-carousel"></span
-            ><span class="nav-link-title">{{
-              $t("Menu Documents", "Documents")
-            }}</span>
-          </router-link>
-        </li>
-        <li class="nav-item">
-          <router-link
-            :to="{ name: 'DocumentVerification' }"
-            class="nav-link"
-            data-toggle="tooltip"
-            data-placement="right"
-            data-boundary="window"
-            :title="$t('Menu Verification', 'Verification')"
-            ><span class="material-icons mdi mdi-shield-check"></span
-            ><span class="nav-link-title">{{
-              $t("Menu Verification", "Verification")
-            }}</span>
-          </router-link>
-        </li>
-        <li class="nav-item">
-          <router-link
-            :to="{ name: 'SignatureRequests' }"
-            class="nav-link"
-            data-toggle="tooltip"
-            data-placement="right"
-            data-boundary="window"
-            :title="$t('Menu Signature Requests', 'Signature Requests')"
-            ><span class="material-icons mdi mdi-pen"></span
-            ><span class="nav-link-title"
-              >{{ $t("Menu Signature Requests", "Signature Requests") }} ({{
-                signatureRequestCount
-              }})</span
-            >
-          </router-link>
-        </li>
-      </nav>
-
-      <div class="bottom-section mt-auto p-4">
-        <ul class="nav secondary-nav">
-          <li class="nav-item" v-if="userCanAccessBackend">
-            <router-link
-              :to="{ name: 'UserImportExport' }"
-              class="nav-link"
-              data-toggle="tooltip"
-              data-placement="right"
-              data-boundary="window"
-              :title="$t('Menu Data', 'Data')"
-              ><span class="material-icons mdi mdi-database"></span
-              ><span class="nav-link-title">{{ $t("Menu Data", "Data") }}</span>
-            </router-link>
-          </li>
-          <li class="nav-item" v-if="userCanAccessBackend">
-            <a
-              href="/admin/workflow"
-              class="nav-link"
-              data-toggle="tooltip"
-              data-placement="right"
-              data-boundary="window"
-              :title="$t('Menu Backend', 'Admin Panel')"
-              ><span class="material-icons">event_note</span
-              ><span class="nav-link-title">{{
-                $t("Menu Backend", "Admin Panel")
-              }}</span>
-            </a>
-          </li>
-
-          <!--<li class="nav-item dropdown">-->
-          <!--<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownWallet" role="button" data-toggle="dropdown"-->
-          <!--aria-haspopup="true" aria-expanded="false">-->
-          <!--<span class="material-icons mdi mdi-wallet"></span>-->
-          <!--<span class="nav-link-title">Wallet</span>-->
-          <!--</a>-->
-          <!--</li>-->
-        </ul>
-      </div>
+    <nav class="nav main-nav flex-column main-nav-frontend">
+      <li class="nav-item">
+        <router-link
+          :to="{ name: 'Documents' }"
+          class="nav-link"
+          data-toggle="tooltip"
+          data-placement="right"
+          data-boundary="window"
+          :title="$t('Menu Documents', 'Documents')"
+          ><span class="material-icons mdi mdi-view-carousel"></span
+          ><span class="nav-link-title">{{
+            $t("Menu Documents", "Documents")
+          }}</span>
+        </router-link>
+      </li>
+      <li class="nav-item">
+        <router-link
+          :to="{ name: 'DocumentVerification' }"
+          class="nav-link"
+          data-toggle="tooltip"
+          data-placement="right"
+          data-boundary="window"
+          :title="$t('Menu Verification', 'Verification')"
+          ><span class="material-icons mdi mdi-shield-check"></span
+          ><span class="nav-link-title">{{
+            $t("Menu Verification", "Verification")
+          }}</span>
+        </router-link>
+      </li>
+      <li class="nav-item">
+        <router-link
+          :to="{ name: 'SignatureRequests' }"
+          class="nav-link"
+          data-toggle="tooltip"
+          data-placement="right"
+          data-boundary="window"
+          :title="$t('Menu Signature Requests', 'Signature Requests')"
+          ><span class="material-icons mdi mdi-pen"></span
+          ><span class="nav-link-title"
+            >{{ $t("Menu Signature Requests", "Signature Requests") }} ({{
+              signatureRequestCount
+            }})</span
+          >
+        </router-link>
+      </li>
     </nav>
+
+    <div class="bottom-section mt-auto p-4">
+      <ul class="nav secondary-nav">
+        <li class="nav-item" v-if="userCanAccessBackend">
+          <router-link
+            :to="{ name: 'UserImportExport' }"
+            class="nav-link"
+            data-toggle="tooltip"
+            data-placement="right"
+            data-boundary="window"
+            :title="$t('Menu Data', 'Data')"
+            ><span class="material-icons mdi mdi-database"></span
+            ><span class="nav-link-title">{{ $t("Menu Data", "Data") }}</span>
+          </router-link>
+        </li>
+        <li class="nav-item" v-if="userCanAccessBackend">
+          <a
+            href="/admin/workflow"
+            class="nav-link"
+            data-toggle="tooltip"
+            data-placement="right"
+            data-boundary="window"
+            :title="$t('Menu Backend', 'Admin Panel')"
+            ><span class="material-icons">event_note</span
+            ><span class="nav-link-title">{{
+              $t("Menu Backend", "Admin Panel")
+            }}</span>
+          </a>
+        </li>
+
+        <!--<li class="nav-item dropdown">-->
+        <!--<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownWallet" role="button" data-toggle="dropdown"-->
+        <!--aria-haspopup="true" aria-expanded="false">-->
+        <!--<span class="material-icons mdi mdi-wallet"></span>-->
+        <!--<span class="nav-link-title">Wallet</span>-->
+        <!--</a>-->
+        <!--</li>-->
+      </ul>
+    </div>
   </responsive-sidebar>
 </template>
 
