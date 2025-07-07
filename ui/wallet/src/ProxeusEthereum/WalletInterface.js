@@ -1,47 +1,47 @@
-import serviceConfig from './config/service-config'
-import {
-  PROXEUS_FS_ABI,
-  XES_TOKEN_ABI
-} from './config/ABI'
+import serviceConfig from "./config/service-config";
+import { PROXEUS_FS_ABI, XES_TOKEN_ABI } from "./config/ABI";
 
-import ProxeusWallet from './ProxeusWallet'
-import ProxeusFS from './services/ProxeusFS'
-import MetamaskWallet from './MetamaskWallet'
-import {
-  keccak256
-} from 'js-sha3'
-import MetamaskUtil from './MetamaskUtil'
+import ProxeusWallet from "./ProxeusWallet";
+import ProxeusFS from "./services/ProxeusFS";
+import MetamaskWallet from "./MetamaskWallet";
+import { keccak256 } from "js-sha3";
+import MetamaskUtil from "./MetamaskUtil";
 
-import Web3 from 'web3'
+import Web3 from "web3";
 
-import getTransactionReceiptMined from './helpers/getTransactionReceiptMined'
+import getTransactionReceiptMined from "./helpers/getTransactionReceiptMined";
 
 class WalletInterface {
   // TODO improve checking that current network matches what is expected
   // TODO: network param only for compatibility reasons with blockchain/dapp
-  constructor (network = 'sepolia', proxeusFSAddress, forceProxeusWallet = false) {
+  constructor(
+    network = "sepolia",
+    proxeusFSAddress,
+    forceProxeusWallet = false
+  ) {
     // make sure we are using the web3 we want and not the one provided by metamask
-    this.web3 = new Web3(Web3.givenProvider || 'ws://localhost:8545')
-    this.systemNetworkId = this.getNetworkIdByName(network)
+    this.web3 = new Web3(Web3.givenProvider || "ws://localhost:8545");
+    this.systemNetworkId = this.getNetworkIdByName(network);
 
-    this.useProxeusWallet = forceProxeusWallet || typeof window.ethereum === 'undefined'
+    this.useProxeusWallet =
+      forceProxeusWallet || typeof window.ethereum === "undefined";
 
-    this.web3.eth.getTransactionReceiptMined = getTransactionReceiptMined
-    this.serviceConfig = serviceConfig[network]
+    this.web3.eth.getTransactionReceiptMined = getTransactionReceiptMined;
+    this.serviceConfig = serviceConfig[network];
     if (proxeusFSAddress) {
-      this.serviceConfig.PROXEUS_FS_ADDRESS = proxeusFSAddress
+      this.serviceConfig.PROXEUS_FS_ADDRESS = proxeusFSAddress;
     }
-    this.metamaskUtil = new MetamaskUtil()
+    this.metamaskUtil = new MetamaskUtil();
 
     if (this.useProxeusWallet) {
       // connect to the network using what was given in the constructor
       this.web3.setProvider(
-        new this.web3.providers.HttpProvider(
-          this.getPublicRPC(network)))
-      this.isPublicRPCUsing = true
+        new this.web3.providers.HttpProvider(this.getPublicRPC(network))
+      );
+      this.isPublicRPCUsing = true;
     } else {
       if (window.ethereum) {
-        this.web3.setProvider(window.ethereum)
+        this.web3.setProvider(window.ethereum);
       }
     }
 
@@ -50,174 +50,199 @@ class WalletInterface {
     // add the XES smart contract to the config
     this.xesTokenContract = new this.web3.eth.Contract(
       XES_TOKEN_ABI,
-      this.serviceConfig.XES_TOKEN_ADDRESS, {
-        gas: this.serviceConfig.DEFAULT_GAS_REGULAR
+      this.serviceConfig.XES_TOKEN_ADDRESS,
+      {
+        gas: this.serviceConfig.DEFAULT_GAS_REGULAR,
       }
-    )
-    this.setProxeusFsContract(this.serviceConfig.PROXEUS_FS_ADDRESS)
+    );
+    this.setProxeusFsContract(this.serviceConfig.PROXEUS_FS_ADDRESS);
 
     if (this.useProxeusWallet) {
-      this.wallet = new ProxeusWallet(this.web3, this.xesTokenContract)
+      this.wallet = new ProxeusWallet(this.web3, this.xesTokenContract);
     } else {
-      this.wallet = new MetamaskWallet(this.web3, this.xesTokenContract)
+      this.wallet = new MetamaskWallet(this.web3, this.xesTokenContract);
 
       // set the default from address to use on the proxeusFS smart contract
       this.wallet.setupDefaultAccount().then(() => {
         if (this.wallet.getCurrentAddress() !== null) {
-          this.proxeusFSContract.options.from = this.wallet.getCurrentAddress()
+          this.proxeusFSContract.options.from = this.wallet.getCurrentAddress();
         }
-      })
+      });
     }
   }
 
-  async validateUserNetwork (blockCb, unblockCb) {
-    if (window.ethereum && this.systemNetworkId.toString() !== window.ethereum.request({ method: 'net_version' })) {
+  async validateUserNetwork(blockCb, unblockCb) {
+    if (
+      window.ethereum &&
+      this.systemNetworkId.toString() !==
+        window.ethereum.request({ method: "net_version" })
+    ) {
       try {
         if (blockCb) {
-          blockCb()
+          blockCb();
         }
 
         await window.ethereum.request({
-          method: 'wallet_switchEthereumChain',
-          params: [{
-            chainId: this.web3.utils.toHex(this.systemNetworkId)
-          }]
-        })
+          method: "wallet_switchEthereumChain",
+          params: [
+            {
+              chainId: this.web3.utils.toHex(this.systemNetworkId),
+            },
+          ],
+        });
 
-        this.isIncorrectNetwork = false
+        this.isIncorrectNetwork = false;
       } catch {
-        this.isIncorrectNetwork = true
+        this.isIncorrectNetwork = true;
       } finally {
         if (unblockCb) {
-          unblockCb()
+          unblockCb();
         }
       }
     }
   }
 
-  signMessage (message) {
-    return this.wallet.signMessage(message)
+  signMessage(message) {
+    return this.wallet.signMessage(message);
   }
 
-  getCurrentAddress () {
-    return this.wallet.getCurrentAddress()
+  getCurrentAddress() {
+    return this.wallet.getCurrentAddress();
   }
 
-  hasAccount () {
-    return this.wallet.getCurrentAddress() !== undefined
+  hasAccount() {
+    return this.wallet.getCurrentAddress() !== undefined;
   }
 
-  importKeystore (keystore, password) {
+  importKeystore(keystore, password) {
     // optional function on wallet
     if (!this.wallet.importKeystore) {
-      return null
+      return null;
     }
 
-    return this.wallet.importKeystore(keystore, password)
+    return this.wallet.importKeystore(keystore, password);
   }
 
-  exportKeystore (password) {
+  exportKeystore(password) {
     // optional function on wallet
     if (!this.wallet.exportKeystore) {
-      return null
+      return null;
     }
 
-    return this.wallet.exportKeystore(password)
+    return this.wallet.exportKeystore(password);
   }
 
-  importPrivateKey (privateKey) {
+  importPrivateKey(privateKey) {
     // optional function on wallet
     if (!this.wallet.importPrivateKey) {
-      return null
+      return null;
     }
 
-    return this.wallet.importPrivateKey(privateKey)
+    return this.wallet.importPrivateKey(privateKey);
   }
 
-  exportPrivateKey () {
+  exportPrivateKey() {
     // optional function on wallet
     if (!this.wallet.exportPrivateKey) {
-      return null
+      return null;
     }
 
-    return this.wallet.exportPrivateKey()
+    return this.wallet.exportPrivateKey();
   }
 
-  storePGPPublicKey (pgpPublicKey) {
-    pgpPublicKey = btoa(pgpPublicKey)
+  storePGPPublicKey(pgpPublicKey) {
+    pgpPublicKey = btoa(pgpPublicKey);
     // TODO: Store keys in constants
-    localStorage.setItem('pgpPk', pgpPublicKey)
+    localStorage.setItem("pgpPk", pgpPublicKey);
   }
 
-  loadPGPPublicKey () {
-    return atob(localStorage.getItem('pgpPk'))
+  loadPGPPublicKey() {
+    return atob(localStorage.getItem("pgpPk"));
   }
 
-  exportWalletToBlob (password = '') {
-    if (password === '') {
+  exportWalletToBlob(password = "") {
+    if (password === "") {
       try {
-        const authObj = localStorage.getItem('mnidmao')
-        password = JSON.parse(atob(authObj)).password
+        const authObj = localStorage.getItem("mnidmao");
+        password = JSON.parse(atob(authObj)).password;
       } catch (e) {
-        return false
+        return false;
       }
     }
 
-    const encryptedKeystore = this.exportKeystore(password)
+    const encryptedKeystore = this.exportKeystore(password);
     if (encryptedKeystore.length === 0) {
-      return false
+      return false;
     }
 
-    return new Blob([
-      btoa(JSON.stringify({
-        keystore: encryptedKeystore,
-        pgpKeys: this.web3.eth.accounts.wallet.PGPKeys
-      }))
-    ], {
-      type: 'text/plain'
-    })
+    return new Blob(
+      [
+        btoa(
+          JSON.stringify({
+            keystore: encryptedKeystore,
+            pgpKeys: this.web3.eth.accounts.wallet.PGPKeys,
+          })
+        ),
+      ],
+      {
+        type: "text/plain",
+      }
+    );
   }
 
-  importWalletFromBlob (blob, password) {
-    const reader = new FileReader()
+  importWalletFromBlob(blob, password) {
+    const reader = new FileReader();
     // first set the reader event listener and wrap it in a promise
     const promise = new Promise((resolve, reject) => {
-      reader.addEventListener('loadend', () => {
+      reader.addEventListener("loadend", () => {
         try {
-          const decoder = new TextDecoder()
-          const parsed = JSON.parse(atob(decoder.decode(reader.result)))
+          const decoder = new TextDecoder();
+          const parsed = JSON.parse(atob(decoder.decode(reader.result)));
 
-          const importedKeystore = this.importKeystore(parsed.keystore, password)
+          const importedKeystore = this.importKeystore(
+            parsed.keystore,
+            password
+          );
 
           if (importedKeystore) {
-            this.web3.eth.accounts.wallet.PGPKeys = parsed.pgpKeys
+            this.web3.eth.accounts.wallet.PGPKeys = parsed.pgpKeys;
 
-            this.proxeusFSContract.options.from = this.getCurrentAddress()
+            this.proxeusFSContract.options.from = this.getCurrentAddress();
 
             // save the pgp keys, encrypted keystore, and password on local storage
-            localStorage.setItem('mnidmao', btoa(JSON.stringify({
-              password
-            })))
-            localStorage.setItem('mnidmpgp',
-              btoa(JSON.stringify(parsed.pgpKeys[this.getCurrentAddress()])))
-            localStorage.setItem('mnidmks',
-              btoa(JSON.stringify(parsed.keystore)))
+            localStorage.setItem(
+              "mnidmao",
+              btoa(
+                JSON.stringify({
+                  password,
+                })
+              )
+            );
+            localStorage.setItem(
+              "mnidmpgp",
+              btoa(JSON.stringify(parsed.pgpKeys[this.getCurrentAddress()]))
+            );
+            localStorage.setItem(
+              "mnidmks",
+              btoa(JSON.stringify(parsed.keystore))
+            );
 
-            resolve(true)
+            resolve(true);
           }
 
           reject(
-            new Error('wallet.importWalletFromBlob.error.incorrectPassword'))
+            new Error("wallet.importWalletFromBlob.error.incorrectPassword")
+          );
         } catch (error) {
-          reject(new Error('wallet.importWalletFromBlob.error.invalidFile'))
+          reject(new Error("wallet.importWalletFromBlob.error.invalidFile"));
         }
-      })
-    })
+      });
+    });
 
     // call the reader on the blob which will trigger the above event listener
-    reader.readAsArrayBuffer(blob)
+    reader.readAsArrayBuffer(blob);
 
-    return promise
+    return promise;
   }
 
   /*
@@ -227,27 +252,27 @@ class WalletInterface {
    *
    * @param password - the password that protects the keystore
    */
-  saveWallet (password) {
-    let encryptedKeystore = this.exportKeystore(password)
+  saveWallet(password) {
+    let encryptedKeystore = this.exportKeystore(password);
     if (encryptedKeystore.length === 0) {
-      return false
+      return false;
     }
 
-    let pgp = this.exportPGPKeyPair(this.getCurrentAddress())
+    let pgp = this.exportPGPKeyPair(this.getCurrentAddress());
 
     let authObj = {
-      password
-    }
+      password,
+    };
 
-    authObj = btoa(JSON.stringify(authObj))
-    encryptedKeystore = btoa(JSON.stringify(encryptedKeystore))
-    pgp = btoa(JSON.stringify(pgp))
+    authObj = btoa(JSON.stringify(authObj));
+    encryptedKeystore = btoa(JSON.stringify(encryptedKeystore));
+    pgp = btoa(JSON.stringify(pgp));
 
-    localStorage.setItem('mnidmao', authObj)
-    localStorage.setItem('mnidmpgp', pgp)
-    localStorage.setItem('mnidmks', encryptedKeystore)
+    localStorage.setItem("mnidmao", authObj);
+    localStorage.setItem("mnidmpgp", pgp);
+    localStorage.setItem("mnidmks", encryptedKeystore);
 
-    return true
+    return true;
   }
 
   /*
@@ -256,64 +281,67 @@ class WalletInterface {
    *
    * @param password - the password that protects the keystore
    */
-  loadWallet (password = '') {
-    const authObj = localStorage.getItem('mnidmao')
-    let pgp = localStorage.getItem('mnidmpgp')
-    let encryptedKeystore = this.getKeystoreFromLocalStorage()
+  loadWallet(password = "") {
+    const authObj = localStorage.getItem("mnidmao");
+    let pgp = localStorage.getItem("mnidmpgp");
+    let encryptedKeystore = this.getKeystoreFromLocalStorage();
 
-    if (password === '') {
+    if (password === "") {
       try {
-        password = JSON.parse(atob(authObj)).password
+        password = JSON.parse(atob(authObj)).password;
       } catch (e) {
-        return false
+        return false;
       }
     } else {
       let authObj = {
-        password
-      }
+        password,
+      };
 
-      authObj = btoa(JSON.stringify(authObj))
-      localStorage.setItem('mnidmao', authObj)
+      authObj = btoa(JSON.stringify(authObj));
+      localStorage.setItem("mnidmao", authObj);
     }
 
-    encryptedKeystore = JSON.parse(atob(encryptedKeystore))
+    encryptedKeystore = JSON.parse(atob(encryptedKeystore));
     if (this.importKeystore(encryptedKeystore, password) !== true) {
-      return false
+      return false;
     }
 
-    pgp = JSON.parse(atob(pgp))
-    this.importPGPKeyPair(this.getCurrentAddress(), pgp.publicKey,
-      pgp.privateKey)
+    pgp = JSON.parse(atob(pgp));
+    this.importPGPKeyPair(
+      this.getCurrentAddress(),
+      pgp.publicKey,
+      pgp.privateKey
+    );
 
-    this.proxeusFSContract.options.from = this.getCurrentAddress()
+    this.proxeusFSContract.options.from = this.getCurrentAddress();
 
-    return true
+    return true;
   }
 
-  lockAccount () {
-    localStorage.removeItem('mnidmao')
+  lockAccount() {
+    localStorage.removeItem("mnidmao");
   }
 
-  logout () {
-    localStorage.removeItem('mnidmao')
-    localStorage.removeItem('mnidmks')
-    localStorage.removeItem('mnidmpgp')
-    this.web3.eth.accounts.wallet.PGPKeys = {}
+  logout() {
+    localStorage.removeItem("mnidmao");
+    localStorage.removeItem("mnidmks");
+    localStorage.removeItem("mnidmpgp");
+    this.web3.eth.accounts.wallet.PGPKeys = {};
     // can't be undefined because Eth has a watched on the property and won't let it go undefined
-    this.web3.eth.defaultAccount = '0x0000000000000000000000000000000000000000'
-    this.web3.eth.accounts.wallet.clear()
+    this.web3.eth.defaultAccount = "0x0000000000000000000000000000000000000000";
+    this.web3.eth.accounts.wallet.clear();
   }
 
-  getKeystoreFromLocalStorage () {
-    return localStorage.getItem('mnidmks')
+  getKeystoreFromLocalStorage() {
+    return localStorage.getItem("mnidmks");
   }
 
-  getPasswordFromLocalStorage () {
+  getPasswordFromLocalStorage() {
     try {
-      const authObj = localStorage.getItem('mnidmao')
-      return JSON.parse(atob(authObj)).password
+      const authObj = localStorage.getItem("mnidmao");
+      return JSON.parse(atob(authObj)).password;
     } catch (e) {
-      return false
+      return false;
     }
   }
 
@@ -324,12 +352,13 @@ class WalletInterface {
    * @param publicKey
    * @param privateKey
    */
-  importPGPKeyPair (address, publicKey, privateKey) {
-    if (!this.web3.eth.accounts.wallet.PGPKeys) this.web3.eth.accounts.wallet.PGPKeys = {}
+  importPGPKeyPair(address, publicKey, privateKey) {
+    if (!this.web3.eth.accounts.wallet.PGPKeys)
+      this.web3.eth.accounts.wallet.PGPKeys = {};
     this.web3.eth.accounts.wallet.PGPKeys[address] = {
       publicKey,
-      privateKey
-    }
+      privateKey,
+    };
   }
 
   /*
@@ -338,55 +367,67 @@ class WalletInterface {
    * @param address - the ethereum wallet address to which the PGP key pair relates to
    * @return Object with two fields: "privateKey" and "publicKey"
    */
-  exportPGPKeyPair (address) {
-    return this.web3.eth.accounts.wallet.PGPKeys[address]
+  exportPGPKeyPair(address) {
+    return this.web3.eth.accounts.wallet.PGPKeys[address];
   }
 
-  createNewAccount () {
-    return this.web3.eth.accounts.wallet.create(1)
+  createNewAccount() {
+    return this.web3.eth.accounts.wallet.create(1);
   }
 
   /*
    * Everything below this comment needs to be moved outside of the wallet libray
    */
 
-  hashFile (arrBuffer) {
-    return keccak256(arrBuffer)
+  hashFile(arrBuffer) {
+    return keccak256(arrBuffer);
   }
 
-  getDocumentRegistrationTx (hash, proxeusFSContract) {
-    const contract = (proxeusFSContract === undefined) ? this.proxeusFSContract : proxeusFSContract.contract
+  getDocumentRegistrationTx(hash, proxeusFSContract) {
+    const contract =
+      proxeusFSContract === undefined
+        ? this.proxeusFSContract
+        : proxeusFSContract.contract;
     // this one is based on events and not promises, so can't use async
     return new Promise((resolve, reject) => {
-      contract.getPastEvents('UpdatedEvent', {
-        filter: {
-          hash: hash
+      contract.getPastEvents(
+        "UpdatedEvent",
+        {
+          filter: {
+            hash: hash,
+          },
+          fromBlock: 0,
         },
-        fromBlock: 0
-      }, (error, result) => {
-        if (error) {
-          reject(error)
+        (error, result) => {
+          if (error) {
+            reject(error);
+          }
+          if (result === undefined || result.length === 0) {
+            reject(new Error("No event found"));
+          } else {
+            resolve(result[0].transactionHash);
+          }
         }
-        if (result === undefined || result.length === 0) {
-          reject(new Error('No event found'))
-        } else {
-          resolve(result[0].transactionHash)
-        }
-      })
-    })
+      );
+    });
   }
 
-  setProxeusFsContract (address) {
+  setProxeusFsContract(address) {
+    if (!this.web3.utils.isAddress(address)) {
+      // Invalid Proxeus FS contract address
+      return;
+    }
     // add the document registry smart contract to the config
     this.proxeusFSContract = new this.web3.eth.Contract(
       PROXEUS_FS_ABI,
-      address, {
-        gas: this.serviceConfig.DEFAULT_GAS_REGULAR
+      address,
+      {
+        gas: this.serviceConfig.DEFAULT_GAS_REGULAR,
       }
-    )
+    );
 
     // Attach proxeus FS Service
-    this.proxeusFS = new ProxeusFS(this.web3, this.proxeusFSContract)
+    this.proxeusFS = new ProxeusFS(this.web3, this.proxeusFSContract);
   }
 
   /**
@@ -394,18 +435,19 @@ class WalletInterface {
    *
    * @return array of past contract instances
    */
-  getAllProxeusFsServices () {
-    const proxeusFSPastContracts = []
+  getAllProxeusFsServices() {
+    const proxeusFSPastContracts = [];
     for (const address of this.serviceConfig.PROXEUS_FS_PAST_ADDRESSES) {
       const proxeusFSContract = new this.web3.eth.Contract(
         PROXEUS_FS_ABI,
-        address, {
-          gas: this.serviceConfig.DEFAULT_GAS_REGULAR
+        address,
+        {
+          gas: this.serviceConfig.DEFAULT_GAS_REGULAR,
         }
-      )
-      proxeusFSPastContracts.push(new ProxeusFS(this.web3, proxeusFSContract))
+      );
+      proxeusFSPastContracts.push(new ProxeusFS(this.web3, proxeusFSContract));
     }
-    return proxeusFSPastContracts
+    return proxeusFSPastContracts;
   }
 
   /**
@@ -413,178 +455,186 @@ class WalletInterface {
    *
    * @return string
    */
-  async getClientProvidedNetwork () {
-    const netId = await this.web3.eth.getChainId()
-    return this.getNetworkNameById(netId)
+  async getClientProvidedNetwork() {
+    const netId = await this.web3.eth.getChainId();
+    return this.getNetworkNameById(netId);
   }
 
-  getNetworkNameById (netId) {
+  getNetworkNameById(netId) {
     switch (netId) {
       case 5:
-        return 'goerli'
+        return "goerli";
       case 11155111:
-        return 'sepolia'
+        return "sepolia";
       case 137:
-        return 'polygon'
+        return "polygon";
       case 80001:
-        return 'polygon-mumbai'
+        return "polygon-mumbai";
       default:
-        return 'mainnet'
+        return "mainnet";
     }
   }
 
-  getNetworkIdByName (name) {
+  getNetworkIdByName(name) {
     switch (name) {
-      case 'goerli':
-        return 5
-      case 'sepolia':
-        return 11155111
-      case 'polygon':
-        return 137
-      case 'polygon-mumbai':
-        return 80001
+      case "goerli":
+        return 5;
+      case "sepolia":
+        return 11155111;
+      case "polygon":
+        return 137;
+      case "polygon-mumbai":
+        return 80001;
       default:
-        return 1
+        return 1;
     }
   }
 
-  getPublicRPC (network) {
+  getPublicRPC(network) {
     switch (network) {
-      case 'goerli':
-        return 'https://goerli.rpc.thirdweb.com/'
-      case 'sepolia':
-        return 'https://sepolia.rpc.thirdweb.com/'
-      case 'polygon':
-        return 'https://polygon.rpc.thirdweb.com/'
-      case 'polygon-mumbai':
-        return 'https://mumbai.rpc.thirdweb.com/'
+      case "goerli":
+        return "https://goerli.rpc.thirdweb.com/";
+      case "sepolia":
+        return "https://sepolia.rpc.thirdweb.com/";
+      case "polygon":
+        return "https://polygon.rpc.thirdweb.com/";
+      case "polygon-mumbai":
+        return "https://mumbai.rpc.thirdweb.com/";
       default:
-        return 'https://ethereum.rpc.thirdweb.com/'
+        return "https://ethereum.rpc.thirdweb.com/";
     }
   }
 
-  async verifyHash (hash) {
-    const result = await this.proxeusFS.fileVerify(hash)
+  async verifyHash(hash) {
+    const result = await this.proxeusFS.fileVerify(hash);
 
     if (result && result[0] === true) {
-      return this.getDocumentRegistrationTx(hash)
+      return this.getDocumentRegistrationTx(hash);
     } else {
       for (const proxeusFSPastContract of this.getAllProxeusFsServices()) {
-        const result = await proxeusFSPastContract.fileVerify(hash)
+        const result = await proxeusFSPastContract.fileVerify(hash);
         if (result && result[0] === true) {
-          return this.getDocumentRegistrationTx(hash, proxeusFSPastContract)
+          return this.getDocumentRegistrationTx(hash, proxeusFSPastContract);
         }
       }
     }
-    throw new Error('Could not verify hash.')
+    throw new Error("Could not verify hash.");
   }
 
-  async fileVerify (hash) {
-    const result = await this.proxeusFS.fileVerify(hash)
+  async fileVerify(hash) {
+    const result = await this.proxeusFS.fileVerify(hash);
 
     if (result && result[0] === true) {
-      return result
+      return result;
     } else {
       for (const proxeusFSPastContract of this.getAllProxeusFsServices()) {
-        const result = await proxeusFSPastContract.fileVerify(hash)
+        const result = await proxeusFSPastContract.fileVerify(hash);
         if (result && result[0] === true) {
-          return result
+          return result;
         }
       }
     }
-    throw new Error('Could not verify hash.')
+    throw new Error("Could not verify hash.");
   }
 
-  formatBalance (decimalsToKeep, tokensRaw) {
+  formatBalance(decimalsToKeep, tokensRaw) {
     if (decimalsToKeep !== undefined) {
-      return this.metamaskUtil.formatBalance(this.web3.utils.toHex(tokensRaw),
-        decimalsToKeep)
+      return this.metamaskUtil.formatBalance(
+        this.web3.utils.toHex(tokensRaw),
+        decimalsToKeep
+      );
     } else {
-      return this.web3.utils.fromWei(tokensRaw, 'ether')
+      return this.web3.utils.fromWei(tokensRaw, "ether");
     }
   }
 
-  transferETH (to, amount) {
+  transferETH(to, amount) {
     return this.web3.eth.sendTransaction({
       to: to,
       value: amount,
-      gas: this.serviceConfig.DEFAULT_GAS_REGULAR
-    })
+      gas: this.serviceConfig.DEFAULT_GAS_REGULAR,
+    });
   }
 
-  async getETHBalance (decimalsToKeep) {
-    return this.formatBalance(decimalsToKeep, await this.web3.eth.getBalance(this.getCurrentAddress()))
+  async getETHBalance(decimalsToKeep) {
+    return this.formatBalance(
+      decimalsToKeep,
+      await this.web3.eth.getBalance(this.getCurrentAddress())
+    );
   }
 
   // optional callback parameter
-  transferXES (to, amount, callback) {
-    return this.wallet.transferXES(to, amount, callback)
+  transferXES(to, amount, callback) {
+    return this.wallet.transferXES(to, amount, callback);
   }
 
-  async getXESBalance (decimalsToKeep, address) {
+  async getXESBalance(decimalsToKeep, address) {
     if (address === undefined) {
-      address = this.getCurrentAddress()
+      address = this.getCurrentAddress();
     }
-    const tokensRaw = await this.xesTokenContract.methods.balanceOf(address)
-      .call()
+    const tokensRaw = await this.xesTokenContract.methods
+      .balanceOf(address)
+      .call();
 
-    return this.formatBalance(decimalsToKeep, tokensRaw)
+    return this.formatBalance(decimalsToKeep, tokensRaw);
   }
 
-  approveXES (spender, value) {
-    return this.xesTokenContract.methods.approve(spender,
-      this.web3.utils.toWei(value.toString()))
+  approveXES(spender, value) {
+    return this.xesTokenContract.methods
+      .approve(spender, this.web3.utils.toWei(value.toString()))
       .send({
-        from: this.getCurrentAddress()
-      })
+        from: this.getCurrentAddress(),
+      });
   }
 
-  async getAllowance ({
-    spender,
-    decimalsToKeep
-  }) {
-    const owner = this.getCurrentAddress()
-    const tokensRaw = await this.xesTokenContract.methods.allowance(owner,
-      spender).call()
+  async getAllowance({ spender, decimalsToKeep }) {
+    const owner = this.getCurrentAddress();
+    const tokensRaw = await this.xesTokenContract.methods
+      .allowance(owner, spender)
+      .call();
 
     if (decimalsToKeep === undefined) {
-      return this.web3.utils.fromWei(tokensRaw)
+      return this.web3.utils.fromWei(tokensRaw);
     } else {
-      return this.metamaskUtil.formatBalance(this.web3.utils.toHex(tokensRaw),
-        decimalsToKeep)
+      return this.metamaskUtil.formatBalance(
+        this.web3.utils.toHex(tokensRaw),
+        decimalsToKeep
+      );
     }
   }
 
-  txMined (tx) {
-    return this.web3.eth.getTransactionReceiptMined(tx)
+  txMined(tx) {
+    return this.web3.eth.getTransactionReceiptMined(tx);
   }
 
-  async getFileSignedEvent (signerAddress) {
+  async getFileSignedEvent(signerAddress) {
     const arrEvents = await this.proxeusFSContract.getPastEvents(
-      'FileSignedEvent', {
+      "FileSignedEvent",
+      {
         filter: {
-          signer: signerAddress
+          signer: signerAddress,
         },
-        fromBlock: 0
-      })
-    return arrEvents[0] || null
+        fromBlock: 0,
+      }
+    );
+    return arrEvents[0] || null;
   }
 
-  async getRegistrationTxBlock (signerAddress) {
-    const event = await this.getFileSignedEvent(signerAddress)
+  async getRegistrationTxBlock(signerAddress) {
+    const event = await this.getFileSignedEvent(signerAddress);
     if (event === null) {
-      return null
+      return null;
     }
-    const block = await this.getBlock(event.blockHash)
+    const block = await this.getBlock(event.blockHash);
     return {
       txHash: event.transactionHash,
-      block: block
-    }
+      block: block,
+    };
   }
 
-  async getBlock (blockHash) {
-    return await this.web3.eth.getBlock(blockHash)
+  async getBlock(blockHash) {
+    return await this.web3.eth.getBlock(blockHash);
   }
 }
 
-export default WalletInterface
+export default WalletInterface;
