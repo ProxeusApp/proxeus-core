@@ -1,14 +1,13 @@
 [![CircleCI](https://dl.circleci.com/status-badge/img/gh/ProxeusApp/proxeus-core/tree/main.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/ProxeusApp/proxeus-core/tree/main)
 
-**⚠️ Notice ⚠️** This project is not actively supported and we are looking for new maintainers! Please contact us via [Issues](https://github.com/ProxeusApp/proxeus-core/issues) or by [e-mail](mailto:info@proxeus.org) if you are interested.
-
-
 # Proxeus Core
 --------------
 
 Proxeus combines a powerful automation tool with a form builder, document generator and blockchain connection - enabling you to digitize, secure, and tap into the value of data flows. Access the full source code of available modules and extensions [@ProxeusApp](https://github.com/ProxeusApp).
 
 ![Screenshot of Proxeus workflow from the handbook](docs/handbook/Proxeus%20-%20The%20Complete%20Handbook_html_10299e76126cc024.png)
+
+**⚠️ Notice ⚠️** This project is not actively supported and we are looking for new maintainers! Please contact us via [Issues](https://github.com/ProxeusApp/proxeus-core/issues) or by [e-mail](mailto:info@proxeus.org) if you are interested.
 
 ## User Guides
 
@@ -18,7 +17,7 @@ To learn more about developing smart contracts and deploying tokens, see the doc
 
 ## Installation
 
-Proxeus is primarily a Web application, intended for access with a web browser. The [Proxeus Association](https://proxeus.org) maintains a demo instance you can use to test the product, and can recommend a service provider to help you or your business get set up. 
+Proxeus is primarily a Web application, intended for access with a web browser. The [Proxeus Association](https://proxeus.org) maintains a demo instance you can use to test the product, and can recommend a service provider to help you or your business get set up.
 
 In addition to the developer guidelines below, several "one-click" deployment configurations are available for select cloud platforms:
 
@@ -31,7 +30,7 @@ Currently supported Blockchains include:
 - Ethereum: mainnet, sepolia, goerli
 - Polygon: mainnet, mumbai
 
-If you wish to build the project from source code, follow the instructions in [Build all](docs/build_all.md). 
+If you wish to build the project from source code, follow the instructions in [Build all](docs/build_all.md).
 
 Join the [Discussions](https://github.com/ProxeusApp/community/discussions/3) if you have any questions.
 
@@ -49,7 +48,7 @@ If you find a vulnerability that may affect live or testnet deployments please D
 
 ## License
 
-Proxeus Core is licensed under the [GNU GENERAL PUBLIC LICENSE](LICENSE). Nodes may be published under a different license. 
+Proxeus Core is licensed under the [GNU GENERAL PUBLIC LICENSE](LICENSE). Nodes may be published under a different license.
 
 ## Acknowledgements
 
