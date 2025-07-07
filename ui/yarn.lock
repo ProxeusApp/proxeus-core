@@ -9833,7 +9833,7 @@ vue-password-strength-meter@^1.3.2:
   resolved "https://registry.yarnpkg.com/vue-password-strength-meter/-/vue-password-strength-meter-1.7.2.tgz#ddaae2246fb8a53fd8cdc5b1084b1d16cc401505"
   integrity sha512-S17DsEbXciTcI0fKq1PXia7i3COM/AJOT7os8AVyGxglc5ho1EBssE+ogDa5cFh6Rn8pPgqfVCt/KBcNpgPBiA==
 
-vue-pdf-embed@1:
+vue-pdf-embed@1.2.1:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/vue-pdf-embed/-/vue-pdf-embed-1.2.1.tgz#013ce78005b548eb5c74f2026afc00b633f00e3d"
   integrity sha512-4uUm4wxaEGT9cS1cyuagAmMJjBxfQXWG1MvdGPesD3CiXhhSp4i0VMUCYwhFXtZ5+QqWv4mXbfLJ29Wpt+Qcuw==
