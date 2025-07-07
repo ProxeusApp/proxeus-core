@@ -879,7 +879,7 @@ var FT_Workspace = function (fb, jqEl, comps) {
                 }
                 // Prevent text selection
                 e.preventDefault();
-
+                e.stopPropagation();
                 _.$dz = _.ws.body.find(".fws-main");
                 if (_.$dz && _.$dz.length) {
                   _.dragActive = true;

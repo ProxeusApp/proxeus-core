@@ -617,6 +617,14 @@ export default {
   background: rgba(255, 255, 255, 0.9);
 }
 
+.fb-comp-search-group .input-group-addon {
+  width: 3rem;
+}
+
+.fb-comp-search-group .fb-comp-search-field {
+  font-size: 1.2rem !important;
+}
+
 .hcbuilder-settings-body input:invalid {
   color: red !important;
   border: 1px solid red;
@@ -671,6 +679,14 @@ export default {
         font-weight: normal;
       }
     }
+  }
+
+  .htmlComponents {
+    user-select: none;
+    -khtml-user-select: none;
+    -o-user-select: none;
+    -moz-user-select: -moz-none;
+    -webkit-user-select: none;
   }
 
   .dropdown-menu.show {
