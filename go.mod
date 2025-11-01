@@ -27,7 +27,7 @@ require (
 	github.com/pkg/errors v0.9.1
 	github.com/robertkrimen/otto v0.5.1
 	github.com/satori/go.uuid v1.2.0
-	github.com/stretchr/testify v1.10.0
+	github.com/stretchr/testify v1.11.1
 	github.com/vmihailenco/msgpack v4.0.4+incompatible // indirect
 	github.com/xeipuuv/gojsonpointer v0.0.0-20190905194746-02993c407bfb // indirect
 	github.com/xeipuuv/gojsonschema v1.2.0 // indirect
