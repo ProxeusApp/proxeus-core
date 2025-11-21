@@ -4,7 +4,7 @@ version: 2.1
 parameters:
   golang-tag:
     type: string
-    default: "1.24"
+    default: "1.25"
   nodejs-ver:
     type: integer
     default: 20
