@@ -12,7 +12,7 @@ require (
 	github.com/davecgh/go-spew v1.1.1
 	github.com/disintegration/imaging v1.6.2
 	github.com/dop251/goja v0.0.0-20250630131328-58d95d85e994
-	github.com/ethereum/go-ethereum v1.16.4
+	github.com/ethereum/go-ethereum v1.16.5
 	github.com/fatih/structs v1.1.0 // indirect
 	github.com/gavv/httpexpect/v2 v2.17.0
 	github.com/golang/mock v1.6.0
@@ -27,7 +27,7 @@ require (
 	github.com/pkg/errors v0.9.1
 	github.com/robertkrimen/otto v0.5.1
 	github.com/satori/go.uuid v1.2.0
-	github.com/stretchr/testify v1.10.0
+	github.com/stretchr/testify v1.11.1
 	github.com/vmihailenco/msgpack v4.0.4+incompatible // indirect
 	github.com/xeipuuv/gojsonpointer v0.0.0-20190905194746-02993c407bfb // indirect
 	github.com/xeipuuv/gojsonschema v1.2.0 // indirect
@@ -59,7 +59,7 @@ require (
 require (
 	github.com/golang-jwt/jwt/v5 v5.3.0
 	github.com/labstack/echo/v4 v4.13.4
-	go.mongodb.org/mongo-driver v1.17.4
+	go.mongodb.org/mongo-driver v1.17.6
 )
 
 require (
@@ -68,7 +68,7 @@ require (
 	github.com/ajg/form v1.5.1 // indirect
 	github.com/andybalholm/brotli v1.2.0 // indirect
 	github.com/bits-and-blooms/bitset v1.22.0 // indirect
-	github.com/consensys/gnark-crypto v0.18.1 // indirect
+	github.com/consensys/gnark-crypto v0.18.0 // indirect
 	github.com/crate-crypto/go-eth-kzg v1.4.0 // indirect
 	github.com/crate-crypto/go-ipa v0.0.0-20240724233137-53bbb0ceb27a // indirect
 	github.com/deckarep/golang-set/v2 v2.8.0 // indirect
