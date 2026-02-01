@@ -57,7 +57,7 @@ require (
 )
 
 require (
-	github.com/golang-jwt/jwt/v5 v5.3.0
+	github.com/golang-jwt/jwt/v5 v5.3.1
 	github.com/labstack/echo/v4 v4.15.0
 	go.mongodb.org/mongo-driver v1.17.6
 )
