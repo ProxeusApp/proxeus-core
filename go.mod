@@ -12,7 +12,7 @@ require (
 	github.com/davecgh/go-spew v1.1.1
 	github.com/disintegration/imaging v1.6.2
 	github.com/dop251/goja v0.0.0-20250630131328-58d95d85e994
-	github.com/ethereum/go-ethereum v1.16.7
+	github.com/ethereum/go-ethereum v1.16.8
 	github.com/fatih/structs v1.1.0 // indirect
 	github.com/gavv/httpexpect/v2 v2.17.0
 	github.com/golang/mock v1.6.0
@@ -22,7 +22,7 @@ require (
 	github.com/h2non/filetype v1.1.3
 	github.com/imkira/go-interpol v1.1.0 // indirect
 	github.com/labstack/gommon v0.4.2
-	github.com/onsi/gomega v1.38.3
+	github.com/onsi/gomega v1.39.1
 	github.com/patrickmn/go-cache v2.1.0+incompatible
 	github.com/pkg/errors v0.9.1
 	github.com/robertkrimen/otto v0.5.1
@@ -32,8 +32,8 @@ require (
 	github.com/xeipuuv/gojsonpointer v0.0.0-20190905194746-02993c407bfb // indirect
 	github.com/xeipuuv/gojsonschema v1.2.0 // indirect
 	go.etcd.io/bbolt v1.4.2 // indirect
-	golang.org/x/crypto v0.46.0
-	golang.org/x/net v0.48.0
+	golang.org/x/crypto v0.47.0
+	golang.org/x/net v0.49.0
 )
 
 require (
@@ -57,7 +57,7 @@ require (
 )
 
 require (
-	github.com/golang-jwt/jwt/v5 v5.3.0
+	github.com/golang-jwt/jwt/v5 v5.3.1
 	github.com/labstack/echo/v4 v4.15.0
 	go.mongodb.org/mongo-driver v1.17.6
 )
@@ -84,7 +84,7 @@ require (
 	github.com/golang/protobuf v1.5.4 // indirect
 	github.com/golang/snappy v1.0.0 // indirect
 	github.com/google/go-cmp v0.7.0 // indirect
-	github.com/google/pprof v0.0.0-20250630185457-6e76a2b096b5 // indirect
+	github.com/google/pprof v0.0.0-20260115054156-294ebfa9ad83 // indirect
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/gorilla/securecookie v1.1.2 // indirect
 	github.com/holiman/uint256 v1.3.2 // indirect
@@ -107,8 +107,8 @@ require (
 	go.yaml.in/yaml/v3 v3.0.4 // indirect
 	golang.org/x/exp v0.0.0-20250620022241-b7579e27df2b // indirect
 	golang.org/x/sync v0.19.0 // indirect
-	golang.org/x/sys v0.39.0 // indirect
-	golang.org/x/text v0.32.0 // indirect
+	golang.org/x/sys v0.40.0 // indirect
+	golang.org/x/text v0.33.0 // indirect
 	golang.org/x/time v0.14.0 // indirect
 	gopkg.in/fsnotify.v1 v1.4.7 // indirect
 	gopkg.in/sourcemap.v1 v1.0.5 // indirect
