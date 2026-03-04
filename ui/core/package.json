@@ -39,7 +39,7 @@
     "readable-stream": "4",
     "sortablejs": "^1.15.6",
     "tippy.js": "^6.3.7",
-    "underscore": "^1.13.7",
+    "underscore": "^1.13.8",
     "v-tooltip": "^2.0.0-rc.33",
     "velocity-animate": "^1.5.1",
     "vis": "^4.21.0",
