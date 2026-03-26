@@ -27,7 +27,7 @@
     "ethereumjs-util": "^7.1.5",
     "flatpickr": "^4.5.1",
     "font-awesome": "^4.7.0",
-    "handlebars": "^4.0.11",
+    "handlebars": "^4.7.9",
     "he": "^1.2.0",
     "html-svg-connect": "^2.0.0",
     "human-standard-token-abi": "^2.0.0",
